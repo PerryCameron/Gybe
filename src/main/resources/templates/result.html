@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>ECSC: Email Sent!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.2.2/dist/css/bootstrap.min.css}"/>
+</head>
+<head>
+    <meta charset="UTF-8">
+    <title>Sucess!</title>
+</head>
+<body>
+
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto">
+
+            <div class="text-center">
+                <br><br>
+                <img src="images/envelope2023.png" alt="ECSC Email">
+            </div>
+
+            <div class="text-center">
+                <br>
+                <!--                     why the hell can't tymeleaf see this object?????-->
+
+                <p th:text="'Hi ' + ${authDTO.getF_name()} + ','"></p>
+                <p th:text="'An email has been sent to ' + ${authDTO.getEmail()} + '. Please check your inbox and click on the provided link to open your renewal form.'"></p>
+                <p>If you don't see your email within a few minutes please check the junk folder</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

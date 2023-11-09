@@ -1,0 +1,51 @@
+
+<div th:replace="fragments/header :: head"></div>
+<div th:replace="fragments/topnav :: navbar"></div>
+	<div class="container">
+		<a href="/lists?year=2022&sort=byId&rb=option1">lists</a>
+<!--		<div class="row">-->
+<!--			<div class="col">-->
+<!--				<h1>Memberships</h1>-->
+<!--			</div>-->
+<!--&lt;!&ndash; 			<div class="col">-->
+<!--				<a th:href="@{/addOffer}" class="btn btn-primary float-right">Add</a>-->
+<!--			</div> &ndash;&gt;-->
+<!--		</div>-->
+<!--		-->
+<!--		<div class="row">-->
+<!--			<table class="table table-hover" th:if="${!membershipDTO.empty}">-->
+<!--				<thead>-->
+<!--					<tr>-->
+<!--						<th scope="col">#</th>-->
+<!--						<th scope="col">Primary</th>-->
+<!--						<th scope="col">Join Date</th>-->
+<!--						<th scope="col">Type</th>-->
+<!--						<th scope="col">Address</th>-->
+<!--						<th scope="col">City</th>-->
+<!--						<th scope="col">State</th>-->
+<!--						<th scope="col">Zip</th>-->
+<!--					</tr>-->
+<!--				</thead>-->
+<!--				<tbody>-->
+<!--					<tr th:each="membershipDTO : ${membershipDTO}">-->
+<!--						<td th:text="${membershipDTO.ms_id}"></td>					-->
+<!--						<td th:text="${membershipDTO.p_id}"></td>-->
+<!--						<td th:text="${#dates.format(membershipDTO.join_date, 'dd-MMM-yyyy')}"></td>-->
+<!--						<td th:text="${membershipDTO.mem_type}"></td>-->
+<!--						<td th:text="${membershipDTO.address}"></td>-->
+<!--						<td th:text="${membershipDTO.city}"></td>-->
+<!--						<td th:text="${membershipDTO.state}"></td>-->
+<!--						<td th:text="${membershipDTO.zip}"></td>-->
+<!--						<td><a type="button" class="btn btn-primary" href="/">Edit</a></td>-->
+<!--&lt;!&ndash; 						<td><a class="btn btn-primary" th:if="${offerDTO.id} &gt; 0" th:href="@{/editOffer/} + ${offerDTO.id}">Edit</a></td>-->
+<!--						<td><a class="btn btn-danger" th:if="${offerDTO.id} &gt; 0" th:href="@{/deleteOffer/} + ${offerDTO.id}">Delete</a></td>-->
+<!-- &ndash;&gt;					</tr>-->
+<!--				</tbody>-->
+<!--			</table>-->
+<!--		</div>-->
+<!--		-->
+<!--&lt;!&ndash; 		<div class="row" th:if="${offersDTO.empty}">-->
+<!--			<h3>No tours in the offer</h3>-->
+<!--		</div> &ndash;&gt;-->
+	</div>
+<div th:replace="fragments/footer :: foot"></div>

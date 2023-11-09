@@ -1,0 +1,72 @@
+/* This is the table */
+.styled-table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+  background: linear-gradient(
+    to bottom,
+    #007f6b,
+    #00b28f
+  ); /* Adjust the gradient colors as needed */
+  color: #ffffff;
+  text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr:hover {
+  background-color: deepskyblue; /* Or any color you prefer */
+}
+
+/* This applies to links inside your header cells by default */
+.header-link th a,
+.header-link th a:visited,
+.header-link th a:active {
+  color: white; /* Links are white */
+  text-decoration: none; /* No underline */
+}
+
+/* This changes the background color of the header cell and the color of the links when hovered */
+.header-link th:hover {
+  background-color: yellow; /* Background color of the cell */
+}
+
+.header-link th:hover a {
+  color: black; /* Text color of the links */
+}
+
+/* New stuff below here */
+/* Div before the table  */
+.main-content {
+  display: block;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.styled-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #007f6b; /* Set this to the background color of your header */
+  z-index: 10;
+}

@@ -1,0 +1,14 @@
+table.table-responsive{
+    display: block;
+    overflow: scroll;
+}
+
+
+.table-responsive {
+    overflow: hidden;
+    padding: 0px;
+    margin: 0px;
+    table-layout: fixed;
+    width: 100%;
+    display: table;
+}

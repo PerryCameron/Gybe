@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head> 
+    <title>ECSC: Email Authentication</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto">
+
+            <div class="text-center">
+                <br><br>
+                <img src="images/ecsc2023.png" alt="ECSC">
+            </div>
+            <form class="col-12" action="#" th:action="@{/}" th:object="${authDTO}" method="post">
+                <div class="text-center">
+                    <br>
+                    <input type="email" th:field="*{email}" class="form-control" id="email" th:name="email" aria-describedby="emailSubmit"
+                           placeholder="Enter email">
+                </div>
+                <div class="text-center">
+                    <small  id="emailHelp" class="form-text text-muted">Use any email listed in your
+                        membership</small><br><br>
+                </div>
+                <div class="text-center">
+                    <button type="submit" value="check email" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<p th:if="${authDTO.getExists()} == 'F'">This email was not found in the system</p>
+</body>
+</html>

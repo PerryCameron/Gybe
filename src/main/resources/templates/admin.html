@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head> 
+    <title>ECSC: Email Authentication</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.2.2/dist/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto">
+
+            <div class="text-center">
+                <br><br>
+                <img src="images/ecsc2023.png" alt="ECSC">
+            </div>
+            <div class="text-center">
+                <small  id="emailHelp" class="form-text text-muted">You are not currently connected to a database</small><br>
+            </div>
+            <form class="col-12" action="#" th:action="@{/init}" th:object="${sqlAuthDTO}" method="post">
+                <div class="text-center">
+                    <br>
+                    <input type="text" th:field="*{userDTO}" class="form-control" id="userDTO" th:name="userDTO" aria-describedby="userSubmit"
+                           placeholder="Enter SQL username">
+                    <br>
+                    <input type="password" th:field="*{pass}" class="form-control" id="pass" th:name="pass" aria-describedby="passSubmit"
+                           placeholder="Enter SQL password">
+                    <br>
+                    <input type="text" th:field="*{ip}" class="form-control" id="ip" th:name="ip" aria-describedby="ipSubmit"
+                           placeholder="Enter SQL ip or domain name">
+                    <br>
+                    <input type="text" th:field="*{port}" class="form-control" id="port" th:name="port" aria-describedby="portSubmit"
+                           placeholder="Enter SQL server port">
+                    <br>
+                    <input type="text" th:field="*{db_name}" class="form-control" id="db_name" th:name="db_name" aria-describedby="db_nameSubmit"
+                           placeholder="Enter SQL database name">
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" value="check email" class="btn btn-warning">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<p th:if="${sqlAuthDTO.getUser()} == ''">This userDTO was left empty</p>
+</body>
+</html>
