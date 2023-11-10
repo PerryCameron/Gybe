@@ -37,7 +37,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[] {selectedYear.intValue()});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
         return membershipListDTOS;
     }
 
@@ -81,7 +81,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID
                                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear,selectedYear.intValue()});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear, selectedYear.intValue()});
         return membershipListDTOS;
     }
 
@@ -117,7 +117,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                                 """;
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue(),
-                selectedYear.intValue(), selectedYear.intValue(),selectedYear.intValue(),selectedYear.intValue(),
+                selectedYear.intValue(), selectedYear.intValue(), selectedYear.intValue(), selectedYear.intValue(),
                 selectedYear.intValue()});
         return membershipListDTOS;
     }
@@ -126,12 +126,12 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     public List<MembershipListDTO> getSlipWaitList(Integer selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,
-                s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
-                FROM (SELECT * from wait_list where SLIP_WAIT=true) wl
-                INNER JOIN (select * from membership_id where FISCAL_YEAR=? and RENEW=1) id on id.MS_ID=wl.MS_ID
-                INNER JOIN membership m on m.MS_ID=wl.MS_ID
-                LEFT JOIN (select * from person where MEMBER_TYPE=1) p on m.MS_ID= p.MS_ID
-                LEFT JOIN slip s on m.MS_ID = s.MS_ID;
+                               s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
+                        FROM (SELECT * from wait_list where SLIP_WAIT=true) wl
+                                 INNER JOIN (select * from membership_id where FISCAL_YEAR=YEAR(NOW()) and RENEW=1) id on id.MS_ID=wl.MS_ID
+                                 INNER JOIN membership m on m.MS_ID=wl.MS_ID
+                                 LEFT JOIN (select * from person where MEMBER_TYPE=1) p on m.MS_ID= p.MS_ID
+                                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
@@ -180,8 +180,9 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 membership m LEFT JOIN person p ON m.p_id=p.p_id LEFT JOIN membership_id 
                 id ON m.ms_id=id.ms_id WHERE id.fiscal_year=YEAR(NOW()) AND membership_id=?
                 """;
-         return template.queryForObject(query, new MembershipListRowMapper1(), membershipId);
+        return template.queryForObject(query, new MembershipListRowMapper1(), membershipId);
     }
+
     @Override
     public List<MembershipListDTO> getRoster(int year, boolean isActive) {
         String QUERY = "Select m.MS_ID,m.P_ID,id.MEMBERSHIP_ID,id.FISCAL_YEAR,id.FISCAL_YEAR,m.JOIN_DATE," +
@@ -192,6 +193,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
         List<MembershipListDTO> memberships = template.query(QUERY, new MembershipListRowMapper(), year, isActive);
         return memberships;
     }
+
     @Override
     public List<MembershipListDTO> getRosterOfAll(int year) {
         String QUERY = "SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,m.join_date,id.mem_type,s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip "
@@ -203,17 +205,18 @@ public class MembershipRepositoryImpl implements MembershipRepository {
         List<MembershipListDTO> memberships = template.query(QUERY, new MembershipListRowMapper(), year);
         return memberships;
     }
+
     @Override
     public List<MembershipListDTO> getReturnMembers(int year) {
         String QUERY = "SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,m.join_date,id.mem_type,s.SLIP_NUM" +
                 ",p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip FROM membership_id id LEFT JOIN " +
                 "membership m ON id.ms_id=m.ms_id LEFT JOIN person p ON p.p_id=m.p_id LEFT JOIN slip s ON " +
-                "s.ms_id=m.ms_id WHERE fiscal_year="+year+" AND id.membership_id > (SELECT membership_id FROM " +
-                "membership_id WHERE fiscal_year="+year+" AND ms_id=(SELECT ms_id FROM membership_id WHERE " +
-                "membership_id=(SELECT MAX(membership_id) FROM membership_id WHERE fiscal_year="+(year -1)+" " +
-                "AND membership_id < 500 AND renew=1) AND fiscal_year="+(year -1)+")) AND id.membership_id < " +
-                "500 AND YEAR(m.join_date)!="+year+" AND (SELECT NOT EXISTS(SELECT mid FROM membership_id " +
-                "WHERE fiscal_year="+(year -1)+ " AND renew=1 AND ms_id=id.ms_id))";
+                "s.ms_id=m.ms_id WHERE fiscal_year=" + year + " AND id.membership_id > (SELECT membership_id FROM " +
+                "membership_id WHERE fiscal_year=" + year + " AND ms_id=(SELECT ms_id FROM membership_id WHERE " +
+                "membership_id=(SELECT MAX(membership_id) FROM membership_id WHERE fiscal_year=" + (year - 1) + " " +
+                "AND membership_id < 500 AND renew=1) AND fiscal_year=" + (year - 1) + ")) AND id.membership_id < " +
+                "500 AND YEAR(m.join_date)!=" + year + " AND (SELECT NOT EXISTS(SELECT mid FROM membership_id " +
+                "WHERE fiscal_year=" + (year - 1) + " AND renew=1 AND ms_id=id.ms_id))";
         List<MembershipListDTO> memberships = template.query(QUERY, new MembershipListRowMapper(), year);
         return memberships;
     }
@@ -233,13 +236,36 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     public List<MembershipListDTO> getSearchRoster(Integer selectedYear, List<String> searchParams) {
         // Starting part of the SQL query
         StringBuilder queryBuilder = new StringBuilder("""
-        SELECT m.ms_id, m.p_id, id.membership_id, id.fiscal_year, id.fiscal_year, m.join_date, id.mem_type,
-               s.SLIP_NUM, p.l_name, p.f_name, s.subleased_to, m.address, m.city, m.state, m.zip 
-        FROM (select * from membership_id where FISCAL_YEAR = ?) id 
-        INNER JOIN membership m on m.MS_ID = id.MS_ID 
-        LEFT JOIN (select * from person where MEMBER_TYPE = 1) p on m.MS_ID = p.MS_ID 
-        LEFT JOIN slip s on m.MS_ID = s.MS_ID
-    """);
+                SELECT
+                    m.ms_id,
+                    id.membership_id,
+                    m.p_id,
+                    id.fiscal_year,
+                    m.join_date,
+                    id.mem_type,
+                    s.SLIP_NUM,
+                    p.l_name,
+                    p.f_name,
+                    s.subleased_to,
+                    m.address,
+                    m.city,
+                    m.state,
+                    m.zip
+                FROM (
+                         SELECT mi.*
+                         FROM membership_id mi
+                                  INNER JOIN (
+                             SELECT MS_ID, MAX(FISCAL_YEAR) as MaxYear
+                             FROM membership_id
+                             WHERE MEM_TYPE != 'NR'
+                             GROUP BY MS_ID
+                         ) as newest
+                                             ON mi.MS_ID = newest.MS_ID AND mi.FISCAL_YEAR = newest.MaxYear
+                ) id
+                         INNER JOIN membership m ON m.MS_ID = id.MS_ID
+                         LEFT JOIN (SELECT * FROM person WHERE MEMBER_TYPE = 1) p ON m.MS_ID = p.MS_ID
+                         LEFT JOIN slip s ON m.MS_ID = s.MS_ID
+                                                """);
 
         // List to hold parameters for the prepared statement
         List<Object> params = new ArrayList<>();

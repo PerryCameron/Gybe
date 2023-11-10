@@ -8,7 +8,6 @@
 		<link rel="stylesheet" th:href="@{/css/roster.css}" type="text/css" />
 		<link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
 		<script th:src="@{/js/list.js}" defer></script>
-
 	</head>
 	<body>
 
@@ -71,6 +70,9 @@
 			<th class="header" style="width: 12%" scope="col">
 				<a href="javascript:void(0)" onclick="sortList('sort', 'date')">Join Date</a>
 			</th>
+			<th class="header" style="width: 12%" scope="col">
+				<a href="javascript:void(0)" onclick="sortList('sort', 'last-renew-year')">Last Renew</a>
+			</th>
 			<th class="header" scope="col">
 				<a href="javascript:void(0)" onclick="sortList('sort', 'type')">Type</a>
 			</th>
@@ -90,6 +92,7 @@
 		<tr th:each="list : ${list}">
 			<td th:text="${list.membershipId}"></td>
 			<td th:text="${list.joinDate}"></td>
+			<td th:text="${list.selectedYear}"></td>
 			<td th:text="${list.memType}"></td>
 			<td th:text="${list.slip}"></td>
 			<td th:text="${list.firstName}"></td>
