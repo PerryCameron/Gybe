@@ -114,16 +114,6 @@ public class AuthController {
 		return "lists";
 	}
 
-//	@GetMapping("/lists") // http://localhost:8080/lists?year=2023&sort=byId&rb=option1
-//	public String getHomePage(Model model,
-//							  @RequestParam(name = "year", required = false, defaultValue = "2023") int year,
-//							  @RequestParam(name = "rb", required = false, defaultValue = "option1") String rb,
-//							  @RequestParam(name = "sort", required = false, defaultValue = "byId") String sort) {
-//
-//		List<MembershipListDTO> membershipList = rosterService.getRoster(year, rb, sort);
-//		model.addAttribute("membershipList", membershipList);
-//		return "lists";
-//	}
 
 
 

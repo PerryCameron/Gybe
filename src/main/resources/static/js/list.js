@@ -1,12 +1,10 @@
 let timeout = null;
 
-
 // Call the function with your desired years as arguments
 document.addEventListener("DOMContentLoaded", () => {
     const startYear = 1970;
     const endYear = new Date().getFullYear(); // This will get the current year
     populateYearSelect(startYear, endYear);
-    console.log("new year")
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,7 +44,7 @@ function populateYearSelect(startYear, endYear) {
         yearSelect2.add(option2);
     }
     document.getElementById('sidenav-yearselect').addEventListener('change', function () {
-        setGetParameter('year', this.value);
+        setParameter('year', this.value);
         location.reload();
     });
     const queryString = window.location.search;
@@ -54,10 +52,9 @@ function populateYearSelect(startYear, endYear) {
     const product = urlParams.get('year');
     yearSelect1.value = product;
     yearSelect2.value = product;
-    console.log("logged")
 }
 
-function setGetParameter(paramName, paramValue) {
+function setParameter(paramName, paramValue) {
     let url = new URL(window.location.href);
     let params = new URLSearchParams(url.search);
     // Set the parameter
@@ -70,7 +67,7 @@ function setGetParameter(paramName, paramValue) {
 // handles the list links
 function handleLinkClick(element) {
     let value = element.getAttribute('value');
-    setGetParameter('rb', value);
+    setParameter('rb', value);
     // select all elements in the sidenav
     document.querySelectorAll(".sidenav a").forEach(function (el) {
         el.classList.remove("selected");
@@ -86,17 +83,21 @@ function handleKeyUp() {
     // Clear the previous timeout if the user types something new before the timeout is reached
     clearTimeout(timeout);
     clearSearchParams();
+
     // Set a new timeout
     timeout = setTimeout(() => {
         // Get the value of the input
-        const searchValue = document.getElementById("search").value;
+        const searchValue = document.getElementById("search").value.trim();
+        // Check if searchValue is not an empty string
+        if (searchValue !== "") {
             // Split the searchValue into an array
             let valuesArray = searchValue.split(" "); // Splitting the string into an array
             // Loop through the array and set each value as a parameter
             valuesArray.forEach((val, index) => {
                 // Assuming setGetParameter is defined elsewhere
-                setGetParameter('param' + (index + 1), val);
+                setParameter('param' + (index + 1), val);
             });
+        }
         location.reload();
     }, 1000); // 1000 milliseconds = 1 second
 }
@@ -113,4 +114,9 @@ function clearSearchParams() {
     });
     url.search = params.toString();
     window.history.replaceState({}, '', url);
+}
+
+function sortList(paramName, paramValue) {
+    setParameter(paramName, paramValue);
+    location.reload();
 }

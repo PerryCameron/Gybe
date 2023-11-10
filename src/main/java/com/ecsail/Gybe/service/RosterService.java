@@ -20,31 +20,30 @@ public class RosterService {
     }
 
     public List<MembershipListDTO> getRoster(int year, String rosterType, String sort, List<String> searchParams) {
-        List<MembershipListDTO> membershipList = getRosterType(year, rosterType);
+        if(!searchParams.isEmpty())
+            rosterType="search";
+        List<MembershipListDTO> membershipList = getRosterType(year, rosterType, searchParams);
         sortList(sort, membershipList);
-        if(searchParams.isEmpty())
-            System.out.println("There are no search params");
-        else
-            searchParams.forEach(System.out::println);
         return membershipList;
     }
 
-    private List<MembershipListDTO> getRosterType(int year, String rosterType) {
-        List<MembershipListDTO> membershipList = null;
+    private List<MembershipListDTO> getRosterType(int year, String rosterType, List<String> searchParams) {
         if(rosterType.equals("active")) {
-            membershipList = membershipRepository.getRoster(year, true);
+            return membershipRepository.getRoster(year, true);
         } else if (rosterType.equals("non-renew")) {
-            membershipList = membershipRepository.getRoster(year, false);
+            return membershipRepository.getRoster(year, false);
         } else if (rosterType.equals("all")) {
-            membershipList = membershipRepository.getRosterOfAll(year);
+            return membershipRepository.getRosterOfAll(year);
         } else if (rosterType.equals("new")) {
-            membershipList = membershipRepository.getNewMemberRoster(year);
+            return membershipRepository.getNewMemberRoster(year);
         } else if (rosterType.equals("return")) {
-            membershipList = membershipRepository.getReturnMembers(year);
+            return membershipRepository.getReturnMembers(year);
         } else if (rosterType.equals("slip")) {
-            membershipList = membershipRepository.getSlipWaitList(year);
+            return membershipRepository.getSlipWaitList(year);
+        } else if (rosterType.equals("search")) {
+            return membershipRepository.getSearchRoster(year, searchParams);
         }
-        return membershipList;
+        return null;
     }
 
     private static void sortList(String sort, List<MembershipListDTO> membershipList) {

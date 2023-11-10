@@ -46,12 +46,12 @@
 
 	<div id="list-select-div">
 		<select id="topnav-select-field" class="topnav-control" name="topnavlists">
-			<option value="all" onclick="setGetParameter('rb', 'option3')">All</option>
-			<option value="active" onclick="setGetParameter('sort', 'option1')">Active</option>
-			<option value="non-renew" onclick="setGetParameter('sort', 'option2')">Non-Renew</option>
-			<option value="new-members" onclick="setGetParameter('sort', 'option4')">New Members</option>
-			<option value="return-members" onclick="setGetParameter('sort', 'option5')">Return Members</option>
-			<option value="slip" onclick="setGetParameter('sort', 'option6')">Slip Waitlist</option>
+			<option value="all" onclick="setParameter('rb', 'option3')">All</option>
+			<option value="active" onclick="setParameter('sort', 'option1')">Active</option>
+			<option value="non-renew" onclick="setParameter('sort', 'option2')">Non-Renew</option>
+			<option value="new-members" onclick="setParameter('sort', 'option4')">New Members</option>
+			<option value="return-members" onclick="setParameter('sort', 'option5')">Return Members</option>
+			<option value="slip" onclick="setParameter('sort', 'option6')">Slip Waitlist</option>
 		</select>
 	</div>
 	<div class="topnav-child-div">
@@ -66,22 +66,22 @@
 		<thead class="header-link">
 		<tr>
 			<th class="header" scope="col">
-				<a href="javascript:void(0)" onclick="setGetParameter('sort', 'byId')">ID</a>
+				<a href="javascript:void(0)" onclick="sortList('sort', 'byId')">ID</a>
 			</th>
 			<th class="header" style="width: 12%" scope="col">
-				<a href="javascript:void(0)" onclick="setGetParameter('sort', 'date')">Join Date</a>
+				<a href="javascript:void(0)" onclick="sortList('sort', 'date')">Join Date</a>
 			</th>
 			<th class="header" scope="col">
-				<a href="javascript:void(0)" onclick="setGetParameter('sort', 'type')">Type</a>
+				<a href="javascript:void(0)" onclick="sortList('sort', 'type')">Type</a>
 			</th>
 			<th class="header" scope="col">
-				<a href="javascript:void(0)" onclick="setGetParameter('sort', 'slip')">Slip</a>
+				<a href="javascript:void(0)" onclick="sortList('sort', 'slip')">Slip</a>
 			</th>
 			<th class="header" scope="col">
-				<a href="javascript:void(0)" onclick="setGetParameter('sort', 'fname')">First Name</a>
+				<a href="javascript:void(0)" onclick="sortList('sort', 'fname')">First Name</a>
 			</th>
 			<th class="header" scope="col">
-				<a href="javascript:void(0)" onclick="setGetParameter('sort', 'lname')">Last Name</a>
+				<a href="javascript:void(0)" onclick="sortList('sort', 'lname')">Last Name</a>
 			</th>
 			<th class="header">City</th>
 		</tr>

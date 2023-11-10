@@ -230,7 +230,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     }
 
     @Override
-    public List<MembershipListDTO> getAllRoster(Integer selectedYear, List<String> searchParams) {
+    public List<MembershipListDTO> getSearchRoster(Integer selectedYear, List<String> searchParams) {
         // Starting part of the SQL query
         StringBuilder queryBuilder = new StringBuilder("""
         SELECT m.ms_id, m.p_id, id.membership_id, id.fiscal_year, id.fiscal_year, m.join_date, id.mem_type,
