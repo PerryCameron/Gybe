@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -81,9 +83,32 @@ public class AuthController {
 //		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 //	}
 
+//	@GetMapping("/lists")
+//	public String getHomePage(Model model,
+//							  @RequestParam int year,
+//							  @RequestParam String rb,
+//							  @RequestParam String sort,
+//							  @RequestParam(required = false) String[] searchParams) {
+//		List<MembershipListDTO> membershipList = rosterService.getRoster(year,rb,sort);
+//		model.addAttribute("list", membershipList);
+//		model.addAttribute("listSize", membershipList.size());
+//		return "lists";
+//	}
+
 	@GetMapping("/lists")
-	public String getHomePage(Model model, @RequestParam int year, @RequestParam String rb, @RequestParam String sort) {
-		List<MembershipListDTO> membershipList = rosterService.getRoster(year,rb,sort);
+	public String getHomePage(Model model,
+							  @RequestParam int year,
+							  @RequestParam String rb,
+							  @RequestParam String sort,
+							  @RequestParam Map<String, String> allParams) {
+
+		// Extract searchParams from allParams
+		List<String> searchParams = allParams.entrySet().stream()
+				.filter(e -> e.getKey().startsWith("param"))
+				.map(Map.Entry::getValue)
+				.collect(Collectors.toList());
+
+		List<MembershipListDTO> membershipList = rosterService.getRoster(year, rb, sort, searchParams);
 		model.addAttribute("list", membershipList);
 		model.addAttribute("listSize", membershipList.size());
 		return "lists";

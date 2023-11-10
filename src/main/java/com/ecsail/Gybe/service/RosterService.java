@@ -19,9 +19,13 @@ public class RosterService {
         this.membershipRepository = membershipRepository;
     }
 
-    public List<MembershipListDTO> getRoster(int year, String rosterType, String sort) {
+    public List<MembershipListDTO> getRoster(int year, String rosterType, String sort, List<String> searchParams) {
         List<MembershipListDTO> membershipList = getRosterType(year, rosterType);
         sortList(sort, membershipList);
+        if(searchParams.isEmpty())
+            System.out.println("There are no search params");
+        else
+            searchParams.forEach(System.out::println);
         return membershipList;
     }
 

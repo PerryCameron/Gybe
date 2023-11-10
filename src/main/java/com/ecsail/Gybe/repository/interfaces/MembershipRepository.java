@@ -27,4 +27,6 @@ public interface MembershipRepository {
     List<MembershipListDTO> getReturnMembers(int year);
 
     MembershipListDTO getMembershipListFromMsidAndYear(String year);
+
+    List<MembershipListDTO> getAllRoster(Integer selectedYear, List<String> searchParams);
 }

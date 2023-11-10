@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -227,4 +228,51 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                         + "p.MS_ID=m.MS_ID WHERE id.FISCAL_YEAR=? AND m.ms_id=? AND p.MEMBER_TYPE=1";
         return (MembershipListDTO) template.queryForObject(QUERY, new MembershipListRowMapper(), year);
     }
+
+    @Override
+    public List<MembershipListDTO> getAllRoster(Integer selectedYear, List<String> searchParams) {
+        // Starting part of the SQL query
+        StringBuilder queryBuilder = new StringBuilder("""
+        SELECT m.ms_id, m.p_id, id.membership_id, id.fiscal_year, id.fiscal_year, m.join_date, id.mem_type,
+               s.SLIP_NUM, p.l_name, p.f_name, s.subleased_to, m.address, m.city, m.state, m.zip 
+        FROM (select * from membership_id where FISCAL_YEAR = ?) id 
+        INNER JOIN membership m on m.MS_ID = id.MS_ID 
+        LEFT JOIN (select * from person where MEMBER_TYPE = 1) p on m.MS_ID = p.MS_ID 
+        LEFT JOIN slip s on m.MS_ID = s.MS_ID
+    """);
+
+        // List to hold parameters for the prepared statement
+        List<Object> params = new ArrayList<>();
+        params.add(selectedYear);
+
+        // Check if there are search parameters and if so, build the WHERE clause
+        if (searchParams != null && !searchParams.isEmpty()) {
+            queryBuilder.append(" WHERE ");
+            String searchCondition = " (m.ms_id LIKE ? OR m.p_id LIKE ? OR id.membership_id LIKE ? OR " +
+                    "id.fiscal_year LIKE ? OR m.join_date LIKE ? OR id.mem_type LIKE ? OR " +
+                    "s.SLIP_NUM LIKE ? OR p.l_name LIKE ? OR p.f_name LIKE ? OR " +
+                    "s.subleased_to LIKE ? OR m.address LIKE ? OR m.city LIKE ? OR " +
+                    "m.state LIKE ? OR m.zip LIKE ?) ";
+            queryBuilder.append(searchCondition);
+
+            // Add search parameters to the list for each field you want to search
+            for (String param : searchParams) {
+                // Add the same search param multiple times, one for each field in the search condition
+                for (int i = 0; i < 14; i++) { // 14 is the number of fields in the search condition
+                    params.add("%" + param + "%");
+                }
+            }
+        }
+
+        // Convert StringBuilder to String
+        String query = queryBuilder.toString();
+
+        // Convert params list to an array
+        Object[] paramsArray = params.toArray();
+
+        // Execute the query
+        List<MembershipListDTO> membershipListDTOS = template.query(query, new MembershipListRowMapper(), paramsArray);
+        return membershipListDTOS;
+    }
+
 }

@@ -21,9 +21,9 @@
 		<label id="numb-of-records">Records: <span th:text="${listSize}">0</span></label>
 	</div>
 	<div id="search-bar-div">
-		<form>
+		<form onsubmit="return false;">
 			<label for="search"></label>
-			<input id="search" placeholder="Search" type="text" class="sidenav-control"/>
+			<input id="search" placeholder="Search" type="text" class="sidenav-control" onkeyup="handleKeyUp()"/>
 		</form>
 	</div>
 	<div id="sidenav-year-container">
