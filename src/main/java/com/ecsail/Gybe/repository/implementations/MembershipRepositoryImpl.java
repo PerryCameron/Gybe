@@ -233,7 +233,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     }
 
     @Override
-    public List<MembershipListDTO> getSearchRoster(Integer selectedYear, List<String> searchParams) {
+    public List<MembershipListDTO> getSearchRoster(List<String> searchParams) {
         // Starting part of the SQL query
         StringBuilder queryBuilder = new StringBuilder("""
                 SELECT
@@ -269,25 +269,23 @@ public class MembershipRepositoryImpl implements MembershipRepository {
 
         // List to hold parameters for the prepared statement
         List<Object> params = new ArrayList<>();
-        params.add(selectedYear);
+//        params.add(selectedYear);
 
-        // Check if there are search parameters and if so, build the WHERE clause
         if (searchParams != null && !searchParams.isEmpty()) {
             queryBuilder.append(" WHERE ");
-            String searchCondition = " (m.ms_id LIKE ? OR m.p_id LIKE ? OR id.membership_id LIKE ? OR " +
-                    "id.fiscal_year LIKE ? OR m.join_date LIKE ? OR id.mem_type LIKE ? OR " +
-                    "s.SLIP_NUM LIKE ? OR p.l_name LIKE ? OR p.f_name LIKE ? OR " +
-                    "s.subleased_to LIKE ? OR m.address LIKE ? OR m.city LIKE ? OR " +
-                    "m.state LIKE ? OR m.zip LIKE ?) ";
-            queryBuilder.append(searchCondition);
+            List<String> conditions = new ArrayList<>();
 
-            // Add search parameters to the list for each field you want to search
             for (String param : searchParams) {
-                // Add the same search param multiple times, one for each field in the search condition
-                for (int i = 0; i < 14; i++) { // 14 is the number of fields in the search condition
-                    params.add("%" + param + "%");
-                }
+                // Here, each param should be checked against every field
+                String searchCondition = String.format(" (m.ms_id LIKE '%%%1$s%%' OR m.p_id LIKE '%%%1$s%%' OR id.membership_id LIKE '%%%1$s%%' OR " +
+                        "id.fiscal_year LIKE '%%%1$s%%' OR m.join_date LIKE '%%%1$s%%' OR id.mem_type LIKE '%%%1$s%%' OR " +
+                        "s.SLIP_NUM LIKE '%%%1$s%%' OR p.l_name LIKE '%%%1$s%%' OR p.f_name LIKE '%%%1$s%%' OR " +
+                        "s.subleased_to LIKE '%%%1$s%%' OR m.address LIKE '%%%1$s%%' OR m.city LIKE '%%%1$s%%' OR " +
+                        "m.state LIKE '%%%1$s%%' OR m.zip LIKE '%%%1$s%%')", param);
+                conditions.add(searchCondition);
             }
+
+            queryBuilder.append(String.join(" OR ", conditions));
         }
 
         // Convert StringBuilder to String

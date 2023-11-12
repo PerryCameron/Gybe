@@ -41,7 +41,7 @@ public class RosterService {
         } else if (rosterType.equals("slip")) {
             return membershipRepository.getSlipWaitList(year);
         } else if (rosterType.equals("search")) {
-            return membershipRepository.getSearchRoster(year, searchParams);
+            return membershipRepository.getSearchRoster(searchParams);
         }
         return null;
     }

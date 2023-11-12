@@ -1,0 +1,106 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex; /* Enables Flexbox */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+  font-family: "Poppins", sans-serif;
+}
+
+#email {
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  padding: 8px 10px;
+  width: 30%;
+  height: 40px;
+  font-size: 16px;
+}
+
+#email-div {
+  text-align: center;
+}
+
+#email:focus {
+  border-color: #7db0fb;
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(24, 117, 255, 0.25);
+}
+
+.div-common {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  max-width: 30%; /* Adjust the value as needed */
+  height: auto; /* This ensures the image maintains its aspect ratio */
+}
+
+#submit-button-div {
+  margin-top: 30px;
+  text-align: center;
+  width: 100vw;
+}
+
+#email-help-div {
+  margin-top: 5px;
+  text-align: center;
+  width: 100vw;
+}
+
+@media screen and (max-width: 768px) {
+  img {
+    max-width: 50%; /* Adjust the value as needed */
+    height: auto; /* This ensures the image maintains its aspect ratio */
+  }
+
+  #email {
+    padding: 8px 10px;
+    width: 60%;
+  }
+}
+
+/* CSS */
+#submit-button {
+  appearance: none;
+  background-color: #913bb5;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 20px;
+  /* top, right, bottom, and left */
+  padding: 10px 10px 11px 10px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+#submit-button:focus:not(:focus-visible):not(.focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
+#submit-button:hover {
+  background-color: #a60fe7;
+}
+
+#submit-button:focus {
+  box-shadow: rgba(46, 164, 79, 0.4) 0 0 0 3px;
+  outline: none;
+}
