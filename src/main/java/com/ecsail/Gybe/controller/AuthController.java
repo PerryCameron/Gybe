@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,10 +98,15 @@ public class AuthController {
 
 	@GetMapping("/lists")
 	public String getHomePage(Model model,
-							  @RequestParam int year,
-							  @RequestParam String rb,
-							  @RequestParam String sort,
+							  @RequestParam(required = false) Integer year,
+							  @RequestParam(defaultValue = "active") String rb,
+							  @RequestParam(defaultValue = "byId") String sort,
 							  @RequestParam Map<String, String> allParams) {
+
+		// Set the year to current year if it's not provided
+		if (year == null) {
+			year = Year.now().getValue();
+		}
 
 		// Extract searchParams from allParams
 		List<String> searchParams = allParams.entrySet().stream()
