@@ -120,3 +120,10 @@ function sortList(paramName, paramValue) {
     setParameter(paramName, paramValue);
     location.reload();
 }
+
+function redirectToUrl(element) {
+    var url = element.getAttribute('data-url');
+    if (url) {
+        window.location.href = url;
+    }
+}

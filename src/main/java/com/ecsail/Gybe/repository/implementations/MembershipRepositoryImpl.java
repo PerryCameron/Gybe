@@ -184,6 +184,17 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     }
 
     @Override
+    public MembershipListDTO getMembershipByMsId(int msId) {
+        String query = """
+                SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,m.join_date,
+                id.mem_type,p.l_name,p.f_name,m.address,m.city,m.state,m.zip FROM 
+                membership m LEFT JOIN person p ON m.p_id=p.p_id LEFT JOIN membership_id 
+                id ON m.ms_id=id.ms_id WHERE id.fiscal_year=YEAR(NOW()) AND m.MS_ID=?
+                """;
+        return template.queryForObject(query, new MembershipListRowMapper1(), msId);
+    }
+
+    @Override
     public List<MembershipListDTO> getRoster(int year, boolean isActive) {
         String QUERY = "Select m.MS_ID,m.P_ID,id.MEMBERSHIP_ID,id.FISCAL_YEAR,id.FISCAL_YEAR,m.JOIN_DATE," +
                 "id.MEM_TYPE,s.SLIP_NUM,p.L_NAME,p.F_NAME,s.SUBLEASED_TO,m.address,m.city,m.state,m.zip " +

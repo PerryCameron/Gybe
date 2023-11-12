@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.AuthDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.dto.SqlAuthDTO;
 import com.ecsail.Gybe.service.EmailService;
+import com.ecsail.Gybe.service.MembershipService;
 import com.ecsail.Gybe.service.RosterService;
 import com.ecsail.Gybe.service.SendMailService;
 import org.slf4j.Logger;
@@ -30,16 +31,24 @@ public class AuthController {
 
 	EmailService emailService;
 	SendMailService service;
+	RosterService rosterService;
+	MembershipService membershipService;
+
 
 	@Value("${spring.mail.username}")
 	private String fromEmail;
 
-	RosterService rosterService;
+
 	@Autowired
-	public AuthController(SendMailService service, EmailService emailService, RosterService rosterService) {
+	public AuthController(
+			SendMailService service,
+			EmailService emailService,
+			RosterService rosterService,
+			MembershipService membershipService) {
 		this.service = service;
 		this.emailService = emailService;
 		this.rosterService = rosterService;
+		this.membershipService = membershipService;
 	}
 
 
@@ -84,17 +93,14 @@ public class AuthController {
 //		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 //	}
 
-//	@GetMapping("/lists")
-//	public String getHomePage(Model model,
-//							  @RequestParam int year,
-//							  @RequestParam String rb,
-//							  @RequestParam String sort,
-//							  @RequestParam(required = false) String[] searchParams) {
-//		List<MembershipListDTO> membershipList = rosterService.getRoster(year,rb,sort);
-//		model.addAttribute("list", membershipList);
-//		model.addAttribute("listSize", membershipList.size());
-//		return "lists";
-//	}
+
+	@GetMapping("/membership")
+	public String getMembership(Model model,
+								@RequestParam() Integer msid) {
+		MembershipListDTO membershipListDTO = membershipService.getMembership(msid);
+		model.addAttribute("membership", membershipListDTO);
+		return "membership";
+	}
 
 	@GetMapping("/lists")
 	public String getHomePage(Model model,

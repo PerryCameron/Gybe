@@ -20,6 +20,8 @@ public interface MembershipRepository {
 
     MembershipListDTO getMembershipByMembershipId(int membershipId);
 
+    MembershipListDTO getMembershipByMsId(int msId);
+
     List<MembershipListDTO> getRoster(int year, boolean isActive);
 
     List<MembershipListDTO> getRosterOfAll(int year);
