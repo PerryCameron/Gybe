@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MembershipService {
@@ -18,6 +19,7 @@ public class MembershipService {
     private final AwardRepository awardRepository;
     private final OfficerRepository officerRepository;
     private final NotesRepository notesRepository;
+    private final BoardPositionsRepository boardPositionsRepository;
 
 
     @Autowired
@@ -30,7 +32,8 @@ public class MembershipService {
             EmailRepository emailRepository,
             AwardRepository awardRepository,
             OfficerRepository officerRepository,
-            NotesRepository notesRepository
+            NotesRepository notesRepository,
+            BoardPositionsRepository boardPositionsRepository
     ) {
         this.membershipRepository = membershipRepository;
         this.personRepository = personRepository;
@@ -41,6 +44,7 @@ public class MembershipService {
         this.awardRepository = awardRepository;
         this.officerRepository = officerRepository;
         this.notesRepository = notesRepository;
+        this.boardPositionsRepository = boardPositionsRepository;
     }
 
     public MembershipListDTO getMembership(int msId) {
@@ -58,4 +62,7 @@ public class MembershipService {
         return membership;
     }
 
+    public List<BoardPositionDTO> getBoardPositions() {
+        return boardPositionsRepository.getPositions();
+    }
 }

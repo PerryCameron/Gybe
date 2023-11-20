@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.AuthDTO;
+import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.dto.SqlAuthDTO;
 import com.ecsail.Gybe.service.EmailService;
@@ -98,7 +99,9 @@ public class AuthController {
 	public String getMembership(Model model,
 								@RequestParam() Integer msid) {
 		MembershipListDTO membershipListDTO = membershipService.getMembership(msid);
+		List<BoardPositionDTO> boardPositionDTOS = membershipService.getBoardPositions();
 		model.addAttribute("membership", membershipListDTO);
+		model.addAttribute("boardPositions", boardPositionDTOS);
 		return "membership";
 	}
 

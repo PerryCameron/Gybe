@@ -4,14 +4,14 @@ public class EmailDTO {
 
 	private Integer emailId;
 	private Integer pId;
-	private Boolean primary_use;
+	private Boolean primaryUse;
 	private String email;
 	private Boolean emailListed;
 
-	public EmailDTO(Integer emailId, Integer pId, Boolean primary_use, String email, Boolean emailListed) {
+	public EmailDTO(Integer emailId, Integer pId, Boolean primaryUse, String email, Boolean emailListed) {
 		this.emailId = emailId;
 		this.pId = pId;
-		this.primary_use = primary_use;
+		this.primaryUse = primaryUse;
 		this.email = email;
 		this.emailListed = emailListed;
 	}
@@ -35,12 +35,12 @@ public class EmailDTO {
 		this.pId = pId;
 	}
 
-	public Boolean getPrimary_use() {
-		return primary_use;
+	public Boolean getPrimaryUse() {
+		return primaryUse;
 	}
 
-	public void setPrimary_use(Boolean primary_use) {
-		this.primary_use = primary_use;
+	public void setPrimaryUse(Boolean primaryUse) {
+		this.primaryUse = primaryUse;
 	}
 
 	public String getEmail() {
@@ -64,7 +64,7 @@ public class EmailDTO {
 		return "EmailDTO{" +
 				"email_id=" + emailId +
 				", p_id=" + pId +
-				", primary_use=" + primary_use +
+				", primary_use=" + primaryUse +
 				", email='" + email + '\'' +
 				", email_listed=" + emailListed +
 				'}';
