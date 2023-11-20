@@ -2,37 +2,37 @@ package com.ecsail.Gybe.dto;
 
 public class EmailDTO {
 
-	private Integer email_id;
-	private Integer p_id;
+	private Integer emailId;
+	private Integer pId;
 	private Boolean primary_use;
 	private String email;
-	private Boolean email_listed;
+	private Boolean emailListed;
 
-	public EmailDTO(Integer email_id, Integer p_id, Boolean primary_use, String email, Boolean email_listed) {
-		this.email_id = email_id;
-		this.p_id = p_id;
+	public EmailDTO(Integer emailId, Integer pId, Boolean primary_use, String email, Boolean emailListed) {
+		this.emailId = emailId;
+		this.pId = pId;
 		this.primary_use = primary_use;
 		this.email = email;
-		this.email_listed = email_listed;
+		this.emailListed = emailListed;
 	}
 
 	public EmailDTO() {
 	}
 
-	public Integer getEmail_id() {
-		return email_id;
+	public Integer getEmailId() {
+		return emailId;
 	}
 
-	public void setEmail_id(Integer email_id) {
-		this.email_id = email_id;
+	public void setEmailId(Integer emailId) {
+		this.emailId = emailId;
 	}
 
-	public Integer getP_id() {
-		return p_id;
+	public Integer getpId() {
+		return pId;
 	}
 
-	public void setP_id(Integer p_id) {
-		this.p_id = p_id;
+	public void setpId(Integer pId) {
+		this.pId = pId;
 	}
 
 	public Boolean getPrimary_use() {
@@ -51,22 +51,22 @@ public class EmailDTO {
 		this.email = email;
 	}
 
-	public Boolean getEmail_listed() {
-		return email_listed;
+	public Boolean getEmailListed() {
+		return emailListed;
 	}
 
-	public void setEmail_listed(Boolean email_listed) {
-		this.email_listed = email_listed;
+	public void setEmailListed(Boolean emailListed) {
+		this.emailListed = emailListed;
 	}
 
 	@Override
 	public String toString() {
 		return "EmailDTO{" +
-				"email_id=" + email_id +
-				", p_id=" + p_id +
+				"email_id=" + emailId +
+				", p_id=" + pId +
 				", primary_use=" + primary_use +
 				", email='" + email + '\'' +
-				", email_listed=" + email_listed +
+				", email_listed=" + emailListed +
 				'}';
 	}
 }

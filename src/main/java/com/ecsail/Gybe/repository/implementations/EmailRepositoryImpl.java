@@ -66,13 +66,13 @@ public class EmailRepositoryImpl implements EmailRepository {
                 "VALUES (:pId, :isPrimaryUse, :email, :isListed)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
-        emailDTO.setEmail_id(keyHolder.getKey().intValue());
+        emailDTO.setEmailId(keyHolder.getKey().intValue());
         return affectedRows;
     }
 
     @Override
     public int delete(EmailDTO emailDTO) {
         String deleteSql = "DELETE FROM email WHERE EMAIL_ID = ?";
-        return template.update(deleteSql, emailDTO.getEmail_id());
+        return template.update(deleteSql, emailDTO.getEmailId());
     }
 }
