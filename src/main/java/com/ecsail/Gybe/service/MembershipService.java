@@ -47,9 +47,9 @@ public class MembershipService {
         this.boardPositionsRepository = boardPositionsRepository;
     }
 
-    public MembershipListDTO getMembership(int msId) {
+    public MembershipListDTO getMembership(int msId, int selectedYear) {
         System.out.println("Getting info for msId " + msId);
-        MembershipListDTO membership = membershipRepository.getMembershipByMsId(msId);
+        MembershipListDTO membership = membershipRepository.getMembershipByMsId(msId, selectedYear);
         membership.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(msId));
         membership.getPersonDTOS().forEach(personDTO -> {
             personDTO.setPhones((ArrayList<PhoneDTO>) phoneRepository.getPhoneByPid(personDTO.getpId()));

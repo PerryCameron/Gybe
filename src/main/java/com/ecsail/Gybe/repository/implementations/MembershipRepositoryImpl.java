@@ -182,18 +182,44 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 """;
         return template.queryForObject(query, new MembershipListRowMapper1(), membershipId);
     }
-
+// Below no longer used
     @Override
-    public MembershipListDTO getMembershipByMsId(int msId) {
+    public MembershipListDTO getMembershipByMsId(int msId) {  // will get by newest year available
         String query = """
-                Select m.MS_ID,m.P_ID,id.MEMBERSHIP_ID,id.FISCAL_YEAR,id.FISCAL_YEAR,m.JOIN_DATE, 
-                id.MEM_TYPE,s.SLIP_NUM,p.L_NAME,p.F_NAME,s.SUBLEASED_TO,m.address,m.city,m.state,m.zip 
-                from slip s right join membership m on m.MS_ID=s.MS_ID left join membership_id id on 
-                m.MS_ID=id.MS_ID left join person p on p.MS_ID=m.MS_ID where p.MEMBER_TYPE=1 
-                AND id.fiscal_year=YEAR(NOW()) AND m.MS_ID=?
+                Select m.MS_ID,m.P_ID,id.MEMBERSHIP_ID,id.FISCAL_YEAR,id.FISCAL_YEAR,m.JOIN_DATE,
+                id.MEM_TYPE,s.SLIP_NUM,p.L_NAME,p.F_NAME,s.SUBLEASED_TO,m.address,m.city,m.state,m.zip
+                from slip s right join membership m on m.MS_ID=s.MS_ID left join membership_id id on
+                m.MS_ID=id.MS_ID left join person p on p.MS_ID=m.MS_ID where p.MEMBER_TYPE=1
+                AND id.fiscal_year=(SELECT MAX(FISCAL_YEAR) FROM membership_id where MS_ID=76) AND m.MS_ID=?
                                 """;
         return template.queryForObject(query, new MembershipListRowMapper(), msId);
     }
+@Override
+public MembershipListDTO getMembershipByMsId(int msId, int specifiedYear) {
+    String query = """
+            SELECT m.MS_ID, m.P_ID, id.MEMBERSHIP_ID, id.FISCAL_YEAR, m.JOIN_DATE, 
+                   id.MEM_TYPE, s.SLIP_NUM, p.L_NAME, p.F_NAME, s.SUBLEASED_TO, 
+                   m.address, m.city, m.state, m.zip 
+            FROM slip s 
+            RIGHT JOIN membership m ON m.MS_ID = s.MS_ID 
+            LEFT JOIN membership_id id ON m.MS_ID = id.MS_ID 
+            LEFT JOIN person p ON p.MS_ID = m.MS_ID 
+            WHERE p.MEMBER_TYPE = 1 
+            AND id.fiscal_year = (
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM membership_id 
+                        WHERE FISCAL_YEAR = ? AND MS_ID = ?
+                    )
+                    THEN ?
+                    ELSE (SELECT MAX(FISCAL_YEAR) FROM membership_id WHERE MS_ID = ?)
+                END
+            )
+            AND m.MS_ID = ?
+            """;
+    return template.queryForObject(query, new MembershipListRowMapper(), specifiedYear, msId, specifiedYear, msId, msId);
+}
+
 
     @Override
     public List<MembershipListDTO> getRoster(int year, boolean isActive) {

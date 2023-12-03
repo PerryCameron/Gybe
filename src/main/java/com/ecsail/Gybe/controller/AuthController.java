@@ -97,8 +97,9 @@ public class AuthController {
 
 	@GetMapping("/membership")
 	public String getMembership(Model model,
-								@RequestParam() Integer msid) {
-		MembershipListDTO membershipListDTO = membershipService.getMembership(msid);
+								@RequestParam() Integer msId,
+								@RequestParam() Integer selectedYear) {
+		MembershipListDTO membershipListDTO = membershipService.getMembership(msId, selectedYear);
 		List<BoardPositionDTO> boardPositionDTOS = membershipService.getBoardPositions();
 		model.addAttribute("membership", membershipListDTO);
 		model.addAttribute("boardPositions", boardPositionDTOS);

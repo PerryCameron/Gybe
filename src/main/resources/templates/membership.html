@@ -3,12 +3,137 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ECSC Membership View</title>
     <script th:inline="javascript">
       let membershipData = /*[[${membership}]]*/ {};
       let boardPositions = /*[[${boardPositions}]]*/ {};
     </script>
+    <link rel="stylesheet" th:href="@{/css/frame.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/membership.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/tab.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/form.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/people.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/dropdown.css}" type="text/css" />
+    <script th:src="@{/js/membership.js}" defer></script>
+    <script th:src="@{/js/people.js}" defer></script>
+    <script th:src="@{/js/dropdown.js}"></script>
+    <script th:src="@{/js/components.js}"></script>
     <script th:src="@{/js/membership.old.js}" defer></script>
   </head>
-  <body></body>
+  <body>
+    <!-- Side Navigation bar -->
+    <div class="sidenav">
+      <div class="logo">
+        <img src="images/ecsc_logo_small.png" alt="logo" />
+      </div>
+      <div class="sidebar-container">
+        <p class="sidebar-info">Membership ID:</p>
+        <p class="sidebar-info block-info" id="membership-id">0</p>
+      </div>
+      <div class="sidebar-container">
+        <p class="sidebar-info">Record Year:</p>
+        <p class="sidebar-info block-info" id="year">2023</p>
+      </div>
+      <div class="sidebar-container">
+        <p class="sidebar-info">Type:</p>
+        <p class="sidebar-info block-info" id="type">Regular</p>
+      </div>
+      <div class="sidebar-container">
+        <p class="sidebar-info">Join Date:</p>
+        <p class="sidebar-info block-info" id="join-date">1971-04-10</p>
+      </div>
+    </div>
+    <!-- Top navigation bar -->
+    <div class="topnav">
+      <!-- Insert Top nav stuff here currently empty  -->
+    </div>
+
+    <div class="main-content">
+      <!-- Tab links -->
+      <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'People')" id="defaultOpen">People</button>
+        <button class="tablinks" onclick="openCity(event, 'Address')">Address</button>
+        <button class="tablinks" onclick="openCity(event, 'Boats')">Boats</button>
+        <button class="tablinks" onclick="openCity(event, 'Notes')">Notes</button>
+        <button class="tablinks" onclick="openCity(event, 'Properties')">Properties</button>
+        <button class="tablinks" onclick="openCity(event, 'Attachments')">Attachments</button>
+        <button class="tablinks" onclick="openCity(event, 'History')">History</button>
+      </div>
+
+      <!-- People stuff is to go here -->
+      <div id="People" class="tab-container tabcontent">
+        <div class="tabs-container">
+          <div class="tabs" id="vertical-tab-pane">
+            <!-- vertical tabs go here -->
+          </div>
+          <div class="content-container" id="tab-content">
+            <div id="top-spacer"></div>
+            <!-- vertical tab content goes here -->
+            <div id="person-info" class="person-info"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address stuff is to go here -->
+      <div id="Address" class="tabcontent">
+        <h3>Address</h3>
+        <div class="address-div">
+          <input id="address-line1" type="text" placeholder="Street Address" class="long-input" autocomplete="off" />
+        </div>
+        <div class="address-div">
+          <input
+            id="address-line2"
+            type="text"
+            placeholder="Street Address Line 2"
+            class="long-input"
+            autocomplete="off"
+          />
+        </div>
+        <div class="address-div">
+          <input
+            id="address-city"
+            type="text"
+            placeholder="City"
+            class="short-input"
+            autocomplete="off"
+          />
+          <input id="address-state" type="text" placeholder="State / Province" class="short-input" autocomplete="off" />
+        </div>
+        <div class="address-div">
+          <input id="address-zip" type="text" placeholder="Postal / Zip Code" class="long-input" autocomplete="off" />
+        </div>
+        <div class="address-div">
+          <button class="button-43" role="button">Update</button>
+        </div>
+      </div>
+
+      <!-- This is where Boat stuff goes -->
+
+      <div id="Boats" class="tabcontent">
+        <h3>Boats</h3>
+        <p>Boat stuff will go here</p>
+      </div>
+
+      <div id="Notes" class="tabcontent">
+        <h3>Notes</h3>
+        <p>Notes stuff will go here</p>
+      </div>
+
+      <div id="Properties" class="tabcontent">
+        <h3>Properties</h3>
+        <p>Properties stuff will go here.</p>
+      </div>
+
+      <div id="Attachments" class="tabcontent">
+        <h3>Attachments</h3>
+        <p>Attachments stuff will go here</p>
+      </div>
+
+      <div id="History" class="tabcontent">
+        <h3>History</h3>
+        <p>History stuff will go here</p>
+      </div>
+    </div>
+  </body>
 </html>

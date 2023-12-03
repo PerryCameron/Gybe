@@ -89,7 +89,9 @@
 		</tr>
 		</thead>
 		<tbody>
-		<tr th:each="list : ${list}" th:data-url="@{/membership?msid={msId}(msId=${list.msId})}" onclick="redirectToUrl(this)">
+		<tr th:each="list : ${list}"
+			th:data-url="@{/membership(msId=${list.msId}, selectedYear=${list.selectedYear})}"
+			onclick="redirectToUrl(this)">
 			<td th:text="${list.membershipId}"></td>
 			<td th:text="${list.joinDate}"></td>
 			<td th:text="${list.selectedYear}"></td>
