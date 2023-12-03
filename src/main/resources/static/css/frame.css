@@ -1,0 +1,156 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  display: flex;
+}
+
+.left-menubox {
+  width: 25rem;
+  height: 60rem;
+  background: #00b28f;
+  border-right: 2px solid gray;
+}
+
+.sidenav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px; /* width of the sidebar */
+  background-color: #333;
+  overflow-x: hidden;
+  padding-top: 20px;
+  z-index: 2;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 25px;
+  text-decoration: none;
+  font-size: 25px;
+  width: 250px;
+  display: flex;
+  text-decoration: none;
+  color: #cacaca;
+}
+
+.sidenav a.active {
+  color: #f1f1f1;
+}
+
+.sidenav a:hover {
+  background-image: linear-gradient(
+    to right,
+    #2a88e6 7px,
+    rgba(255, 255, 255, 0.1) 7px
+  );
+  color: #ffffff;
+}
+
+.main-content {
+  margin-left: 250px; /* should be the same as the width of the sidebar */
+  margin-top: 60px; /* should be the same as the height of the topnav */
+  padding: 0px;
+  overflow: auto; /* Added overflow auto to enable scrolling on the main content */
+}
+
+.topnav-child-div {
+  display: none; /* Or adjust for a small icon menu */
+}
+
+@media screen and (max-width: 768px) {
+  .topnav-child-div {
+    display: inline;
+  }
+  /* Adjust this value as needed */
+  .sidenav {
+    width: 0;
+    display: none; /* Or adjust for a small icon menu */
+  }
+  .main-content {
+    margin-left: 0;
+  }
+
+  .topnav {
+    left: 0px; /* should be the same as the width of the sidebar */
+  }
+}
+
+.logo {
+  margin-left: 50px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+label {
+  display: block;
+  color: #f2f2f2;
+  margin-bottom: 5px;
+}
+
+/* CSS for the collapsed state */
+.navbar.collapsed {
+  width: 0; /* Or you could set it to a smaller width if you want to show icons */
+  /* Hide content inside the sidebar when it is collapsed */
+  display: none;
+}
+
+/* Adjust main-content margin when sidebar is collapsed */
+.collapsed + .main-content {
+  margin-left: 0; /* Adjust this value as needed */
+}
+
+/* For all controls on sidenav */
+.sidenav-control {
+  line-height: 1.5;
+  width: 195px;
+  height: 50px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0.5rem 0.7rem;
+}
+
+.topnav {
+  display: flex; /* Use flexbox layout */
+  flex-direction: row;
+  justify-content: space-between; /* This will space out the child elements evenly */
+  align-items: center; /* This will center the items vertically */
+  margin-right: 20px;
+}
+
+.topnav-control {
+  padding: 0.5rem 0.7rem; /* or any other padding you prefer */
+  height: 40px; /* or any other height you prefer */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Style the topnav */
+.topnav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  background-color: #333;
+  height: 60px;
+}
+
+/* Style the links inside the navigation bar */
+/* .topnav a {
+  float: left;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+} */

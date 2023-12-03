@@ -1,0 +1,144 @@
+:root {
+  --main-color: #00b28f; /* Define a color variable */
+  --main-color2: #007f6b;
+  --component-width: 50%; /* Define a padding size variable */
+}
+
+.sidebar-info {
+  display: inline-block; /* or 'inline' depending on your layout needs */
+  margin-right: 10px; /* optional, for some space between the elements */
+  color: white;
+}
+
+/* This is to change the color of text answers for side panel */
+.block-info {
+  /* color: #00b28f; */
+  color: var(--main-color);
+}
+
+.sidebar-container {
+  padding-left: 40px;
+  display: flex;
+  justify-content: space-between;
+  width: 70%; /* Ensure the div takes up the full width */
+}
+
+#Address {
+  padding: 30px;
+}
+
+/* #People {
+  padding: 20px;
+} */
+
+.address-div {
+  display: flex; /* Enable Flexbox */
+  justify-content: space-between; /* Place items on opposite ends */
+  margin-bottom: 30px;
+  width: 90%;
+}
+
+.button-div {
+  display: flex; /* Enable Flexbox */
+  justify-content: space-between; /* Place items on opposite ends */
+  margin-bottom: 30px;
+  margin-top: 30px;
+  width: 44.5%;
+}
+
+/* .people-div {
+  width: 50%;
+  margin-bottom: 10px;
+} */
+
+.short-input {
+  width: 42%;
+}
+
+.long-input {
+  width: 100%;
+}
+
+.quarter-input {
+  width: 25%;
+}
+
+/* CSS */
+.button-submit {
+  background-image: linear-gradient(-180deg, var(--main-color2) 0%, var(--main-color) 100%);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  color: #ffffff;
+  display: flex;
+  font-size: 16px;
+  justify-content: center;
+  padding: 1rem 1.75rem;
+  text-decoration: none;
+  width: 30%;
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-submit:disabled {
+  background-image: linear-gradient(180deg, #dddddd 0%, #dddddd 100%);
+  background-color: grey;
+  color: #ccc;
+  pointer-events: none;
+  /* Other styling for disabled button */
+}
+
+.button-submit:hover {
+  background-image: linear-gradient(180deg, #dddddd 0%, #dddddd 100%);
+  color: black;
+}
+
+.button-cancel {
+  background-image: linear-gradient(-180deg, #ddd 0%, #908e8e 100%);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  color: #ffffff;
+  display: flex;
+  font-size: 16px;
+  justify-content: center;
+  padding: 1rem 1.75rem;
+  text-decoration: none;
+  width: 30%;
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-cancel:hover {
+  background-image: linear-gradient(180deg, #dddddd 0%, #dddddd 100%);
+  color: black;
+}
+
+@media (min-width: 768px) {
+  .button-submit {
+    padding: 1rem 2rem;
+  }
+
+  .button-cancel {
+    padding: 1rem 2rem;
+  }
+
+  .address-div {
+    width: 50%;
+  }
+}
+
+.edit-header {
+  display: flex; /* Enable Flexbox */
+  justify-content: space-between; /* Place items on opposite ends */
+  /* margin-bottom: 30px; */
+  width: 44.5%;
+}
+
+.spaced-line {
+  margin-bottom: 20px;
+}
