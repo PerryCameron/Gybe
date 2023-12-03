@@ -48,6 +48,7 @@ public class MembershipService {
     }
 
     public MembershipListDTO getMembership(int msId) {
+        System.out.println("Getting info for msId " + msId);
         MembershipListDTO membership = membershipRepository.getMembershipByMsId(msId);
         membership.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(msId));
         membership.getPersonDTOS().forEach(personDTO -> {
