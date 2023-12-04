@@ -3,7 +3,6 @@ package com.ecsail.Gybe.controller;
 import com.ecsail.Gybe.dto.AuthDTO;
 import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
-import com.ecsail.Gybe.dto.SqlAuthDTO;
 import com.ecsail.Gybe.service.EmailService;
 import com.ecsail.Gybe.service.MembershipService;
 import com.ecsail.Gybe.service.RosterService;
@@ -12,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +50,7 @@ public class AuthController {
 	}
 
 
-	@GetMapping("/")
+	@GetMapping("/renew")
 	public String greetingForm(Model model) {
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //		logger.info("Current authentication: {}", authentication);
@@ -72,12 +69,12 @@ public class AuthController {
 //		return emailService.returnCorrectPage(authDTO);
 //	}
 
-	@GetMapping("/admin")
-	public String initForm(Model model) {
-		SqlAuthDTO sqlAuthDTO = new SqlAuthDTO();
-		model.addAttribute("sqlAuthDTO", sqlAuthDTO);
-		return "admin";
-	}
+//	@GetMapping("/admin")
+//	public String initForm(Model model) {
+//		SqlAuthDTO sqlAuthDTO = new SqlAuthDTO();
+//		model.addAttribute("sqlAuthDTO", sqlAuthDTO);
+//		return "admin";
+//	}
 
 	@GetMapping("/notfound")
 	public String showNotFound(@ModelAttribute AuthDTO authDTO, Model model) {
