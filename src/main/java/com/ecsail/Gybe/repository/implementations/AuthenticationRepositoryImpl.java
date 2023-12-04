@@ -1,16 +1,24 @@
 package com.ecsail.Gybe.repository.implementations;
 
+import com.ecsail.Gybe.dto.RoleDTO;
 import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
+import com.ecsail.Gybe.repository.rowmappers.RoleRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -34,42 +42,86 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
         }
     }
 
-//    @Override
-//    public List<AwardDTO> getAwards(PersonDTO p) {
-//        String query = "SELECT * FROM awards WHERE p_id=" + p.getpId();
-//        return template.query(query, new AwardsRowMapper());
-//    }
-//
-//    @Override
-//    public List<AwardDTO> getAwards() {
-//        String query = "SELECT * FROM awards";
-//        return template.query(query, new AwardsRowMapper());
-//    }
-//
-//    @Override
-//    public int update(AwardDTO awardDTO) {
-//        String query = "UPDATE awards SET " +
-//                "P_ID = :pId, " +
-//                "AWARD_YEAR = :awardYear, " +
-//                "AWARD_TYPE = :awardType " +
-//                "WHERE AWARD_ID = :awardId ";
-//        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(awardDTO);
-//        return namedParameterJdbcTemplate.update(query, namedParameters);
-//    }
-//
-//    @Override
-//    public int insert(AwardDTO awardDTO) {
-//        KeyHolder keyHolder = new GeneratedKeyHolder();
-//        String query = "INSERT INTO awards (P_ID, AWARD_YEAR, AWARD_TYPE) VALUES (:pId, :awardYear, :awardType)";
-//        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(awardDTO);
-//        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
-//        awardDTO.setAwardId(keyHolder.getKey().intValue());
-//        return affectedRows;
-//    }
-//
-//    @Override
-//    public int delete(AwardDTO awardDTO) {
-//        String deleteSql = "DELETE FROM awards WHERE Award_ID = ?";
-//        return template.update(deleteSql, awardDTO.getAwardId());
-//    }
+    @Override
+    public Set<RoleDTO> getAuthoritiesById(Integer userId) {
+        String query = "SELECT r.role_id, r.role_name FROM roles r " +
+                "INNER JOIN user_roles ur ON r.role_id = ur.role_id " +
+                "WHERE ur.user_id = ?";
+        return new HashSet<>(template.query(query, new RoleRowMapper(), userId));
+    }
+
+    // UserDTO has the field "private Set<RoleDTO> authorities", I would like to combine the above two methods
+    //    so that I end up with a fully populated UserDTO, only provide the method
+
+    @Override
+    public Optional<RoleDTO> findByAuthority(String authority) {
+        String query = "SELECT * FROM roles WHERE role_name=?";
+        JdbcTemplate jdbcTemplate; // Assume this is autowired or passed through constructor
+        try {
+            RoleDTO role = template.queryForObject(query, new RoleRowMapper(), authority);
+            return Optional.ofNullable(role);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public RoleDTO saveAuthority(String authority) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String insertQuery = "INSERT INTO roles (role_name) VALUES (?)";
+        template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insertQuery, new String[]{"role_id"});
+            ps.setString(1, authority);
+            return ps;
+        }, keyHolder);
+        return new RoleDTO(keyHolder.getKey().intValue(), authority);
+    }
+
+    @Override
+    public UserDTO saveUser(UserDTO user) {
+        String insertQuery = "INSERT INTO users (username, password, p_id) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insertQuery, new String[] {"user_id"});
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setInt(3, user.getpId());
+            return ps;
+        }, keyHolder);
+        user.setUserId(keyHolder.getKey().intValue());
+        return user;
+    }
+
+    @Override
+    public Void saveUserRole(UserDTO user, RoleDTO role) {
+        String insertQuery = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
+        try {
+            template.update(insertQuery, user.getUserId(), role.getRoleId());
+        } catch (DataAccessException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    @Override
+    public Optional<UserDTO> findUserWithAuthoritiesByUsername(String username) {
+        String userQuery = "SELECT * FROM users WHERE username=?";
+        String rolesQuery = "SELECT r.role_id, r.role_name FROM roles r " +
+                "INNER JOIN user_roles ur ON r.role_id = ur.role_id " +
+                "WHERE ur.user_id = ?";
+        try {
+            UserDTO user = template.queryForObject(userQuery, new UserRowMapper(), username);
+            if (user != null) {
+                Set<RoleDTO> authorities = new HashSet<>(template.query(rolesQuery, new RoleRowMapper(), user.getUserId()));
+                user.setAuthorities(authorities);
+            }
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+
+
+
 }
