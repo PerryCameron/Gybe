@@ -22,18 +22,15 @@ public class AuthenticationService {
     private AuthenticationRepository authenticationRepository;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
-    private TokenService tokenService;
 
 //    @Autowired
     public AuthenticationService(AuthenticationRepository authenticationRepository,
                                  PasswordEncoder passwordEncoder,
-                                 AuthenticationManager authenticationManager,
-                                 TokenService tokenService
+                                 AuthenticationManager authenticationManager
                                  ) {
         this.authenticationRepository = authenticationRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.tokenService = tokenService;
     }
 
     public UserDTO registerUser(String username, String password) {

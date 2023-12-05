@@ -16,6 +16,8 @@
         <div class="form-group">
           <input type="password" id="password" name="password" placeholder="Password" />
         </div>
+        <!-- CSRF Token Field -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div class="form-group">
           <button type="submit">Login</button>
         </div>

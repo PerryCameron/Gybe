@@ -19,9 +19,14 @@ public class FormHashRequestDTO {
         this.mailed_to = mailed_to;
     }
 
-//    public FormHashRequestDTO() {
-//        generateKey();
-//    }
+    public FormHashRequestDTO(int form_hash_id, String req_date, String pri_mem, String link, int msid, String mailed_to) {
+        this.form_hash_id = form_hash_id;
+        this.req_date = req_date;
+        this.pri_mem = pri_mem;
+        this.link = link;
+        this.msid = msid;
+        this.mailed_to = mailed_to;
+    }
 
     public int getForm_hash_id() {
         return form_hash_id;
@@ -71,7 +76,4 @@ public class FormHashRequestDTO {
         this.mailed_to = mailed_to;
     }
 
-//    public void generateKey() {
-//        this.form_hash_id = SqlKey.getNextPrimaryKey("form_hash_request","FORM_HASH_ID");
-//    }
 }
