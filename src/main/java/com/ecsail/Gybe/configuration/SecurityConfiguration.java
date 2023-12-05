@@ -25,10 +25,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 @Configuration
 public class SecurityConfiguration {
     private final RSAKeyProperties keys;
+
     @Autowired
     public SecurityConfiguration(RSAKeyProperties keys) {
         this.keys = keys;
@@ -45,6 +48,7 @@ public class SecurityConfiguration {
         daoProvider.setUserDetailsService(detailsService);
         return new ProviderManager(daoProvider);
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -58,7 +62,15 @@ public class SecurityConfiguration {
                 .formLogin(form -> form
                         .loginPage("/login") // Specify your custom login page URL
                         .permitAll() // Allow all users to access the login page
-                        .defaultSuccessUrl("/", true) // Redirect to the original page after successful login
+                        .successHandler((request, response, authentication) -> {
+                            SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
+                            if (savedRequest == null) {
+                                response.sendRedirect(request.getContextPath() + "/");
+                            } else {
+                                String targetUrl = savedRequest.getRedirectUrl();
+                                response.sendRedirect(targetUrl);
+                            }
+                        })
                         .failureUrl("/login?error=true")) // Redirect to log
                 .logout(logout -> logout
                         .logoutUrl("/logout") // Specify the logout URL
