@@ -94,4 +94,12 @@ public class UserDTO implements UserDetails {
     public void setpId(Integer pId) {
         this.pId = pId;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

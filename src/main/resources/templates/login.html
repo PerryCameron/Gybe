@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}" type="text/css" />
+  </head>
+  <body>
+    <div class="container">
+      <img src="images/ecsc_logo_small.png" alt="logo" />
+      <form action="/login" method="post">
+        <div class="form-group">
+          <input type="text" id="username" name="username" placeholder="Username" />
+        </div>
+        <div class="form-group">
+          <input type="password" id="password" name="password" placeholder="Password" />
+        </div>
+        <div class="form-group">
+          <button type="submit">Login</button>
+        </div>
+        <!-- Optional: Display error message -->
+        <div class="error" th:if="${param.error}">Invalid username or password.</div>
+      </form>
+    </div>
+  </body>
+</html>
