@@ -27,7 +27,7 @@ public class HashRepositoryImpl implements HashRepository {
 
     @Override
     public List<FormHashRequestDTO> getFormHashRequests() {
-        String sql = "SELECT FORM_HASH_ID, REQ_DATE, PRI_MEM, LINK, MSID, MAILED_TO FROM YourTableName";
+        String sql = "SELECT FORM_HASH_ID, REQ_DATE, PRI_MEM, LINK, MSID, MAILED_TO FROM form_hash_request";
         return template.query(sql, new FormHashRequestRowMapper());
     }
     @Override

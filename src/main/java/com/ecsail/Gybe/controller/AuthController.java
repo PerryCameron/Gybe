@@ -2,11 +2,9 @@ package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.AuthDTO;
 import com.ecsail.Gybe.dto.BoardPositionDTO;
+import com.ecsail.Gybe.dto.FormHashRequestDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
-import com.ecsail.Gybe.service.EmailService;
-import com.ecsail.Gybe.service.MembershipService;
-import com.ecsail.Gybe.service.RosterService;
-import com.ecsail.Gybe.service.SendMailService;
+import com.ecsail.Gybe.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +29,7 @@ public class AuthController {
 	SendMailService service;
 	RosterService rosterService;
 	MembershipService membershipService;
+	AdminService adminService;
 
 
 	@Value("${spring.mail.username}")
@@ -42,18 +41,18 @@ public class AuthController {
 			SendMailService service,
 			EmailService emailService,
 			RosterService rosterService,
+			AdminService adminService,
 			MembershipService membershipService) {
 		this.service = service;
 		this.emailService = emailService;
 		this.rosterService = rosterService;
+		this.adminService = adminService;
 		this.membershipService = membershipService;
 	}
 
 
 	@GetMapping("/renew")
 	public String greetingForm(Model model) {
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//		logger.info("Current authentication: {}", authentication);
 		AuthDTO authDTO = new AuthDTO();
 		model.addAttribute("authDTO", authDTO);
 		return "auth";
@@ -101,6 +100,12 @@ public class AuthController {
 		model.addAttribute("membership", membershipListDTO);
 		model.addAttribute("boardPositions", boardPositionDTOS);
 		return "membership";
+	}
+	@GetMapping("/form-request")
+	public String getFormRequests(Model model) {
+		List<FormHashRequestDTO> formHashRequestDTOS = adminService.getFormRequests();
+		model.addAttribute("formRequests", formHashRequestDTOS);
+		return "form-request";
 	}
 
 	@GetMapping("/lists")
