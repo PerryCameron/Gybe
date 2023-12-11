@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.dto;
 
 
+import java.util.ArrayList;
 
 public class InvoiceDTO {
     private Integer id;
@@ -15,6 +16,7 @@ public class InvoiceDTO {
     private Boolean closed;
     private Boolean supplemental;
     private String maxCredit;
+    private ArrayList<InvoiceItemDTO> invoiceItems;
 
 
     public InvoiceDTO(Integer id, Integer msId, Integer year, String paid, String total, String credit, String balance, Integer batch, Boolean committed, Boolean closed, Boolean supplemental, String maxCredit) {
@@ -30,6 +32,14 @@ public class InvoiceDTO {
         this.closed = closed;
         this.supplemental = supplemental;
         this.maxCredit = maxCredit;
+    }
+
+    public ArrayList<InvoiceItemDTO> getInvoiceItems() {
+        return invoiceItems;
+    }
+
+    public void setInvoiceItems(ArrayList<InvoiceItemDTO> invoiceItems) {
+        this.invoiceItems = invoiceItems;
     }
 
     public Integer getId() {

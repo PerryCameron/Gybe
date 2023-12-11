@@ -25,6 +25,17 @@ public class InvoiceItemDTO {
         this.categoryItem = categoryItem;
     }
 
+    public InvoiceItemDTO(int id, int invoiceId, int msId, int year, String fieldName, boolean credit, String value, int qty) {
+        this.id = id;
+        this.invoiceId = invoiceId;
+        this.msId = msId;
+        this.year = year;
+        this.fieldName = fieldName;
+        this.credit = credit;
+        this.value = value;
+        this.qty = qty;
+    }
+
     public int getId() {
         return id;
     }

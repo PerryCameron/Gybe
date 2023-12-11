@@ -8,13 +8,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.*;
-
+@Repository
 public class InvoiceRepositoryImpl implements InvoiceRepository {
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -28,6 +28,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     public List<InvoiceDTO> getInvoicesByMsid(int msId) {
         String query = "SELECT * FROM invoice WHERE ms_id=?";
         return template.query(query, new InvoiceRowMapper(), msId);
+    }
+
+    @Override
+    public List<InvoiceDTO> getInvoicesByMsidAndYear(int msId, int year) {
+        String query = "SELECT * FROM invoice WHERE ms_id=? and FISCAL_YEAR=? limit 1";
+        return template.query(query, new InvoiceRowMapper(), new Object[]{msId, year});
     }
 
     @Override
@@ -108,7 +114,6 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         String query = "SELECT * FROM fee WHERE fee_year=?";
         return template.query(query, new FeeRowMapper(), year);
     }
-
 
     @Override
     public int update(InvoiceDTO invoiceDTO) {

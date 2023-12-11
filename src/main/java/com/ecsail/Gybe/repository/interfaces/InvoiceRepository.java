@@ -7,6 +7,9 @@ import java.util.Set;
 
 public interface InvoiceRepository {
     List<InvoiceDTO> getInvoicesByMsid(int ms_id);
+
+    List<InvoiceDTO> getInvoicesByMsidAndYear(int msId, int year);
+
     List<InvoiceDTO> getAllInvoices();
     List<InvoiceWithMemberInfoDTO> getInvoicesWithMembershipInfoByDeposit(DepositDTO d);
     List<InvoiceWithMemberInfoDTO> getInvoicesWithMembershipInfoByYear(String year);

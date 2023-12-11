@@ -1,124 +1,81 @@
 package com.ecsail.Gybe.service;
 
-import com.ecsail.Gybe.dto.FormSettingsDTO;
-import com.ecsail.Gybe.dto.HashDTO;
-import com.ecsail.Gybe.dto.MembershipListDTO;
+import com.ecsail.Gybe.controller.AuthController;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.implementations.HashRepositoryImpl;
+import com.ecsail.Gybe.repository.implementations.InvoiceRepositoryImpl;
 import com.ecsail.Gybe.repository.implementations.MembershipRepositoryImpl;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
+import com.ecsail.Gybe.repository.interfaces.InvoiceRepository;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.ArrayList;
 
 @Service
 public class EmailService {
     private final HashRepository hashRepository;
     private final MembershipRepository membershipRepository;
+    private final InvoiceRepository invoiceRepository;
     LinkBuilderService linkBuilder;
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
 
     @Autowired
     public EmailService(
             LinkBuilderService linkBuilder,
             HashRepositoryImpl hashRepository,
-            MembershipRepositoryImpl membershipRepository) {
+            MembershipRepositoryImpl membershipRepository,
+            InvoiceRepositoryImpl invoiceRepository) {
         this.linkBuilder = linkBuilder;
         this.hashRepository = hashRepository;
         this.membershipRepository = membershipRepository;
+        this.invoiceRepository = invoiceRepository;
     }
 
-// IMPLEMENT
+    // IMPLEMENT
     public String buildLinkWithParameters(String hash) {
         FormSettingsDTO formSettingsDTO = hashRepository.getFormSettings();
         HashDTO hashDTO = hashRepository.getHashDTOFromHash(Long.valueOf(hash));
-        MembershipListDTO membershipListDTO = membershipRepository.getMembershipListFromMsidAndYear(formSettingsDTO.getSelected_year(), hashDTO.getMsId());
+        MembershipListDTO m = membershipRepository.getMembershipListFromMsidAndYear(formSettingsDTO.getSelected_year(), hashDTO.getMsId());
+        logger.info("Serving form to membership " + m.getMembershipId() + " " + m.getFullName());
+        m.setInvoiceDTOS((ArrayList<InvoiceDTO>) invoiceRepository.getInvoicesByMsidAndYear(m.getMsId(), formSettingsDTO.getSelected_year()));
+        int invoiceId = m.getInvoiceDTOS().get(0).getId();
+        m.getInvoiceDTOS().get(0).setInvoiceItems((ArrayList<InvoiceItemDTO>) invoiceRepository.getInvoiceItemsByInvoiceId(invoiceId));
+        ArrayList<InvoiceItemDTO> items = m.getInvoiceDTOS().get(0).getInvoiceItems();
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(formSettingsDTO.getForm_url())
                 .path(formSettingsDTO.getForm_id())
-                .queryParam("memid", membershipListDTO.getMembershipId())
-                .queryParam("membershipType", membershipListDTO.getMemType());
+                .queryParam("memid", m.getMembershipId())
+                .queryParam("membershipType", m.getMemType())
+                .queryParam("address[addr_line1]", m.getAddress())
+                .queryParam("address[city]", m.getCity())
+                .queryParam("address[state]", m.getState())
+                .queryParam("address[postal]", m.getZip())
+                .queryParam("workCredit", getInvoiceItemValue(items, "Work Credits"))
+                .queryParam("winterStorage", "winterStorage", getInvoiceItemQty(items, "Winter Storage"))
+                .queryParam("additionalCredit", getInvoiceItemValue(items, "Other Credit"))
+                .queryParam("otherFee", getInvoiceItemValue(items, "Other Fee"))
+                .queryParam("initiation", getInvoiceItemValue(items, "Initiation"))
+                .queryParam("positionCredit", getInvoiceItemValue(items, "Position Credit"));
+//                .queryParam("", "");
         String url = builder.toUriString();
-//        MembershipListDTO membershipListDTO = membershipRepository.getMembershipListFromMsidAndYear(new SimpleDateFormat("yyyy").format(new Date()));
-
-//        String parameterLink = linkBuilder.createGetRequestWithParameters(
-//                membershipListDTO, settingRepo.getFormSettings().getSelected_year());
-//        SpinnakerPackagedApplication.logger.info(parameterLink);
-//        // This DTO records a request for a jotform with filled out parameters
-//        int id = genRepo.getNextAvailablePrimaryKey("form_request","form_id");
-//        insertRepo.insertHashHistory(new FormRequestDTO(id,membershipListDTO.getF_name() + " "
-//                + membershipListDTO.getL_name(),membershipListDTO.getMs_id(),true));
-//        return parameterLink;
         return url;
     }
 
-    /** This method is given an email address and uses that to pull up the relevant membership information,
-     * It then takes that information and creates and HTML body for an email with a link to later be used
-     * to open a Jotform. Essentially this is a simple way to validate who people are without making people
-     * create a login.
-     *
-     * @param
-     * @return a mailDTO that contains a nice HTML formatted email body with a link containing a hash which
-     * corresponds to a membership. This hash is used in a link placed within an email to later open a
-     * jotform populated with the data from the membership.
-     */
+    private String getInvoiceItemValue(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
+        InvoiceItemDTO invoiceItemDTO = invoiceItems.stream()
+                .filter(item -> item.getFieldName().equals(fieldName)).findFirst().orElse(null);
+        return  invoiceItemDTO.getValue();
+    }
 
-    // IMPLEMENT
-//    public MailDTO processEmailSubmission(AuthDTO authDTO) {
-//        FormSettingsDTO fs = settingRepo.getFormSettings();
-//        MailDTO mailDTO = null;
-//        if (genRepo.emailFromActiveMembershipExists(authDTO.getEmail(), settingRepo.getFormSettings().getSelected_year())) {
-//            // create a query builder
-//            HttpUrl.Builder queryUrlBuilder = HttpUrl.get("https://"+fs.getLink()+":"+fs.getPort()+"/register").newBuilder();
-//            // this fills the dto with correct values
-//            objRepo.getAuthDTOFromEmail(authDTO);
-//            // creates a new hash or loads an existing hash
-//            HashDTO hashDTO = createHash(authDTO);
-//            // create link
-//            queryUrlBuilder.addQueryParameter("member", String.valueOf(hashDTO.getHash()));
-//            // log it
-//            SpinnakerPackagedApplication.logger.info("link created: " + queryUrlBuilder);
-//            System.out.println(genRepo.getNextAvailablePrimaryKey("form_hash_request","form_hash_id"));
-//            // this DTO will store a record of someone requesting a hash
-//            int id = genRepo.getNextAvailablePrimaryKey("form_hash_request","form_hash_id");
-//            insertRepo.insertHashRequestHistory(new FormHashRequestDTO(id,authDTO.getF_name()
-//                    + " " + authDTO.getL_name(), String.valueOf(queryUrlBuilder),authDTO.getMs_id(),
-//                    authDTO.getEmail()));
-////             This adds the HTML body to the email
-//            mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration",
-//                    RegisterHtml.createEmailWithHtml(authDTO.getF_name(),queryUrlBuilder.toString()));
-//            // log to system
-//            SpinnakerPackagedApplication.logger.info("Created Mail for: " + mailDTO.getRecipient());
-//        } else {
-//            authDTO.setExists(false);
-//        }
-//        return mailDTO;
-//    }
+    private String getInvoiceItemQty(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
+        InvoiceItemDTO invoiceItemDTO = invoiceItems.stream()
+                .filter(item -> item.getFieldName().equals(fieldName)).findFirst().orElse(null);
+        return String.valueOf(invoiceItemDTO.getQty());
+    }
 
-    // IMPLEMENT
-//    private HashDTO createHash(AuthDTO authDTO) {
-//        HashDTO hashDTO;
-//        // see if a hash already exists for this membership
-//        if(genRepo.recordExists("form_msid_hash","MS_ID",authDTO.getMs_id())) {
-//            // if it does exist we won't add another entry
-//            hashDTO = objRepo.getHashDTOFromMsid(authDTO.getMs_id());
-//            SpinnakerPackagedApplication.logger.info("Hash exists, no need to create. hash=" + hashDTO.getHash());
-//        }
-//        // it doesn't exist so we will create one
-//        else {
-//            // creates new hash as object
-//            hashDTO = new HashDTO(genRepo.getNextAvailablePrimaryKey("form_msid_hash", "HASH_ID"), authDTO.getMs_id(), authDTO.getEmail());
-//            // put our hash object into the database
-//            hashRepo.insertHash(hashDTO);
-//            SpinnakerPackagedApplication.logger.info("Created hash=" + hashDTO.getHash() + " for ms_id=" + hashDTO.getMs_id());
-//        }
-//        return hashDTO;
-//    }
-
-    // determines page to direct to and makes hash
-//    public String returnCorrectPage(AuthDTO authDTO) {
-//        if(authDTO.getExists())
-//            authDTO.setHtmlPage("result");
-//        else
-//            authDTO.setHtmlPage("notfound");
-//        return authDTO.getHtmlPage();
-//    }
 }

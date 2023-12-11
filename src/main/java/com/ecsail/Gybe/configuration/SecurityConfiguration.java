@@ -37,7 +37,8 @@ public class SecurityConfiguration {
                             "/images/**",
                             "/js/**",
                             "/renew/**",
-                            "/register/**"
+                            "/register/**",
+                            "/error/**"
                     ).permitAll();
                     auth.anyRequest().authenticated();
                 })
