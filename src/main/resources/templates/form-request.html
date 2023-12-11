@@ -8,8 +8,50 @@
       let formRequestData = /*[[${formRequests}]]*/ {};
     </script>
     <link rel="stylesheet" th:href="@{/css/table.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/roster.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
     <script th:src="@{/js/form-request.js}" defer></script>
     <script th:src="@{/js/components.js}"></script>
   </head>
-  <body><div id="formRequestTable"></div></body>
+  <body>
+  <!-- Side Navigation bar -->
+  <div class="sidenav">
+    <div id="logo">
+      <img src="images/ecsc_logo_small.png" alt="logo" />
+    </div>
+    <div id="record-content-div">
+      <label id="numb-of-records">Records: 201</label>
+    </div>
+
+    <div id="sidenav-year-container">
+      <select id="sidenav-yearselect" class="sidenav-control" name="year"></select>
+    </div>
+  </div>
+  <!-- Top navigation bar -->
+  <div class="topnav">
+    <div class="topnav-child-div" id="topnav-yearselect-div">
+      <select id="topnav-yearselect" class="topnav-control" name="topnavyear"></select>
+    </div>
+
+    <div id="list-select-div">
+      <select id="topnav-select-field" class="topnav-control" name="topnavlists">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="non-renew">Non-Renew</option>
+        <option value="new-members">New Members</option>
+        <option value="return-members">Return Members</option>
+        <option value="slip">Slip Waitlist</option>
+      </select>
+    </div>
+    <div class="topnav-child-div">
+      <form>
+        <input id="topnav-search-field" placeholder="Search" type="text" class="topnav-control" />
+      </form>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div id="formRequestTable"></div>
+  </div>
+  </body>
 </html>
