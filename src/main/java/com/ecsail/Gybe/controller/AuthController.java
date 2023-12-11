@@ -9,12 +9,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Year;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +95,17 @@ public class AuthController {
 //		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 //	}
 
+//	@GetMapping("register")
+//	public void redirectToForm(@RequestParam String member) throws URISyntaxException {
+//		String url = emailService.buildLinkWithParameters(member);
+//		System.out.println(url);
+//
+//		logger.info(url);
+//	}
+//		URI jotform = new URI(url);
+//		HttpHeaders httpHeaders = new HttpHeaders();
+//		httpHeaders.setLocation(jotform);
+//		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 
 	@GetMapping("/membership")
 	public String getMembership(Model model,
@@ -131,24 +147,4 @@ public class AuthController {
 		model.addAttribute("listSize", membershipList.size());
 		return "lists";
 	}
-
-
-
-
-
-//	@GetMapping("/person/{pid}")
-//	@ResponseBody
-//		public PersonDTO getStudent(@PathVariable("pid") Integer pid) {
-//			return PEOPLE.stream().filter(person -> pid.equals(person.getP_id()))
-//					.findFirst()
-//					.orElseThrow(() -> new IllegalStateException("person " + pid + " does not exist"));
-//		}
-//
-//	@GetMapping("/user/{pid}")
-//	@ResponseBody
-//	public PersonDTO getStudent2(@PathVariable("pid") Integer pid) {
-//		return PEOPLE.stream().filter(person -> pid.equals(person.getP_id()))
-//				.findFirst()
-//				.orElseThrow(() -> new IllegalStateException("person " + pid + " does not exist"));
-//	}
 }

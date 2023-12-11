@@ -1,13 +1,13 @@
 package com.ecsail.Gybe.service;
 
 
-import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.dto.HashDTO;
+import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.repository.implementations.HashRepositoryImpl;
 import com.ecsail.Gybe.repository.implementations.MembershipRepositoryImpl;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +34,8 @@ public class EmailService {
 
 
 // IMPLEMENT
-//    public String buildLinkWithParameters(String hash) {
+    public String buildLinkWithParameters(String hash) {
+        System.out.println(hash);
 //        HashDTO hashDTO = hashRepository.getHashDTOFromHash(Long.valueOf(hash));
 //        MembershipListDTO membershipListDTO = membershipRepository.getMembershipListFromMsidAndYear(new SimpleDateFormat("yyyy").format(new Date()));
 //        String parameterLink = linkBuilder.createGetRequestWithParameters(
@@ -45,7 +46,8 @@ public class EmailService {
 //        insertRepo.insertHashHistory(new FormRequestDTO(id,membershipListDTO.getF_name() + " "
 //                + membershipListDTO.getL_name(),membershipListDTO.getMs_id(),true));
 //        return parameterLink;
-//    }
+        return String.valueOf("Testing");
+    }
 
     /** This method is given an email address and uses that to pull up the relevant membership information,
      * It then takes that information and creates and HTML body for an email with a link to later be used
