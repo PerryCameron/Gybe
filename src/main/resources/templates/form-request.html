@@ -7,6 +7,9 @@
     <script th:inline="javascript">
       let formRequestData = /*[[${formRequests}]]*/ {};
     </script>
+    <link rel="stylesheet" th:href="@{/css/table.css}" type="text/css" />
+    <script th:src="@{/js/form-request.js}" defer></script>
+    <script th:src="@{/js/components.js}"></script>
   </head>
-  <body></body>
+  <body><div id="formRequestTable"></div></body>
 </html>
