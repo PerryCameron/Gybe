@@ -3,18 +3,18 @@ package com.ecsail.Gybe.dto;
 public class HashDTO {
     private int hash_id;
     private long hash;
-    private int ms_id;
+    private int msId;
 
-    public HashDTO(int hash_id, int ms_id, String email) {
+    public HashDTO(int hash_id, int msId, String email) {
         this.hash_id = hash_id;
-        this.hash = (email + ms_id).hashCode();
-        this.ms_id = ms_id;
+        this.hash = (email + msId).hashCode();
+        this.msId = msId;
     }
 
-    public HashDTO(int hash_id, long hash, int ms_id) {
+    public HashDTO(int hash_id, long hash, int msId) {
         this.hash_id = hash_id;
         this.hash = hash;
-        this.ms_id = ms_id;
+        this.msId = msId;
     }
 
     public HashDTO() {
@@ -36,12 +36,12 @@ public class HashDTO {
         this.hash = hash;
     }
 
-    public int getMs_id() {
-        return ms_id;
+    public int getMsId() {
+        return msId;
     }
 
-    public void setMs_id(int ms_id) {
-        this.ms_id = ms_id;
+    public void setMsId(int msId) {
+        this.msId = msId;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class HashDTO {
         return "HashDTO{" +
                 "hash_id=" + hash_id +
                 ", hash=" + hash +
-                ", msid=" + ms_id +
+                ", msid=" + msId +
                 '}';
     }
 }

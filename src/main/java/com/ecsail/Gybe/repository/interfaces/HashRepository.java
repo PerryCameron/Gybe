@@ -7,13 +7,8 @@ import com.ecsail.Gybe.dto.HashDTO;
 import java.util.List;
 
 public interface HashRepository {
-
-
     List<FormHashRequestDTO> getFormHashRequests();
-
     HashDTO getHashDTOFromMsid(int msid);
-
     HashDTO getHashDTOFromHash(long hash);
-
-    FormSettingsDTO getFormSettingsByYear(int year);
+    FormSettingsDTO getFormSettings();
 }

@@ -260,14 +260,14 @@ public MembershipListDTO getMembershipByMsId(int msId, int specifiedYear) {
     }
 
     @Override
-    public MembershipListDTO getMembershipListFromMsidAndYear(String year) {
-        String QUERY =
-                "SELECT m.MS_ID,m.P_ID,id.MEMBERSHIP_ID,id.FISCAL_YEAR,m.JOIN_DATE,"
-                        + "id.MEM_TYPE,s.SLIP_NUM,p.L_NAME,p.F_NAME,s.SUBLEASED_TO,m.address,m.city,m.state,"
-                        + "m.zip FROM slip s RIGHT JOIN membership m on m.MS_ID=s.MS_ID LEFT JOIN membership_id "
-                        + "id ON m.MS_ID=id.MS_ID JOIN person p ON "
-                        + "p.MS_ID=m.MS_ID WHERE id.FISCAL_YEAR=? AND m.ms_id=? AND p.MEMBER_TYPE=1";
-        return (MembershipListDTO) template.queryForObject(QUERY, new MembershipListRowMapper(), year);
+    public MembershipListDTO getMembershipListFromMsidAndYear(int year, int msId) {
+        String QUERY = "SELECT m.MS_ID, m.P_ID, id.MEMBERSHIP_ID, id.FISCAL_YEAR, m.JOIN_DATE, "
+                + "id.MEM_TYPE, s.SLIP_NUM, p.L_NAME, p.F_NAME, s.SUBLEASED_TO, m.address, m.city, m.state, "
+                + "m.zip FROM slip s RIGHT JOIN membership m ON m.MS_ID = s.MS_ID "
+                + "LEFT JOIN membership_id id ON m.MS_ID = id.MS_ID "
+                + "JOIN person p ON p.MS_ID = m.MS_ID "
+                + "WHERE id.FISCAL_YEAR = ? AND m.ms_id = ? AND p.MEMBER_TYPE = 1";
+        return template.queryForObject(QUERY, new Object[]{year, msId}, new MembershipListRowMapper());
     }
 
     @Override

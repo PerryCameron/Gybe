@@ -44,8 +44,8 @@ public class HashRepositoryImpl implements HashRepository {
     }
 
     @Override
-    public FormSettingsDTO getFormSettingsByYear(int year) {
-        String QUERY = "select * from form_settings where selected_year=?";
-        return template.queryForObject(QUERY, new FormSettingsRowMapper(), year);
+    public FormSettingsDTO getFormSettings() {
+        String QUERY = "select * from form_settings";
+        return template.queryForObject(QUERY, new FormSettingsRowMapper());
     }
 }

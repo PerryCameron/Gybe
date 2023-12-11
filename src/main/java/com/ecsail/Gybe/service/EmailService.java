@@ -1,6 +1,6 @@
 package com.ecsail.Gybe.service;
 
-
+import com.ecsail.Gybe.dto.FormSettingsDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.repository.implementations.HashRepositoryImpl;
@@ -11,12 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 @Service
 public class EmailService {
-
     private final HashRepository hashRepository;
     private final MembershipRepository membershipRepository;
     LinkBuilderService linkBuilder;
@@ -31,18 +27,15 @@ public class EmailService {
         this.membershipRepository = membershipRepository;
     }
 
-
-
-
 // IMPLEMENT
     public String buildLinkWithParameters(String hash) {
-        System.out.println(hash);
+        FormSettingsDTO formSettingsDTO = hashRepository.getFormSettings();
         HashDTO hashDTO = hashRepository.getHashDTOFromHash(Long.valueOf(hash));
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("http://example.com")
-                .path("/somePath")
-                .queryParam("param1", "value1")
-                .queryParam("param2", "value2");
+        MembershipListDTO membershipListDTO = membershipRepository.getMembershipListFromMsidAndYear(formSettingsDTO.getSelected_year(), hashDTO.getMsId());
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(formSettingsDTO.getForm_url())
+                .path(formSettingsDTO.getForm_id())
+                .queryParam("memid", membershipListDTO.getMembershipId())
+                .queryParam("membershipType", membershipListDTO.getMemType());
         String url = builder.toUriString();
 //        MembershipListDTO membershipListDTO = membershipRepository.getMembershipListFromMsidAndYear(new SimpleDateFormat("yyyy").format(new Date()));
 
