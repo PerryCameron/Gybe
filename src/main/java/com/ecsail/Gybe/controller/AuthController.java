@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-	EmailService emailService;
+
 	SendMailService service;
 	RosterService rosterService;
 	MembershipService membershipService;
@@ -44,12 +44,10 @@ public class AuthController {
 	@Autowired
 	public AuthController(
 			SendMailService service,
-			EmailService emailService,
 			RosterService rosterService,
 			AdminService adminService,
 			MembershipService membershipService) {
 		this.service = service;
-		this.emailService = emailService;
 		this.rosterService = rosterService;
 		this.adminService = adminService;
 		this.membershipService = membershipService;

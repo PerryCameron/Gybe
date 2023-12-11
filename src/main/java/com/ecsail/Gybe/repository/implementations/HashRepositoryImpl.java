@@ -1,9 +1,11 @@
 package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.FormHashRequestDTO;
+import com.ecsail.Gybe.dto.FormSettingsDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.repository.rowmappers.FormHashRequestRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.FormSettingsRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.HashRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -41,4 +43,9 @@ public class HashRepositoryImpl implements HashRepository {
         return (HashDTO) template.queryForObject(QUERY, new HashRowMapper(), hash);
     }
 
+    @Override
+    public FormSettingsDTO getFormSettingsByYear(int year) {
+        String QUERY = "select * from form_settings where selected_year=?";
+        return template.queryForObject(QUERY, new FormSettingsRowMapper(), year);
+    }
 }

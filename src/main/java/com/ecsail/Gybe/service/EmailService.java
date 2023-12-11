@@ -9,6 +9,7 @@ import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,8 +37,15 @@ public class EmailService {
 // IMPLEMENT
     public String buildLinkWithParameters(String hash) {
         System.out.println(hash);
-//        HashDTO hashDTO = hashRepository.getHashDTOFromHash(Long.valueOf(hash));
+        HashDTO hashDTO = hashRepository.getHashDTOFromHash(Long.valueOf(hash));
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("http://example.com")
+                .path("/somePath")
+                .queryParam("param1", "value1")
+                .queryParam("param2", "value2");
+        String url = builder.toUriString();
 //        MembershipListDTO membershipListDTO = membershipRepository.getMembershipListFromMsidAndYear(new SimpleDateFormat("yyyy").format(new Date()));
+
 //        String parameterLink = linkBuilder.createGetRequestWithParameters(
 //                membershipListDTO, settingRepo.getFormSettings().getSelected_year());
 //        SpinnakerPackagedApplication.logger.info(parameterLink);
@@ -46,7 +54,7 @@ public class EmailService {
 //        insertRepo.insertHashHistory(new FormRequestDTO(id,membershipListDTO.getF_name() + " "
 //                + membershipListDTO.getL_name(),membershipListDTO.getMs_id(),true));
 //        return parameterLink;
-        return String.valueOf("Testing");
+        return url;
     }
 
     /** This method is given an email address and uses that to pull up the relevant membership information,

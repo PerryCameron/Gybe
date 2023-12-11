@@ -3,11 +3,8 @@ package com.ecsail.Gybe.dto;
 public class FormSettingsDTO {
     int port;
     String link;
-
     String form_url;
-
     String form_id;
-
     int selected_year;
 
     public FormSettingsDTO(int port, String link, String form_url, String form_id, int selected_year) {
