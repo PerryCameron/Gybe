@@ -6,6 +6,7 @@ import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.rowmappers.EmailRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -43,8 +44,13 @@ public class EmailRepositoryImpl implements EmailRepository {
     }
 
     @Override
-    public EmailDTO getEmail(PersonDTO person) {
-        return null;
+    public EmailDTO getPrimaryEmail(PersonDTO person) {
+        String query = "select * from email where P_ID=? and PRIMARY_USE=true limit 1;";
+        try {
+            return template.queryForObject(query, new EmailRowMapper(), person.getpId());
+        } catch (EmptyResultDataAccessException e) {
+            return null; // Return null if no email is found
+        }
     }
 
     @Override

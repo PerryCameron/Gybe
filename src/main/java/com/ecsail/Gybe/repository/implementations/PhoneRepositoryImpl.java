@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.PhoneDTO;
 import com.ecsail.Gybe.repository.interfaces.PhoneRepository;
 import com.ecsail.Gybe.repository.rowmappers.PhoneRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -34,21 +35,31 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     @Override
     public List<PhoneDTO> getPhoneByPerson(PersonDTO personDTO) {
-        String query = "SELECT * FROM phone WHERE p_id=" + personDTO.getpId();
-        return template.query(query, new PhoneRowMapper());
+        String query = "SELECT * FROM phone WHERE p_id = ?";
+        return template.query(query, new PhoneRowMapper(), personDTO.getpId());
     }
 
     @Override
     public PhoneDTO getListedPhoneByType(PersonDTO p, String phoneType) {
-        String query = "SELECT * FROM phone WHERE p_id=" + p.getpId() + " AND phone_listed=true AND phone_type='" + phoneType + "'";
-        return template.queryForObject(query, new PhoneRowMapper());
+        String query = "SELECT * FROM phone WHERE p_id = ? AND phone_listed = true AND phone_type = ? limit 1";
+        try {
+            return template.queryForObject(query, new PhoneRowMapper(), p.getpId(), phoneType);
+        } catch (EmptyResultDataAccessException e) {
+            return null; // Return null if no phone is found
+        }
     }
 
+
     @Override
-    public PhoneDTO getPhoneByType(String pId, String type) {
-        String query = "SELECT * FROM phone WHERE p_id=" + pId + " AND phone_type='" + type + "'";
-        return template.queryForObject(query, new PhoneRowMapper());
+    public PhoneDTO getPhoneByPersonAndType(int pId, String type) {
+        String query = "SELECT * FROM phone WHERE p_id = ? AND phone_type = ? LIMIT 1";
+        try {
+            return template.queryForObject(query, new PhoneRowMapper(), pId, type);
+        } catch (EmptyResultDataAccessException e) {
+            return null; // Return null if no phone is found
+        }
     }
+
 
     @Override
     public int update(PhoneDTO phoneDTO) {

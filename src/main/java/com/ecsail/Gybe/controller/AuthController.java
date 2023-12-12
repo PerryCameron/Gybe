@@ -61,49 +61,11 @@ public class AuthController {
 		return "auth";
 	}
 
-//	@PostMapping("/")
-//	public String greetingSubmit(@ModelAttribute AuthDTO authDTO, Model model) throws MessagingException {
-//		MailDTO mailDTO = emailService.processEmailSubmission(authDTO);
-//		if(authDTO.getExists())
-//			service.sendHTMLMail(mailDTO, fromEmail);
-//		model.addAttribute("authDTO", authDTO);
-//		// makes hash and returns page
-//		return emailService.returnCorrectPage(authDTO);
-//	}
-
-//	@GetMapping("/admin")
-//	public String initForm(Model model) {
-//		SqlAuthDTO sqlAuthDTO = new SqlAuthDTO();
-//		model.addAttribute("sqlAuthDTO", sqlAuthDTO);
-//		return "admin";
-//	}
-
 	@GetMapping("/notfound")
 	public String showNotFound(@ModelAttribute AuthDTO authDTO, Model model) {
 		model.addAttribute("authDTO", authDTO);
 		return "notfound";
 	}
-
-//	@GetMapping("register")
-//	public ResponseEntity<Object> redirectToForm(@RequestParam String member) throws URISyntaxException {
-//		String url = emailService.buildLinkWithParameters(member);
-//		URI jotform = new URI(url);
-//		HttpHeaders httpHeaders = new HttpHeaders();
-//		httpHeaders.setLocation(jotform);
-//		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-//	}
-
-//	@GetMapping("register")
-//	public void redirectToForm(@RequestParam String member) throws URISyntaxException {
-//		String url = emailService.buildLinkWithParameters(member);
-//		System.out.println(url);
-//
-//		logger.info(url);
-//	}
-//		URI jotform = new URI(url);
-//		HttpHeaders httpHeaders = new HttpHeaders();
-//		httpHeaders.setLocation(jotform);
-//		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 
 	@GetMapping("/membership")
 	public String getMembership(Model model,
