@@ -22,7 +22,7 @@ public class FormRequestController {
 
     @GetMapping("register")
     public ResponseEntity<Object> redirectToForm(@RequestParam String member) throws URISyntaxException {
-        String url = formRequestService.buildLinkWithParameters(member);
+        String url = formRequestService.openForm(member);
         URI jotform = new URI(url);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(jotform);

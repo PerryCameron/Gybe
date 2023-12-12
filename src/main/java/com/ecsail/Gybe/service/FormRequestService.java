@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.service;
 
 import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.models.FormRequestModel;
 import com.ecsail.Gybe.repository.implementations.*;
 import com.ecsail.Gybe.repository.interfaces.*;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ public class FormRequestService {
     private final PersonRepository personRepository;
     private final EmailRepository emailRepository;
     private final PhoneRepository phoneRepository;
-
+    private FormRequestModel model;
     LinkBuilderService linkBuilder;
     private static final Logger logger = LoggerFactory.getLogger(FormRequestService.class);
 
@@ -40,54 +41,76 @@ public class FormRequestService {
         this.personRepository = personRepository;
         this.emailRepository = emailRepository;
         this.phoneRepository = phoneRepository;
+        this.model = new FormRequestModel();
+    }
+
+    public String openForm(String hash) {
+        // collect and organize data
+        populateModel(hash);
+        // use data to build and return link
+        return buildLinkWithParameters();
+    }
+    public void populateModel(String hash) {
+        model.setFormSettingsDTO(hashRepository.getFormSettings());
+        model.setHashDTO(hashRepository.getHashDTOFromHash(Long.valueOf(hash)));
+        // get the membership
+        model.setMembershipListDTO(membershipRepository.getMembershipListFromMsidAndYear(model.getYear(), model.getMsId()));
+        logger.info("Serving form to membership " + model.getMembershipId() + " " + model.getPrimaryFullName());
+        // get the invoices
+        model.setInvoiceDTOS((ArrayList<InvoiceDTO>) invoiceRepository.getInvoicesByMsidAndYear(model.getMsId(), model.getYear()));
+        model.setInvoiceId(model.getInvoiceDTOS().get(0).getId());
+        model.setInvoiceItemDTOS((ArrayList<InvoiceItemDTO>) invoiceRepository.getInvoiceItemsByInvoiceId(model.getInvoiceId()));
+        // get the people
+        model.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(model.getMsId()));
+        // primary
+        model.setPrimary(getPerson(model.getPersonDTOS(), 1));
+        model.setPrimaryEmail(emailRepository.getPrimaryEmail(model.getPrimary()));
+        model.setPrimaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(),"C"));
+        model.setPrimaryEmergencyPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(),"E"));
+        // secondary
+        model.setSecondary(getPerson(model.getPersonDTOS(), 2));
+        model.setSecondaryEmail(emailRepository.getPrimaryEmail(model.getSecondary()));
+        model.setSecondaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getSecondary().getpId(),"C"));
     }
 
     // IMPLEMENT
-    public String buildLinkWithParameters(String hash) {
-        FormSettingsDTO formSettingsDTO = hashRepository.getFormSettings();
-        HashDTO hashDTO = hashRepository.getHashDTOFromHash(Long.valueOf(hash));
-        // get the membership
-        MembershipListDTO m = membershipRepository.getMembershipListFromMsidAndYear(formSettingsDTO.getSelected_year(), hashDTO.getMsId());
-        logger.info("Serving form to membership " + m.getMembershipId() + " " + m.getFullName());
-        // get the invoices
-        m.setInvoiceDTOS((ArrayList<InvoiceDTO>) invoiceRepository.getInvoicesByMsidAndYear(m.getMsId(), formSettingsDTO.getSelected_year()));
-        int invoiceId = m.getInvoiceDTOS().get(0).getId();
-        m.getInvoiceDTOS().get(0).setInvoiceItems((ArrayList<InvoiceItemDTO>) invoiceRepository.getInvoiceItemsByInvoiceId(invoiceId));
-        ArrayList<InvoiceItemDTO> items = m.getInvoiceDTOS().get(0).getInvoiceItems();
-        // get the people
-        m.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(m.getMsId()));
-        // primary
-        PersonDTO primary = getPerson(m.getPersonDTOS(), 1);
-        EmailDTO primaryEmail = emailRepository.getPrimaryEmail(primary);
-        PhoneDTO primaryPhone = phoneRepository.getPhoneByPersonAndType(primary.getpId(),"C");
+    public String buildLinkWithParameters() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(model.getFormSettingsDTO().getForm_url())
+                .path(model.getFormSettingsDTO().getForm_id())
+                .queryParam("memid", model.getMembershipId())
+                .queryParam("membershipType", model.getMembership().getMemType())
+                .queryParam("address[addr_line1]", model.getMembership().getAddress())
+                .queryParam("address[city]", model.getMembership().getCity())
+                .queryParam("address[state]", model.getMembership().getState())
+                .queryParam("address[postal]", model.getMembership().getZip())
+                .queryParam("workCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Work Credits"))
+                .queryParam("winterStorage", "winterStorage", getInvoiceItemQty(model.getInvoiceItemDTOS(), "Winter Storage"))
+                .queryParam("additionalCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Other Credit"))
+                .queryParam("otherFee", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Other Fee"))
+                .queryParam("initiation", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Initiation"))
+                .queryParam("positionCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Position Credit"))
+                .queryParam("primaryMember[first]", model.getPrimary().getFirstName())
+                .queryParam("primaryMember[last]", model.getPrimary().getLastName())
+                .queryParam("primaryOccupation", model.getPrimary().getOccupation());
 
+        if(model.getPrimaryEmail() != null)
+            builder.queryParam("primaryemail", model.getPrimaryEmail().getEmail());
+        if(model.getPrimaryCellPhone() != null)
+            builder.queryParam("primaryPhone", model.getPrimaryCellPhone().getPhone());
+        if(model.getPrimaryEmergencyPhone() != null)
+            builder.queryParam("emergencyPhone", model.getPrimaryEmergencyPhone().getPhone());
+        if(model.getSecondary() != null) {
+            builder.queryParam("haveSpouse", "Yes")
+                    .queryParam("spouseName[first]",model.getSecondary().getFirstName())
+                    .queryParam("spouseName[last]",model.getSecondary().getLastName())
+                    .queryParam("spouseOccupation",model.getSecondary().getOccupation())
+                    .queryParam("spouseCompany",model.getSecondary().getBusiness());
+            if(model.getSecondaryCellPhone() != null)
+                builder.queryParam("spousePhone", model.getSecondaryCellPhone().getPhone());
+            if(model.getSecondaryEmail() != null)
+                builder.queryParam("spouseEmail",model.getSecondaryEmail().getEmail());
 
-        PersonDTO secondary = getPerson(m.getPersonDTOS(), 2);
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(formSettingsDTO.getForm_url())
-                .path(formSettingsDTO.getForm_id())
-                .queryParam("memid", m.getMembershipId())
-                .queryParam("membershipType", m.getMemType())
-                .queryParam("address[addr_line1]", m.getAddress())
-                .queryParam("address[city]", m.getCity())
-                .queryParam("address[state]", m.getState())
-                .queryParam("address[postal]", m.getZip())
-                .queryParam("workCredit", getInvoiceItemValue(items, "Work Credits"))
-                .queryParam("winterStorage", "winterStorage", getInvoiceItemQty(items, "Winter Storage"))
-                .queryParam("additionalCredit", getInvoiceItemValue(items, "Other Credit"))
-                .queryParam("otherFee", getInvoiceItemValue(items, "Other Fee"))
-                .queryParam("initiation", getInvoiceItemValue(items, "Initiation"))
-                .queryParam("positionCredit", getInvoiceItemValue(items, "Position Credit"))
-                .queryParam("primaryMember[first]", primary.getFirstName())
-                .queryParam("primaryMember[last]", primary.getLastName())
-                .queryParam("primaryOccupation", primary.getOccupation());
-
-        if(primaryEmail != null)
-            builder.queryParam("primaryemail", primaryEmail.getEmail());
-        if(primaryPhone != null)
-            builder.queryParam("primaryPhone", primaryPhone.getPhone());
-
-
+        }
         String url = builder.toUriString();
         return url;
     }

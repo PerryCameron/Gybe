@@ -42,6 +42,10 @@ public class MembershipListDTO {
 		this.selectedYear = selectedYear;
 	}
 
+	public MembershipListDTO() {
+		super();
+	}
+
 	public String getFullName() {
 		return getFirstName() + " " + getLastName();
 	}
