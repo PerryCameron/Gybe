@@ -9,6 +9,7 @@ public class FormHashRequestDTO {
     String link;
     int msid;
     String mailed_to;
+    int duplicateCount;
 
     public FormHashRequestDTO(int form_hash_id, String primaryMember, String link, int msid, String mailed_to) {
         this.form_hash_id = form_hash_id;
@@ -19,13 +20,22 @@ public class FormHashRequestDTO {
         this.mailed_to = mailed_to;
     }
 
-    public FormHashRequestDTO(int form_hash_id, String req_date, String pri_mem, String link, int msid, String mailed_to) {
+    public FormHashRequestDTO(int form_hash_id, String req_date, String pri_mem, String link, int msid, String mailed_to, int duplicateCount) {
         this.form_hash_id = form_hash_id;
         this.req_date = req_date;
         this.pri_mem = pri_mem;
         this.link = link;
         this.msid = msid;
         this.mailed_to = mailed_to;
+        this.duplicateCount = duplicateCount;
+    }
+
+    public int getDuplicateCount() {
+        return duplicateCount;
+    }
+
+    public void setDuplicateCount(int duplicateCount) {
+        this.duplicateCount = duplicateCount;
     }
 
     public int getForm_hash_id() {

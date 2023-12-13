@@ -28,15 +28,34 @@ public class HashRepositoryImpl implements HashRepository {
     }
 
     @Override
-    public List<FormHashRequestDTO> getFormHashRequests() {
-        String sql = "SELECT FORM_HASH_ID, REQ_DATE, PRI_MEM, LINK, MSID, MAILED_TO FROM form_hash_request";
-        return template.query(sql, new FormHashRequestRowMapper());
+    public List<FormHashRequestDTO> getFormHashRequests(int year) {
+        String sql = """
+                SELECT
+                    MAX(FORM_HASH_ID) AS FORM_HASH_ID,
+                    MAX(REQ_DATE) AS REQ_DATE,
+                    PRI_MEM,
+                    LINK,
+                    MSID,
+                    MAILED_TO,
+                    COUNT(*) AS DUPLICATE_COUNT
+                FROM
+                    form_hash_request
+                WHERE
+                        YEAR(REQ_DATE) = ?
+                GROUP BY
+                    PRI_MEM, LINK, MSID, MAILED_TO
+                ORDER BY
+                    REQ_DATE DESC;
+                """;
+        return template.query(sql, new FormHashRequestRowMapper(), year);
     }
+
     @Override
     public HashDTO getHashDTOFromMsid(int msid) {
         String QUERY = "select * from form_msid_hash where MS_ID=?";
-        return (HashDTO) template.queryForObject(QUERY, new BeanPropertyRowMapper(HashDTO.class), new Object [] {msid});
+        return (HashDTO) template.queryForObject(QUERY, new BeanPropertyRowMapper(HashDTO.class), new Object[]{msid});
     }
+
     @Override
     public HashDTO getHashDTOFromHash(long hash) {
         String QUERY = "select * from form_msid_hash where HASH=?";

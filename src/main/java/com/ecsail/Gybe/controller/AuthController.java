@@ -1,9 +1,6 @@
 package com.ecsail.Gybe.controller;
 
-import com.ecsail.Gybe.dto.AuthDTO;
-import com.ecsail.Gybe.dto.BoardPositionDTO;
-import com.ecsail.Gybe.dto.FormHashRequestDTO;
-import com.ecsail.Gybe.dto.MembershipListDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +74,11 @@ public class AuthController {
 		model.addAttribute("boardPositions", boardPositionDTOS);
 		return "membership";
 	}
+
 	@GetMapping("/form-request")
-	public String getFormRequests(Model model) {
-		List<FormHashRequestDTO> formHashRequestDTOS = adminService.getFormRequests();
+	public String getFormRequests(Model model, @RequestParam(required = false) Integer year) {
+		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
+		List<FormHashRequestDTO> formHashRequestDTOS = adminService.getFormRequests(year);
 		model.addAttribute("formRequests", formHashRequestDTOS);
 		return "form-request";
 	}
@@ -90,18 +89,15 @@ public class AuthController {
 							  @RequestParam(defaultValue = "active") String rb,
 							  @RequestParam(defaultValue = "byId") String sort,
 							  @RequestParam Map<String, String> allParams) {
-
 		// Set the year to current year if it's not provided
 		if (year == null) {
 			year = Year.now().getValue();
 		}
-
 		// Extract searchParams from allParams
 		List<String> searchParams = allParams.entrySet().stream()
 				.filter(e -> e.getKey().startsWith("param"))
 				.map(Map.Entry::getValue)
 				.collect(Collectors.toList());
-
 		List<MembershipListDTO> membershipList = rosterService.getRoster(year, rb, sort, searchParams);
 		model.addAttribute("list", membershipList);
 		model.addAttribute("listSize", membershipList.size());

@@ -16,6 +16,7 @@ public class FormHashRequestRowMapper implements RowMapper<FormHashRequestDTO> {
         rs.getString("PRI_MEM"),
         rs.getString("LINK"),
         rs.getInt("MSID"),
-        rs.getString("MAILED_TO"));
+        rs.getString("MAILED_TO"),
+        rs.getInt("DUPLICATE_COUNT"));
     }
 }

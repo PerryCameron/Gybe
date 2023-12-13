@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.service;
 
 import com.ecsail.Gybe.dto.FormHashRequestDTO;
+import com.ecsail.Gybe.dto.FormSettingsDTO;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,9 @@ public class AdminService {
         this.hashRepository = hashRepository;
     }
 
-    public List<FormHashRequestDTO> getFormRequests() {
-        return hashRepository.getFormHashRequests();
+    public List<FormHashRequestDTO> getFormRequests(int year) {
+        return hashRepository.getFormHashRequests(year);
     }
+
+    public FormSettingsDTO getFormSettings() { return hashRepository.getFormSettings(); }
 }
