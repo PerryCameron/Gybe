@@ -20,7 +20,7 @@ public class FormRequestService {
     private final PersonRepository personRepository;
     private final EmailRepository emailRepository;
     private final PhoneRepository phoneRepository;
-    private FormRequestModel model;
+    private final FormRequestModel model;
     LinkBuilderService linkBuilder;
     private static final Logger logger = LoggerFactory.getLogger(FormRequestService.class);
 
@@ -52,7 +52,7 @@ public class FormRequestService {
     }
     public void populateModel(String hash) {
         model.setFormSettingsDTO(hashRepository.getFormSettings());
-        model.setHashDTO(hashRepository.getHashDTOFromHash(Long.valueOf(hash)));
+        model.setHashDTO(hashRepository.getHashDTOFromHash(Long.parseLong(hash)));
         // get the membership
         model.setMembershipListDTO(membershipRepository.getMembershipListFromMsidAndYear(model.getYear(), model.getMsId()));
         logger.info("Serving form to membership " + model.getMembershipId() + " " + model.getPrimaryFullName());
@@ -77,7 +77,7 @@ public class FormRequestService {
     public String buildLinkWithParameters() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(model.getFormSettingsDTO().getForm_url())
                 .path(model.getFormSettingsDTO().getForm_id())
-                .queryParam("memid", model.getMembershipId())
+                .queryParam("memId", model.getMembershipId())
                 .queryParam("membershipType", model.getMembership().getMemType())
                 .queryParam("address[addr_line1]", model.getMembership().getAddress())
                 .queryParam("address[city]", model.getMembership().getCity())
@@ -94,7 +94,7 @@ public class FormRequestService {
                 .queryParam("primaryOccupation", model.getPrimary().getOccupation());
 
         if(model.getPrimaryEmail() != null)
-            builder.queryParam("primaryemail", model.getPrimaryEmail().getEmail());
+            builder.queryParam("primaryEmail", model.getPrimaryEmail().getEmail());
         if(model.getPrimaryCellPhone() != null)
             builder.queryParam("primaryPhone", model.getPrimaryCellPhone().getPhone());
         if(model.getPrimaryEmergencyPhone() != null)
@@ -111,8 +111,7 @@ public class FormRequestService {
                 builder.queryParam("spouseEmail",model.getSecondaryEmail().getEmail());
 
         }
-        String url = builder.toUriString();
-        return url;
+        return builder.toUriString();
     }
 
 //    .queryParam("", "")

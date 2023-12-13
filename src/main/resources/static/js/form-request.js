@@ -5,7 +5,7 @@ formRequestData.forEach((request) => {
   table += `<tr>
                 <td>${request.req_date}</td>
                 <td>${request.pri_mem}</td>
-                <td><a href="${request.link}">Register Link</a></td>
+                <td><a href="http://localhost:8080/${request.link}"  target="_blank">Register Link</a></td>
                 <td><a href="mailto:${request.mailed_to}">${request.mailed_to}</a></td>
               </tr>`;
 });
