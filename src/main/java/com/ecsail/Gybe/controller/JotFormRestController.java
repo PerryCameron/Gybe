@@ -13,12 +13,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-public class FormRequestController {
+public class JotFormRestController {
 
     private final AdminServiceImpl adminServiceImpl;
     FormRequestServiceImpl formRequestServiceImpl;
 
-    public FormRequestController(FormRequestServiceImpl formRequestServiceImpl,
+    public JotFormRestController(FormRequestServiceImpl formRequestServiceImpl,
                                  AdminServiceImpl adminServiceImpl) {
         this.formRequestServiceImpl = formRequestServiceImpl;
         this.adminServiceImpl = adminServiceImpl;

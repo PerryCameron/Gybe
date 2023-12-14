@@ -28,9 +28,6 @@ import java.util.stream.Collectors;
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final EmailServiceImpl emailServiceImpl;
-	SendMailService service;
-	RosterServiceImpl rosterServiceImpl;
-	MembershipServiceImpl membershipServiceImpl;
 	AdminServiceImpl adminServiceImpl;
 
 
@@ -40,15 +37,9 @@ public class AuthController {
 
 	@Autowired
 	public AuthController(
-			SendMailService service,
-			RosterServiceImpl rosterServiceImpl,
 			AdminServiceImpl adminServiceImpl,
-			MembershipServiceImpl membershipServiceImpl,
 			EmailServiceImpl emailServiceImpl) {
-		this.service = service;
-		this.rosterServiceImpl = rosterServiceImpl;
 		this.adminServiceImpl = adminServiceImpl;
-		this.membershipServiceImpl = membershipServiceImpl;
 		this.emailServiceImpl = emailServiceImpl;
 	}
 
@@ -77,43 +68,11 @@ public class AuthController {
 		return "notfound";
 	}
 
-	@GetMapping("/membership")
-	public String getMembership(Model model,
-								@RequestParam() Integer msId,
-								@RequestParam() Integer selectedYear) {
-		MembershipListDTO membershipListDTO = membershipServiceImpl.getMembership(msId, selectedYear);
-		List<BoardPositionDTO> boardPositionDTOS = membershipServiceImpl.getBoardPositions();
-		model.addAttribute("membership", membershipListDTO);
-		model.addAttribute("boardPositions", boardPositionDTOS);
-		return "membership";
-	}
-
 	@GetMapping("/form-request")
 	public String getFormRequests(Model model, @RequestParam(required = false) Integer year) {
 		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
 		List<FormHashRequestDTO> formHashRequestDTOS = adminServiceImpl.getFormRequests(year);
 		model.addAttribute("formRequests", formHashRequestDTOS);
 		return "form-request";
-	}
-
-	@GetMapping("/lists")
-	public String getHomePage(Model model,
-							  @RequestParam(required = false) Integer year,
-							  @RequestParam(defaultValue = "active") String rb,
-							  @RequestParam(defaultValue = "byId") String sort,
-							  @RequestParam Map<String, String> allParams) {
-		// Set the year to current year if it's not provided
-		if (year == null) {
-			year = Year.now().getValue();
-		}
-		// Extract searchParams from allParams
-		List<String> searchParams = allParams.entrySet().stream()
-				.filter(e -> e.getKey().startsWith("param"))
-				.map(Map.Entry::getValue)
-				.collect(Collectors.toList());
-		List<MembershipListDTO> membershipList = rosterServiceImpl.getRoster(year, rb, sort, searchParams);
-		model.addAttribute("list", membershipList);
-		model.addAttribute("listSize", membershipList.size());
-		return "lists";
 	}
 }
