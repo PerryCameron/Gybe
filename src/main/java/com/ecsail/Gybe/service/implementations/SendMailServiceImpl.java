@@ -1,6 +1,7 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.MailDTO;
+import com.ecsail.Gybe.service.interfaces.SendMailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;

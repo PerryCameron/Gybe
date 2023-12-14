@@ -2,14 +2,13 @@ package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.*;
+import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
+import com.ecsail.Gybe.service.interfaces.SendMailService;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Year;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +29,7 @@ public class AuthController {
 	SendMailService service;
 	RosterService rosterService;
 	MembershipService membershipService;
-	AdminService adminService;
+	AdminServiceImpl adminServiceImpl;
 
 
 	@Value("${spring.mail.username}")
@@ -43,12 +40,12 @@ public class AuthController {
 	public AuthController(
 			SendMailService service,
 			RosterService rosterService,
-			AdminService adminService,
+			AdminServiceImpl adminServiceImpl,
 			MembershipService membershipService,
 			EmailService emailService) {
 		this.service = service;
 		this.rosterService = rosterService;
-		this.adminService = adminService;
+		this.adminServiceImpl = adminServiceImpl;
 		this.membershipService = membershipService;
 		this.emailService = emailService;
 	}
@@ -92,7 +89,7 @@ public class AuthController {
 	@GetMapping("/form-request")
 	public String getFormRequests(Model model, @RequestParam(required = false) Integer year) {
 		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
-		List<FormHashRequestDTO> formHashRequestDTOS = adminService.getFormRequests(year);
+		List<FormHashRequestDTO> formHashRequestDTOS = adminServiceImpl.getFormRequests(year);
 		model.addAttribute("formRequests", formHashRequestDTOS);
 		return "form-request";
 	}

@@ -1,4 +1,4 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.interfaces;
 
 //import jakarta.mail.MessagingException;
 
