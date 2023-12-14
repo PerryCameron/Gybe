@@ -3,6 +3,8 @@ package com.ecsail.Gybe.controller;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.*;
 import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
+import com.ecsail.Gybe.service.implementations.EmailServiceImpl;
+import com.ecsail.Gybe.service.implementations.MembershipServiceImpl;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
@@ -25,10 +27,10 @@ import java.util.stream.Collectors;
 @Controller
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-	private final EmailService emailService;
+	private final EmailServiceImpl emailServiceImpl;
 	SendMailService service;
 	RosterService rosterService;
-	MembershipService membershipService;
+	MembershipServiceImpl membershipServiceImpl;
 	AdminServiceImpl adminServiceImpl;
 
 
@@ -41,13 +43,13 @@ public class AuthController {
 			SendMailService service,
 			RosterService rosterService,
 			AdminServiceImpl adminServiceImpl,
-			MembershipService membershipService,
-			EmailService emailService) {
+			MembershipServiceImpl membershipServiceImpl,
+			EmailServiceImpl emailServiceImpl) {
 		this.service = service;
 		this.rosterService = rosterService;
 		this.adminServiceImpl = adminServiceImpl;
-		this.membershipService = membershipService;
-		this.emailService = emailService;
+		this.membershipServiceImpl = membershipServiceImpl;
+		this.emailServiceImpl = emailServiceImpl;
 	}
 
 	@GetMapping("/renew")
@@ -63,10 +65,10 @@ public class AuthController {
 			logger.error("Email is null or Empty");
 			return "error"; // Replace with your error page view name
 		}
-		MailDTO mailDTO = emailService.processEmailSubmission(email);
+		MailDTO mailDTO = emailServiceImpl.processEmailSubmission(email);
 		if (mailDTO == null) return "error"; // Replace with your error page view name
 		model.addAttribute("email", mailDTO); // Update the model with the email
-		return emailService.returnCorrectPage(mailDTO); // Adjust this method to accept a string email
+		return emailServiceImpl.returnCorrectPage(mailDTO); // Adjust this method to accept a string email
 	}
 
 	@GetMapping("/notfound")
@@ -79,8 +81,8 @@ public class AuthController {
 	public String getMembership(Model model,
 								@RequestParam() Integer msId,
 								@RequestParam() Integer selectedYear) {
-		MembershipListDTO membershipListDTO = membershipService.getMembership(msId, selectedYear);
-		List<BoardPositionDTO> boardPositionDTOS = membershipService.getBoardPositions();
+		MembershipListDTO membershipListDTO = membershipServiceImpl.getMembership(msId, selectedYear);
+		List<BoardPositionDTO> boardPositionDTOS = membershipServiceImpl.getBoardPositions();
 		model.addAttribute("membership", membershipListDTO);
 		model.addAttribute("boardPositions", boardPositionDTOS);
 		return "membership";

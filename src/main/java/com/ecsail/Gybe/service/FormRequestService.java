@@ -21,20 +21,17 @@ public class FormRequestService {
     private final EmailRepository emailRepository;
     private final PhoneRepository phoneRepository;
     private final FormRequestModel model;
-    LinkBuilderService linkBuilder;
     private static final Logger logger = LoggerFactory.getLogger(FormRequestService.class);
 
 
     @Autowired
     public FormRequestService(
-            LinkBuilderService linkBuilder,
             HashRepositoryImpl hashRepository,
             MembershipRepositoryImpl membershipRepository,
             InvoiceRepositoryImpl invoiceRepository,
             PersonRepositoryImpl personRepository,
             EmailRepositoryImpl emailRepository,
             PhoneRepositoryImpl phoneRepository) {
-        this.linkBuilder = linkBuilder;
         this.hashRepository = hashRepository;
         this.membershipRepository = membershipRepository;
         this.invoiceRepository = invoiceRepository;

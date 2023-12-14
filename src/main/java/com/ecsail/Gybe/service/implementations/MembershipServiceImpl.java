@@ -1,7 +1,8 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.*;
+import com.ecsail.Gybe.service.interfaces.MembershipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MembershipService {
+public class MembershipServiceImpl implements MembershipService {
     private final MembershipRepository membershipRepository;
     private final PersonRepository personRepository;
     private final BoatRepository boatRepository;
@@ -23,7 +24,7 @@ public class MembershipService {
 
 
     @Autowired
-    public MembershipService(
+    public MembershipServiceImpl(
             MembershipRepository membershipRepository, 
             PersonRepository personRepository,
             BoatRepository boatRepository,
@@ -46,9 +47,8 @@ public class MembershipService {
         this.notesRepository = notesRepository;
         this.boardPositionsRepository = boardPositionsRepository;
     }
-
+    @Override
     public MembershipListDTO getMembership(int msId, int selectedYear) {
-        System.out.println("Getting info for msId " + msId);
         MembershipListDTO membership = membershipRepository.getMembershipByMsId(msId, selectedYear);
         membership.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(msId));
         membership.getPersonDTOS().forEach(personDTO -> {
@@ -62,7 +62,7 @@ public class MembershipService {
         membership.setNotesDTOS((ArrayList<NotesDTO>) notesRepository.getMemosByMsId(msId));
         return membership;
     }
-
+    @Override
     public List<BoardPositionDTO> getBoardPositions() {
         return boardPositionsRepository.getPositions();
     }

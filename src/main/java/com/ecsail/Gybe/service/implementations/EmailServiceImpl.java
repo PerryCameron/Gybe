@@ -1,10 +1,11 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.implementations;
 
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
+import com.ecsail.Gybe.service.interfaces.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,20 +14,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.Year;
 
 @Service
-public class EmailService {
-    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+public class EmailServiceImpl implements EmailService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
     private final HashRepository hashRepository;
     private final EmailRepository emailRepository;
     private final GeneralRepository generalRepository;
 
-    public EmailService(HashRepository hashRepository,
-                        EmailRepository emailRepository,
-                        GeneralRepository generalRepository) {
+    public EmailServiceImpl(HashRepository hashRepository,
+                            EmailRepository emailRepository,
+                            GeneralRepository generalRepository) {
         this.hashRepository = hashRepository;
         this.emailRepository = emailRepository;
         this.generalRepository = generalRepository;
     }
-
+    @Override
     public MailDTO processEmailSubmission(String email) {
         FormSettingsDTO fs = hashRepository.getFormSettings();
         MailDTO mailDTO = null;
@@ -65,8 +66,8 @@ public class EmailService {
         }
         return mailDTO;
     }
-
-    private HashDTO createHash(AuthDTO authDTO) {
+    @Override
+    public HashDTO createHash(AuthDTO authDTO) {
         HashDTO hashDTO;
         // see if a hash already exists for this membership
         if(generalRepository.recordExists("form_msid_hash","MS_ID", authDTO.getMsId())) {
@@ -84,7 +85,7 @@ public class EmailService {
         }
         return hashDTO;
     }
-
+    @Override
     public String returnCorrectPage(MailDTO mailDTO) {
         if (mailDTO.getAuthDTO() != null && Boolean.TRUE.equals(mailDTO.getAuthDTO().getExists())) {
             return "result";
