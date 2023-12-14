@@ -1,9 +1,5 @@
 package com.ecsail.Gybe.controller;
 
-import com.ecsail.Gybe.dto.LoginResponseDTO;
-import com.ecsail.Gybe.dto.UserDTO;
-import com.ecsail.Gybe.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

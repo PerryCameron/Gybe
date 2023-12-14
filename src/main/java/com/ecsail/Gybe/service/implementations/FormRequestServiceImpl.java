@@ -1,9 +1,10 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.models.FormRequestModel;
 import com.ecsail.Gybe.repository.implementations.*;
 import com.ecsail.Gybe.repository.interfaces.*;
+import com.ecsail.Gybe.service.interfaces.FormRequestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
 
 @Service
-public class FormRequestService {
+public class FormRequestServiceImpl implements FormRequestService {
     private final HashRepository hashRepository;
     private final MembershipRepository membershipRepository;
     private final InvoiceRepository invoiceRepository;
@@ -21,11 +22,11 @@ public class FormRequestService {
     private final EmailRepository emailRepository;
     private final PhoneRepository phoneRepository;
     private final FormRequestModel model;
-    private static final Logger logger = LoggerFactory.getLogger(FormRequestService.class);
+    private static final Logger logger = LoggerFactory.getLogger(FormRequestServiceImpl.class);
 
 
     @Autowired
-    public FormRequestService(
+    public FormRequestServiceImpl(
             HashRepositoryImpl hashRepository,
             MembershipRepositoryImpl membershipRepository,
             InvoiceRepositoryImpl invoiceRepository,
@@ -40,13 +41,14 @@ public class FormRequestService {
         this.phoneRepository = phoneRepository;
         this.model = new FormRequestModel();
     }
-
+    @Override
     public String openForm(String hash) {
         // collect and organize data
         populateModel(hash);
         // use data to build and return link
         return buildLinkWithParameters();
     }
+    @Override
     public void populateModel(String hash) {
         model.setFormSettingsDTO(hashRepository.getFormSettings());
         model.setHashDTO(hashRepository.getHashDTOFromHash(Long.parseLong(hash)));
@@ -69,8 +71,7 @@ public class FormRequestService {
         model.setSecondaryEmail(emailRepository.getPrimaryEmail(model.getSecondary()));
         model.setSecondaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getSecondary().getpId(),"C"));
     }
-
-    // IMPLEMENT
+    @Override
     public String buildLinkWithParameters() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(model.getFormSettingsDTO().getForm_url())
                 .path(model.getFormSettingsDTO().getForm_id())
@@ -112,21 +113,21 @@ public class FormRequestService {
     }
 
 //    .queryParam("", "")
-
-    private PersonDTO getPerson(ArrayList<PersonDTO> people, int personType) {
+    @Override
+    public PersonDTO getPerson(ArrayList<PersonDTO> people, int personType) {
         return people.stream()
                 .filter(personDTO -> personDTO.getMemberType() == personType)
                 .findFirst()
                 .orElse(null); // Returns null if no match is found
     }
-
-    private String getInvoiceItemValue(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
+    @Override
+    public String getInvoiceItemValue(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
         InvoiceItemDTO invoiceItemDTO = invoiceItems.stream()
                 .filter(item -> item.getFieldName().equals(fieldName)).findFirst().orElse(null);
         return invoiceItemDTO.getValue();
     }
-
-    private String getInvoiceItemQty(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
+    @Override
+    public String getInvoiceItemQty(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
         InvoiceItemDTO invoiceItemDTO = invoiceItems.stream()
                 .filter(item -> item.getFieldName().equals(fieldName)).findFirst().orElse(null);
         return String.valueOf(invoiceItemDTO.getQty());

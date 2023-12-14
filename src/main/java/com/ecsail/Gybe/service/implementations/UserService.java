@@ -1,4 +1,4 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

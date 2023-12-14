@@ -1,7 +1,7 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
-import com.ecsail.Gybe.service.FormRequestService;
+import com.ecsail.Gybe.service.implementations.FormRequestServiceImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +16,17 @@ import java.net.URISyntaxException;
 public class FormRequestController {
 
     private final AdminServiceImpl adminServiceImpl;
-    FormRequestService formRequestService;
+    FormRequestServiceImpl formRequestServiceImpl;
 
-    public FormRequestController(FormRequestService formRequestService,
+    public FormRequestController(FormRequestServiceImpl formRequestServiceImpl,
                                  AdminServiceImpl adminServiceImpl) {
-        this.formRequestService = formRequestService;
+        this.formRequestServiceImpl = formRequestServiceImpl;
         this.adminServiceImpl = adminServiceImpl;
     }
 
     @GetMapping("register")
     public ResponseEntity<Object> redirectToForm(@RequestParam String member) throws URISyntaxException {
-        String url = formRequestService.openForm(member);
+        String url = formRequestServiceImpl.openForm(member);
         URI jotform = new URI(url);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(jotform);

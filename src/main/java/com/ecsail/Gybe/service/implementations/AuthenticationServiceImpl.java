@@ -1,22 +1,15 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.implementations;
 
-import com.ecsail.Gybe.dto.LoginResponseDTO;
 import com.ecsail.Gybe.dto.RoleDTO;
 import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.naming.AuthenticationException;
 
 //@Service
 //@Transactional
-public class AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     private AuthenticationRepository authenticationRepository;
@@ -24,15 +17,16 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
 //    @Autowired
-    public AuthenticationService(AuthenticationRepository authenticationRepository,
-                                 PasswordEncoder passwordEncoder,
-                                 AuthenticationManager authenticationManager
+    public AuthenticationServiceImpl(AuthenticationRepository authenticationRepository,
+                                     PasswordEncoder passwordEncoder,
+                                     AuthenticationManager authenticationManager
                                  ) {
         this.authenticationRepository = authenticationRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
     }
 
+    @Override
     public UserDTO registerUser(String username, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         RoleDTO userRole = authenticationRepository.findByAuthority("USER").get();
