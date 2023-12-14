@@ -28,7 +28,6 @@ public class EmailService {
     }
 
     public MailDTO processEmailSubmission(String email) {
-        System.out.println(email);
         FormSettingsDTO fs = hashRepository.getFormSettings();
         MailDTO mailDTO = null;
         if (emailRepository.emailFromActiveMembershipExists(email, hashRepository.getFormSettings().getSelected_year())) {
@@ -36,15 +35,15 @@ public class EmailService {
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
                     .scheme("https")
                     .host(fs.getLink())
-                    .port(fs.getPort())
+//                    .port(fs.getPort())
                     .path("/register");
             // this fills the dto with correct values
             AuthDTO authDTO = emailRepository.getAuthDTOFromEmail(Year.now().getValue(), email);
             // creates a new hash or loads an existing hash
             System.out.println(authDTO);
-//            HashDTO hashDTO = createHash(authDTO);
+            HashDTO hashDTO = createHash(authDTO);
             // create link
-            builder.queryParam("member", "String.valueOf(hashDTO.getHash())");
+            builder.queryParam("member", String.valueOf(hashDTO.getHash()));
             // log it
             logger.info("link created: " + builder.toUriString());
             // this DTO will store a record of someone requesting a hash
@@ -54,11 +53,15 @@ public class EmailService {
                     authDTO.getEmail()));
 //             This adds the HTML body to the email
             mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration","");
+            mailDTO.setAuthDTO(authDTO);
+            System.out.println(mailDTO);
+            System.out.println(mailDTO.getAuthDTO());
 //                    RegisterHtml.createEmailWithHtml(authDTO.getfName(),queryUrlBuilder.toString()));
             // log to system
 //            logger.info("Created Mail for: " + mailDTO.getRecipient());
+            mailDTO.getAuthDTO().setExists(true);
         } else {
-//            authDTO.setExists(false);
+            mailDTO.getAuthDTO().setExists(false);
         }
         return mailDTO;
     }
@@ -82,16 +85,8 @@ public class EmailService {
         return hashDTO;
     }
 
-    // determines page to direct to and makes hash
-//    public String returnCorrectPage(AuthDTO authDTO) {
-//        if(authDTO.getExists())
-//            authDTO.setHtmlPage("result");
-//        else
-//            authDTO.setHtmlPage("notfound");
-//        return authDTO.getHtmlPage();
-//    }
-    public String returnCorrectPage(String email) {
-        if (emailExists(email)) {
+    public String returnCorrectPage(MailDTO mailDTO) {
+        if (mailDTO.getAuthDTO() != null && Boolean.TRUE.equals(mailDTO.getAuthDTO().getExists())) {
             return "result";
         } else {
             return "notfound";

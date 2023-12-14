@@ -4,6 +4,7 @@ public class MailDTO {
     private String recipient;
     private String subject;
     private String message;
+    private AuthDTO authDTO;
 
     public MailDTO() {
     }
@@ -12,6 +13,14 @@ public class MailDTO {
         this.recipient = recipient;
         this.subject = subject;
         this.message = message;
+    }
+
+    public AuthDTO getAuthDTO() {
+        return authDTO;
+    }
+
+    public void setAuthDTO(AuthDTO authDTO) {
+        this.authDTO = authDTO;
     }
 
     public String getRecipient() {
