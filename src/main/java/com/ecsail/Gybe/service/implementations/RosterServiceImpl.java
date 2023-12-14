@@ -1,7 +1,8 @@
-package com.ecsail.Gybe.service;
+package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
+import com.ecsail.Gybe.service.interfaces.RosterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,15 +11,15 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class RosterService {
+public class RosterServiceImpl implements RosterService {
 
     private final MembershipRepository membershipRepository;
 
     @Autowired
-    public RosterService(MembershipRepository membershipRepository) {
+    public RosterServiceImpl(MembershipRepository membershipRepository) {
         this.membershipRepository = membershipRepository;
     }
-
+    @Override
     public List<MembershipListDTO> getRoster(int year, String rosterType, String sort, List<String> searchParams) {
         if(!searchParams.isEmpty())
             rosterType="search";
@@ -26,8 +27,8 @@ public class RosterService {
         sortList(sort, membershipList);
         return membershipList;
     }
-
-    private List<MembershipListDTO> getRosterType(int year, String rosterType, List<String> searchParams) {
+    @Override
+    public List<MembershipListDTO> getRosterType(int year, String rosterType, List<String> searchParams) {
         if(rosterType.equals("active")) {
             return membershipRepository.getRoster(year, true);
         } else if (rosterType.equals("non-renew")) {

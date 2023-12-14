@@ -1,10 +1,10 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
-import com.ecsail.Gybe.service.*;
 import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
 import com.ecsail.Gybe.service.implementations.EmailServiceImpl;
 import com.ecsail.Gybe.service.implementations.MembershipServiceImpl;
+import com.ecsail.Gybe.service.implementations.RosterServiceImpl;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final EmailServiceImpl emailServiceImpl;
 	SendMailService service;
-	RosterService rosterService;
+	RosterServiceImpl rosterServiceImpl;
 	MembershipServiceImpl membershipServiceImpl;
 	AdminServiceImpl adminServiceImpl;
 
@@ -41,12 +41,12 @@ public class AuthController {
 	@Autowired
 	public AuthController(
 			SendMailService service,
-			RosterService rosterService,
+			RosterServiceImpl rosterServiceImpl,
 			AdminServiceImpl adminServiceImpl,
 			MembershipServiceImpl membershipServiceImpl,
 			EmailServiceImpl emailServiceImpl) {
 		this.service = service;
-		this.rosterService = rosterService;
+		this.rosterServiceImpl = rosterServiceImpl;
 		this.adminServiceImpl = adminServiceImpl;
 		this.membershipServiceImpl = membershipServiceImpl;
 		this.emailServiceImpl = emailServiceImpl;
@@ -111,7 +111,7 @@ public class AuthController {
 				.filter(e -> e.getKey().startsWith("param"))
 				.map(Map.Entry::getValue)
 				.collect(Collectors.toList());
-		List<MembershipListDTO> membershipList = rosterService.getRoster(year, rb, sort, searchParams);
+		List<MembershipListDTO> membershipList = rosterServiceImpl.getRoster(year, rb, sort, searchParams);
 		model.addAttribute("list", membershipList);
 		model.addAttribute("listSize", membershipList.size());
 		return "lists";
