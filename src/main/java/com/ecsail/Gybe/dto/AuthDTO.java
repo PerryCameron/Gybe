@@ -36,6 +36,22 @@ public class AuthDTO {
 		this.nickName = nickName;
 	}
 
+	public void copyFrom(AuthDTO other) {
+		if (other == null) {
+			return; // or throw IllegalArgumentException
+		}
+		this.pId = other.getpId();
+		this.msId = other.getMsId();
+		this.memberType = other.getMemberType();
+		this.fName = other.getfName();
+		this.lName = other.getlName();
+		this.email = other.getEmail();
+		this.htmlPage = other.getHtmlPage();
+		this.exists = other.getExists();
+		this.nickName = other.getNickName();
+	}
+
+
 	public String getEmail() {
 		return email;
 	}
@@ -108,17 +124,6 @@ public class AuthDTO {
 		this.nickName = nickName;
 	}
 
-	public void copy(AuthDTO authDTO) {
-		this.pId = authDTO.getpId();
-		this.msId = authDTO.getMsId();
-		this.memberType = authDTO.getMemberType();
-		this.fName = authDTO.getfName();
-		this.lName = authDTO.getlName();
-		this.email = authDTO.getEmail();
-		this.htmlPage = authDTO.getHtmlPage();
-		this.exists = authDTO.getExists();
-		this.nickName = authDTO.getNickName();
-	}
 
 	@Override
 	public String toString() {

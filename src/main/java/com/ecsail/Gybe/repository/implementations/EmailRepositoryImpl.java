@@ -132,6 +132,33 @@ public class EmailRepositoryImpl implements EmailRepository {
         }
     }
 
-
-
+    @Override
+    public void updateAuthDTOFromEmail(int year, AuthDTO authDTO) {
+        if (authDTO == null || authDTO.getEmail() == null || authDTO.getEmail().isEmpty()) {
+            logger.error("AuthDTO or email is null or empty");
+            return;
+        }
+        String email = authDTO.getEmail();
+        System.out.println("Using year " + year + " and email=" + email);
+        String query = "SELECT p.p_id, p.ms_id, p.member_type, p.f_name, p.l_name, e.email, p.nick_name " +
+                "FROM email e " +
+                "LEFT JOIN person p ON e.P_ID = p.P_ID " +
+                "LEFT JOIN membership_id id ON p.MS_ID = id.MS_ID " +
+                "WHERE id.FISCAL_YEAR = ? AND e.EMAIL = ?";
+        try {
+            AuthDTO result = template.queryForObject(
+                    query,
+                    new AuthRowMapper(), // Use your custom RowMapper implementation
+                    year,
+                    email
+            );
+            if (result != null) {
+                authDTO.copyFrom(result); // Assuming there is a method to copy properties from another AuthDTO
+            }
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
 }

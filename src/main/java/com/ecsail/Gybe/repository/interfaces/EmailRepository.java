@@ -18,4 +18,6 @@ public interface EmailRepository {
     boolean emailFromActiveMembershipExists(String email, int year);
 
     AuthDTO getAuthDTOFromEmail(int year, String email);
+
+    void updateAuthDTOFromEmail(int year, AuthDTO authDTO);
 }

@@ -27,10 +27,11 @@ public class EmailService {
         this.generalRepository = generalRepository;
     }
 
-    public MailDTO processEmailSubmission(AuthDTO authDTO) {
+    public MailDTO processEmailSubmission(String email) {
+        System.out.println(email);
         FormSettingsDTO fs = hashRepository.getFormSettings();
         MailDTO mailDTO = null;
-        if (emailRepository.emailFromActiveMembershipExists(authDTO.getEmail(), hashRepository.getFormSettings().getSelected_year())) {
+        if (emailRepository.emailFromActiveMembershipExists(email, hashRepository.getFormSettings().getSelected_year())) {
             // create a query builder
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
                     .scheme("https")
@@ -38,9 +39,10 @@ public class EmailService {
                     .port(fs.getPort())
                     .path("/register");
             // this fills the dto with correct values
-            emailRepository.getAuthDTOFromEmail(Year.now().getValue(), authDTO.getEmail());
+            AuthDTO authDTO = emailRepository.getAuthDTOFromEmail(Year.now().getValue(), email);
             // creates a new hash or loads an existing hash
-            HashDTO hashDTO = createHash(authDTO);
+            System.out.println(authDTO);
+//            HashDTO hashDTO = createHash(authDTO);
             // create link
             builder.queryParam("member", "String.valueOf(hashDTO.getHash())");
             // log it
@@ -56,7 +58,7 @@ public class EmailService {
             // log to system
 //            logger.info("Created Mail for: " + mailDTO.getRecipient());
         } else {
-            authDTO.setExists(false);
+//            authDTO.setExists(false);
         }
         return mailDTO;
     }
@@ -64,7 +66,7 @@ public class EmailService {
     private HashDTO createHash(AuthDTO authDTO) {
         HashDTO hashDTO;
         // see if a hash already exists for this membership
-        if(generalRepository.recordExists("form_msid_hash","MS_ID",authDTO.getMsId())) {
+        if(generalRepository.recordExists("form_msid_hash","MS_ID", authDTO.getMsId())) {
             // if it does exist we won't add another entry
             hashDTO = hashRepository.getHashDTOFromMsid(authDTO.getMsId());
             logger.info("Hash exists, no need to create. hash=" + hashDTO.getHash());
@@ -81,11 +83,24 @@ public class EmailService {
     }
 
     // determines page to direct to and makes hash
-    public String returnCorrectPage(AuthDTO authDTO) {
-        if(authDTO.getExists())
-            authDTO.setHtmlPage("result");
-        else
-            authDTO.setHtmlPage("notfound");
-        return authDTO.getHtmlPage();
+//    public String returnCorrectPage(AuthDTO authDTO) {
+//        if(authDTO.getExists())
+//            authDTO.setHtmlPage("result");
+//        else
+//            authDTO.setHtmlPage("notfound");
+//        return authDTO.getHtmlPage();
+//    }
+    public String returnCorrectPage(String email) {
+        if (emailExists(email)) {
+            return "result";
+        } else {
+            return "notfound";
+        }
+    }
+
+    private boolean emailExists(String email) {
+        // Implement logic to check if email exists
+        // This could involve a database query or other checks
+        return true; // Placeholder for actual implementation
     }
 }

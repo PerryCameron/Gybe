@@ -13,15 +13,14 @@
     </div>
 
     <div class="div-common" id="form-div">
-        <form action="#" th:action="@{/}" th:object="${authDTO}" method="post">
+        <form action="#" th:action="@{/renew}" method="post">
             <!-- <div> -->
             <div id="email-div">
                 <input
                         type="email"
-                        th:field="*{email}"
+                        name="email"
                         class="form-control"
                         id="email"
-                        th:name="email"
                         aria-describedby="emailSubmit"
                         placeholder=" Email"
                 />
@@ -39,6 +38,5 @@
         </form>
     </div>
 </div>
-<p th:if="${authDTO.getExists()} == 'F'">This email was not found in the system</p>
 </body>
 </html>

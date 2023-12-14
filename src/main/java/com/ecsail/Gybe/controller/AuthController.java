@@ -53,23 +53,52 @@ public class AuthController {
 		this.emailService = emailService;
 	}
 
+//	@GetMapping("/renew")
+//	public String greetingForm(Model model) {
+//		AuthDTO authDTO = new AuthDTO();
+//		model.addAttribute("authDTO", authDTO);
+//		return "auth";
+//	}
+
 	@GetMapping("/renew")
 	public String greetingForm(Model model) {
-		AuthDTO authDTO = new AuthDTO();
-		model.addAttribute("authDTO", authDTO);
-		return "auth";
+		String email = ""; // Initialize with an empty string or a default value
+		model.addAttribute("email", email);
+		return "email_auth_form";
 	}
 
 	@PostMapping("/renew")
-	public String greetingSubmit(@ModelAttribute AuthDTO authDTO, Model model) throws MessagingException {
-		MailDTO mailDTO = emailService.processEmailSubmission(authDTO);
-		if(authDTO.getExists())
-			System.out.println(mailDTO);
-//			service.sendHTMLMail(mailDTO, fromEmail);
-		model.addAttribute("authDTO", authDTO);
-		// makes hash and returns page
-		return emailService.returnCorrectPage(authDTO);
+	public String greetingSubmit(@RequestParam String email, Model model) throws MessagingException {
+		System.out.println("I am getting here");
+		if (email == null || email.isEmpty()) {
+			logger.error("Email is null or Empty");
+			// Handle the case where email is null or empty
+			return "error"; // Replace with your error page view name
+		}
+		// Process the email submission. Update this method as per your application logic
+		MailDTO mailDTO = emailService.processEmailSubmission(email);
+		if (mailDTO == null) {
+			// Handle the null case for mailDTO, if necessary
+			return "error"; // Replace with your error page view name
+		}
+		// If email processing is successful, continue with your logic
+		// Example: Uncomment the below line when you are ready to send emails
+		// service.sendHTMLMail(mailDTO, fromEmail);
+		model.addAttribute("email", email); // Update the model with the email
+		// Determine the correct page to return based on the processing result
+		return emailService.returnCorrectPage(email); // Adjust this method to accept a string email
 	}
+
+//	@PostMapping("/renew")
+//	public String greetingSubmit(@ModelAttribute AuthDTO authDTO, Model model) throws MessagingException {
+//		MailDTO mailDTO = emailService.processEmailSubmission(authDTO);
+//		if(authDTO.getExists())
+//			System.out.println(mailDTO);
+////			service.sendHTMLMail(mailDTO, fromEmail);
+//		model.addAttribute("authDTO", authDTO);
+//		// makes hash and returns page
+//		return emailService.returnCorrectPage(authDTO);
+//	}
 
 	@GetMapping("/notfound")
 	public String showNotFound(@ModelAttribute AuthDTO authDTO, Model model) {
