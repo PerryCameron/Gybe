@@ -1,10 +1,14 @@
 package com.ecsail.Gybe.repository.implementations;
 
+import com.ecsail.Gybe.dto.AuthDTO;
 import com.ecsail.Gybe.dto.EmailDTO;
 import com.ecsail.Gybe.dto.Email_InformationDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
+import com.ecsail.Gybe.repository.rowmappers.AuthRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.EmailRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +27,7 @@ public class EmailRepositoryImpl implements EmailRepository {
 
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(EmailRepositoryImpl.class);
 
     @Autowired
     public EmailRepositoryImpl(DataSource dataSource) {
@@ -81,4 +86,52 @@ public class EmailRepositoryImpl implements EmailRepository {
         String deleteSql = "DELETE FROM email WHERE EMAIL_ID = ?";
         return template.update(deleteSql, emailDTO.getEmailId());
     }
+    @Override
+    public boolean emailFromActiveMembershipExists(String email, int year) {
+        if (email == null || email.isEmpty()) {
+            logger.error("Email " + email + "doesn't exist");
+            return false;
+        }
+        String existsQuery = "SELECT EXISTS(SELECT * FROM email e " +
+                "LEFT JOIN person p ON e.P_ID = p.P_ID " +
+                "LEFT JOIN membership_id id ON p.MS_ID = id.MS_ID " +
+                "WHERE id.FISCAL_YEAR = ? AND e.EMAIL = ?)";
+        try {
+            Boolean result = template.queryForObject(existsQuery, Boolean.class, year, email);
+            return Boolean.TRUE.equals(result);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public AuthDTO getAuthDTOFromEmail(int year, String email) {
+        if (email == null || email.isEmpty()) {
+            logger.error("Email parameter is null or empty");
+            return null;
+        }
+        String query = "SELECT p.p_id, p.ms_id, p.member_type, p.f_name, p.l_name, e.email, p.nick_name " +
+                "FROM email e " +
+                "LEFT JOIN person p ON e.P_ID = p.P_ID " +
+                "LEFT JOIN membership_id id ON p.MS_ID = id.MS_ID " +
+                "WHERE id.FISCAL_YEAR = ? AND e.EMAIL = ?";
+        try {
+            return template.queryForObject(
+                    query,
+                    new AuthRowMapper(), // Use your custom RowMapper implementation
+                    year,
+                    email
+            );
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e.getMessage());
+            return null;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
+        }
+    }
+
+
+
 }

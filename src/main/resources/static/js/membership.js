@@ -1,4 +1,5 @@
 document.getElementById("defaultOpen").click();
+updateTitle("Mem " + membershipData.membershipId);
 
 function openCity(evt, cityName) {
   // Declare all variables
@@ -65,3 +66,7 @@ const phoneTypeMappings = {
   Work: "W",
   Home: "H",
 };
+
+function updateTitle(newTitle) {
+  document.title = newTitle;
+}

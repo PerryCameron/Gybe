@@ -2,6 +2,7 @@ package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.*;
+import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URI;
@@ -26,8 +28,7 @@ import java.util.stream.Collectors;
 @Controller
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-
-
+	private final EmailService emailService;
 	SendMailService service;
 	RosterService rosterService;
 	MembershipService membershipService;
@@ -43,19 +44,31 @@ public class AuthController {
 			SendMailService service,
 			RosterService rosterService,
 			AdminService adminService,
-			MembershipService membershipService) {
+			MembershipService membershipService,
+			EmailService emailService) {
 		this.service = service;
 		this.rosterService = rosterService;
 		this.adminService = adminService;
 		this.membershipService = membershipService;
+		this.emailService = emailService;
 	}
-
 
 	@GetMapping("/renew")
 	public String greetingForm(Model model) {
 		AuthDTO authDTO = new AuthDTO();
 		model.addAttribute("authDTO", authDTO);
 		return "auth";
+	}
+
+	@PostMapping("/renew")
+	public String greetingSubmit(@ModelAttribute AuthDTO authDTO, Model model) throws MessagingException {
+		MailDTO mailDTO = emailService.processEmailSubmission(authDTO);
+		if(authDTO.getExists())
+			System.out.println(mailDTO);
+//			service.sendHTMLMail(mailDTO, fromEmail);
+		model.addAttribute("authDTO", authDTO);
+		// makes hash and returns page
+		return emailService.returnCorrectPage(authDTO);
 	}
 
 	@GetMapping("/notfound")

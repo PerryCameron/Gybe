@@ -1,0 +1,91 @@
+package com.ecsail.Gybe.service;
+
+
+import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.repository.interfaces.EmailRepository;
+import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
+import com.ecsail.Gybe.repository.interfaces.HashRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.time.Year;
+
+@Service
+public class EmailService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+    private final HashRepository hashRepository;
+    private final EmailRepository emailRepository;
+    private final GeneralRepository generalRepository;
+
+    public EmailService(HashRepository hashRepository,
+                        EmailRepository emailRepository,
+                        GeneralRepository generalRepository) {
+        this.hashRepository = hashRepository;
+        this.emailRepository = emailRepository;
+        this.generalRepository = generalRepository;
+    }
+
+    public MailDTO processEmailSubmission(AuthDTO authDTO) {
+        FormSettingsDTO fs = hashRepository.getFormSettings();
+        MailDTO mailDTO = null;
+        if (emailRepository.emailFromActiveMembershipExists(authDTO.getEmail(), hashRepository.getFormSettings().getSelected_year())) {
+            // create a query builder
+            UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
+                    .scheme("https")
+                    .host(fs.getLink())
+                    .port(fs.getPort())
+                    .path("/register");
+            // this fills the dto with correct values
+            emailRepository.getAuthDTOFromEmail(Year.now().getValue(), authDTO.getEmail());
+            // creates a new hash or loads an existing hash
+            HashDTO hashDTO = createHash(authDTO);
+            // create link
+            builder.queryParam("member", "String.valueOf(hashDTO.getHash())");
+            // log it
+            logger.info("link created: " + builder.toUriString());
+            // this DTO will store a record of someone requesting a hash
+//            int id = genRepo.getNextAvailablePrimaryKey("form_hash_request","form_hash_id");
+            hashRepository.insertHashRequestHistory(new FormHashRequestDTO(0,authDTO.getfName()
+                    + " " + authDTO.getlName(), builder.toUriString(),authDTO.getMsId(),
+                    authDTO.getEmail()));
+//             This adds the HTML body to the email
+            mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration","");
+//                    RegisterHtml.createEmailWithHtml(authDTO.getfName(),queryUrlBuilder.toString()));
+            // log to system
+//            logger.info("Created Mail for: " + mailDTO.getRecipient());
+        } else {
+            authDTO.setExists(false);
+        }
+        return mailDTO;
+    }
+
+    private HashDTO createHash(AuthDTO authDTO) {
+        HashDTO hashDTO;
+        // see if a hash already exists for this membership
+        if(generalRepository.recordExists("form_msid_hash","MS_ID",authDTO.getMsId())) {
+            // if it does exist we won't add another entry
+            hashDTO = hashRepository.getHashDTOFromMsid(authDTO.getMsId());
+            logger.info("Hash exists, no need to create. hash=" + hashDTO.getHash());
+        }
+        // it doesn't exist so we will create one
+        else {
+            // creates new hash as object
+            hashDTO = new HashDTO(0, authDTO.getMsId(), authDTO.getEmail());
+            // put our hash object into the database
+            hashRepository.insertHash(hashDTO);
+            logger.info("Created hash=" + hashDTO.getHash() + " for ms_id=" + hashDTO.getMsId());
+        }
+        return hashDTO;
+    }
+
+    // determines page to direct to and makes hash
+    public String returnCorrectPage(AuthDTO authDTO) {
+        if(authDTO.getExists())
+            authDTO.setHtmlPage("result");
+        else
+            authDTO.setHtmlPage("notfound");
+        return authDTO.getHtmlPage();
+    }
+}

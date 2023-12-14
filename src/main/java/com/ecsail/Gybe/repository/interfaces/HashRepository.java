@@ -11,4 +11,8 @@ public interface HashRepository {
     HashDTO getHashDTOFromMsid(int msid);
     HashDTO getHashDTOFromHash(long hash);
     FormSettingsDTO getFormSettings();
+
+    HashDTO insertHash(HashDTO h);
+
+    FormHashRequestDTO insertHashRequestHistory(FormHashRequestDTO formHashRequestDTO);
 }

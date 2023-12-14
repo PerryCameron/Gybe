@@ -1,29 +1,39 @@
 package com.ecsail.Gybe.dto;
 
 public class AuthDTO {
-	private Integer p_id;
-	private Integer ms_id;
-	private Integer member_type; // 1 == primary 2 == secondary 3 == children of
-	private String f_name;
-	private String l_name;
+	private Integer pId;
+	private Integer msId;
+	private Integer memberType; // 1 == primary 2 == secondary 3 == children of
+	private String fName;
+	private String lName;
 	private String email;
 	private String htmlPage;
 	private Boolean exists;
-	private String nick_name;
+	private String nickName;
 
 	public AuthDTO() {
 	}
 
-	public AuthDTO(Integer p_id, Integer ms_id, Integer memberType, String fname, String lname, String email, String htmlPage, Boolean exists, String nname) {
-		this.p_id = p_id;
-		this.ms_id = ms_id;
-		this.member_type = memberType;
-		this.f_name = fname;
-		this.l_name = lname;
+	public AuthDTO(Integer pId, Integer msId, Integer memberType, String firstName, String lastName, String email, String htmlPage, Boolean exists, String nickName) {
+		this.pId = pId;
+		this.msId = msId;
+		this.memberType = memberType;
+		this.fName = firstName;
+		this.lName = lastName;
 		this.email = email;
 		this.htmlPage = htmlPage;
 		this.exists = exists;
-		this.nick_name = nname;
+		this.nickName = nickName;
+	}
+
+	public AuthDTO(Integer pId, Integer msId, Integer memberType, String firstName, String lastName, String email, String nickName) {
+		this.pId = pId;
+		this.msId = msId;
+		this.memberType = memberType;
+		this.fName = firstName;
+		this.lName = lastName;
+		this.email = email;
+		this.nickName = nickName;
 	}
 
 	public String getEmail() {
@@ -34,44 +44,44 @@ public class AuthDTO {
 		this.email = email;
 	}
 
-	public Integer getP_id() {
-		return p_id;
+	public Integer getpId() {
+		return pId;
 	}
 
-	public void setP_id(Integer p_id) {
-		this.p_id = p_id;
+	public void setpId(Integer pId) {
+		this.pId = pId;
 	}
 
-	public Integer getMs_id() {
-		return ms_id;
+	public Integer getMsId() {
+		return msId;
 	}
 
-	public void setMs_id(Integer ms_id) {
-		this.ms_id = ms_id;
+	public void setMsId(Integer msId) {
+		this.msId = msId;
 	}
 
-	public Integer getMember_type() {
-		return member_type;
+	public Integer getMemberType() {
+		return memberType;
 	}
 
-	public void setMember_type(Integer member_type) {
-		this.member_type = member_type;
+	public void setMemberType(Integer memberType) {
+		this.memberType = memberType;
 	}
 
-	public String getF_name() {
-		return f_name;
+	public String getfName() {
+		return fName;
 	}
 
-	public void setF_name(String f_name) {
-		this.f_name = f_name;
+	public void setfName(String fName) {
+		this.fName = fName;
 	}
 
-	public String getL_name() {
-		return l_name;
+	public String getlName() {
+		return lName;
 	}
 
-	public void setL_name(String l_name) {
-		this.l_name = l_name;
+	public void setlName(String lName) {
+		this.lName = lName;
 	}
 
 	public String getHtmlPage() {
@@ -90,38 +100,38 @@ public class AuthDTO {
 		this.exists = exists;
 	}
 
-	public String getNick_name() {
-		return nick_name;
+	public String getNickName() {
+		return nickName;
 	}
 
-	public void setNick_name(String nick_name) {
-		this.nick_name = nick_name;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
 	public void copy(AuthDTO authDTO) {
-		this.p_id = authDTO.getP_id();
-		this.ms_id = authDTO.getMs_id();
-		this.member_type = authDTO.getMember_type();
-		this.f_name = authDTO.getF_name();
-		this.l_name = authDTO.getL_name();
+		this.pId = authDTO.getpId();
+		this.msId = authDTO.getMsId();
+		this.memberType = authDTO.getMemberType();
+		this.fName = authDTO.getfName();
+		this.lName = authDTO.getlName();
 		this.email = authDTO.getEmail();
 		this.htmlPage = authDTO.getHtmlPage();
 		this.exists = authDTO.getExists();
-		this.nick_name = authDTO.getNick_name();
+		this.nickName = authDTO.getNickName();
 	}
 
 	@Override
 	public String toString() {
 		return "AuthDTO{" +
-				"p_id=" + p_id +
-				", ms_id=" + ms_id +
-				", member_type=" + member_type +
-				", f_name='" + f_name + '\'' +
-				", l_name='" + l_name + '\'' +
+				"p_id=" + pId +
+				", ms_id=" + msId +
+				", member_type=" + memberType +
+				", f_name='" + fName + '\'' +
+				", l_name='" + lName + '\'' +
 				", email='" + email + '\'' +
 				", htmlPage='" + htmlPage + '\'' +
 				", exists=" + exists +
-				", nick_name='" + nick_name + '\'' +
+				", nick_name='" + nickName + '\'' +
 				'}';
 	}
 }
