@@ -48,14 +48,15 @@ public class EmailServiceImpl implements EmailService {
             // log it
             logger.info("link created: " + builder.toUriString());
             // this DTO will store a record of someone requesting a hash
-//            int id = genRepo.getNextAvailablePrimaryKey("form_hash_request","form_hash_id");
-            hashRepository.insertHashRequestHistory(new FormHashRequestDTO(0,authDTO.getfName()
-                    + " " + authDTO.getlName(), builder.toUriString(),authDTO.getMsId(),
-                    authDTO.getEmail()));
+//            hashRepository.insertHashRequestHistory(new FormHashRequestDTO(0,authDTO.getfName()
+//                    + " " + authDTO.getlName(), builder.toUriString(),authDTO.getMsId(),
+//                    authDTO.getEmail()));
+
 //             This adds the HTML body to the email
-            mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration","");
+            mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration",
+                    RegisterHtml.createEmailWithHtml(authDTO.getfName(), builder.toUriString()));
             mailDTO.setAuthDTO(authDTO);
-            RegisterHtml.createEmailWithHtml(authDTO.getfName(), "Test Link");
+
             System.out.println(mailDTO);
             System.out.println(mailDTO.getAuthDTO());
 

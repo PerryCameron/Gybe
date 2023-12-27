@@ -1,11 +1,11 @@
 package com.ecsail.Gybe.utils;
 
 public class RegisterHtml {
-    static String buttonColor = "#7ba7fe";
+    static String buttonColor = "#913bb5";
     static String buttonBorderColor = "#000000";
     static String buttonTextColor = "#ffffff";
-    static String backgroundColor = "#ffc365"; // last year's color
-    static String imageURL = "https://eaglecreeksailing.com/images/2023thumb300.png";
+    static String backgroundColor = "#cfd0d1"; // last year's color
+    static String imageURL = "https://eaglecreeksailing.com/images/2024thumb300.png";
     public static String createEmailWithHtml(String name, String link) {
         return "<!DOCTYPE html>\n" +
                 "\n" +
