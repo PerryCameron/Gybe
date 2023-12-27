@@ -1,0 +1,13 @@
+body {
+  text-align: center; /* Centers text in the body */
+}
+
+div {
+  margin: 0 auto; /* Centers divs in the body */
+  text-align: center; /* Centers text within each div */
+}
+
+img {
+  display: block; /* Makes the image a block element */
+  margin: 0 auto; /* Centers the image within its container */
+}
