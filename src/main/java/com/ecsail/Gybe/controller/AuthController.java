@@ -1,11 +1,10 @@
 package com.ecsail.Gybe.controller;
 
-import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.dto.AuthDTO;
+import com.ecsail.Gybe.dto.FormHashRequestDTO;
+import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
 import com.ecsail.Gybe.service.implementations.EmailServiceImpl;
-import com.ecsail.Gybe.service.implementations.MembershipServiceImpl;
-import com.ecsail.Gybe.service.implementations.RosterServiceImpl;
-import com.ecsail.Gybe.service.interfaces.SendMailService;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Year;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Controller
