@@ -36,7 +36,7 @@ public class RegisterHtml {
                 "\t\t}\n" +
                 "\n" +
                 "\t\tp {\n" +
-                "\t\t\tline-height: inherit\n" +
+                "\t\t\tline-height: inherit;\n" +
                 "\t\t}\n" +
                 "\n" +
                 "\t\t@media (max-width:520px) {\n" +

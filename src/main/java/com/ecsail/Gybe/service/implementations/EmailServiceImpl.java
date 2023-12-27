@@ -6,6 +6,7 @@ import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.service.interfaces.EmailService;
+import com.ecsail.Gybe.utils.RegisterHtml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,6 @@ public class EmailServiceImpl implements EmailService {
             // this fills the dto with correct values
             AuthDTO authDTO = emailRepository.getAuthDTOFromEmail(Year.now().getValue(), email);
             // creates a new hash or loads an existing hash
-            System.out.println(authDTO);
             HashDTO hashDTO = createHash(authDTO);
             // create link
             builder.queryParam("member", String.valueOf(hashDTO.getHash()));
@@ -55,11 +55,11 @@ public class EmailServiceImpl implements EmailService {
 //             This adds the HTML body to the email
             mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration","");
             mailDTO.setAuthDTO(authDTO);
+            RegisterHtml.createEmailWithHtml(authDTO.getfName(), "Test Link");
             System.out.println(mailDTO);
             System.out.println(mailDTO.getAuthDTO());
-//                    RegisterHtml.createEmailWithHtml(authDTO.getfName(),queryUrlBuilder.toString()));
-            // log to system
-//            logger.info("Created Mail for: " + mailDTO.getRecipient());
+
+            logger.info("Created Mail for: " + mailDTO.getRecipient());
             mailDTO.getAuthDTO().setExists(true);
         } else {
             mailDTO.getAuthDTO().setExists(false);

@@ -5,6 +5,7 @@ import com.ecsail.Gybe.dto.FormHashRequestDTO;
 import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
 import com.ecsail.Gybe.service.implementations.EmailServiceImpl;
+import com.ecsail.Gybe.service.implementations.SendMailServiceImpl;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import java.util.List;
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final EmailServiceImpl emailServiceImpl;
+	private final SendMailServiceImpl sendMailService;
 	AdminServiceImpl adminServiceImpl;
 
 
@@ -35,9 +37,11 @@ public class AuthController {
 	@Autowired
 	public AuthController(
 			AdminServiceImpl adminServiceImpl,
-			EmailServiceImpl emailServiceImpl) {
+			EmailServiceImpl emailServiceImpl,
+			SendMailServiceImpl sendMailService) {
 		this.adminServiceImpl = adminServiceImpl;
 		this.emailServiceImpl = emailServiceImpl;
+		this.sendMailService = sendMailService;
 	}
 
 	@GetMapping("/renew")
@@ -54,6 +58,8 @@ public class AuthController {
 			return "error"; // Replace with your error page view name
 		}
 		MailDTO mailDTO = emailServiceImpl.processEmailSubmission(email);
+		if(mailDTO.getAuthDTO().getExists())
+			sendMailService.sendHTMLMail(mailDTO, fromEmail);
 		if (mailDTO == null) return "error"; // Replace with your error page view name
 		model.addAttribute("email", mailDTO); // Update the model with the email
 		return emailServiceImpl.returnCorrectPage(mailDTO); // Adjust this method to accept a string email
