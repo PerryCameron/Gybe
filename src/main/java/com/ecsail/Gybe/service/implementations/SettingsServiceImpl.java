@@ -18,12 +18,12 @@ public class SettingsServiceImpl implements SettingsService {
     public SettingsServiceImpl(ArrayList<AppSettingDTO> appSettingDTOS, SettingsRepository settingsRepository) {
         this.appSettingDTOS = appSettingDTOS;
         this.settingsRepository = settingsRepository;
-        this.appSettingDTOS = (ArrayList<AppSettingDTO>) settingsRepository.getAppSettingsByGroupName("2024_Gybe");
+        this.appSettingDTOS = (ArrayList<AppSettingDTO>) settingsRepository.getAppSettingsByGroupName("gybe");
     }
     @Override
     public void refreshSettings() {
         appSettingDTOS.clear();
-        this.appSettingDTOS = (ArrayList<AppSettingDTO>) settingsRepository.getAppSettingsByGroupName("2024_Gybe");
+        this.appSettingDTOS = (ArrayList<AppSettingDTO>) settingsRepository.getAppSettingsByGroupName("gybe");
     }
     @Override
     public AppSettingDTO getScheme() {
@@ -55,13 +55,21 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-    public AppSettingDTO getSelectedYear() {
-        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("selected_year"))
-                .findFirst().orElse(null);
+    public int getSelectedYear() {
+        return appSettingDTOS.stream()
+                .filter(appSettingDTO -> appSettingDTO.getKey().equals("selected_year"))
+                .map(appSettingDTO -> {
+                    try {
+                        // Attempt to parse the string value to an int
+                        return Integer.parseInt(appSettingDTO.getValue());
+                    } catch (NumberFormatException e) {
+                        // Handle the case where the value is not a valid integer
+                        // You can log this error or return a default value
+                        return null; // Or use a default value like 0
+                    }
+                })
+                .findFirst()
+                .orElse(null); // Or a default value if preferred
     }
-
-
-
-
 
 }

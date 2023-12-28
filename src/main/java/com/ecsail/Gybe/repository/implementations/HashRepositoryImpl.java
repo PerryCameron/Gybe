@@ -67,11 +67,6 @@ public class HashRepositoryImpl implements HashRepository {
     }
 
     @Override
-    public FormSettingsDTO getFormSettings() {
-        String QUERY = "select * from form_settings";
-        return template.queryForObject(QUERY, new FormSettingsRowMapper());
-    }
-    @Override
     public HashDTO insertHash(HashDTO hashDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String insertQuery = "INSERT INTO form_msid_hash (HASH, MS_ID) VALUES (?, ?)";

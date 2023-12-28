@@ -23,9 +23,12 @@ public class SettingsRepositoryImpl implements SettingsRepository {
     }
     @Override
     public List<AppSettingDTO> getAppSettingsByGroupName(String groupName) {
-        String sql = "SELECT * FROM app_settings WHERE group_name = ?";
-        return template.query(sql, new AppSettingsRowMapper(), groupName);
+        String sql = "SELECT * FROM app_settings WHERE group_name LIKE ?";
+        // Append the wildcard character to the groupName parameter
+        String groupNamePattern = groupName + "%";
+        return template.query(sql, new AppSettingsRowMapper(), groupNamePattern);
     }
+
 
     @Override
     public List<DbRosterSettingsDTO> getSearchableListItems() {

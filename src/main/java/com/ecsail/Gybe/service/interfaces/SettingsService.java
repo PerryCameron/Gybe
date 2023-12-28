@@ -15,5 +15,5 @@ public interface SettingsService {
 
     AppSettingDTO getFormId();
 
-    AppSettingDTO getSelectedYear();
+    int getSelectedYear();
 }

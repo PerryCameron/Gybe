@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface AdminService {
     List<FormHashRequestDTO> getFormRequests(int year);
-    FormSettingsDTO getFormSettings();
 }

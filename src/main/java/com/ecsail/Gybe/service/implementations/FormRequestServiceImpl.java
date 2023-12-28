@@ -57,11 +57,11 @@ public class FormRequestServiceImpl implements FormRequestService {
         model.setHashDTO(hashRepository.getHashDTOFromHash(Long.parseLong(hash)));
         // get the membership
         model.setMembershipListDTO(membershipRepository.getMembershipListFromMsidAndYear(
-                Integer.parseInt(settingService.getSelectedYear().getValue()), model.getMsId()));
+                settingService.getSelectedYear(), model.getMsId()));
         logger.info("Serving form to membership " + model.getMembershipId() + " " + model.getPrimaryFullName());
         // get the invoices
         model.setInvoiceDTOS((ArrayList<InvoiceDTO>) invoiceRepository.getInvoicesByMsidAndYear(model.getMsId(),
-                Integer.parseInt(settingService.getSelectedYear().getValue())));
+                settingService.getSelectedYear()));
         model.setInvoiceId(model.getInvoiceDTOS().get(0).getId());
         model.setInvoiceItemDTOS((ArrayList<InvoiceItemDTO>) invoiceRepository.getInvoiceItemsByInvoiceId(model.getInvoiceId()));
         // get the people

@@ -40,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public MailDTO processEmailSubmission(String email) {
         MailDTO mailDTO = null;
-        if (emailRepository.emailFromActiveMembershipExists(email, hashRepository.getFormSettings().getSelected_year())) {
+        if (emailRepository.emailFromActiveMembershipExists(email, settingsService.getSelectedYear())) {
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
                     .scheme(settingsService.getScheme().getValue())
                     .host(settingsService.getHostName().getValue())

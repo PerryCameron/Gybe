@@ -22,6 +22,4 @@ public class AdminServiceImpl implements AdminService {
         return hashRepository.getFormHashRequests(year);
     }
 
-    @Override
-    public FormSettingsDTO getFormSettings() { return hashRepository.getFormSettings(); }
 }
