@@ -1,26 +1,32 @@
 package com.ecsail.Gybe;
 
+import com.ecsail.Gybe.dto.AppSettingDTO;
+import com.ecsail.Gybe.repository.interfaces.SettingsRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class GybeApplication {
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(GybeApplication.class, args);
 	}
 
 //	@Bean
-//	CommandLineRunner run(AuthenticationRepository authenticationRepository, PasswordEncoder passwordEncoder){
+//	CommandLineRunner run(SettingsRepository settingsRepository){
 //		return args -> {
-//			RoleDTO adminRole = authenticationRepository.saveAuthority("ADMIN");
-//			RoleDTO userRole = authenticationRepository.saveAuthority("USER");
-//			Set<RoleDTO> roles = new HashSet<>();
-//			UserDTO adminUser = authenticationRepository.saveUser(new UserDTO(0,"Perry", passwordEncoder.encode("password"),0));
-//			authenticationRepository.saveUserRole(adminUser,adminRole);
-//			authenticationRepository.saveUserRole(adminUser,userRole);
-//
+//			appSettings = settingsRepository.getAppSettingsByGroupName("2023_Gybe");
 //		};
+//	}
+//
+//	public List<AppSettingDTO> getAppSettings() {
+//		return appSettings;
 //	}
 
 }
