@@ -1,7 +1,10 @@
 package com.ecsail.Gybe.service.implementations;
 
 
-import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.dto.AuthDTO;
+import com.ecsail.Gybe.dto.FormSettingsDTO;
+import com.ecsail.Gybe.dto.HashDTO;
+import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
@@ -21,6 +24,7 @@ public class EmailServiceImpl implements EmailService {
     private final EmailRepository emailRepository;
     private final GeneralRepository generalRepository;
 
+
     public EmailServiceImpl(HashRepository hashRepository,
                             EmailRepository emailRepository,
                             GeneralRepository generalRepository) {
@@ -35,7 +39,6 @@ public class EmailServiceImpl implements EmailService {
         if (emailRepository.emailFromActiveMembershipExists(email, hashRepository.getFormSettings().getSelected_year())) {
             // create a query builder
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
-                    .scheme("https")
                     .host(fs.getLink())
 //                    .port(fs.getPort())
                     .path("/register");
@@ -56,10 +59,6 @@ public class EmailServiceImpl implements EmailService {
             mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration",
                     RegisterHtml.createEmailWithHtml(authDTO.getfName(), builder.toUriString()));
             mailDTO.setAuthDTO(authDTO);
-
-            System.out.println(mailDTO);
-            System.out.println(mailDTO.getAuthDTO());
-
             logger.info("Created Mail for: " + mailDTO.getRecipient());
             mailDTO.getAuthDTO().setExists(true);
         } else {
