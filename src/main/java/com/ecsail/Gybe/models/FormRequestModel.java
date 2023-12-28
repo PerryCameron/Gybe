@@ -5,7 +5,6 @@ import com.ecsail.Gybe.dto.*;
 import java.util.ArrayList;
 
 public class FormRequestModel {
-    FormSettingsDTO formSettingsDTO = null;
     HashDTO hashDTO = null;
     MembershipListDTO membershipListDTO = new MembershipListDTO();
     ArrayList<InvoiceDTO> invoiceDTOS = membershipListDTO.getInvoiceDTOS();
@@ -127,18 +126,8 @@ public class FormRequestModel {
     public int getMembershipId() {
         return membershipListDTO.getMembershipId();
     }
-    public int getYear() {
-        return formSettingsDTO.getSelected_year();
-    }
     public int getMsId() {
         return hashDTO.getMsId();
-    }
-    public FormSettingsDTO getFormSettingsDTO() {
-        return formSettingsDTO;
-    }
-
-    public void setFormSettingsDTO(FormSettingsDTO formSettingsDTO) {
-        this.formSettingsDTO = formSettingsDTO;
     }
 
     public HashDTO getHashDTO() {

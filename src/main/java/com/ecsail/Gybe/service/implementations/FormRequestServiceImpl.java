@@ -22,7 +22,9 @@ public class FormRequestServiceImpl implements FormRequestService {
     private final EmailRepository emailRepository;
     private final PhoneRepository phoneRepository;
     private final FormRequestModel model;
+    private final SettingsServiceImpl settingService;
     private static final Logger logger = LoggerFactory.getLogger(FormRequestServiceImpl.class);
+
 
 
     @Autowired
@@ -32,13 +34,15 @@ public class FormRequestServiceImpl implements FormRequestService {
             InvoiceRepositoryImpl invoiceRepository,
             PersonRepositoryImpl personRepository,
             EmailRepositoryImpl emailRepository,
-            PhoneRepositoryImpl phoneRepository) {
+            PhoneRepositoryImpl phoneRepository,
+            SettingsServiceImpl settingsService) {
         this.hashRepository = hashRepository;
         this.membershipRepository = membershipRepository;
         this.invoiceRepository = invoiceRepository;
         this.personRepository = personRepository;
         this.emailRepository = emailRepository;
         this.phoneRepository = phoneRepository;
+        this.settingService = settingsService;
         this.model = new FormRequestModel();
     }
     @Override
@@ -50,13 +54,14 @@ public class FormRequestServiceImpl implements FormRequestService {
     }
     @Override
     public void populateModel(String hash) {
-        model.setFormSettingsDTO(hashRepository.getFormSettings());
         model.setHashDTO(hashRepository.getHashDTOFromHash(Long.parseLong(hash)));
         // get the membership
-        model.setMembershipListDTO(membershipRepository.getMembershipListFromMsidAndYear(model.getYear(), model.getMsId()));
+        model.setMembershipListDTO(membershipRepository.getMembershipListFromMsidAndYear(
+                Integer.parseInt(settingService.getSelectedYear().getValue()), model.getMsId()));
         logger.info("Serving form to membership " + model.getMembershipId() + " " + model.getPrimaryFullName());
         // get the invoices
-        model.setInvoiceDTOS((ArrayList<InvoiceDTO>) invoiceRepository.getInvoicesByMsidAndYear(model.getMsId(), model.getYear()));
+        model.setInvoiceDTOS((ArrayList<InvoiceDTO>) invoiceRepository.getInvoicesByMsidAndYear(model.getMsId(),
+                Integer.parseInt(settingService.getSelectedYear().getValue())));
         model.setInvoiceId(model.getInvoiceDTOS().get(0).getId());
         model.setInvoiceItemDTOS((ArrayList<InvoiceItemDTO>) invoiceRepository.getInvoiceItemsByInvoiceId(model.getInvoiceId()));
         // get the people
@@ -73,8 +78,8 @@ public class FormRequestServiceImpl implements FormRequestService {
     }
     @Override
     public String buildLinkWithParameters() {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(model.getFormSettingsDTO().getForm_url())
-                .path(model.getFormSettingsDTO().getForm_id())
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(settingService.getFormURL().getValue())
+                .path(settingService.getFormId().getValue())
                 .queryParam("memId", model.getMembershipId())
                 .queryParam("membershipType", model.getMembership().getMemType())
                 .queryParam("address[addr_line1]", model.getMembership().getAddress())
@@ -109,6 +114,7 @@ public class FormRequestServiceImpl implements FormRequestService {
                 builder.queryParam("spouseEmail",model.getSecondaryEmail().getEmail());
 
         }
+        System.out.println(builder.toUriString());
         return builder.toUriString();
     }
 

@@ -9,9 +9,10 @@ import java.util.List;
 public interface SettingsRepository {
 
     List<AppSettingDTO> getAppSettingsByGroupName(String groupName);
-
     List<DbRosterSettingsDTO> getSearchableListItems();
     List<MembershipListRadioDTO> getRadioChoices();
     List<DbBoatSettingsDTO> getBoatSettings();
     List<BoatListRadioDTO> getBoatRadioChoices();
+    AppSettingDTO getSelectedYear();
+
 }

@@ -46,4 +46,9 @@ public class SettingsRepositoryImpl implements SettingsRepository {
     public List<BoatListRadioDTO> getBoatRadioChoices() {
         return null;
     }
+
+    @Override
+    public AppSettingDTO getSelectedYear() {
+        return null;
+    }
 }

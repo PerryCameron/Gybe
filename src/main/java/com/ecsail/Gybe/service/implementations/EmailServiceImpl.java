@@ -39,20 +39,12 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public MailDTO processEmailSubmission(String email) {
         MailDTO mailDTO = null;
-        String scheme = settingsService.getScheme().getValue();
-        String host = settingsService.getHostName().getValue();
-        String port = settingsService.getAppPort().getValue();
-
-        System.out.println("Scheme: " + scheme);
-        System.out.println("Host: " + host);
-        System.out.println("Port: " + port);
-
         if (emailRepository.emailFromActiveMembershipExists(email, hashRepository.getFormSettings().getSelected_year())) {
 
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
-                    .scheme(scheme)
-                    .host(host)
-                    .port(port)
+                    .scheme(settingsService.getScheme().getValue())
+                    .host(settingsService.getHostName().getValue())
+                    .port(settingsService.getAppPort().getValue())
                     .path("/register");
             // this fills the dto with correct values
             AuthDTO authDTO = emailRepository.getAuthDTOFromEmail(Year.now().getValue(), email);

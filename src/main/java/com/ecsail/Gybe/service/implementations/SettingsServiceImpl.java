@@ -48,6 +48,18 @@ public class SettingsServiceImpl implements SettingsService {
                 .findFirst().orElse(null);
     }
 
+    @Override
+    public AppSettingDTO getFormId() {
+        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_id"))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public AppSettingDTO getSelectedYear() {
+        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("selected_year"))
+                .findFirst().orElse(null);
+    }
+
 
 
 

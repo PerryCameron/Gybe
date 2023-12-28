@@ -12,4 +12,8 @@ public interface SettingsService {
     AppSettingDTO getAppPort();
 
     AppSettingDTO getFormURL();
+
+    AppSettingDTO getFormId();
+
+    AppSettingDTO getSelectedYear();
 }
