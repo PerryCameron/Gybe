@@ -4,7 +4,6 @@ public class FormRequestDTO {
     int form_id;
     String req_date;
     String primaryMember;
-
     int msid;
     boolean success;
 

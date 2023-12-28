@@ -62,11 +62,19 @@ public class AuthController {
 		}
 	}
 
-	@GetMapping("/form-request")
+	@GetMapping("/email-login")
 	public String getFormRequests(Model model, @RequestParam(required = false) Integer year) {
 		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
 		List<FormHashRequestDTO> formHashRequestDTOS = adminServiceImpl.getFormRequests(year);
-		model.addAttribute("formRequests", formHashRequestDTOS);
+		model.addAttribute("emailLogins", formHashRequestDTOS);
+		return "email-login";
+	}
+
+	@GetMapping("/form-request")
+	public String getJotFormRequests(Model model, @RequestParam(required = false) Integer year) {
+//		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
+//		List<FormHashRequestDTO> formHashRequestDTOS = adminServiceImpl.getFormRequests(year);
+//		model.addAttribute("formRequests", formHashRequestDTOS);
 		return "form-request";
 	}
 }

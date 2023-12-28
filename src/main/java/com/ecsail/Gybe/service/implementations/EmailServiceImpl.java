@@ -86,18 +86,5 @@ public class EmailServiceImpl implements EmailService {
         }
         return hashDTO;
     }
-    @Override
-    public String returnCorrectPage(MailDTO mailDTO) {
-        if (mailDTO.getAuthDTO() != null && Boolean.TRUE.equals(mailDTO.getAuthDTO().getExists())) {
-            return "result";
-        } else {
-            return "notfound";
-        }
-    }
 
-    private boolean emailExists(String email) {
-        // Implement logic to check if email exists
-        // This could involve a database query or other checks
-        return true; // Placeholder for actual implementation
-    }
 }

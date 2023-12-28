@@ -9,5 +9,4 @@ public interface EmailService {
 
     HashDTO createHash(AuthDTO authDTO);
 
-    String returnCorrectPage(MailDTO mailDTO);
 }

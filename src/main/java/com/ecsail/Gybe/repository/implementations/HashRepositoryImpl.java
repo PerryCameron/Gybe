@@ -1,11 +1,11 @@
 package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.FormHashRequestDTO;
-import com.ecsail.Gybe.dto.FormSettingsDTO;
+import com.ecsail.Gybe.dto.FormRequestSummaryDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.repository.rowmappers.FormHashRequestRowMapper;
-import com.ecsail.Gybe.repository.rowmappers.FormSettingsRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.FormRequestSummaryRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.HashRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -102,4 +102,22 @@ public class HashRepositoryImpl implements HashRepository {
         }
         return formHashRequestDTO;
     }
+    @Override
+    public List<FormRequestSummaryDTO> getFormRequestSummariesForYear(int year) {
+        String sql = "SELECT " +
+                "MAX(fhr.REQ_DATE) AS newest_hash_req_date, " +
+                "fhr.PRI_MEM, " +
+                "fhr.LINK, " +
+                "fhr.MAILED_TO, " +
+                "COUNT(DISTINCT fhr.FORM_HASH_ID) AS num_hash_duplicates, " +
+                "MAX(fr.REQ_DATE) AS newest_form_req_date, " +
+                "COUNT(DISTINCT fr.FORM_ID) AS num_form_attempts " +
+                "FROM form_hash_request fhr " +
+                "LEFT JOIN form_request fr ON fhr.MSID = fr.MSID " +
+                "WHERE YEAR(fhr.REQ_DATE) = ? OR YEAR(fr.REQ_DATE) = ? " +
+                "GROUP BY fhr.PRI_MEM, fhr.LINK, fhr.MAILED_TO";
+        return template.query(sql, new FormRequestSummaryRowMapper(), year, year);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.repository.interfaces;
 
 import com.ecsail.Gybe.dto.FormHashRequestDTO;
+import com.ecsail.Gybe.dto.FormRequestSummaryDTO;
 import com.ecsail.Gybe.dto.FormSettingsDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 
@@ -12,4 +13,6 @@ public interface HashRepository {
     HashDTO getHashDTOFromHash(long hash);
     HashDTO insertHash(HashDTO h);
     FormHashRequestDTO insertHashRequestHistory(FormHashRequestDTO formHashRequestDTO);
+
+    List<FormRequestSummaryDTO> getFormRequestSummariesForYear(int year);
 }
