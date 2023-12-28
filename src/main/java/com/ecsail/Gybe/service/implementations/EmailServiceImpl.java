@@ -13,6 +13,7 @@ import com.ecsail.Gybe.utils.RegisterHtml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Year;
@@ -40,7 +41,6 @@ public class EmailServiceImpl implements EmailService {
     public MailDTO processEmailSubmission(String email) {
         MailDTO mailDTO = null;
         if (emailRepository.emailFromActiveMembershipExists(email, hashRepository.getFormSettings().getSelected_year())) {
-
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
                     .scheme(settingsService.getScheme().getValue())
                     .host(settingsService.getHostName().getValue())
@@ -66,6 +66,10 @@ public class EmailServiceImpl implements EmailService {
             logger.info("Created Mail for: " + mailDTO.getRecipient());
             mailDTO.getAuthDTO().setExists(true);
         } else {
+            mailDTO = new MailDTO();
+            AuthDTO authDTO = new AuthDTO();
+            authDTO.setEmail(email);
+            mailDTO.setAuthDTO(authDTO);
             mailDTO.getAuthDTO().setExists(false);
         }
         return mailDTO;

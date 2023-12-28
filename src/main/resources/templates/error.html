@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Something went wrong!</title>
+    <link rel="stylesheet" th:href="@{css/result.css}" type="text/css" />
 </head>
 <body>
-<div class="text-center">
+<div>
     <br><br>
-    <img src="images/ecsc2023.png" alt="ECSC">
+    <img src="images/2024thumb300.png" alt="ECSC">
 </div>
 <br><br>
 <div class="text-center">
     <h1>Something went wrong! </h1>
-    <h2>Our Engineers are on it</h2>
+    <p th:text="${errorMessage}"></p>
 </div>
 <br>
 <div class="text-center">
     <form action = "/">
-    <button type="submit" value="check email" class="btn btn-primary">Try Again</button>
+    <button type="submit" value="check email" >Try Again</button>
     </form>
 </div>
 </body>

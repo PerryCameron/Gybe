@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/email-error.css" type="text/css" />
+</head>
+<body>
+<div class="image-div">
+    <img src="images/ecsc_logo_small.png" alt="ECSC" />
+</div>
+<br /><br />
+<div>
+    <h1>Something went wrong!</h1>
+    <p th:text="${errorMessage}"></p>
+</div>
+<br />
+<div>
+    <form action="/">
+        <button type="submit" value="check email">Try Again</button>
+    </form>
+</div>
+</body>
+</html>

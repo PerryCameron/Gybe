@@ -112,13 +112,11 @@ public class FormRequestServiceImpl implements FormRequestService {
                 builder.queryParam("spousePhone", model.getSecondaryCellPhone().getPhone());
             if(model.getSecondaryEmail() != null)
                 builder.queryParam("spouseEmail",model.getSecondaryEmail().getEmail());
-
         }
-        System.out.println(builder.toUriString());
+        logger.info(builder.toUriString());
         return builder.toUriString();
     }
 
-//    .queryParam("", "")
     @Override
     public PersonDTO getPerson(ArrayList<PersonDTO> people, int personType) {
         return people.stream()

@@ -53,15 +53,14 @@ public class AuthController {
 
 	@PostMapping("/renew")
 	public String greetingSubmit(@RequestParam String email, Model model) throws MessagingException {
-		if (email == null || email.isEmpty()) {
-			logger.error("Email is null or Empty");
-			return "error"; // Replace with your error page view name
-		}
 		MailDTO mailDTO = emailServiceImpl.processEmailSubmission(email);
 //		if(mailDTO.getAuthDTO().getExists())
 //			sendMailService.sendHTMLMail(mailDTO, fromEmail);
-		if (mailDTO == null) return "error"; // Replace with your error page view name
-		model.addAttribute("email", mailDTO); // Update the model with the email
+		if (mailDTO == null) {
+			model.addAttribute("errorMessage", "Your email was not found in the system."); // Add custom error message
+			System.out.println("Returning second one");
+			return "email-error"; // Replace with your error page view name
+		}		model.addAttribute("email", mailDTO); // Update the model with the email
 		return emailServiceImpl.returnCorrectPage(mailDTO); // Adjust this method to accept a string email
 	}
 

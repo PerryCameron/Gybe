@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/auth.css}" type="text/css" />
+    <script th:src="@{/js/email_auth_form.js}" defer></script>
 </head>
 <body>
 <div id="main-div">
@@ -13,7 +14,7 @@
     </div>
 
     <div class="div-common" id="form-div">
-        <form action="#" th:action="@{/renew}" method="post">
+        <form id="form-email-submit" action="#" th:action="@{/renew}" method="post">
             <!-- <div> -->
             <div id="email-div">
                 <input
