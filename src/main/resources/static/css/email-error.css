@@ -2,6 +2,7 @@ body {
     text-align: center; /* Centers text in the body */
     background-color: black;
     color: white;
+    font-family: "Poppins", sans-serif;
 }
 
 div {

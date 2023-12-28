@@ -14,10 +14,12 @@
 <div>
     <h1>Something went wrong!</h1>
     <p th:text="${errorMessage}"></p>
+    <p>Perhaps you mistyped it? You can try any other email on your account.</p>
+    <p>You can also check with the membership chair to see if your email is in the system.</p>
 </div>
 <br />
 <div>
-    <form action="/">
+    <form action="/renew">
         <button type="submit" value="check email">Try Again</button>
     </form>
 </div>

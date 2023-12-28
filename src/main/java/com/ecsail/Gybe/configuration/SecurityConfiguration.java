@@ -38,7 +38,8 @@ public class SecurityConfiguration {
                             "/js/**",
                             "/renew/**",
                             "/register/**",
-                            "/error/**"
+                            "/error/**",
+                            "/email-error/**"
                     ).permitAll();
                     auth.anyRequest().authenticated();
                 })
