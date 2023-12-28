@@ -16,4 +16,14 @@ public interface SettingsService {
     AppSettingDTO getFormId();
 
     int getSelectedYear();
+
+    AppSettingDTO getFormButtonColor();
+
+    AppSettingDTO getFormButtonBorderColor();
+
+    AppSettingDTO getFormButtonTextColor();
+
+    AppSettingDTO getFormBackgroundColor();
+
+    AppSettingDTO getFormImage();
 }

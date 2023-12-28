@@ -1,12 +1,14 @@
 package com.ecsail.Gybe.utils;
 
+import com.ecsail.Gybe.service.interfaces.SettingsService;
+
 public class RegisterHtml {
-    static String buttonColor = "#913bb5";
-    static String buttonBorderColor = "#000000";
-    static String buttonTextColor = "#ffffff";
-    static String backgroundColor = "#cfd0d1"; // last year's color
-    static String imageURL = "https://eaglecreeksailing.com/images/2024thumb300.png";
-    public static String createEmailWithHtml(String name, String link) {
+    public static String createEmailWithHtml(String name, String link, SettingsService settingsService) {
+        String buttonColor = settingsService.getFormButtonColor().getValue();
+        String buttonBorderColor = settingsService.getFormButtonBorderColor().getValue();
+        String buttonTextColor = settingsService.getFormButtonTextColor().getValue();
+        String backgroundColor = settingsService.getFormBackgroundColor().getValue();
+        String imageURL = settingsService.getFormImage().getValue();
         return "<!DOCTYPE html>\n" +
                 "\n" +
                 "<html lang=\"en-US\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n" +

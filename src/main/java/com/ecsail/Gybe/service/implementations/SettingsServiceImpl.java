@@ -72,4 +72,36 @@ public class SettingsServiceImpl implements SettingsService {
                 .orElse(null); // Or a default value if preferred
     }
 
+    @Override
+    public AppSettingDTO getFormButtonColor() {
+        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("button_color"))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public AppSettingDTO getFormButtonBorderColor() {
+        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("button_border_color"))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public AppSettingDTO getFormButtonTextColor() {
+        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("button_text_color"))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public AppSettingDTO getFormBackgroundColor() {
+        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_background_color"))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public AppSettingDTO getFormImage() {
+        return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_image"))
+                .findFirst().orElse(null);
+    }
+
+
+
 }

@@ -60,7 +60,7 @@ public class EmailServiceImpl implements EmailService {
                     authDTO.getEmail()));
             // This adds the HTML body to the email
             mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration",
-                    RegisterHtml.createEmailWithHtml(authDTO.getfName(), builder.toUriString()));
+                    RegisterHtml.createEmailWithHtml(authDTO.getfName(), builder.toUriString(), settingsService));
             mailDTO.setAuthDTO(authDTO);
             logger.info("Created Mail for: " + mailDTO.getRecipient());
             mailDTO.getAuthDTO().setExists(true);
