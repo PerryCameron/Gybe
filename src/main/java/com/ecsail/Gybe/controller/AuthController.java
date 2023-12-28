@@ -58,8 +58,8 @@ public class AuthController {
 			return "error"; // Replace with your error page view name
 		}
 		MailDTO mailDTO = emailServiceImpl.processEmailSubmission(email);
-		if(mailDTO.getAuthDTO().getExists())
-			sendMailService.sendHTMLMail(mailDTO, fromEmail);
+//		if(mailDTO.getAuthDTO().getExists())
+//			sendMailService.sendHTMLMail(mailDTO, fromEmail);
 		if (mailDTO == null) return "error"; // Replace with your error page view name
 		model.addAttribute("email", mailDTO); // Update the model with the email
 		return emailServiceImpl.returnCorrectPage(mailDTO); // Adjust this method to accept a string email

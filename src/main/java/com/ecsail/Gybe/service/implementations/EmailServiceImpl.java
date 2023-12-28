@@ -2,13 +2,13 @@ package com.ecsail.Gybe.service.implementations;
 
 
 import com.ecsail.Gybe.dto.AuthDTO;
-import com.ecsail.Gybe.dto.FormSettingsDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.service.interfaces.EmailService;
+import com.ecsail.Gybe.service.interfaces.SettingsService;
 import com.ecsail.Gybe.utils.RegisterHtml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,24 +23,36 @@ public class EmailServiceImpl implements EmailService {
     private final HashRepository hashRepository;
     private final EmailRepository emailRepository;
     private final GeneralRepository generalRepository;
+    private final SettingsService settingsService;
 
 
     public EmailServiceImpl(HashRepository hashRepository,
                             EmailRepository emailRepository,
-                            GeneralRepository generalRepository) {
+                            GeneralRepository generalRepository,
+                            SettingsService settingsService) {
         this.hashRepository = hashRepository;
         this.emailRepository = emailRepository;
         this.generalRepository = generalRepository;
+        this.settingsService = settingsService;
     }
+
     @Override
     public MailDTO processEmailSubmission(String email) {
-        FormSettingsDTO fs = hashRepository.getFormSettings();
         MailDTO mailDTO = null;
+        String scheme = settingsService.getScheme().getValue();
+        String host = settingsService.getHostName().getValue();
+        String port = settingsService.getAppPort().getValue();
+
+        System.out.println("Scheme: " + scheme);
+        System.out.println("Host: " + host);
+        System.out.println("Port: " + port);
+
         if (emailRepository.emailFromActiveMembershipExists(email, hashRepository.getFormSettings().getSelected_year())) {
-            // create a query builder
+
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
-                    .host(fs.getLink())
-//                    .port(fs.getPort())
+                    .scheme(scheme)
+                    .host(host)
+                    .port(port)
                     .path("/register");
             // this fills the dto with correct values
             AuthDTO authDTO = emailRepository.getAuthDTOFromEmail(Year.now().getValue(), email);
