@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class FormRequestSummaryDTO {
 
+    private int membershipId;
     private Timestamp newestHashReqDate;
     private String priMem;
     private String link;
@@ -12,7 +13,8 @@ public class FormRequestSummaryDTO {
     private Timestamp newestFormReqDate;
     private int numFormAttempts;
 
-    public FormRequestSummaryDTO(Timestamp newestHashReqDate, String priMem, String link, String mailedTo, int numHashDuplicates, Timestamp newestFormReqDate, int numFormAttempts) {
+    public FormRequestSummaryDTO(int membershipId, Timestamp newestHashReqDate, String priMem, String link, String mailedTo, int numHashDuplicates, Timestamp newestFormReqDate, int numFormAttempts) {
+        this.membershipId = membershipId;
         this.newestHashReqDate = newestHashReqDate;
         this.priMem = priMem;
         this.link = link;
@@ -20,6 +22,14 @@ public class FormRequestSummaryDTO {
         this.numHashDuplicates = numHashDuplicates;
         this.newestFormReqDate = newestFormReqDate;
         this.numFormAttempts = numFormAttempts;
+    }
+
+    public int getMembershipId() {
+        return membershipId;
+    }
+
+    public void setMembershipId(int membershipId) {
+        this.membershipId = membershipId;
     }
 
     public Timestamp getNewestHashReqDate() {

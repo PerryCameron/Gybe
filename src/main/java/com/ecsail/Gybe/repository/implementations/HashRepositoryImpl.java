@@ -102,21 +102,32 @@ public class HashRepositoryImpl implements HashRepository {
         }
         return formHashRequestDTO;
     }
+
     @Override
     public List<FormRequestSummaryDTO> getFormRequestSummariesForYear(int year) {
-        String sql = "SELECT " +
-                "MAX(fhr.REQ_DATE) AS newest_hash_req_date, " +
-                "fhr.PRI_MEM, " +
-                "fhr.LINK, " +
-                "fhr.MAILED_TO, " +
-                "COUNT(DISTINCT fhr.FORM_HASH_ID) AS num_hash_duplicates, " +
-                "MAX(fr.REQ_DATE) AS newest_form_req_date, " +
-                "COUNT(DISTINCT fr.FORM_ID) AS num_form_attempts " +
-                "FROM form_hash_request fhr " +
-                "LEFT JOIN form_request fr ON fhr.MSID = fr.MSID " +
-                "WHERE YEAR(fhr.REQ_DATE) = ? OR YEAR(fr.REQ_DATE) = ? " +
-                "GROUP BY fhr.PRI_MEM, fhr.LINK, fhr.MAILED_TO";
-        return template.query(sql, new FormRequestSummaryRowMapper(), year, year);
+        String sql = """
+                SELECT
+                    id.MEMBERSHIP_ID,
+                    MAX(fhr.REQ_DATE) AS newest_hash_req_date,
+                    MAX(fhr.PRI_MEM) AS pri_mem,
+                    MAX(fhr.LINK) AS link,
+                    MAX(fhr.MAILED_TO) AS mailed_to,
+                    COUNT(DISTINCT fhr.FORM_HASH_ID) AS num_hash_duplicates,
+                    MAX(fr.REQ_DATE) AS newest_form_req_date,
+                    COUNT(DISTINCT fr.FORM_ID) AS num_form_attempts
+                FROM
+                    form_hash_request fhr
+                        LEFT JOIN form_request fr ON fhr.MSID = fr.MSID
+                        LEFT JOIN membership_id id ON fhr.MSID = id.MS_ID
+                WHERE
+                    (YEAR(fhr.REQ_DATE) = ? OR YEAR(fr.REQ_DATE) = ?)
+                  AND id.FISCAL_YEAR = ?
+                GROUP BY
+                    fhr.MSID, id.MEMBERSHIP_ID
+                ORDER BY
+                    id.MEMBERSHIP_ID ASC;
+                """;
+        return template.query(sql, new Object[]{year, year, year}, new FormRequestSummaryRowMapper());
     }
 
 

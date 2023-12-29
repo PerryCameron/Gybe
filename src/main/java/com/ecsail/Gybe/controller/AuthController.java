@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.FormHashRequestDTO;
+import com.ecsail.Gybe.dto.FormRequestSummaryDTO;
 import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
 import com.ecsail.Gybe.service.implementations.EmailServiceImpl;
@@ -70,11 +71,11 @@ public class AuthController {
 		return "email-login";
 	}
 
-	@GetMapping("/form-request")
+	@GetMapping("/form-request-summary")
 	public String getJotFormRequests(Model model, @RequestParam(required = false) Integer year) {
-//		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
-//		List<FormHashRequestDTO> formHashRequestDTOS = adminServiceImpl.getFormRequests(year);
-//		model.addAttribute("formRequests", formHashRequestDTOS);
-		return "form-request";
+		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
+		List<FormRequestSummaryDTO> formRequestSummaryDTOS = adminServiceImpl.getFormSummaries(year);
+		model.addAttribute("formSummaries", formRequestSummaryDTOS);
+		return "form-request-summary";
 	}
 }

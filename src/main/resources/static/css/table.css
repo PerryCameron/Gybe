@@ -48,7 +48,7 @@
 
 /* This changes the background color of the header cell and the color of the links when hovered */
 .header-link th:hover {
-  background-color: yellow; /* Background color of the cell */
+  background-color: #00b28f; /* Background color of the cell */
 }
 
 .header-link th:hover a {

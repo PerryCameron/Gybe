@@ -12,6 +12,7 @@ public class FormRequestSummaryRowMapper implements RowMapper<FormRequestSummary
     @Override
     public FormRequestSummaryDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new FormRequestSummaryDTO(
+        rs.getInt("MEMBERSHIP_ID"),
         rs.getTimestamp("newest_hash_req_date"),
         rs.getString("PRI_MEM"),
         rs.getString("LINK"),
