@@ -22,6 +22,18 @@ public class FormRequestModel {
     PhoneDTO secondaryCellPhone = null;
     int invoiceId = 0;
 
+    public ArrayList<PersonDTO> extractDependentsFromPeople() {
+        ArrayList<PersonDTO> dependents = new ArrayList<>();
+        personDTOS.stream().filter(personDTO -> personDTO.getMemberType() == 3).forEach(personDTO -> dependents.add(personDTO));
+        return dependents;
+    }
+
+    public int getNumberOfDependents() {
+        if(dependents.isEmpty())
+            return 0;
+        else
+        return dependents.size();
+    }
 
     public SlipDTO getSlip() {
         return slip;

@@ -84,6 +84,9 @@ public class FormRequestServiceImpl implements FormRequestService {
             model.setSecondaryEmail(emailRepository.getPrimaryEmail(model.getSecondary()));
             model.setSecondaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getSecondary().getpId(), "C"));
         }
+        // separate our dependents if they exist
+        model.setDependents(model.extractDependentsFromPeople());
+
     }
 
     @Override
@@ -91,6 +94,7 @@ public class FormRequestServiceImpl implements FormRequestService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(settingService.getFormURL().getValue())
                 .path(settingService.getFormId().getValue())
                 .queryParam("slipNumber", model.getSlip().getSlip_num())
+                .queryParam("numberOfDependents", model.getNumberOfDependents())
                 .queryParam("memId", model.getMembershipId())
                 .queryParam("membershipType", model.getMembership().getMemType())
                 .queryParam("address[addr_line1]", model.getMembership().getAddress())
@@ -125,6 +129,15 @@ public class FormRequestServiceImpl implements FormRequestService {
                 builder.queryParam("spouseEmail", model.getSecondaryEmail().getEmail());
         } else
             builder.queryParam("haveSpouse", "No");
+        if(model.getNumberOfDependents() > 0) {
+            int count = 1;
+            for(PersonDTO personDTO: model.getDependents()) {
+                builder.queryParam("dependent" + count + "[first]", personDTO.getFirstName())
+                .queryParam("dependent" + count + "[last]", personDTO.getLastName())
+                .queryParam("dependent" + count + "BirthDay", personDTO.getBirthday());
+                count++;
+            }
+        }
         logger.info(builder.toUriString());
         return builder.toUriString();
     }
