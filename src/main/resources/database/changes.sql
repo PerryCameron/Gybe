@@ -19,7 +19,7 @@ CREATE TABLE ECSC_SQL.app_settings
 # needs dropped on production
 drop table form_settings;
 
-# needs added on production
+# needs added on production (need to update this first)
 INSERT INTO app_settings (setting_key, setting_value, description, data_type, updated_at, group_name)
 VALUES
     ('app_port', '8080', 'The port that the application should run on, 8080 for testing, 443 for production', 'integer', '2023-12-27 23:29:39', '2024_gybe'),
@@ -29,3 +29,7 @@ VALUES
     ('host_name', 'localhost', 'Our current host, localhost for testing, ecsail.org for production', 'string', '2023-12-27 23:29:39', '2024_gybe'),
     ('scheme', 'http', 'This will be http:// when testing local and https:// if in production', 'string', '2023-12-28 00:06:17', '2024_gybe'),
     ('selected_year', '2023', 'Usually the current year unless, testing', 'integer', '2023-12-27 23:17:45', '2024_gybe');
+
+# needs added on production - This will remove the unnecessary part of the links
+UPDATE form_hash_request
+SET LINK = CONCAT('register?member', SUBSTRING_INDEX(LINK, 'register?member', -1));
