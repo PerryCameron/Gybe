@@ -8,6 +8,7 @@ public class SlipDTO {
     private String alt_text;
 
     public SlipDTO() {
+        super();
     }
 
     public SlipDTO(Integer slip_id, Integer ms_id, String slip_num, Integer subleased_to, String alt_text) {

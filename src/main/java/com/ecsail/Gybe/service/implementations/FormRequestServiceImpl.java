@@ -24,7 +24,7 @@ public class FormRequestServiceImpl implements FormRequestService {
     private final FormRequestModel model;
     private final SettingsServiceImpl settingService;
     private static final Logger logger = LoggerFactory.getLogger(FormRequestServiceImpl.class);
-
+    private final SlipRepositoryImpl slipRepository;
 
 
     @Autowired
@@ -35,7 +35,8 @@ public class FormRequestServiceImpl implements FormRequestService {
             PersonRepositoryImpl personRepository,
             EmailRepositoryImpl emailRepository,
             PhoneRepositoryImpl phoneRepository,
-            SettingsServiceImpl settingsService) {
+            SettingsServiceImpl settingsService,
+            SlipRepositoryImpl slipRepository) {
         this.hashRepository = hashRepository;
         this.membershipRepository = membershipRepository;
         this.invoiceRepository = invoiceRepository;
@@ -44,7 +45,9 @@ public class FormRequestServiceImpl implements FormRequestService {
         this.phoneRepository = phoneRepository;
         this.settingService = settingsService;
         this.model = new FormRequestModel();
+        this.slipRepository = slipRepository;
     }
+
     @Override
     public String openForm(String hash) {
         // collect and organize data
@@ -52,6 +55,7 @@ public class FormRequestServiceImpl implements FormRequestService {
         // use data to build and return link
         return buildLinkWithParameters();
     }
+
     @Override
     public void populateModel(String hash) {
         model.setHashDTO(hashRepository.getHashDTOFromHash(Long.parseLong(hash)));
@@ -64,22 +68,29 @@ public class FormRequestServiceImpl implements FormRequestService {
                 settingService.getSelectedYear()));
         model.setInvoiceId(model.getInvoiceDTOS().get(0).getId());
         model.setInvoiceItemDTOS((ArrayList<InvoiceItemDTO>) invoiceRepository.getInvoiceItemsByInvoiceId(model.getInvoiceId()));
+        // get slip
+        model.setSlip(slipRepository.getSlip(model.getMsId()));
         // get the people
         model.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(model.getMsId()));
         // primary
         model.setPrimary(getPerson(model.getPersonDTOS(), 1));
         model.setPrimaryEmail(emailRepository.getPrimaryEmail(model.getPrimary()));
-        model.setPrimaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(),"C"));
-        model.setPrimaryEmergencyPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(),"E"));
+        model.setPrimaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(), "C"));
+        model.setPrimaryEmergencyPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(), "E"));
+
         // secondary
         model.setSecondary(getPerson(model.getPersonDTOS(), 2));
-        model.setSecondaryEmail(emailRepository.getPrimaryEmail(model.getSecondary()));
-        model.setSecondaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getSecondary().getpId(),"C"));
+        if (model.getSecondary() != null) {
+            model.setSecondaryEmail(emailRepository.getPrimaryEmail(model.getSecondary()));
+            model.setSecondaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getSecondary().getpId(), "C"));
+        }
     }
+
     @Override
     public String buildLinkWithParameters() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(settingService.getFormURL().getValue())
                 .path(settingService.getFormId().getValue())
+                .queryParam("slipNumber", model.getSlip().getSlip_num())
                 .queryParam("memId", model.getMembershipId())
                 .queryParam("membershipType", model.getMembership().getMemType())
                 .queryParam("address[addr_line1]", model.getMembership().getAddress())
@@ -96,23 +107,24 @@ public class FormRequestServiceImpl implements FormRequestService {
                 .queryParam("primaryMember[last]", model.getPrimary().getLastName())
                 .queryParam("primaryOccupation", model.getPrimary().getOccupation());
 
-        if(model.getPrimaryEmail() != null)
+        if (model.getPrimaryEmail() != null)
             builder.queryParam("primaryEmail", model.getPrimaryEmail().getEmail());
-        if(model.getPrimaryCellPhone() != null)
+        if (model.getPrimaryCellPhone() != null)
             builder.queryParam("primaryPhone", model.getPrimaryCellPhone().getPhone());
-        if(model.getPrimaryEmergencyPhone() != null)
+        if (model.getPrimaryEmergencyPhone() != null)
             builder.queryParam("emergencyPhone", model.getPrimaryEmergencyPhone().getPhone());
-        if(model.getSecondary() != null) {
+        if (model.getSecondary() != null) {
             builder.queryParam("haveSpouse", "Yes")
-                    .queryParam("spouseName[first]",model.getSecondary().getFirstName())
-                    .queryParam("spouseName[last]",model.getSecondary().getLastName())
-                    .queryParam("spouseOccupation",model.getSecondary().getOccupation())
-                    .queryParam("spouseCompany",model.getSecondary().getBusiness());
-            if(model.getSecondaryCellPhone() != null)
+                    .queryParam("spouseName[first]", model.getSecondary().getFirstName())
+                    .queryParam("spouseName[last]", model.getSecondary().getLastName())
+                    .queryParam("spouseOccupation", model.getSecondary().getOccupation())
+                    .queryParam("spouseCompany", model.getSecondary().getBusiness());
+            if (model.getSecondaryCellPhone() != null)
                 builder.queryParam("spousePhone", model.getSecondaryCellPhone().getPhone());
-            if(model.getSecondaryEmail() != null)
-                builder.queryParam("spouseEmail",model.getSecondaryEmail().getEmail());
-        }
+            if (model.getSecondaryEmail() != null)
+                builder.queryParam("spouseEmail", model.getSecondaryEmail().getEmail());
+        } else
+            builder.queryParam("haveSpouse", "No");
         logger.info(builder.toUriString());
         return builder.toUriString();
     }
@@ -124,12 +136,14 @@ public class FormRequestServiceImpl implements FormRequestService {
                 .findFirst()
                 .orElse(null); // Returns null if no match is found
     }
+
     @Override
     public String getInvoiceItemValue(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
         InvoiceItemDTO invoiceItemDTO = invoiceItems.stream()
                 .filter(item -> item.getFieldName().equals(fieldName)).findFirst().orElse(null);
         return invoiceItemDTO.getValue();
     }
+
     @Override
     public String getInvoiceItemQty(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
         InvoiceItemDTO invoiceItemDTO = invoiceItems.stream()

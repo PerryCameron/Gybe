@@ -25,7 +25,7 @@ formSummaryData.forEach((request) => {
                 <td>${request.membershipId}</td>
                 <td>${request.newestHashReqDate}</td>
                 <td>${request.priMem}</td>
-                <td><a href="${request.link}">Register Link</a></td>
+                <td><a href="${request.link}" target='_blank'>Register Link</a></td>
                 <td><a href="mailto:${request.mailedTo}">${request.mailedTo}</a></td>
                 <td>${request.numHashDuplicates}</td>
                 <td>${request.newestFormReqDate}</td>

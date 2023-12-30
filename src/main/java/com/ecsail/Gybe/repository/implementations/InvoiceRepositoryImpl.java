@@ -144,61 +144,6 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         return new int[0];
     }
 
-
-//    @Override
-//    public int[] updateBatch(InvoiceDTO invoiceDTO) {
-//        List<InvoiceItemDTO> invoiceItems = invoiceDTO.getInvoiceItemDTOS();
-//        String query = "UPDATE invoice_item SET " +
-//                "INVOICE_ID = :invoiceId, " +
-//                "MS_ID = :msId, " +
-//                "FISCAL_YEAR = :year, " +
-//                "FIELD_NAME = :fieldName, " +
-//                "IS_CREDIT = :credit, " +
-//                "VALUE = :value, " +
-//                "QTY = :qty, " +
-//                "CATEGORY = :category, " +
-//                "CATEGORY_ITEM = :categoryItem " +
-//                "WHERE ID = :id";
-//        List<SqlParameterSource> parameters = new ArrayList<>();
-//        for (InvoiceItemDTO invoiceItemDTO : invoiceItems) {
-//            parameters.add(new BeanPropertySqlParameterSource(invoiceItemDTO));
-//        }
-//        int[] updateResults = namedParameterJdbcTemplate.batchUpdate(query, parameters.toArray(new SqlParameterSource[0]));
-//        int[] number = new int[updateResults.length + 1];
-//        System.arraycopy(updateResults, 0, number, 0, updateResults.length);
-//        if(Arrays.stream(updateResults).sum() == invoiceItems.size())
-//            number[updateResults.length] = update(invoiceDTO);
-//        return number;
-//    }
-
-//    @Override
-//    public int[] insertBatch(InvoiceDTO invoiceDTO) {
-//        List<InvoiceItemDTO> invoiceItems = invoiceDTO.getInvoiceItemDTOS();
-//        String query = "INSERT INTO invoice_item " +
-//                "(INVOICE_ID, MS_ID, FISCAL_YEAR, FIELD_NAME, IS_CREDIT, VALUE, QTY, CATEGORY, CATEGORY_ITEM) " +
-//                "VALUES (:invoiceId, :msId, :year, :fieldName, :credit, :value, :qty, :category, :categoryItem)";
-//
-//        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(invoiceItems.toArray());
-//        KeyHolder keyHolder = new GeneratedKeyHolder();
-//
-//        int[] updateResults = new int[invoiceItems.size()];
-//
-//        for (int i = 0; i < batch.length; i++) {
-//            namedParameterJdbcTemplate.update(query, batch[i], keyHolder);
-//
-//            // Retrieve the generated key for the current row
-//            if (keyHolder.getKeys() != null) {
-//                Number key = (Number) keyHolder.getKeys().get("ID"); // insert generated number into ID column
-//                if (key != null) {
-//                    invoiceItems.get(i).setId(key.intValue());
-//                }
-//            }
-//            updateResults[i] = 1; // Assuming that each insert will affect one row
-//        }
-//        return updateResults;
-//    }
-
-
     @Override
     public int update(PaymentDTO paymentDTO) {
         String query = "UPDATE payment set " +

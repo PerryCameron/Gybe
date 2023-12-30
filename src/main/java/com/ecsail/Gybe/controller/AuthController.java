@@ -59,10 +59,11 @@ public class AuthController {
 			return "result";
 		} else {
 			model.addAttribute("errorMessage", email + " was not found in our system."); // Add custom error message
+			logger.error(email + " was not found in our system.");
 			return "email-error";
 		}
 	}
-
+	// I think this one is deprecated as all  functionality here is included in form-request-summary
 	@GetMapping("/email-login")
 	public String getFormRequests(Model model, @RequestParam(required = false) Integer year) {
 		if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided

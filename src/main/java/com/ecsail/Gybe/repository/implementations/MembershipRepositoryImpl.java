@@ -4,6 +4,8 @@ import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import com.ecsail.Gybe.repository.rowmappers.MembershipListRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.MembershipListRowMapper1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -19,6 +21,8 @@ import java.util.List;
 public class MembershipRepositoryImpl implements MembershipRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate template;
+    private static final Logger logger = LoggerFactory.getLogger(MembershipRepository.class);
+
 
     @Autowired
     public MembershipRepositoryImpl(DataSource dataSource) {

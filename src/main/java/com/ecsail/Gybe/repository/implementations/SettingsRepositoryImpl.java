@@ -3,6 +3,8 @@ package com.ecsail.Gybe.repository.implementations;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.SettingsRepository;
 import com.ecsail.Gybe.repository.rowmappers.AppSettingsRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,8 @@ public class SettingsRepositoryImpl implements SettingsRepository {
 
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(SettingsRepository.class);
+
 
 
     public SettingsRepositoryImpl(DataSource dataSource) {

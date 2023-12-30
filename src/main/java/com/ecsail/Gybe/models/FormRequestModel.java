@@ -5,6 +5,8 @@ import com.ecsail.Gybe.dto.*;
 import java.util.ArrayList;
 
 public class FormRequestModel {
+
+    SlipDTO slip;
     HashDTO hashDTO = null;
     MembershipListDTO membershipListDTO = new MembershipListDTO();
     ArrayList<InvoiceDTO> invoiceDTOS = membershipListDTO.getInvoiceDTOS();
@@ -19,6 +21,15 @@ public class FormRequestModel {
     EmailDTO secondaryEmail = null;
     PhoneDTO secondaryCellPhone = null;
     int invoiceId = 0;
+
+
+    public SlipDTO getSlip() {
+        return slip;
+    }
+
+    public void setSlip(SlipDTO slip) {
+        this.slip = slip;
+    }
 
     public int getInvoiceId() {
         return invoiceId;

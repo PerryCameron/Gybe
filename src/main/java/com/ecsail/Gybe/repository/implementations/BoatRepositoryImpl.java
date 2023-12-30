@@ -7,6 +7,8 @@ import com.ecsail.Gybe.repository.rowmappers.BoatListRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.BoatOwnerRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.BoatPhotosRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.BoatRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -24,6 +26,8 @@ import java.util.Objects;
 public class BoatRepositoryImpl implements BoatRepository {
     private final JdbcTemplate template;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(BoatRepository.class);
+
 
     @Autowired
     public BoatRepositoryImpl(DataSource dataSource) {
