@@ -132,9 +132,12 @@ public class FormRequestServiceImpl implements FormRequestService {
         if(model.getNumberOfDependents() > 0) {
             int count = 1;
             for(PersonDTO personDTO: model.getDependents()) {
-                builder.queryParam("dependent" + count + "[first]", personDTO.getFirstName())
-                .queryParam("dependent" + count + "[last]", personDTO.getLastName())
-                .queryParam("dependent" + count + "BirthDay", personDTO.getBirthday());
+                String birthDay[] = personDTO.getBirthday().toString().split("-");
+                builder.queryParam("dependentName" + count + "[first]", personDTO.getFirstName())
+                .queryParam("dependentName" + count + "[last]", personDTO.getLastName())
+                .queryParam("dependentBirthday" + count + "[day]", birthDay[2])
+                .queryParam("dependentBirthday" + count + "[month]", birthDay[1])
+                .queryParam("dependentBirthday" + count + "[year]", birthDay[0]);
                 count++;
             }
         }
