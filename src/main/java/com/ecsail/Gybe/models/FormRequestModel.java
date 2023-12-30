@@ -6,25 +6,44 @@ import java.util.ArrayList;
 
 public class FormRequestModel {
 
-    SlipDTO slip;
-    HashDTO hashDTO = null;
-    MembershipListDTO membershipListDTO = new MembershipListDTO();
-    ArrayList<InvoiceDTO> invoiceDTOS = membershipListDTO.getInvoiceDTOS();
-    ArrayList<InvoiceItemDTO> invoiceItemDTOS = null;
-    ArrayList<PersonDTO> personDTOS = membershipListDTO.getPersonDTOS();
-    PersonDTO primary = null;
-    PersonDTO secondary = null;
-    ArrayList<PersonDTO> dependents = null;
-    EmailDTO primaryEmail = null;
-    PhoneDTO primaryCellPhone = null;
-    PhoneDTO primaryEmergencyPhone = null;
-    EmailDTO secondaryEmail = null;
-    PhoneDTO secondaryCellPhone = null;
-    int invoiceId = 0;
+    private SlipDTO slip;
+    private HashDTO hashDTO = null;
+    private MembershipListDTO membershipListDTO = new MembershipListDTO();
+    private ArrayList<InvoiceDTO> invoiceDTOS = membershipListDTO.getInvoiceDTOS();
+    private ArrayList<InvoiceItemDTO> invoiceItemDTOS = null;
+    private ArrayList<PersonDTO> personDTOS = membershipListDTO.getPersonDTOS();
+    private ArrayList<BoatDTO> boatDTOS = membershipListDTO.getBoatDTOS();
+    private PersonDTO primary = null;
+    private PersonDTO secondary = null;
+    private ArrayList<PersonDTO> dependents = null;
+    private EmailDTO primaryEmail = null;
+    private PhoneDTO primaryCellPhone = null;
+    private PhoneDTO primaryEmergencyPhone = null;
+    private EmailDTO secondaryEmail = null;
+    private PhoneDTO secondaryCellPhone = null;
+    private int invoiceId = 0;
+
+
+    public boolean membershipHasBoats() {
+        if(boatDTOS.size() > 0) return true;
+        else return false;
+    }
+
+    public boolean membershipHasDependents() {
+        if(dependents.size() > 0) return true;
+        else return false;
+    }
+    public ArrayList<BoatDTO> getBoatDTOS() {
+        return boatDTOS;
+    }
+
+    public void setBoatDTOS(ArrayList<BoatDTO> boatDTOS) {
+        this.boatDTOS = boatDTOS;
+    }
 
     public ArrayList<PersonDTO> extractDependentsFromPeople() {
         ArrayList<PersonDTO> dependents = new ArrayList<>();
-        personDTOS.stream().filter(personDTO -> personDTO.getMemberType() == 3).forEach(personDTO -> dependents.add(personDTO));
+        personDTOS.stream().filter(personDTO -> personDTO.getMemberType() == 3).forEach(dependents::add);
         return dependents;
     }
 
@@ -32,7 +51,7 @@ public class FormRequestModel {
         if(dependents.isEmpty())
             return 0;
         else
-        return dependents.size();
+            return dependents.size();
     }
 
     public SlipDTO getSlip() {

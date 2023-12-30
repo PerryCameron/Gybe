@@ -25,6 +25,7 @@ public class FormRequestServiceImpl implements FormRequestService {
     private final SettingsServiceImpl settingService;
     private static final Logger logger = LoggerFactory.getLogger(FormRequestServiceImpl.class);
     private final SlipRepositoryImpl slipRepository;
+    private final BoatRepositoryImpl boatRepository;
 
 
     @Autowired
@@ -36,7 +37,8 @@ public class FormRequestServiceImpl implements FormRequestService {
             EmailRepositoryImpl emailRepository,
             PhoneRepositoryImpl phoneRepository,
             SettingsServiceImpl settingsService,
-            SlipRepositoryImpl slipRepository) {
+            SlipRepositoryImpl slipRepository,
+            BoatRepositoryImpl boatRepository) {
         this.hashRepository = hashRepository;
         this.membershipRepository = membershipRepository;
         this.invoiceRepository = invoiceRepository;
@@ -46,6 +48,7 @@ public class FormRequestServiceImpl implements FormRequestService {
         this.settingService = settingsService;
         this.model = new FormRequestModel();
         this.slipRepository = slipRepository;
+        this.boatRepository = boatRepository;
     }
 
     @Override
@@ -86,7 +89,8 @@ public class FormRequestServiceImpl implements FormRequestService {
         }
         // separate our dependents if they exist
         model.setDependents(model.extractDependentsFromPeople());
-
+        // get our boats
+        model.setBoatDTOS((ArrayList<BoatDTO>) boatRepository.getBoatsByMsId(model.getMsId()));
     }
 
     @Override
@@ -129,15 +133,32 @@ public class FormRequestServiceImpl implements FormRequestService {
                 builder.queryParam("spouseEmail", model.getSecondaryEmail().getEmail());
         } else
             builder.queryParam("haveSpouse", "No");
-        if(model.getNumberOfDependents() > 0) {
+        if (model.membershipHasDependents()) {
             int count = 1;
-            for(PersonDTO personDTO: model.getDependents()) {
+            for (PersonDTO personDTO : model.getDependents()) {
                 String birthDay[] = personDTO.getBirthday().toString().split("-");
                 builder.queryParam("dependentName" + count + "[first]", personDTO.getFirstName())
-                .queryParam("dependentName" + count + "[last]", personDTO.getLastName())
-                .queryParam("dependentBirthday" + count + "[day]", birthDay[2])
-                .queryParam("dependentBirthday" + count + "[month]", birthDay[1])
-                .queryParam("dependentBirthday" + count + "[year]", birthDay[0]);
+                        .queryParam("dependentName" + count + "[last]", personDTO.getLastName())
+                        .queryParam("dependentBirthday" + count + "[day]", birthDay[2])
+                        .queryParam("dependentBirthday" + count + "[month]", birthDay[1])
+                        .queryParam("dependentBirthday" + count + "[year]", birthDay[0]);
+                count++;
+            }
+        }
+        if (model.membershipHasBoats()) {
+            int count = 1;
+            for (BoatDTO boatDTO : model.getBoatDTOS()) {
+                builder.queryParam("addBoat" + count, "Yes")
+                        .queryParam("boat_id" + count, boatDTO.getBoat_id())
+                        .queryParam("boatName" + count, boatDTO.getBoat_name())
+                        .queryParam("registrationNumber" + count, boatDTO.getRegistration_num())
+                        .queryParam("manufacturer" + count, boatDTO.getManufacturer())
+                        .queryParam("manufactureYear" + count, boatDTO.getManufacture_year())
+                        .queryParam("model" + count, boatDTO.getModel())
+                        .queryParam("length" + count, boatDTO.getLength())
+                        .queryParam("draft" + count, boatDTO.getDraft())
+                        .queryParam("sail" + count, boatDTO.getSail_number())
+                        .queryParam("hasTrailer" + count, boatDTO.getHasTrailer());
                 count++;
             }
         }
