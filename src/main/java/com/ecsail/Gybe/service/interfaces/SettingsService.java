@@ -26,4 +26,6 @@ public interface SettingsService {
     AppSettingDTO getFormBackgroundColor();
 
     AppSettingDTO getFormImage();
+
+    boolean isTestMode();
 }

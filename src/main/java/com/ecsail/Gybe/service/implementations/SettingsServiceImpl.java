@@ -101,6 +101,15 @@ public class SettingsServiceImpl implements SettingsService {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_image"))
                 .findFirst().orElse(null);
     }
+    @Override
+    public boolean isTestMode() {
+        AppSettingDTO appSettingDTO = appSettingDTOS.stream().filter(settingDTO -> settingDTO.getKey().equals("test_mode"))
+                .findFirst().orElse(null);
+        if(appSettingDTO != null) {
+         if(appSettingDTO.getValue().equals("true")) return true;
+        }
+        return false;
+    }
 
 
 

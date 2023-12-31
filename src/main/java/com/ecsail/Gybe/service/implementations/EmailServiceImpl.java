@@ -54,10 +54,12 @@ public class EmailServiceImpl implements EmailService {
             builder.queryParam("member", String.valueOf(hashDTO.getHash()));
             // log it
             logger.info("link created: " + builder.toUriString());
-            // this DTO will store a record of someone requesting a hash
-            hashRepository.insertHashRequestHistory(new FormHashRequestDTO(0,authDTO.getfName()
-                    + " " + authDTO.getlName(), builder.toUriString(),authDTO.getMsId(),
-                    authDTO.getEmail()));
+            // this DTO will store a record of someone requesting a hash  UPDATE: I have wrong one here
+//                hashRepository.insertHashRequestHistory(new FormHashRequestDTO(0, authDTO.getfName()
+//                        + " " + authDTO.getlName(), builder.toUriString(), authDTO.getMsId(),
+//                        authDTO.getEmail()));
+
+            // need to do "form_request" in database, and FormRequestDTO here.  Method above needs to go to /register
             // This adds the HTML body to the email
             mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration",
                     RegisterHtml.createEmailWithHtml(authDTO.getfName(), builder.toUriString(), settingsService));

@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.FormHashRequestDTO;
+import com.ecsail.Gybe.dto.FormRequestDTO;
 import com.ecsail.Gybe.dto.FormRequestSummaryDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
@@ -128,6 +129,12 @@ public class HashRepositoryImpl implements HashRepository {
                     id.MEMBERSHIP_ID ASC;
                 """;
         return template.query(sql, new Object[]{year, year, year}, new FormRequestSummaryRowMapper());
+    }
+    @Override
+    public void insertHashHistory(FormRequestDTO fr) {
+        String INSERT_QUERY =
+                "INSERT into form_request () VALUES (?,CURRENT_TIMESTAMP,?,?,?)";
+        template.update(INSERT_QUERY,fr.getForm_id(),fr.getPrimaryMember(),fr.getMsid(),fr.isSuccess());
     }
 
 
