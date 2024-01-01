@@ -2,7 +2,7 @@ package com.ecsail.Gybe.service.implementations;
 
 
 import com.ecsail.Gybe.dto.AuthDTO;
-import com.ecsail.Gybe.dto.FormHashRequestDTO;
+import com.ecsail.Gybe.dto.FormRequestDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
@@ -59,6 +59,7 @@ public class EmailServiceImpl implements EmailService {
 //                        + " " + authDTO.getlName(), builder.toUriString(), authDTO.getMsId(),
 //                        authDTO.getEmail()));
 
+            hashRepository.insertHashHistory(new FormRequestDTO(authDTO.getFullName(), authDTO.getMsId(), true));
             // need to do "form_request" in database, and FormRequestDTO here.  Method above needs to go to /register
             // This adds the HTML body to the email
             mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration",

@@ -18,6 +18,14 @@ public class FormRequestDTO {
     public FormRequestDTO() {
     }
 
+    public FormRequestDTO(String pri_mem, int msid, boolean success) {
+        this.form_id = 0;
+        this.req_date = "auto";
+        this.primaryMember = pri_mem;
+        this.msid = msid;
+        this.success = success;
+    }
+
     public int getForm_id() {
         return form_id;
     }

@@ -10,8 +10,6 @@ public interface HashRepository {
     HashDTO getHashDTOFromHash(long hash);
     HashDTO insertHash(HashDTO h);
     FormHashRequestDTO insertHashRequestHistory(FormHashRequestDTO formHashRequestDTO);
-
     List<FormRequestSummaryDTO> getFormRequestSummariesForYear(int year);
-
-    void insertHashHistory(FormRequestDTO fr);
+    FormRequestDTO insertHashHistory(FormRequestDTO fr);
 }

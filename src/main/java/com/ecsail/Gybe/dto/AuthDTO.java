@@ -52,6 +52,9 @@ public class AuthDTO {
 	}
 
 
+	public String getFullName() {
+		return fName + " " + lName;
+	}
 	public String getEmail() {
 		return email;
 	}

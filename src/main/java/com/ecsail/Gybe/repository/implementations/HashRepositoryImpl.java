@@ -131,11 +131,20 @@ public class HashRepositoryImpl implements HashRepository {
         return template.query(sql, new Object[]{year, year, year}, new FormRequestSummaryRowMapper());
     }
     @Override
-    public void insertHashHistory(FormRequestDTO fr) {
-        String INSERT_QUERY =
-                "INSERT into form_request () VALUES (?,CURRENT_TIMESTAMP,?,?,?)";
-        template.update(INSERT_QUERY,fr.getForm_id(),fr.getPrimaryMember(),fr.getMsid(),fr.isSuccess());
+    public FormRequestDTO insertHashHistory(FormRequestDTO formRequestDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String INSERT_QUERY = "INSERT INTO form_request (PRI_MEM, MSID, SUCCESS) VALUES (?, ?, ?)";
+        template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(INSERT_QUERY, new String[]{"FORM_ID"});
+            ps.setString(1, formRequestDTO.getPrimaryMember());
+            ps.setInt(2, formRequestDTO.getMsid());
+            ps.setBoolean(3, formRequestDTO.isSuccess());
+            return ps;
+        }, keyHolder);
+
+        if (keyHolder.getKeys() != null && keyHolder.getKeys().containsKey("FORM_ID")) {
+            formRequestDTO.setForm_id((Integer) keyHolder.getKeys().get("FORM_ID"));
+        }
+        return formRequestDTO;
     }
-
-
 }
