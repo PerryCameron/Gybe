@@ -162,6 +162,7 @@ public class FormRequestServiceImpl implements FormRequestService {
                 count++;
             }
         }
+        hashRepository.insertHashHistory(new FormRequestDTO(model.getPrimaryFullName(), model.getMsId(), true));
         logger.info(builder.toUriString());
         return builder.toUriString();
     }

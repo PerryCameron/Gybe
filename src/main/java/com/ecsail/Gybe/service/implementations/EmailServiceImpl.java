@@ -1,10 +1,7 @@
 package com.ecsail.Gybe.service.implementations;
 
 
-import com.ecsail.Gybe.dto.AuthDTO;
-import com.ecsail.Gybe.dto.FormRequestDTO;
-import com.ecsail.Gybe.dto.HashDTO;
-import com.ecsail.Gybe.dto.MailDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
@@ -54,14 +51,12 @@ public class EmailServiceImpl implements EmailService {
             builder.queryParam("member", String.valueOf(hashDTO.getHash()));
             // log it
             logger.info("link created: " + builder.toUriString());
-            // this DTO will store a record of someone requesting a hash  UPDATE: I have wrong one here
-//                hashRepository.insertHashRequestHistory(new FormHashRequestDTO(0, authDTO.getfName()
-//                        + " " + authDTO.getlName(), builder.toUriString(), authDTO.getMsId(),
-//                        authDTO.getEmail()));
-
-            hashRepository.insertHashHistory(new FormRequestDTO(authDTO.getFullName(), authDTO.getMsId(), true));
-            // need to do "form_request" in database, and FormRequestDTO here.  Method above needs to go to /register
-            // This adds the HTML body to the email
+                hashRepository.insertHashRequestHistory(new FormHashRequestDTO(
+                        0,
+                        authDTO.getFullName(),
+                        "register?member=" + hashDTO.getHash(),
+                        authDTO.getMsId(),
+                        authDTO.getEmail()));
             mailDTO = new MailDTO(authDTO.getEmail(),"ECSC Registration",
                     RegisterHtml.createEmailWithHtml(authDTO.getfName(), builder.toUriString(), settingsService));
             mailDTO.setAuthDTO(authDTO);
