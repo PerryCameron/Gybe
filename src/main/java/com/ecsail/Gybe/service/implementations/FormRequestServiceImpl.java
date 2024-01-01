@@ -113,7 +113,8 @@ public class FormRequestServiceImpl implements FormRequestService {
                 .queryParam("positionCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Position Credit"))
                 .queryParam("primaryMember[first]", model.getPrimary().getFirstName())
                 .queryParam("primaryMember[last]", model.getPrimary().getLastName())
-                .queryParam("primaryOccupation", model.getPrimary().getOccupation());
+                .queryParam("primaryOccupation", model.getPrimary().getOccupation())
+                .queryParam("numberOfBoats", model.getBoatDTOS().size());
 
         if (model.getPrimaryEmail() != null)
             builder.queryParam("primaryEmail", model.getPrimaryEmail().getEmail());
