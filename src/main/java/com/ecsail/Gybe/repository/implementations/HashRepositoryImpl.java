@@ -107,29 +107,30 @@ public class HashRepositoryImpl implements HashRepository {
     @Override
     public List<FormRequestSummaryDTO> getFormRequestSummariesForYear(int year) {
         String sql = """
-                SELECT
-                    id.MEMBERSHIP_ID,
-                    MAX(fhr.REQ_DATE) AS newest_hash_req_date,
-                    MAX(fhr.PRI_MEM) AS pri_mem,
-                    MAX(fhr.LINK) AS link,
-                    MAX(fhr.MAILED_TO) AS mailed_to,
-                    COUNT(DISTINCT fhr.FORM_HASH_ID) AS num_hash_duplicates,
-                    MAX(fr.REQ_DATE) AS newest_form_req_date,
-                    COUNT(DISTINCT fr.FORM_ID) AS num_form_attempts
-                FROM
-                    form_hash_request fhr
-                        LEFT JOIN form_request fr ON fhr.MSID = fr.MSID
-                        LEFT JOIN membership_id id ON fhr.MSID = id.MS_ID
-                WHERE
-                    (YEAR(fhr.REQ_DATE) = ? OR YEAR(fr.REQ_DATE) = ?)
-                  AND id.FISCAL_YEAR = ?
-                GROUP BY
-                    fhr.MSID, id.MEMBERSHIP_ID
-                ORDER BY
-                    id.MEMBERSHIP_ID ASC;
+                    SELECT
+                          id.MEMBERSHIP_ID,
+                          MAX(fhr.REQ_DATE) AS newest_hash_req_date,
+                          MAX(fhr.PRI_MEM) AS pri_mem,
+                          MAX(fhr.LINK) AS link,
+                          MAX(fhr.MAILED_TO) AS mailed_to,
+                          COUNT(DISTINCT CASE WHEN YEAR(fhr.REQ_DATE) = ? THEN fhr.FORM_HASH_ID END) AS num_hash_duplicates,
+                          MAX(fr.REQ_DATE) AS newest_form_req_date,
+                          COUNT(DISTINCT CASE WHEN YEAR(fr.REQ_DATE) = ? THEN fr.FORM_ID END) AS num_form_attempts
+                      FROM
+                          form_hash_request fhr
+                          LEFT JOIN form_request fr ON fhr.MSID = fr.MSID
+                          LEFT JOIN membership_id id ON fhr.MSID = id.MS_ID
+                      WHERE
+                          (YEAR(fhr.REQ_DATE) = ? OR YEAR(fr.REQ_DATE) = ?)
+                          AND id.FISCAL_YEAR = ?
+                      GROUP BY
+                          fhr.MSID, id.MEMBERSHIP_ID
+                      ORDER BY
+                          id.MEMBERSHIP_ID ASC;
                 """;
-        return template.query(sql, new Object[]{year, year, year}, new FormRequestSummaryRowMapper());
+        return template.query(sql, new Object[]{year, year, year, year, year}, new FormRequestSummaryRowMapper());
     }
+
     @Override
     public FormRequestDTO insertHashHistory(FormRequestDTO formRequestDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
