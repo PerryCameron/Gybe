@@ -4,11 +4,14 @@ import com.ecsail.Gybe.dto.RoleDTO;
 import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
 import com.ecsail.Gybe.service.interfaces.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-//@Service
-//@Transactional
+@Service
+@Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
 
 
@@ -16,7 +19,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
 
-//    @Autowired
+    @Autowired
     public AuthenticationServiceImpl(AuthenticationRepository authenticationRepository,
                                      PasswordEncoder passwordEncoder,
                                      AuthenticationManager authenticationManager
@@ -28,11 +31,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserDTO registerUser(String username, String password) {
+        System.out.println("registering the user");
         String encodedPassword = passwordEncoder.encode(password);
-        RoleDTO userRole = authenticationRepository.findByAuthority("USER").get();
+        System.out.println("encoded password:" + encodedPassword);
+        RoleDTO userRole = authenticationRepository.findByAuthority("ROLE_USER").get();
+        System.out.println("userRole=" + userRole);
         UserDTO userDTO = authenticationRepository.saveUser(new UserDTO(0, username, encodedPassword, 0));
+        System.out.println("userDTO" + userDTO);
         authenticationRepository.saveUserRole(userDTO, userRole);
-        return null;
+        return userDTO;
     }
 
 //    public LoginResponseDTO loginUser(String username, String password) {

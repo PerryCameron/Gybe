@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                             "/email-error/**"
                     ).permitAll();
                     auth.requestMatchers("/home/**").hasRole("USER");
-                    auth.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
+                    auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
                     auth.requestMatchers("/lists/**").hasAnyRole("ADMIN","MEMBERSHIP");
                     auth.anyRequest().authenticated();
                 })

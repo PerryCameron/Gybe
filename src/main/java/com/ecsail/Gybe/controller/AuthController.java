@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.FormHashRequestDTO;
 import com.ecsail.Gybe.dto.FormRequestSummaryDTO;
 import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
+import com.ecsail.Gybe.service.implementations.AuthenticationServiceImpl;
 import com.ecsail.Gybe.service.implementations.EmailServiceImpl;
 import com.ecsail.Gybe.service.implementations.SendMailServiceImpl;
 import jakarta.mail.MessagingException;
@@ -26,7 +27,8 @@ public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final EmailServiceImpl emailServiceImpl;
 	private final SendMailServiceImpl sendMailService;
-	AdminServiceImpl adminServiceImpl;
+	private final AdminServiceImpl adminServiceImpl;
+	private final AuthenticationServiceImpl authenticationService;
 
 
 	@Value("${spring.mail.username}")
@@ -37,10 +39,12 @@ public class AuthController {
 	public AuthController(
 			AdminServiceImpl adminServiceImpl,
 			EmailServiceImpl emailServiceImpl,
-			SendMailServiceImpl sendMailService) {
+			SendMailServiceImpl sendMailService,
+			AuthenticationServiceImpl authenticationService) {
 		this.adminServiceImpl = adminServiceImpl;
 		this.emailServiceImpl = emailServiceImpl;
 		this.sendMailService = sendMailService;
+		this.authenticationService = authenticationService;
 	}
 
 	@GetMapping("/renew")
@@ -79,4 +83,22 @@ public class AuthController {
 		model.addAttribute("formSummaries", formRequestSummaryDTOS);
 		return "form-request-summary";
 	}
+
+	@GetMapping("/admin")
+	public String getAdminPage() {
+		return "admin";
+	}
+
+	@PostMapping("/adduser")
+	public String addUser(@RequestParam String username, @RequestParam String password, Model model) {
+		// Call the registerUser method from AuthenticationServiceImpl
+		try {
+			System.out.println(username + " " + password);
+			authenticationService.registerUser(username, password);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return "admin"; // Redirect to the "admin" view or page
+	}
+
 }

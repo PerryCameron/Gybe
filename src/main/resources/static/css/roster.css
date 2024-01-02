@@ -98,13 +98,15 @@ html {
   margin-bottom: 50px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 0.5rem 0.7rem;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="password"]:focus {
   border-color: #7db0fb;
   outline: 0;
   box-shadow: 0 0 0 4px rgba(24, 117, 255, 0.25);

@@ -4,11 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-
-    <link rel="stylesheet" href="css/table.css" type="text/css" />
-    <link rel="stylesheet" href="/css/roster.css" type="text/css" />
-    <link rel="stylesheet" href="/css/admin.css" type="text/css" />
-    <script src="js/components.js"></script>
+    <link rel="stylesheet" th:href="@{css/table.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/roster.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" />
+    <script th:src="@{js/components.js}"></script>
     <!-- <script src="js/form-request-summary.js" defer></script> -->
 </head>
 <body>
@@ -26,7 +25,8 @@
 
 <div class="main-content">
     <p>Create a user</p>
-    <form action="/addUser" method="post">
+    <form action="/adduser" method="post">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
         <div class="user-add">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" />

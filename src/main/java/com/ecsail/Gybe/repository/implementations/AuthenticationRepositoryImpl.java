@@ -3,8 +3,11 @@ package com.ecsail.Gybe.repository.implementations;
 import com.ecsail.Gybe.dto.RoleDTO;
 import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
+import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import com.ecsail.Gybe.repository.rowmappers.RoleRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.UserRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,6 +27,7 @@ import java.util.Set;
 public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationRepository.class);
 
     @Autowired
     public AuthenticationRepositoryImpl(DataSource dataSource) {
@@ -56,11 +60,11 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     @Override
     public Optional<RoleDTO> findByAuthority(String authority) {
         String query = "SELECT * FROM roles WHERE role_name=?";
-        JdbcTemplate jdbcTemplate; // Assume this is autowired or passed through constructor
         try {
             RoleDTO role = template.queryForObject(query, new RoleRowMapper(), authority);
             return Optional.ofNullable(role);
         } catch (EmptyResultDataAccessException e) {
+            logger.error(e.getMessage());
             return Optional.empty();
         }
     }
@@ -81,16 +85,21 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     public UserDTO saveUser(UserDTO user) {
         String insertQuery = "INSERT INTO users (username, password, p_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(insertQuery, new String[] {"user_id"});
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setInt(3, user.getpId());
-            return ps;
-        }, keyHolder);
-        user.setUserId(keyHolder.getKey().intValue());
+        try {
+            template.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(insertQuery, new String[] {"user_id"});
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getPassword());
+                ps.setInt(3, user.getpId());
+                return ps;
+            }, keyHolder);
+            user.setUserId(keyHolder.getKey().intValue());
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+        }
         return user;
     }
+
 
     @Override
     public Void saveUserRole(UserDTO user, RoleDTO role) {
@@ -98,7 +107,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
         try {
             template.update(insertQuery, user.getUserId(), role.getRoleId());
         } catch (DataAccessException e) {
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
         return null;
     }
