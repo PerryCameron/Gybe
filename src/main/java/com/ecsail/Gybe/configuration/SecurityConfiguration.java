@@ -41,6 +41,9 @@ public class SecurityConfiguration {
                             "/error/**",
                             "/email-error/**"
                     ).permitAll();
+                    auth.requestMatchers("/home/**").hasRole("USER");
+                    auth.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
+                    auth.requestMatchers("/lists/**").hasAnyRole("ADMIN","MEMBERSHIP");
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(form -> form
