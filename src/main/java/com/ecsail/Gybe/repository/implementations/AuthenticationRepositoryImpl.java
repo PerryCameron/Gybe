@@ -129,8 +129,4 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
             return Optional.empty();
         }
     }
-
-
-
-
 }
