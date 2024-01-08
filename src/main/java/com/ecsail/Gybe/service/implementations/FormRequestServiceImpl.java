@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.enums.MembershipType;
 import com.ecsail.Gybe.models.FormRequestModel;
 import com.ecsail.Gybe.repository.implementations.*;
 import com.ecsail.Gybe.repository.interfaces.*;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Service
@@ -93,15 +93,21 @@ public class FormRequestServiceImpl implements FormRequestService {
         // get our boats
         model.setBoatDTOS((ArrayList<BoatDTO>) boatRepository.getBoatsByMsId(model.getMsId()));
     }
-
+// addDependent2
     @Override
     public String buildLinkWithParameters() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(settingService.getFormURL().getValue())
                 .path(settingService.getFormId().getValue())
                 .queryParam("slipNumber", model.getSlip().getSlip_num())
                 .queryParam("numberOfDependents", model.getNumberOfDependents())
+                .queryParam("addDependent2", determineIfAdd(2))
+                .queryParam("addDependent3", determineIfAdd(3))
+                .queryParam("addDependent4", determineIfAdd(4))
+                .queryParam("addDependent5", determineIfAdd(5))
+                .queryParam("addDependent6", determineIfAdd(6))
+                .queryParam("addDependent7", determineIfAdd(7))
                 .queryParam("memId", model.getMembershipId())
-                .queryParam("membershipType", model.getMembership().getMemType())
+                .queryParam("membershipType", MembershipType.getByCode(model.getMembership().getMemType()))
                 .queryParam("address[addr_line1]", model.getMembership().getAddress())
                 .queryParam("address[city]", model.getMembership().getCity())
                 .queryParam("address[state]", model.getMembership().getState())
@@ -169,6 +175,15 @@ public class FormRequestServiceImpl implements FormRequestService {
         return builder.toUriString();
     }
 
+    private String determineIfAdd(int dependant) {
+        int totalDependents = model.getNumberOfDependents();
+        // Check if there are more than 1 dependents and dependant is less than totalDependents
+        if (totalDependents > 1 && (dependant - 1) < totalDependents) {
+            return "Yes";
+        } else {
+            return "No";
+        }
+    }
 
     @Override
     public PersonDTO getPerson(ArrayList<PersonDTO> people, int personType) {
