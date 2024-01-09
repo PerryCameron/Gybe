@@ -166,7 +166,8 @@ public class FormRequestServiceImpl implements FormRequestService {
                         .queryParam("length" + count, boatDTO.getLength())
                         .queryParam("draft" + count, boatDTO.getDraft())
                         .queryParam("sail" + count, boatDTO.getSail_number())
-                        .queryParam("hasTrailer" + count, boatDTO.getHasTrailer());
+                        .queryParam("keelType" + count, toKeelType(boatDTO.getKeel()))
+                        .queryParam("hasTrailer" + count, toHumanBool(boatDTO.getHasTrailer()));
                 count++;
             }
         }
@@ -183,6 +184,21 @@ public class FormRequestServiceImpl implements FormRequestService {
         } else {
             return "No";
         }
+    }
+
+    private String toKeelType(String type) {
+        String reducedType = "Other";
+        switch (type) {
+            case "FI","WI","FU","BU" -> reducedType = "Fixed";
+            case "SW","CE","DA","RE" -> reducedType = "Retractable";
+        }
+        return reducedType;
+    }
+
+    private String toHumanBool(boolean booleanTest) {
+        String answer = "Yes";
+        if(booleanTest == false) answer = "No";
+        return answer;
     }
 
     @Override
