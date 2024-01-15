@@ -34,7 +34,6 @@ public class AuthController {
 	@Value("${spring.mail.username}")
 	private String fromEmail;
 
-
 	@Autowired
 	public AuthController(
 			AdminServiceImpl adminServiceImpl,

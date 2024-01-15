@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class FormRequestServiceImpl implements FormRequestService {
@@ -167,6 +169,7 @@ public class FormRequestServiceImpl implements FormRequestService {
                         .queryParam("draft" + count, boatDTO.getDraft())
                         .queryParam("sail" + count, boatDTO.getSail_number())
                         .queryParam("keelType" + count, toKeelType(boatDTO.getKeel()))
+                        .queryParam("beam" + count, extractFirstNumber(boatDTO.getBeam()))
                         .queryParam("hasTrailer" + count, toHumanBool(boatDTO.getHasTrailer()));
                 count++;
             }
@@ -199,6 +202,21 @@ public class FormRequestServiceImpl implements FormRequestService {
         String answer = "Yes";
         if(booleanTest == false) answer = "No";
         return answer;
+    }
+
+    public static double extractFirstNumber(String input) {
+        // Regular expression to match a numeric value (including decimals)
+        String regex = "\\d+\\.\\d+|\\d+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            // Convert the first match to a double and return it
+            return Double.parseDouble(matcher.group());
+        } else {
+            // Throw an exception or return a default value if no number is found
+            throw new IllegalArgumentException("No numeric value found in the input string");
+        }
     }
 
     @Override
