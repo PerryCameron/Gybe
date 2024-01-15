@@ -41,8 +41,12 @@ public class EmailServiceImpl implements EmailService {
             UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
                     .scheme(settingsService.getScheme().getValue())
                     .host(settingsService.getHostName().getValue())
-                    .port(settingsService.getAppPort().getValue())
                     .path("/register");
+
+            String port = settingsService.getAppPort().getValue();
+            if (port != null && !port.isEmpty()) {
+                builder.port(port);
+            }
             // this fills the dto with correct values
             AuthDTO authDTO = emailRepository.getAuthDTOFromEmail(Year.now().getValue(), email);
             // creates a new hash or loads an existing hash

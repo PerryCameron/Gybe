@@ -9,7 +9,6 @@ import com.ecsail.Gybe.repository.rowmappers.FormHashRequestRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.FormRequestSummaryRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.HashRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,12 +23,11 @@ import java.util.List;
 @Repository
 public class HashRepositoryImpl implements HashRepository {
     private final JdbcTemplate template;
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     public HashRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -58,13 +56,13 @@ public class HashRepositoryImpl implements HashRepository {
     @Override
     public HashDTO getHashDTOFromMsid(int msid) {
         String QUERY = "select * from form_msid_hash where MS_ID=?";
-        return (HashDTO) template.queryForObject(QUERY, new BeanPropertyRowMapper(HashDTO.class), new Object[]{msid});
+        return template.queryForObject(QUERY, new HashRowMapper(), msid);
     }
 
     @Override
     public HashDTO getHashDTOFromHash(long hash) {
         String QUERY = "select * from form_msid_hash where HASH=?";
-        return (HashDTO) template.queryForObject(QUERY, new HashRowMapper(), hash);
+        return template.queryForObject(QUERY, new HashRowMapper(), hash);
     }
 
     @Override
