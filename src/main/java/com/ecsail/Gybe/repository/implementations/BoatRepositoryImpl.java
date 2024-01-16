@@ -112,7 +112,7 @@ public class BoatRepositoryImpl implements BoatRepository {
         String query = """
                 SELECT b.boat_id, bo.ms_id, b.manufacturer, b.manufacture_year, b.registration_num, b.model,
                 b.boat_name, b.sail_number, b.has_trailer, b.length, b.weight, b.keel, b.phrf, b.draft, b.beam,
-                b.lwl, b.aux FROM boat b INNER JOIN boat_owner bo USING (boat_id) WHERE ms_id=?
+                b.lwl, b.aux FROM boat b INNER JOIN boat_owner bo USING (boat_id) WHERE AUX=0 and ms_id=?
                 """;
         return template.query(query, new BoatRowMapper(), msId);
     }
