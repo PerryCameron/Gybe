@@ -56,10 +56,19 @@ public class FormRequestServiceImpl implements FormRequestService {
 
     @Override
     public String openForm(String hash) {
+        String link = null;
         // collect and organize data
-        populateModel(hash);
+        try {
+            logger.info("populating model");
+            populateModel(hash);
+            logger.info("creating link");
+            link = buildLinkWithParameters();
+        } catch (Exception e) {
+            logger.error("Could not populate Model: " + e);
+        }
         // use data to build and return link
-        return buildLinkWithParameters();
+        logger.info("Returning link");
+        return link;
     }
 
     @Override
@@ -95,88 +104,161 @@ public class FormRequestServiceImpl implements FormRequestService {
         // get our boats
         model.setBoatDTOS((ArrayList<BoatDTO>) boatRepository.getBoatsByMsId(model.getMsId()));
     }
-// addDependent2
+
+    // addDependent2
     @Override
     public String buildLinkWithParameters() {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(settingService.getFormURL().getValue())
-                .path(settingService.getFormId().getValue())
-                .queryParam("slipNumber", model.getSlip().getSlip_num())
-                .queryParam("numberOfDependents", model.getNumberOfDependents())
-                .queryParam("addDependent2", determineIfAdd(2))
-                .queryParam("addDependent3", determineIfAdd(3))
-                .queryParam("addDependent4", determineIfAdd(4))
-                .queryParam("addDependent5", determineIfAdd(5))
-                .queryParam("addDependent6", determineIfAdd(6))
-                .queryParam("addDependent7", determineIfAdd(7))
-                .queryParam("memId", model.getMembershipId())
-                .queryParam("membershipType", MembershipType.getByCode(model.getMembership().getMemType()))
-                .queryParam("address[addr_line1]", model.getMembership().getAddress())
-                .queryParam("address[city]", model.getMembership().getCity())
-                .queryParam("address[state]", model.getMembership().getState())
-                .queryParam("address[postal]", model.getMembership().getZip())
-                .queryParam("workCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Work Credits"))
-                .queryParam("winterStorage", "winterStorage", getInvoiceItemQty(model.getInvoiceItemDTOS(), "Winter Storage"))
-                .queryParam("additionalCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Other Credit"))
-                .queryParam("otherFee", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Other Fee"))
-                .queryParam("initiation", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Initiation"))
-                .queryParam("positionCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Position Credit"))
-                .queryParam("primaryMember[first]", model.getPrimary().getFirstName())
-                .queryParam("primaryMember[last]", model.getPrimary().getLastName())
-                .queryParam("primaryOccupation", model.getPrimary().getOccupation())
-                .queryParam("numberOfBoats", model.getBoatDTOS().size());
+                .path(settingService.getFormId().getValue());
 
-        if (model.getPrimaryEmail() != null)
-            builder.queryParam("primaryEmail", model.getPrimaryEmail().getEmail());
-        if (model.getPrimaryCellPhone() != null)
-            builder.queryParam("primaryPhone", model.getPrimaryCellPhone().getPhone());
-        if (model.getPrimaryEmergencyPhone() != null)
-            builder.queryParam("emergencyPhone", model.getPrimaryEmergencyPhone().getPhone());
+        if(model.getSlip() != null)
+            setParameter("sln", model.getSlip().getSlip_num(), builder);
+        else logger.error("model.getSlip() is null");
+
+        builder.queryParam("nod", model.getNumberOfDependents())
+                .queryParam("d2", determineIfAdd(2))
+                .queryParam("d3", determineIfAdd(3))
+                .queryParam("d4", determineIfAdd(4))
+                .queryParam("d5", determineIfAdd(5))
+                .queryParam("d6", determineIfAdd(6))
+                .queryParam("d7", determineIfAdd(7));
+
+
+        builder.queryParam("memId", model.getMembershipId());
+
+        if(model.getMembership() != null) {
+            setParameter("met", String.valueOf(MembershipType.getByCode(model.getMembership().getMemType())), builder);
+            setParameter("address[addr_line1]", model.getMembership().getAddress(), builder);
+            setParameter("address[city]", model.getMembership().getCity(), builder);
+            setParameter("address[state]", model.getMembership().getState(), builder);
+            setParameter("address[postal]", model.getMembership().getZip(), builder);
+        } else logger.error("model.getMembership() is null");
+
+        if(model.getInvoiceItemDTOS() != null) {
+            setParameter("workCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Work Credits"), builder);
+            setParameter("winterStorage", getInvoiceItemQty(model.getInvoiceItemDTOS(), "Winter Storage"), builder);
+            setParameter("additionalCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Other Credit"), builder);
+            setParameter("otherFee", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Other Fee"), builder);
+            setParameter("initiation", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Initiation"), builder);
+            setParameter("positionCredit", getInvoiceItemValue(model.getInvoiceItemDTOS(), "Position Credit"), builder);
+        } else logger.error("model.getInvoiceItemDTOS() is null");
+
+        if(model.getPrimary() != null) {
+            setParameter("primaryMember[first]", model.getPrimary().getFirstName(), builder);
+            setParameter("primaryMember[last]", model.getPrimary().getLastName(), builder);
+            setParameter("primaryOccupation", model.getPrimary().getOccupation(), builder);
+        } else logger.error("model.getPrimary() is null");
+
+        if(model.getBoatDTOS() != null)  // probably don't need this one
+            setParameter("numberOfBoats", String.valueOf(model.getBoatDTOS().size()), builder);
+        else logger.error("model.getBoatDTOS() is null");
+
+        if(model.getPrimaryEmail() != null)
+            setParameter("primaryEmail", model.getPrimaryEmail().getEmail(), builder);
+        else logger.error("model.getPrimaryEmail() is null");
+
+        if(model.getPrimaryCellPhone() != null)
+            setParameter("primaryPhone", model.getPrimaryCellPhone().getPhone(), builder);
+        else logger.error("model.getPrimaryCellPhone() is null");
+
+        if(model.getPrimaryEmergencyPhone() != null)
+            setParameter("emergencyPhone", model.getPrimaryEmergencyPhone().getPhone(), builder);
+        else logger.error("model.getPrimaryEmergencyPhone() is null");
+
         if (model.getSecondary() != null) {
-            builder.queryParam("haveSpouse", "Yes")
-                    .queryParam("spouseName[first]", model.getSecondary().getFirstName())
-                    .queryParam("spouseName[last]", model.getSecondary().getLastName())
-                    .queryParam("spouseOccupation", model.getSecondary().getOccupation())
-                    .queryParam("spouseCompany", model.getSecondary().getBusiness());
-            if (model.getSecondaryCellPhone() != null)
-                builder.queryParam("spousePhone", model.getSecondaryCellPhone().getPhone());
-            if (model.getSecondaryEmail() != null)
-                builder.queryParam("spouseEmail", model.getSecondaryEmail().getEmail());
+            builder.queryParam("haveSpouse", "Yes");
+            setParameter("spouseName[first]", model.getSecondary().getFirstName(), builder);
+            setParameter("spouseName[last]", model.getSecondary().getLastName(), builder);
+            setParameter("spouseOccupation", model.getSecondary().getOccupation(), builder);
+            setParameter("spouseCompany", model.getSecondary().getBusiness(), builder);
+            if(model.getSecondaryCellPhone() != null)
+                setParameter("spousePhone", model.getSecondaryCellPhone().getPhone(), builder);
+            else logger.error("model.getSecondaryCellPhone() is null");
+
+            if(model.getSecondaryEmail() != null)
+                setParameter("spouseEmail", model.getSecondaryEmail().getEmail(), builder);
+            else logger.error("model.getSecondaryEmail() is null");
+
         } else
             builder.queryParam("haveSpouse", "No");
         if (model.membershipHasDependents()) {
             int count = 1;
             for (PersonDTO personDTO : model.getDependents()) {
                 String birthDay[] = personDTO.getBirthday().toString().split("-");
-                builder.queryParam("dependentName" + count + "[first]", personDTO.getFirstName())
-                        .queryParam("dependentName" + count + "[last]", personDTO.getLastName())
-                        .queryParam("dependentBirthday" + count + "[day]", birthDay[2])
-                        .queryParam("dependentBirthday" + count + "[month]", birthDay[1])
-                        .queryParam("dependentBirthday" + count + "[year]", birthDay[0]);
+                setParameter("dependentName" + count + "[first]", personDTO.getFirstName(), builder);
+                setParameter("dependentName" + count + "[last]", personDTO.getLastName(), builder);
+                setParameter("dependentBirthday" + count + "[day]", birthDay[2], builder);
+                setParameter("dependentBirthday" + count + "[month]", birthDay[1], builder);
+                setParameter("dependentBirthday" + count + "[year]", birthDay[0], builder);
                 count++;
             }
         }
         if (model.membershipHasBoats()) {
             int count = 1;
             for (BoatDTO boatDTO : model.getBoatDTOS()) {
-                builder.queryParam("addBoat" + count, "Yes")
-                        .queryParam("boat_id" + count, boatDTO.getBoat_id())
-                        .queryParam("boatName" + count, boatDTO.getBoat_name())
-                        .queryParam("registrationNumber" + count, boatDTO.getRegistration_num())
-                        .queryParam("manufacturer" + count, boatDTO.getManufacturer())
-                        .queryParam("manufactureYear" + count, boatDTO.getManufacture_year())
-                        .queryParam("model" + count, boatDTO.getModel())
-                        .queryParam("length" + count, boatDTO.getLength())
-                        .queryParam("draft" + count, boatDTO.getDraft())
-                        .queryParam("sail" + count, boatDTO.getSail_number())
-                        .queryParam("keelType" + count, toKeelType(boatDTO.getKeel()))
-                        .queryParam("beam" + count, extractFirstNumber(boatDTO.getBeam()))
-                        .queryParam("hasTrailer" + count, toHumanBool(boatDTO.getHasTrailer()));
+                if(boatDTO.getKeel() != null)
+                    setParameter("keelType" + count, toKeelType(boatDTO.getKeel()), builder);
+                else logger.error("boatDTO.getKeel() is null");
+
+                if(boatDTO.getBeam() != null)
+                    setParameter("beam" + count, extractFirstNumber(boatDTO.getBeam()), builder);
+                else logger.error("boatDTO.getBeam() is null");
+
+                setParameter("addBoat" + count, "Yes", builder);
+
+                if(boatDTO.getBoat_id() != null)
+                setParameter("boat_id" + count, String.valueOf(boatDTO.getBoat_id()), builder);
+                else logger.error("boatDTO.getBoat_id() is null");
+
+                if(boatDTO.getBoat_name() != null)
+                setParameter("boatName" + count, boatDTO.getBoat_name(), builder);
+                else logger.error("boatDTO.getBoat_name() is null");
+
+                if(boatDTO.getRegistration_num() != null)
+                setParameter("registrationNumber" + count, boatDTO.getRegistration_num(), builder);
+                else logger.error("boatDTO.getRegistration_num() is null");
+
+                if(boatDTO.getManufacturer() != null)
+                setParameter("manufacturer" + count, boatDTO.getManufacturer(), builder);
+                else logger.error("boatDTO.getManufacturer() is null");
+
+                if(boatDTO.getManufacture_year() != null)
+                setParameter("manufactureYear" + count, boatDTO.getManufacture_year(), builder);
+                else logger.error("boatDTO.getManufacture_year() is null");
+
+                if(boatDTO.getModel() != null)
+                setParameter("model" + count, boatDTO.getModel(), builder);
+                else logger.error("boatDTO.getModel() is null");
+
+                if(boatDTO.getLength() != null)
+                setParameter("length" + count, boatDTO.getLength(), builder);
+                else logger.error("boatDTO.getLength() is null");
+
+                if(boatDTO.getDraft() != null)
+                setParameter("draft" + count, boatDTO.getDraft(), builder);
+                else logger.error("boatDTO.getDraft() is null");
+
+                if(boatDTO.getSail_number() != null)
+                setParameter("sail" + count, boatDTO.getSail_number(), builder);
+                else logger.error("boatDTO.getSail_number() is null");
+
+                if(boatDTO.getHasTrailer() != null)
+                setParameter("hasTrailer" + count, toHumanBool(boatDTO.getHasTrailer()), builder);
+                else logger.error("boatDTO.getHasTrailer() is null");
+
                 count++;
             }
         }
         hashRepository.insertHashHistory(new FormRequestDTO(model.getPrimaryFullName(), model.getMsId(), true));
         logger.info(builder.toUriString());
         return builder.toUriString();
+    }
+
+    private void setParameter(String key, String value, UriComponentsBuilder builder) {
+        if (value != null && !value.equals("")) {
+            builder.queryParam(key, value);
+        } else
+            logger.info(key + " = \"\"");
     }
 
     private String determineIfAdd(int dependant) {
@@ -192,19 +274,19 @@ public class FormRequestServiceImpl implements FormRequestService {
     private String toKeelType(String type) {
         String reducedType = "Other";
         switch (type) {
-            case "FI","WI","FU","BU" -> reducedType = "Fixed";
-            case "SW","CE","DA","RE" -> reducedType = "Retractable";
+            case "FI", "WI", "FU", "BU" -> reducedType = "Fixed";
+            case "SW", "CE", "DA", "RE" -> reducedType = "Retractable";
         }
         return reducedType;
     }
 
     private String toHumanBool(boolean booleanTest) {
         String answer = "Yes";
-        if(booleanTest == false) answer = "No";
+        if (booleanTest == false) answer = "No";
         return answer;
     }
 
-    public static double extractFirstNumber(String input) {
+    public static String extractFirstNumber(String input) {
         // Regular expression to match a numeric value (including decimals)
         String regex = "\\d+\\.\\d+|\\d+";
         Pattern pattern = Pattern.compile(regex);
@@ -212,10 +294,10 @@ public class FormRequestServiceImpl implements FormRequestService {
 
         if (matcher.find()) {
             // Convert the first match to a double and return it
-            return Double.parseDouble(matcher.group());
+            return String.valueOf(Double.parseDouble(matcher.group()));
         } else {
             // Throw an exception or return a default value if no number is found
-            throw new IllegalArgumentException("No numeric value found in the input string");
+            return "";
         }
     }
 
@@ -231,6 +313,7 @@ public class FormRequestServiceImpl implements FormRequestService {
     public String getInvoiceItemValue(ArrayList<InvoiceItemDTO> invoiceItems, String fieldName) {
         InvoiceItemDTO invoiceItemDTO = invoiceItems.stream()
                 .filter(item -> item.getFieldName().equals(fieldName)).findFirst().orElse(null);
+        logger.info(invoiceItemDTO.getFieldName() + " = " + invoiceItemDTO.getValue());
         return invoiceItemDTO.getValue();
     }
 
