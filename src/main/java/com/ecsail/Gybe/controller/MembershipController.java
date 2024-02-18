@@ -83,4 +83,10 @@ public class MembershipController {
 		model.addAttribute("listSize", membershipList.size());
 		return "lists";
 	}
+
+	@GetMapping("/bod")
+	public String getBods(Model model, @RequestParam(defaultValue = "2024") Integer year) {
+
+		return "bod";
+	}
 }
