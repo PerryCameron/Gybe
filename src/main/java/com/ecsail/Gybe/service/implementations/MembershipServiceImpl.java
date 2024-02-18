@@ -66,4 +66,9 @@ public class MembershipServiceImpl implements MembershipService {
     public List<BoardPositionDTO> getBoardPositions() {
         return boardPositionsRepository.getPositions();
     }
+
+    @Override
+    public List<LeadershipDTO> getLeaderShip(int number) {
+        return officerRepository.getLeadershipByYear(2024);
+    }
 }

@@ -13,9 +13,7 @@ public interface OfficerRepository {
     List<OfficerDTO> getOfficer(String field, int attribute);
     List<OfficerDTO> getOfficer(PersonDTO person);
     List<OfficerWithNameDTO> getOfficersWithNames(String type);
-
-    List<LeadershipDTO> getLeadershipByYear(String year);
-
+    List<LeadershipDTO> getLeadershipByYear(int year);
     int update(OfficerDTO o);
     int insert(OfficerDTO o);
     int delete(OfficerDTO o);
