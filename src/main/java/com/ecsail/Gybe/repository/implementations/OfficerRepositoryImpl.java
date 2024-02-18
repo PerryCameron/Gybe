@@ -1,9 +1,11 @@
 package com.ecsail.Gybe.repository.implementations;
 
+import com.ecsail.Gybe.dto.LeadershipDTO;
 import com.ecsail.Gybe.dto.OfficerDTO;
 import com.ecsail.Gybe.dto.OfficerWithNameDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.repository.interfaces.OfficerRepository;
+import com.ecsail.Gybe.repository.rowmappers.LeadershipRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.OfficerRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.OfficerWithNamesRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,6 +51,16 @@ public class OfficerRepositoryImpl implements OfficerRepository {
     public List<OfficerWithNameDTO> getOfficersWithNames(String type) {
         String query = "SELECT f_name,L_NAME,off_year FROM officer o LEFT JOIN person p ON o.p_id=p.p_id WHERE off_type= ?";
         return template.query(query,new OfficerWithNamesRowMapper(), type);
+    }
+
+    @Override
+    public List<LeadershipDTO> getLeadershipByYear(String year) {
+        String query = """
+                select o.O_ID,p.P_ID,p.F_NAME,p.L_NAME,b.position,b.is_officer,b.is_chair,b.is_assistant_chair from officer o
+                left join person p on p.P_ID = o.P_ID
+                left join board_positions b on b.identifier=o.OFF_TYPE where OFF_YEAR=?
+                """;
+        return template.query(query,new LeadershipRowMapper(), year);
     }
 
     @Override
