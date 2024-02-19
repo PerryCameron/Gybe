@@ -1,0 +1,57 @@
+#main {
+  display: flex;
+  flex-direction: column; /* Stack child elements vertically */
+  align-items: center; /* Center-align the child elements horizontally */
+}
+
+.table-row {
+  display: flex;
+  justify-content: center;
+}
+
+.officer-table,
+.chair-table {
+  border-collapse: collapse;
+  margin-top: 10px; /* Adjust as needed */
+}
+
+.officer-table th,
+.chair-table th {
+  color: blue; /* Set the header text color to blue */
+}
+
+.officer-table td:first-child,
+.chair-table td:first-child {
+  color: grey; /* Set the text color of the first cell in each row to grey */
+}
+
+.officer-table td,
+.chair-table td {
+  padding: 5px 10px; /* Adjust the padding as needed */
+  text-align: left;
+}
+
+.board-table {
+  border-collapse: separate;
+  border-spacing: 80px 0;
+}
+
+.board-table th {
+  color: blue; /* Set the header text color to blue */
+  padding: 5px 10px; /* Optional: Adjust padding for table cells */
+}
+
+.board-table td {
+  padding: 5px 10px; /* Optional: Adjust padding for table cells */
+}
+
+.table-title {
+  text-align: center;
+  font-size: 25px; /* Adjust the font size to make the title bigger */
+  font-weight: bold;
+  padding: 20px 0; /* Adjust the padding to control the spacing around the title */
+}
+
+.table-container {
+  margin-bottom: 30px; /* Adjust the value to increase or decrease the space */
+}
