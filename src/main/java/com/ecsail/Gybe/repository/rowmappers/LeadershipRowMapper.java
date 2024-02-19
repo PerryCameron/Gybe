@@ -18,6 +18,8 @@ public class LeadershipRowMapper implements RowMapper<LeadershipDTO> {
                 rs.getString("position"), // beginning of board term
                 rs.getBoolean("is_officer"),
                 rs.getBoolean("is_chair"),
-                rs.getBoolean("is_assistant_chair"));
+                rs.getBoolean("is_assistant_chair"),
+                rs.getInt("list_order"),
+                rs.getInt("BOARD_YEAR"));
     }
 }

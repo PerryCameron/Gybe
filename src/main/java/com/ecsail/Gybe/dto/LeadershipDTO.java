@@ -11,8 +11,10 @@ public class LeadershipDTO {
     boolean isOfficer;
     boolean isChair;
     boolean isAssistantChar;
+    int order;
+    int boardYear;
 
-    public LeadershipDTO(int oId, int pId, String firstName, String lastName, String position, boolean isOfficer, boolean isChair, boolean isAssistantChar) {
+    public LeadershipDTO(int oId, int pId, String firstName, String lastName, String position, boolean isOfficer, boolean isChair, boolean isAssistantChar, int order, int boardYear) {
         this.oId = oId;
         this.pId = pId;
         this.firstName = firstName;
@@ -21,6 +23,8 @@ public class LeadershipDTO {
         this.isOfficer = isOfficer;
         this.isChair = isChair;
         this.isAssistantChar = isAssistantChar;
+        this.order = order;
+        this.boardYear = boardYear;
     }
 
     public int getoId() {
@@ -87,6 +91,22 @@ public class LeadershipDTO {
         isAssistantChar = assistantChar;
     }
 
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public int getBoardYear() {
+        return boardYear;
+    }
+
+    public void setBoardYear(int boardYear) {
+        this.boardYear = boardYear;
+    }
+
     @Override
     public String toString() {
         return "LeadershipDTO{" +
@@ -98,19 +118,8 @@ public class LeadershipDTO {
                 ", isOfficer=" + isOfficer +
                 ", isChair=" + isChair +
                 ", isAssistantChar=" + isAssistantChar +
+                ", order=" + order +
+                ", boardYear=" + boardYear +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LeadershipDTO that = (LeadershipDTO) o;
-        return oId == that.oId && pId == that.pId && isOfficer == that.isOfficer && isChair == that.isChair && isAssistantChar == that.isAssistantChar && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(position, that.position);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(oId, pId, firstName, lastName, position, isOfficer, isChair, isAssistantChar);
     }
 }
