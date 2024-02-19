@@ -68,7 +68,7 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     @Override
-    public List<LeadershipDTO> getLeaderShip(int number) {
-        return officerRepository.getLeadershipByYear(2024);
+    public List<LeadershipDTO> getLeaderShip(int year) {
+        return officerRepository.getLeadershipByYear(year);
     }
 }

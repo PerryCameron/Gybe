@@ -56,7 +56,8 @@ public class OfficerRepositoryImpl implements OfficerRepository {
     @Override
     public List<LeadershipDTO> getLeadershipByYear(int year) {
         String query = """
-                select o.O_ID,p.P_ID,p.F_NAME,p.L_NAME,b.position,b.is_officer,b.is_chair,b.is_assistant_chair from officer o
+                select o.O_ID,p.P_ID,p.F_NAME,p.L_NAME,b.position,b.is_officer,b.is_chair,b.is_assistant_chair,b.list_order,o.BOARD_YEAR 
+                from officer o
                 left join person p on p.P_ID = o.P_ID
                 left join board_positions b on b.identifier=o.OFF_TYPE where OFF_YEAR=?
                 """;
