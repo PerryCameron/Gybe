@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Request Summary</title>
+    <title>Board of Directors</title>
     <script th:inline="javascript">
         let boardOfDirectors = /*[[${bod}]]*/ {};
+        let year = [[${year}]] || new Date().getFullYear();
     </script>
     <link rel="stylesheet" href="css/table.css" type="text/css" />
     <link rel="stylesheet" href="/css/roster.css" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/bod.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
+    <script th:src="@{/js/year.js}" defer></script>
+    <script th:src="@{/js/bod.js}" defer></script>
 <!--    <script src="js/components.js"></script>-->
 </head>
 <body>
@@ -31,8 +36,8 @@
     </div>
 </div>
 
-<div class="main-content">
-    <div id="formRequestTable"></div>
+<div class="main-content" id="main">
+
 </div>
 </body>
 </html>

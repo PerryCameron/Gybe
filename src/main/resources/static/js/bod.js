@@ -1,10 +1,20 @@
 const officers = boardOfDirectors.filter((member) => member.officer === true);
 const chairs = boardOfDirectors.filter((member) => member.chair === true);
-const assistents = boardOfDirectors.filter((member) => member.assistantChar === true);
+const assistants = boardOfDirectors.filter((member) => member.assistantChar === true);
 const board1 = boardOfDirectors.filter((member) => member.boardYear === year);
 const board2 = boardOfDirectors.filter((member) => member.boardYear === year + 1);
 const board3 = boardOfDirectors.filter((member) => member.boardYear === year + 2);
 officers.sort((a, b) => a.order - b.order);
+board1.sort((a, b) => a.lastName.localeCompare(b.lastName));
+board2.sort((a, b) => a.lastName.localeCompare(b.lastName));
+board3.sort((a, b) => a.lastName.localeCompare(b.lastName));
+
+
+let count = boardOfDirectors.length;
+// Get the label element by its ID
+let recordsLabel = document.getElementById("numb-of-records");
+// Update the text content of the label with the count
+recordsLabel.textContent = "Board Count: " + count;
 
 const mainDiv = document.getElementById("main");
 const officerDiv = document.createElement("div");
@@ -15,10 +25,12 @@ chairDiv.classList.add("table-container");
 boardDiv.classList.add("table-container");
 officerDiv.classList.add("table-container");
 
-mainDiv.append(officerDiv);
 officerDiv.append(createOfficerTable());
+mainDiv.append(officerDiv);
+
 mainDiv.append(chairDiv);
 chairDiv.append(createChairTable());
+if (assistants.length !== 0)
 chairDiv.append(createAssistentChairTable());
 mainDiv.append(createBoardTable());
 
@@ -90,7 +102,7 @@ function createAssistentChairTable() {
   headerRow.appendChild(headerCell);
   table.appendChild(headerRow);
 
-  assistents.forEach((chair) => {
+  assistants.forEach((chair) => {
     const row = document.createElement("tr");
     const positionCell = document.createElement("td");
     positionCell.textContent = `${chair.position}`;
@@ -122,7 +134,8 @@ function createBoardTable() {
   var headers = [year, year + 1, year + 2]; // Column headers based on years
   headers.forEach(function (year) {
     var th = document.createElement("th");
-    th.textContent = "Board Year " + year;
+    th.classList.add("left-align");
+    th.textContent = year;
     headerRow.appendChild(th);
   });
   thead.appendChild(headerRow);

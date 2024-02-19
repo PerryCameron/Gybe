@@ -55,3 +55,8 @@
 .table-container {
   margin-bottom: 30px; /* Adjust the value to increase or decrease the space */
 }
+
+.left-align {
+  text-align: left;
+}
+
