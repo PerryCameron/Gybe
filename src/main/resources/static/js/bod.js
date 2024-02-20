@@ -5,6 +5,9 @@ const board1 = boardOfDirectors.filter((member) => member.boardYear === year);
 const board2 = boardOfDirectors.filter((member) => member.boardYear === year + 1);
 const board3 = boardOfDirectors.filter((member) => member.boardYear === year + 2);
 officers.sort((a, b) => a.order - b.order);
+chairs.sort((a, b) => a.order - b.order);
+assistants.sort((a, b) => a.order - b.order);
+
 board1.sort((a, b) => a.lastName.localeCompare(b.lastName));
 board2.sort((a, b) => a.lastName.localeCompare(b.lastName));
 board3.sort((a, b) => a.lastName.localeCompare(b.lastName));
