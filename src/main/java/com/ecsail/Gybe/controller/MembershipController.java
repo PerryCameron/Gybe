@@ -87,8 +87,10 @@ public class MembershipController {
 	@GetMapping("/bod")
 	public String getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
 		List<LeadershipDTO> leadershipDTOS = membershipServiceImpl.getLeaderShip(year);
+		ThemeDTO themeDTO = membershipServiceImpl.getTheme(year);
 		model.addAttribute("year", year);
 		model.addAttribute("bod", leadershipDTOS);
+		model.addAttribute("theme", themeDTO);
 		return "bod";
 	}
 }

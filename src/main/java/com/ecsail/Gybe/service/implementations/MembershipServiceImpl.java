@@ -21,6 +21,7 @@ public class MembershipServiceImpl implements MembershipService {
     private final OfficerRepository officerRepository;
     private final NotesRepository notesRepository;
     private final BoardPositionsRepository boardPositionsRepository;
+    private final SettingsRepository settingsRepository;
 
 
     @Autowired
@@ -34,7 +35,8 @@ public class MembershipServiceImpl implements MembershipService {
             AwardRepository awardRepository,
             OfficerRepository officerRepository,
             NotesRepository notesRepository,
-            BoardPositionsRepository boardPositionsRepository
+            BoardPositionsRepository boardPositionsRepository,
+            SettingsRepository settingsRepository
     ) {
         this.membershipRepository = membershipRepository;
         this.personRepository = personRepository;
@@ -46,6 +48,7 @@ public class MembershipServiceImpl implements MembershipService {
         this.officerRepository = officerRepository;
         this.notesRepository = notesRepository;
         this.boardPositionsRepository = boardPositionsRepository;
+        this.settingsRepository = settingsRepository;
     }
     @Override
     public MembershipListDTO getMembership(int msId, int selectedYear) {
@@ -70,5 +73,9 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public List<LeadershipDTO> getLeaderShip(int year) {
         return officerRepository.getLeadershipByYear(year);
+    }
+
+    public ThemeDTO getTheme(Integer year) {
+        return settingsRepository.findThemeByYear(year);
     }
 }

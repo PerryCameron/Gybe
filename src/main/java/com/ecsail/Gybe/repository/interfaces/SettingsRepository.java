@@ -15,4 +15,5 @@ public interface SettingsRepository {
     List<BoatListRadioDTO> getBoatRadioChoices();
     AppSettingDTO getSelectedYear();
 
+    ThemeDTO findThemeByYear(int year);
 }

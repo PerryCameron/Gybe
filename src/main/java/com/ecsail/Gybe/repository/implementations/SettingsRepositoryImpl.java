@@ -3,6 +3,7 @@ package com.ecsail.Gybe.repository.implementations;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.SettingsRepository;
 import com.ecsail.Gybe.repository.rowmappers.AppSettingsRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.ThemeRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -57,5 +58,18 @@ public class SettingsRepositoryImpl implements SettingsRepository {
     @Override
     public AppSettingDTO getSelectedYear() {
         return null;
+    }
+    @Override
+    public ThemeDTO findThemeByYear(int year) {
+        String sql = "SELECT * " +
+                "FROM theme " +
+                "WHERE year = IF(" +
+                "    EXISTS(SELECT 1 FROM theme WHERE year = ?)," +
+                "    ?," +
+                "    0" +
+                ") " +
+                "LIMIT 1";
+
+        return template.queryForObject(sql, new ThemeRowMapper(), year, year);
     }
 }

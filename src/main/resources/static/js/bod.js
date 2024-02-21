@@ -1,17 +1,18 @@
+theme.url = theme.url.replace(/\\/g, "");
+
 const officers = boardOfDirectors.filter((member) => member.officer === true);
 const chairs = boardOfDirectors.filter((member) => member.chair === true);
 const assistants = boardOfDirectors.filter((member) => member.assistantChar === true);
 const board1 = boardOfDirectors.filter((member) => member.boardYear === year);
 const board2 = boardOfDirectors.filter((member) => member.boardYear === year + 1);
 const board3 = boardOfDirectors.filter((member) => member.boardYear === year + 2);
+
 officers.sort((a, b) => a.order - b.order);
 chairs.sort((a, b) => a.order - b.order);
 assistants.sort((a, b) => a.order - b.order);
-
 board1.sort((a, b) => a.lastName.localeCompare(b.lastName));
 board2.sort((a, b) => a.lastName.localeCompare(b.lastName));
 board3.sort((a, b) => a.lastName.localeCompare(b.lastName));
-
 
 let count = boardOfDirectors.length;
 // Get the label element by its ID
@@ -27,15 +28,25 @@ chairDiv.classList.add("table-row"); // Add the class name to chairDiv
 chairDiv.classList.add("table-container");
 boardDiv.classList.add("table-container");
 officerDiv.classList.add("table-container");
+officerDiv.classList.add("officer-container");
 
 officerDiv.append(createOfficerTable());
-mainDiv.append(officerDiv);
 
+const officerImage = document.createElement("img");
+officerImage.src = theme.url + "/" + theme.stickerName;
+officerImage.alt = "Officer Image";
+officerImage.classList.add("officer-image");
+officerDiv.appendChild(officerImage);
+
+mainDiv.append(officerDiv);
 mainDiv.append(chairDiv);
 chairDiv.append(createChairTable());
-if (assistants.length !== 0)
-chairDiv.append(createAssistentChairTable());
+if (assistants.length !== 0) chairDiv.append(createAssistentChairTable());
 mainDiv.append(createBoardTable());
+
+document.querySelectorAll("th").forEach(function (header) {
+  header.style.color = theme.yearColor;
+});
 
 function createOfficerTable() {
   const table = document.createElement("table");

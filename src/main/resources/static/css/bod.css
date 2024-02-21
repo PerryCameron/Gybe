@@ -60,3 +60,17 @@
   text-align: left;
 }
 
+.officer-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the contents horizontally */
+  width: 100%; /* Make the container take up the full width */
+}
+
+.officer-image {
+  width: 20%;
+  height: 20%;
+  margin-left: 20px; /* Adjust the spacing as needed */
+}
+
+
