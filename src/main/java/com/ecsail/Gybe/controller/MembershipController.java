@@ -93,4 +93,14 @@ public class MembershipController {
 		model.addAttribute("theme", themeDTO);
 		return "bod";
 	}
+
+	@GetMapping("/bod-stripped")
+	public String getBodStrippedVersion(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+		List<LeadershipDTO> leadershipDTOS = membershipServiceImpl.getLeaderShip(year);
+		ThemeDTO themeDTO = membershipServiceImpl.getTheme(year);
+		model.addAttribute("year", year);
+		model.addAttribute("bod", leadershipDTOS);
+		model.addAttribute("theme", themeDTO);
+		return "bod-stripped";
+	}
 }
