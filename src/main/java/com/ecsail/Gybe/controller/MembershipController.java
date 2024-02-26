@@ -103,4 +103,11 @@ public class MembershipController {
 		model.addAttribute("theme", themeDTO);
 		return "bod-stripped";
 	}
+
+	@GetMapping("/slip-wait-list")
+	public String getSlipWaitList(Model model) {
+		List<MembershipListDTO> membershipListDTOS = rosterServiceImpl.getSlipWait();
+		model.addAttribute("waitList", membershipListDTOS);
+		return "slip-wait-list";
+	}
 }

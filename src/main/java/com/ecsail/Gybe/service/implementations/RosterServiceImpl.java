@@ -47,6 +47,12 @@ public class RosterServiceImpl implements RosterService {
         return null;
     }
 
+    public List<MembershipListDTO> getSlipWait() {
+        List<MembershipListDTO> waitList = membershipRepository.getSlipWaitList();
+        Collections.sort(waitList, Comparator.comparing(MembershipListDTO::getMembershipId));
+        return waitList;
+    }
+
     private static void sortList(String sort, List<MembershipListDTO> membershipList) {
         if(sort.equals("fname")) {
             Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getFirstName));
