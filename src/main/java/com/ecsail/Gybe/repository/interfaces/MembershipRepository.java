@@ -12,7 +12,7 @@ public interface MembershipRepository {
     List<MembershipListDTO> getAllRoster(Integer selectedYear);
     List<MembershipListDTO> getNewMemberRoster(Integer selectedYear);
     List<MembershipListDTO> getReturnMemberRoster(Integer selectedYear);
-    List<MembershipListDTO> getSlipWaitList(Integer selectedYear);
+    List<MembershipListDTO> getSlipWaitList();
     List<MembershipListDTO> getMembershipByBoatId(Integer boatId);
     int update(MembershipListDTO membershipListDTO);
 

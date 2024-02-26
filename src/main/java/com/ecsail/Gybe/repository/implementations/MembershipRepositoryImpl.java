@@ -127,7 +127,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     }
 
     @Override
-    public List<MembershipListDTO> getSlipWaitList(Integer selectedYear) {
+    public List<MembershipListDTO> getSlipWaitList() {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,
                                s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
@@ -138,7 +138,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                                  LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
+                = template.query(query, new MembershipListRowMapper());
         return membershipListDTOS;
     }
 

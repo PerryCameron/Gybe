@@ -40,7 +40,7 @@ public class RosterServiceImpl implements RosterService {
         } else if (rosterType.equals("return")) {
             return membershipRepository.getReturnMembers(year);
         } else if (rosterType.equals("slip")) {
-            return membershipRepository.getSlipWaitList(year);
+            return membershipRepository.getSlipWaitList();
         } else if (rosterType.equals("search")) {
             return membershipRepository.getSearchRoster(searchParams);
         }
