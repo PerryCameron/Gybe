@@ -27,7 +27,7 @@ public class GeneralRepositoryImpl implements GeneralRepository {
         String EXISTS_QUERY = "SELECT EXISTS(SELECT * FROM " + tableName + " WHERE " + columnName + "=?)";
         return Boolean.TRUE.equals(template.queryForObject(EXISTS_QUERY, Boolean.class, new Object[]{value}));
     }
-
+    @Override
     public List<StatsDTO> getAllStats() {
         String sql = "SELECT * FROM stats";
         return template.query(sql, new StatsRowMapper());

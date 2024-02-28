@@ -1,0 +1,22 @@
+package com.ecsail.Gybe.service.implementations;
+
+import com.ecsail.Gybe.dto.StatsDTO;
+import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
+import com.ecsail.Gybe.service.interfaces.GeneralService;
+
+import java.util.List;
+
+public class GeneralServiceImpl implements GeneralService {
+
+    private final GeneralRepository generalRepository;
+
+    public GeneralServiceImpl(GeneralRepository generalRepository) {
+        this.generalRepository = generalRepository;
+    }
+    @Override
+    public List<StatsDTO> getStats() {
+        return generalRepository.getAllStats();
+    }
+
+
+}
