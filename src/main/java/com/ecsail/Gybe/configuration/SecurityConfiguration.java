@@ -42,7 +42,8 @@ public class SecurityConfiguration {
                             "/email-error/**",
                             "/bod/**",
                             "/bod-stripped/**",
-                            "/slip-wait-list/**"
+                            "/slip-wait-list/**",
+                            "/stats/**"
                     ).permitAll();
                     auth.requestMatchers("/home/**").hasRole("USER");
                     auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'

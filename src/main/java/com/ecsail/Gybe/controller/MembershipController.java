@@ -1,10 +1,7 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
-import com.ecsail.Gybe.service.implementations.AdminServiceImpl;
-import com.ecsail.Gybe.service.implementations.EmailServiceImpl;
-import com.ecsail.Gybe.service.implementations.MembershipServiceImpl;
-import com.ecsail.Gybe.service.implementations.RosterServiceImpl;
+import com.ecsail.Gybe.service.implementations.*;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
@@ -28,6 +25,7 @@ import java.util.stream.Collectors;
 public class MembershipController {
 	private static final Logger logger = LoggerFactory.getLogger(MembershipController.class);
 	private final EmailServiceImpl emailServiceImpl;
+	private final GeneralServiceImpl generalService;
 	SendMailService service;
 	RosterServiceImpl rosterServiceImpl;
 	MembershipServiceImpl membershipServiceImpl;
@@ -44,12 +42,14 @@ public class MembershipController {
 			RosterServiceImpl rosterServiceImpl,
 			AdminServiceImpl adminServiceImpl,
 			MembershipServiceImpl membershipServiceImpl,
-			EmailServiceImpl emailServiceImpl) {
+			EmailServiceImpl emailServiceImpl,
+			GeneralServiceImpl generalService) {
 		this.service = service;
 		this.rosterServiceImpl = rosterServiceImpl;
 		this.adminServiceImpl = adminServiceImpl;
 		this.membershipServiceImpl = membershipServiceImpl;
 		this.emailServiceImpl = emailServiceImpl;
+		this.generalService = generalService;
 	}
 
 	@GetMapping("/membership")
@@ -109,5 +109,12 @@ public class MembershipController {
 		List<MembershipListDTO> membershipListDTOS = rosterServiceImpl.getSlipWait();
 		model.addAttribute("waitList", membershipListDTOS);
 		return "slip-wait-list";
+	}
+	
+	@GetMapping("/stats")
+	public String getStats(Model model) {
+		List<StatsDTO> statsDTOS = generalService.getStats();
+		model.addAttribute("stats", statsDTOS);
+		return "stats";
 	}
 }
