@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.dto.AgesDTO;
 import com.ecsail.Gybe.dto.StatsDTO;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.service.interfaces.GeneralService;
@@ -18,6 +19,8 @@ public class GeneralServiceImpl implements GeneralService {
     public List<StatsDTO> getStats() {
         return generalRepository.getAllStats();
     }
+    @Override
+    public AgesDTO getAges() { return generalRepository.getAges(); }
 
 
 }

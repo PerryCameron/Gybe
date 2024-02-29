@@ -114,7 +114,9 @@ public class MembershipController {
 	@GetMapping("/stats")
 	public String getStats(Model model) {
 		List<StatsDTO> statsDTOS = generalService.getStats();
+		AgesDTO agesDTO = generalService.getAges();
 		model.addAttribute("stats", statsDTOS);
+		model.addAttribute("ages", agesDTO);
 		return "stats";
 	}
 }
