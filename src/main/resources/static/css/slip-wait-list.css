@@ -5,6 +5,7 @@
   font-family: sans-serif;
   min-width: 400px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  margin: auto;
 }
 
 .styled-table thead tr {
@@ -42,7 +43,8 @@
 /* New stuff below here */
 /* Div before the table  */
 .main-content {
-  display: block;
+  display: flex;
+  justify-content: center;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
   overflow-x: hidden;
@@ -51,7 +53,7 @@
 .styled-table thead th {
   position: sticky;
   top: 0;
-  background-color: #1e73be; /* Set this to the background color of your header */
+  background-color: #769cc9; /* Set this to the background color of your header */
   color: white;
   z-index: 10;
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Slip Wait List</title>
-    <link rel="stylesheet" th:href="@{/css/table-stripped.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/slip-wait-list.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
 </head>
 <body>
@@ -11,13 +11,15 @@
     <table class="styled-table">
         <thead class="header-link">
         <tr>
+            <th class="header" scope="col">#</th> <!-- New column for numbering -->
             <th class="header" scope="col">ID</th>
             <th class="header" scope="col">First Name</th>
             <th class="header" scope="col">Last Name</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="list : ${waitList}">
+        <tr th:each="list, iterStat : ${waitList}">
+            <td th:text="${iterStat.count}"></td> <!-- Display the row number -->
             <td th:text="${list.membershipId}"></td>
             <td th:text="${list.firstName}"></td>
             <td th:text="${list.lastName}"></td>
