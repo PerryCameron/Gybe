@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stats</title>
+    <script th:inline="javascript">
+        let stats = /*[[${stats}]]*/ {};
+        let ages = [[${ages}]];
+    </script>
+    <link rel="stylesheet" th:href="@{/css/gybe-chart.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/roster.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
+    <script th:src="@{/js/gybe-chart.js}" defer></script>
+    <script th:src="@{/js/chart.js}"></script>
+<!--    <script th:src="@{https://cdn.jsdelivr.net/npm/chart.js}"></script>-->
+</head>
+<body>
+<div class="sidenav">
+    <div id="logo">
+        <img src="images/ecsc_logo_small.png" alt="logo" />
+    </div>
+    <div class="button-container">
+        <a href="lists" id="option1" target="_blank">Rosters</a>
+        <a href="bod" id="option2" target="_blank">Board of Directors</a>
+        <a href="form-request-summary" target="_blank">Form Requests</a>
+    </div>
+</div>
+<!-- Top navigation bar -->
+<div class="topnav">
+    <div class="topnav-child-div" id="topnav-yearselect-div">
+        <select id="topnav-yearselect" class="topnav-control" name="topnavyear"></select>
+    </div>
+
+    <div id="list-select-div">
+        <select id="topnav-select-field" class="topnav-control" name="topnavlists">
+            <option value="all">Rosters</option>
+            <option value="active">People</option>
+            <option value="non-renew">Slips</option>
+            <option value="new-members">Board of Direcotors</option>
+            <option value="return-members">Create New Membership</option>
+            <option value="slip">Deposits</option>
+            <option value="new-members">Boats</option>
+            <option value="return-members">Notes</option>
+        </select>
+    </div>
+    <div class="topnav-child-div">
+        <form>
+            <input id="topnav-search-field" placeholder="Search" type="text" class="topnav-control" />
+        </form>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="charts">
+        <canvas id="membership-chart"></canvas>
+    </div>
+    <div class="charts">
+        <canvas id="age-chart"></canvas>
+    </div>
+</div>
+</body>
+</html>

@@ -89,7 +89,7 @@ select i.VALUE from invoice_item i
          left join invoice i2 on i2.ID = i.INVOICE_ID
          where i.FISCAL_YEAR=2016 and i2.FISCAL_YEAR=2016.
            and FIELD_NAME='Initiation'
-           and VALUE < 1000 and VALUE > 0 and i2.COMMITTED=true
+           and VALUE < 1000 and VALUE > 0 and i2.COMMITTED=true;
 
 
 ## put in msid and creates other Beach Spot Board invoice item for 1985

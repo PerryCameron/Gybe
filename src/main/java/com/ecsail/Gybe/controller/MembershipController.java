@@ -3,7 +3,6 @@ package com.ecsail.Gybe.controller;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.implementations.*;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
-import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Year;
@@ -111,12 +108,12 @@ public class MembershipController {
 		return "slip-wait-list";
 	}
 	
-	@GetMapping("/stats")
+	@GetMapping("/")
 	public String getStats(Model model) {
 		List<StatsDTO> statsDTOS = generalService.getStats();
 		AgesDTO agesDTO = generalService.getAges();
 		model.addAttribute("stats", statsDTOS);
 		model.addAttribute("ages", agesDTO);
-		return "stats";
+		return "charts";
 	}
 }
