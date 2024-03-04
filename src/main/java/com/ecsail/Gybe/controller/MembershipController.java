@@ -2,6 +2,7 @@ package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.implementations.*;
+import com.ecsail.Gybe.service.interfaces.FeeService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class MembershipController {
 	private static final Logger logger = LoggerFactory.getLogger(MembershipController.class);
 	private final EmailServiceImpl emailServiceImpl;
 	private final GeneralServiceImpl generalService;
+	private final FeeService feeService;
 	SendMailService service;
 	RosterServiceImpl rosterServiceImpl;
 	MembershipServiceImpl membershipServiceImpl;
@@ -40,13 +42,15 @@ public class MembershipController {
 			AdminServiceImpl adminServiceImpl,
 			MembershipServiceImpl membershipServiceImpl,
 			EmailServiceImpl emailServiceImpl,
-			GeneralServiceImpl generalService) {
+			GeneralServiceImpl generalService,
+			FeeService feeService) {
 		this.service = service;
 		this.rosterServiceImpl = rosterServiceImpl;
 		this.adminServiceImpl = adminServiceImpl;
 		this.membershipServiceImpl = membershipServiceImpl;
 		this.emailServiceImpl = emailServiceImpl;
 		this.generalService = generalService;
+		this.feeService = feeService;
 	}
 
 	@GetMapping("/membership")
@@ -107,7 +111,7 @@ public class MembershipController {
 		model.addAttribute("waitList", membershipListDTOS);
 		return "slip-wait-list";
 	}
-	
+
 	@GetMapping("/")
 	public String getStats(Model model) {
 		List<StatsDTO> statsDTOS = generalService.getStats();
@@ -115,5 +119,12 @@ public class MembershipController {
 		model.addAttribute("stats", statsDTOS);
 		model.addAttribute("ages", agesDTO);
 		return "charts";
+	}
+
+	@GetMapping("/ecsc-pricing")
+	public String getPrices(Model model) {
+		List<FeeDTO> feeDTOS = feeService.getFees();
+		model.addAttribute("fees", feeDTOS);
+		return "ecsc-pricing";
 	}
 }
