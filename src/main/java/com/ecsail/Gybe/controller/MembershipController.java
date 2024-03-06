@@ -127,4 +127,11 @@ public class MembershipController {
 		model.addAttribute("fees", feeDTOS);
 		return "ecsc-pricing";
 	}
+
+	@GetMapping("/slips")
+	public String getSlips(Model model) {
+		List<SlipInfoDTO> slipInfoDTOS = generalService.getSlipInfo();
+		model.addAttribute("slips", slipInfoDTOS);
+		return "slips";
+	}
 }

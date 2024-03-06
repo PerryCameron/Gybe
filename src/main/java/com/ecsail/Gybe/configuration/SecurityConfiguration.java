@@ -43,7 +43,8 @@ public class SecurityConfiguration {
                             "/bod/**",
                             "/bod-stripped/**",
                             "/slip-wait-list/**",
-                            "/stats/**"
+                            "/stats/**",
+                            "/slips/**"
                     ).permitAll();
                     auth.requestMatchers("/home/**").hasRole("USER");
                     auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
