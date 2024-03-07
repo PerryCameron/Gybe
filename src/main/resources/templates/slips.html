@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Slip Chart</title>
     <script th:inline="javascript">
         let slipOwners = /*[[${slipOwners}]]*/ {};
         let slipStructure = /*[[${slipStructure}]]*/ {};
     </script>
+    <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
+    <script th:src="@{/js/slips.js}" defer></script>
 </head>
 <body>
-
+<div class="main-content" id="main">
+    <canvas id="slipChart" width="1200" height="1000"></canvas>
+</div>
 </body>
 </html>
