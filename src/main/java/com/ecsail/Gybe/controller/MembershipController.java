@@ -131,7 +131,9 @@ public class MembershipController {
 	@GetMapping("/slips")
 	public String getSlips(Model model) {
 		List<SlipInfoDTO> slipInfoDTOS = generalService.getSlipInfo();
-		model.addAttribute("slips", slipInfoDTOS);
+		List<SlipStructureDTO> slipStructureDTOS = generalService.getSlipStructure();
+		model.addAttribute("slipOwners", slipInfoDTOS);
+		model.addAttribute("slipStructure", slipStructureDTOS);
 		return "slips";
 	}
 }

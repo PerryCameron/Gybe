@@ -2,6 +2,7 @@ package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.AgesDTO;
 import com.ecsail.Gybe.dto.SlipInfoDTO;
+import com.ecsail.Gybe.dto.SlipStructureDTO;
 import com.ecsail.Gybe.dto.StatsDTO;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.repository.interfaces.SlipRepository;
@@ -27,4 +28,6 @@ public class GeneralServiceImpl implements GeneralService {
     public AgesDTO getAges() { return generalRepository.getAges(); }
     @Override
     public List<SlipInfoDTO> getSlipInfo() { return  slipRepository.getSlipInfo(); }
+    @Override
+    public List<SlipStructureDTO> getSlipStructure() { return slipRepository.getSlipStructure(); }
 }

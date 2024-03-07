@@ -1,6 +1,5 @@
 package com.ecsail.Gybe.repository.rowmappers;
 
-import com.ecsail.Gybe.dto.SlipDTO;
 import com.ecsail.Gybe.dto.SlipStructureDTO;
 import org.springframework.jdbc.core.RowMapper;
 

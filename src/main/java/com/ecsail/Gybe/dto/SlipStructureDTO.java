@@ -74,4 +74,17 @@ public class SlipStructureDTO {
     public void setSlip4(String slip4) {
         this.slip4 = slip4;
     }
+
+    @Override
+    public String toString() {
+        return "SlipStructureDTO{" +
+                "id=" + id +
+                ", dock='" + dock + '\'' +
+                ", dockSection=" + dockSection +
+                ", slip1='" + slip1 + '\'' +
+                ", slip2='" + slip2 + '\'' +
+                ", slip3='" + slip3 + '\'' +
+                ", slip4='" + slip4 + '\'' +
+                '}';
+    }
 }

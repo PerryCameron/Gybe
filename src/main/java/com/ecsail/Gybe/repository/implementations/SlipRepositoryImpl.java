@@ -2,9 +2,11 @@ package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.SlipDTO;
 import com.ecsail.Gybe.dto.SlipInfoDTO;
+import com.ecsail.Gybe.dto.SlipStructureDTO;
 import com.ecsail.Gybe.repository.interfaces.SlipRepository;
 import com.ecsail.Gybe.repository.rowmappers.SlipInfoRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.SlipRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.SlipStructureRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -76,6 +78,11 @@ public class SlipRepositoryImpl implements SlipRepository {
                 group by SLIP_NUM;
                 """;
         return template.query(query, new SlipInfoRowMapper());
+    }
+    @Override
+    public List<SlipStructureDTO> getSlipStructure() {
+        String query = "SELECT * FROM slip_structure";
+        return template.query(query, new SlipStructureRowMapper());
     }
 
 }
