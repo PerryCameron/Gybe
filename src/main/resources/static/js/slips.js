@@ -1,9 +1,6 @@
-let main = document.getElementById("main");
-
 let canvas = document.getElementById("slipChart");
 const ctx = canvas.getContext("2d");
-
-// let dDock = slipStructure.filter((slip) => slip.dock === "D");
+let slipPopup = [];
 
 dockPlacement = {
   a: { x: 430, y: 40, dock: "A" },
@@ -70,6 +67,8 @@ function dockSection(x, y, section) {
 }
 
 function fillMembershipDetails(slip, x, y, isLeft) {
+  let textBounds;
+  let slipDetails;
   let owner = getSlipOwnerBySlipNumber(slip);
   if (owner) {
     // this is a club slip
@@ -81,14 +80,32 @@ function fillMembershipDetails(slip, x, y, isLeft) {
       let slipInfo = setDockString(owner, isLeft, true);
       let width = calculateTextOffset(isLeft, slipInfo);
       ctx.fillText(slipInfo, x - width, y);
+      // I want to store the bounds of this text into an object here, store that along with slip for later use
+      textBounds = calculateTextBounds(slipInfo, x - width, y);
       ctx.fillStyle = "black";
       // this is an owner
     } else {
       let slipInfo = setDockString(owner, isLeft, false);
       let width = calculateTextOffset(isLeft, slipInfo);
+      // I want to store the bounds of this text into an object here, store that along with slip for later use
+      textBounds = calculateTextBounds(slipInfo, x - width, y);
       ctx.fillText(slipInfo, x - width, y);
     }
+    if (textBounds) {
+      slipDetails = {
+        slipNumber: slip,
+        textBounds: textBounds,
+      };
+      slipPopup.push(slipDetails);
+    }
   }
+}
+
+function calculateTextBounds(text, x, y) {
+  // Calculate and return the bounds of the text based on the context's font settings
+  // This is a placeholder function, you'll need to implement the actual calculation
+  // For example, you might use ctx.measureText(text).width for the width
+  return { x: x, y: y, width: ctx.measureText(text).width, height: parseInt(ctx.font) };
 }
 
 function calculateTextOffset(isLeft, slipInfo) {
@@ -109,10 +126,6 @@ function setDockString(owner, isLeft, isSubleaser) {
   } else if (isLeft)
     return owner.ownerLastName + " " + abbreviateFirstName(owner.ownerFirstName) + " " + owner.slipNumber;
   else return owner.slipNumber + " " + owner.ownerLastName + " " + abbreviateFirstName(owner.ownerFirstName);
-}
-
-function thisIsASubleasedSlip(owner) {
-  return owner.ownerFirstName === null;
 }
 
 function abbreviateFirstName(name) {
@@ -163,3 +176,74 @@ function setDock(dock) {
 function getSlipOwnerBySlipNumber(slipNumber) {
   return slipOwners.find((owner) => owner.slipNumber === slipNumber);
 }
+
+canvas.addEventListener("mousemove", function (event) {
+  let rect = canvas.getBoundingClientRect(); // Get the bounding rectangle of the canvas
+  let mouseX = event.clientX - rect.left; // Adjust mouse X position relative to the canvas
+  let mouseY = event.clientY - rect.top; // Adjust mouse Y position relative to the canvas
+  let isOverSlip = false;
+
+  for (let i = 0; i < slipPopup.length; i++) {
+    let slip = slipPopup[i];
+    let bounds = slip.textBounds;
+
+    // Adjust bounds if necessary
+    let adjustedBounds = {
+      x: bounds.x,
+      y: bounds.y - bounds.height, // Adjust for baseline to top-left corner
+      width: bounds.width,
+      height: bounds.height,
+    };
+
+    if (
+        mouseX >= adjustedBounds.x &&
+        mouseX <= adjustedBounds.x + adjustedBounds.width &&
+        mouseY >= adjustedBounds.y &&
+        mouseY <= adjustedBounds.y + adjustedBounds.height
+    ) {
+      tooltip.style.display = "block";
+      tooltip.style.left = event.clientX + 10 + "px"; // Add offset to prevent tooltip from blocking the mouse pointer
+      tooltip.style.top = event.clientY + 10 + "px";
+      tooltip.innerHTML = getTextContent(slip.slipNumber);
+      isOverSlip = true;
+      break;
+    }
+  }
+
+  if (!isOverSlip) {
+    tooltip.style.display = "none";
+  }
+});
+
+function getTextContent(slipNumber) {
+  let owner = getSlipOwnerBySlipNumber(slipNumber);
+  let popText =
+      "<strong>Slip:</strong> " +
+      slipNumber +
+      "<BR><BR>" +
+      "<strong>Owner:</strong> <BR>" +
+      owner.ownerId +
+      "  " +
+      owner.ownerFirstName +
+      " " +
+      owner.ownerLastName;
+  if (owner.subleaserFirstName != null)
+    popText +=
+        "<BR><BR><strong>Subleased by:</strong><BR>" +
+        owner.subleaserId +
+        " " +
+        owner.subleaserFirstName +
+        " " +
+        owner.subleaserLastName;
+
+  return popText;
+}
+
+tooltip.style.position = "absolute";
+tooltip.style.display = "none";
+tooltip.style.background = "rgba(0, 0, 0, 0.8)"; // Black background with 70% opacity
+tooltip.style.color = "white"; // White text color
+tooltip.style.padding = "8px"; // Padding around the text
+tooltip.style.borderRadius = "8px"; // Rounded corners
+tooltip.style.fontSize = "16px"; // Font size
+tooltip.style.pointerEvents = "none"; // Prevents the tooltip from interfering with mouse events
