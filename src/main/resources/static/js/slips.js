@@ -15,6 +15,7 @@ addDock(dockPlacement["a"], setDock("A"));
 addDock(dockPlacement["b"], setDock("B"));
 addDock(dockPlacement["c"], setDock("C"));
 addDock(dockPlacement["f"], setDock("F"));
+addLegend();
 
 // dock is dockPlacement, this Dock is slipStructure
 function addDock(dockPosition, thisDock) {
@@ -162,6 +163,35 @@ function dockBottomCap(dock) {
   ctx.fillStyle = "black";
   ctx.fillText(dock["dock"], x + 13, y + 10);
   ctx.stroke();
+}
+
+function addLegend() {
+  let currentDate = new Date();
+  let monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let month = monthNames[currentDate.getMonth()];
+  let day = currentDate.getDate();
+  let year = currentDate.getFullYear();
+  let dateString = `${month} ${day}, ${year}`; // Construct the date string
+
+  ctx.font = "24px Arial";
+  ctx.fillStyle = "black";
+  ctx.fillText("Dock Assignments", 550, 750);
+  ctx.fillStyle = "grey"; // Set the color for the date
+  ctx.font = "12px Arial";
+  ctx.fillText("(Live Update Generated: " + `${dateString}` + ")", 545, 770);
 }
 
 function countDockSections(dockLetter) {
