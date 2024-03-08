@@ -41,7 +41,7 @@ officerDiv.appendChild(officerImage);
 mainDiv.append(officerDiv);
 mainDiv.append(chairDiv);
 chairDiv.append(createChairTable());
-if (assistants.length !== 0) chairDiv.append(createAssistentChairTable());
+if (assistants.length !== 0) chairDiv.append(createAssistantChairTable());
 mainDiv.append(createBoardTable());
 
 document.querySelectorAll("th").forEach(function (header) {
@@ -104,14 +104,14 @@ function createChairTable() {
   return table;
 }
 
-function createAssistentChairTable() {
+function createAssistantChairTable() {
   const table = document.createElement("table");
   table.classList.add("officer-table");
   // Create a table header with the title "Officers"
   const headerRow = document.createElement("tr");
   const headerCell = document.createElement("th");
   headerCell.colSpan = 2; // Span across two columns
-  headerCell.textContent = "Assistent Chairs";
+  headerCell.textContent = "Assistant Chairs";
   headerCell.style.color = "blue"; // Set the text color to blue
   headerRow.appendChild(headerCell);
   table.appendChild(headerRow);
