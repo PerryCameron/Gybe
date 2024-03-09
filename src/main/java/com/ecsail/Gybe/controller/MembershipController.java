@@ -128,6 +128,7 @@ public class MembershipController {
 		return "ecsc-pricing";
 	}
 
+	// this is for exporting to website
 	@GetMapping("/slips")
 	public String getSlips(Model model) {
 		List<SlipInfoDTO> slipInfoDTOS = generalService.getSlipInfo();
@@ -136,4 +137,16 @@ public class MembershipController {
 		model.addAttribute("slipStructure", slipStructureDTOS);
 		return "slips";
 	}
+
+	@GetMapping("/slip_chart")
+	public String getSlipChart(Model model) {
+		List<SlipInfoDTO> slipInfoDTOS = generalService.getSlipInfo();
+		List<SlipStructureDTO> slipStructureDTOS = generalService.getSlipStructure();
+		model.addAttribute("slipOwners", slipInfoDTOS);
+		model.addAttribute("slipStructure", slipStructureDTOS);
+		return "slip_back_end";
+	}
+
+
+
 }
