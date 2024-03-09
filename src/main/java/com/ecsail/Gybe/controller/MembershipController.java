@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.implementations.*;
 import com.ecsail.Gybe.service.interfaces.FeeService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
+import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,16 +87,7 @@ public class MembershipController {
 		return "lists";
 	}
 
-	@GetMapping("/bod")
-	public String getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
-		List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
-		ThemeDTO themeDTO = membershipService.getTheme(year);
-		model.addAttribute("year", year);
-		model.addAttribute("bod", leadershipDTOS);
-		model.addAttribute("theme", themeDTO);
-		return "bod";
-	}
-
+	// this is to forward to ecsail.org
 	@GetMapping("/bod-stripped")
 	public String getBodStrippedVersion(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
 		List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
@@ -106,11 +98,18 @@ public class MembershipController {
 		return "bod-stripped";
 	}
 
-	@GetMapping("/rb_bod")
-	public ResponseEntity<List<LeadershipDTO>> getBoardOfDirectors(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+	@GetMapping("/bod")
+	public String getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
 		List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
-		ThemeDTO themeDTO = membershipService.getTheme(year);
-		return ResponseEntity.ok(leadershipDTOS);
+		BoardOfDirectorsResponse bodResponse = membershipService.getBodResponse(year);
+		model.addAttribute("bodResponse", bodResponse);
+		return "bod";
+	}
+
+	@GetMapping("/rb_bod")
+	public ResponseEntity<BoardOfDirectorsResponse> getBoardOfDirectors(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+		BoardOfDirectorsResponse bodResponse = membershipService.getBodResponse(year);
+		return ResponseEntity.ok(bodResponse);
 	}
 
 	@GetMapping("/slip-wait-list")

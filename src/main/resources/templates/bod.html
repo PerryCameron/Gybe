@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Board of Directors</title>
     <script th:inline="javascript">
-        let boardOfDirectors = /*[[${bod}]]*/ {};
-        let year = [[${year}]] || new Date().getFullYear();
-        let theme = [[${theme}]];
+        let bodResponse = /*[[${bodResponse}]]*/ {};
+        let boardOfDirectors = bodResponse.leadership || {};
+        let year = bodResponse.year || new Date().getFullYear();
+        let theme = bodResponse.theme || {};
     </script>
     <link rel="stylesheet" href="css/table.css" type="text/css" />
     <link rel="stylesheet" href="/css/roster.css" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/bod.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
-    <script th:src="@{/js/side-nav-bod_Original.js}" defer></script>
+    <script th:src="@{/js/side-nav-bod.js}" defer></script>
 <!--    <script th:src="@{/js/year.js}" defer></script>-->
     <script th:src="@{/js/bod.js}" defer></script>
 </head>

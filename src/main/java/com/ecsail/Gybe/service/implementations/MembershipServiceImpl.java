@@ -3,6 +3,7 @@ package com.ecsail.Gybe.service.implementations;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.MembershipService;
+import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,8 +75,18 @@ public class MembershipServiceImpl implements MembershipService {
     public List<LeadershipDTO> getLeaderShip(int year) {
         return officerRepository.getLeadershipByYear(year);
     }
-
+    @Override
     public ThemeDTO getTheme(Integer year) {
         return settingsRepository.findThemeByYear(year);
     }
+    @Override
+    public BoardOfDirectorsResponse getBodResponse(int year) {
+        BoardOfDirectorsResponse bodResponse = new BoardOfDirectorsResponse();
+        bodResponse.setYear(year);
+        bodResponse.setLeadership(officerRepository.getLeadershipByYear(year));
+        bodResponse.setTheme(settingsRepository.findThemeByYear(year));
+        return bodResponse;
+    }
+
+
 }
