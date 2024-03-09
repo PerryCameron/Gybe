@@ -106,12 +106,6 @@ public class MembershipController {
 		return "bod";
 	}
 
-	@GetMapping("/rb_bod")
-	public ResponseEntity<BoardOfDirectorsResponse> getBoardOfDirectors(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
-		BoardOfDirectorsResponse bodResponse = membershipService.getBodResponse(year);
-		return ResponseEntity.ok(bodResponse);
-	}
-
 	@GetMapping("/slip-wait-list")
 	public String getSlipWaitList(Model model) {
 		List<MembershipListDTO> membershipListDTOS = rosterServiceImpl.getSlipWait();
