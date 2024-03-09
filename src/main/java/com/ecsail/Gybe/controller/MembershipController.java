@@ -2,8 +2,7 @@ package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.implementations.*;
-import com.ecsail.Gybe.service.interfaces.FeeService;
-import com.ecsail.Gybe.service.interfaces.SendMailService;
+import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +23,13 @@ import java.util.stream.Collectors;
 @Controller
 public class MembershipController {
 	private static final Logger logger = LoggerFactory.getLogger(MembershipController.class);
-	private final EmailServiceImpl emailServiceImpl;
-	private final GeneralServiceImpl generalService;
+	private final EmailService emailService;
+	private final GeneralService generalService;
 	private final FeeService feeService;
 	SendMailService service;
-	RosterServiceImpl rosterServiceImpl;
-	MembershipServiceImpl membershipService;
-	AdminServiceImpl adminServiceImpl;
+	RosterService rosterService;
+	MembershipService membershipService;
+	AdminService adminService;
 
 
 	@Value("${spring.mail.username}")
@@ -40,17 +39,17 @@ public class MembershipController {
 	@Autowired
 	public MembershipController(
 			SendMailService service,
-			RosterServiceImpl rosterService,
-			AdminServiceImpl adminService,
-			MembershipServiceImpl membershipService,
-			EmailServiceImpl emailService,
-			GeneralServiceImpl generalService,
+			RosterService rosterService,
+			AdminService adminService,
+			MembershipService membershipService,
+			EmailService emailService,
+			GeneralService generalService,
 			FeeService feeService) {
 		this.service = service;
-		this.rosterServiceImpl = rosterService;
-		this.adminServiceImpl = adminService;
+		this.rosterService = rosterService;
+		this.adminService = adminService;
 		this.membershipService = membershipService;
-		this.emailServiceImpl = emailService;
+		this.emailService = emailService;
 		this.generalService = generalService;
 		this.feeService = feeService;
 	}
@@ -81,7 +80,7 @@ public class MembershipController {
 				.filter(e -> e.getKey().startsWith("param"))
 				.map(Map.Entry::getValue)
 				.collect(Collectors.toList());
-		List<MembershipListDTO> membershipList = rosterServiceImpl.getRoster(year, rb, sort, searchParams);
+		List<MembershipListDTO> membershipList = rosterService.getRoster(year, rb, sort, searchParams);
 		model.addAttribute("list", membershipList);
 		model.addAttribute("listSize", membershipList.size());
 		return "lists";
@@ -108,7 +107,7 @@ public class MembershipController {
 
 	@GetMapping("/slip-wait-list")
 	public String getSlipWaitList(Model model) {
-		List<MembershipListDTO> membershipListDTOS = rosterServiceImpl.getSlipWait();
+		List<MembershipListDTO> membershipListDTOS = rosterService.getSlipWait();
 		model.addAttribute("waitList", membershipListDTOS);
 		return "slip-wait-list";
 	}
@@ -147,7 +146,4 @@ public class MembershipController {
 		model.addAttribute("slipStructure", slipStructureDTOS);
 		return "slip_back_end";
 	}
-
-
-
 }

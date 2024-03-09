@@ -19,17 +19,19 @@ public class RosterServiceImpl implements RosterService {
     public RosterServiceImpl(MembershipRepository membershipRepository) {
         this.membershipRepository = membershipRepository;
     }
+
     @Override
     public List<MembershipListDTO> getRoster(int year, String rosterType, String sort, List<String> searchParams) {
-        if(!searchParams.isEmpty())
-            rosterType="search";
+        if (!searchParams.isEmpty())
+            rosterType = "search";
         List<MembershipListDTO> membershipList = getRosterType(year, rosterType, searchParams);
         sortList(sort, membershipList);
         return membershipList;
     }
+
     @Override
     public List<MembershipListDTO> getRosterType(int year, String rosterType, List<String> searchParams) {
-        if(rosterType.equals("active")) {
+        if (rosterType.equals("active")) {
             return membershipRepository.getRoster(year, true);
         } else if (rosterType.equals("non-renew")) {
             return membershipRepository.getRoster(year, false);
@@ -47,6 +49,7 @@ public class RosterServiceImpl implements RosterService {
         return null;
     }
 
+    @Override
     public List<MembershipListDTO> getSlipWait() {
         List<MembershipListDTO> waitList = membershipRepository.getSlipWaitList();
         Collections.sort(waitList, Comparator.comparing(MembershipListDTO::getMembershipId));
@@ -54,7 +57,7 @@ public class RosterServiceImpl implements RosterService {
     }
 
     private static void sortList(String sort, List<MembershipListDTO> membershipList) {
-        if(sort.equals("fname")) {
+        if (sort.equals("fname")) {
             Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getFirstName));
         } else if (sort.equals("byId")) {
             Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getMembershipId));
