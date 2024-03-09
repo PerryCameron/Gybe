@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class MembershipController {
 	private final FeeService feeService;
 	SendMailService service;
 	RosterServiceImpl rosterServiceImpl;
-	MembershipServiceImpl membershipServiceImpl;
+	MembershipServiceImpl membershipService;
 	AdminServiceImpl adminServiceImpl;
 
 
@@ -38,17 +39,17 @@ public class MembershipController {
 	@Autowired
 	public MembershipController(
 			SendMailService service,
-			RosterServiceImpl rosterServiceImpl,
-			AdminServiceImpl adminServiceImpl,
-			MembershipServiceImpl membershipServiceImpl,
-			EmailServiceImpl emailServiceImpl,
+			RosterServiceImpl rosterService,
+			AdminServiceImpl adminService,
+			MembershipServiceImpl membershipService,
+			EmailServiceImpl emailService,
 			GeneralServiceImpl generalService,
 			FeeService feeService) {
 		this.service = service;
-		this.rosterServiceImpl = rosterServiceImpl;
-		this.adminServiceImpl = adminServiceImpl;
-		this.membershipServiceImpl = membershipServiceImpl;
-		this.emailServiceImpl = emailServiceImpl;
+		this.rosterServiceImpl = rosterService;
+		this.adminServiceImpl = adminService;
+		this.membershipService = membershipService;
+		this.emailServiceImpl = emailService;
 		this.generalService = generalService;
 		this.feeService = feeService;
 	}
@@ -57,8 +58,8 @@ public class MembershipController {
 	public String getMembership(Model model,
 								@RequestParam() Integer msId,
 								@RequestParam() Integer selectedYear) {
-		MembershipListDTO membershipListDTO = membershipServiceImpl.getMembership(msId, selectedYear);
-		List<BoardPositionDTO> boardPositionDTOS = membershipServiceImpl.getBoardPositions();
+		MembershipListDTO membershipListDTO = membershipService.getMembership(msId, selectedYear);
+		List<BoardPositionDTO> boardPositionDTOS = membershipService.getBoardPositions();
 		model.addAttribute("membership", membershipListDTO);
 		model.addAttribute("boardPositions", boardPositionDTOS);
 		return "membership";
@@ -87,8 +88,8 @@ public class MembershipController {
 
 	@GetMapping("/bod")
 	public String getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
-		List<LeadershipDTO> leadershipDTOS = membershipServiceImpl.getLeaderShip(year);
-		ThemeDTO themeDTO = membershipServiceImpl.getTheme(year);
+		List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
+		ThemeDTO themeDTO = membershipService.getTheme(year);
 		model.addAttribute("year", year);
 		model.addAttribute("bod", leadershipDTOS);
 		model.addAttribute("theme", themeDTO);
@@ -97,12 +98,19 @@ public class MembershipController {
 
 	@GetMapping("/bod-stripped")
 	public String getBodStrippedVersion(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
-		List<LeadershipDTO> leadershipDTOS = membershipServiceImpl.getLeaderShip(year);
-		ThemeDTO themeDTO = membershipServiceImpl.getTheme(year);
+		List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
+		ThemeDTO themeDTO = membershipService.getTheme(year);
 		model.addAttribute("year", year);
 		model.addAttribute("bod", leadershipDTOS);
 		model.addAttribute("theme", themeDTO);
 		return "bod-stripped";
+	}
+
+	@GetMapping("/rb_bod")
+	public ResponseEntity<List<LeadershipDTO>> getBoardOfDirectors(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+		List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
+		ThemeDTO themeDTO = membershipService.getTheme(year);
+		return ResponseEntity.ok(leadershipDTOS);
 	}
 
 	@GetMapping("/slip-wait-list")

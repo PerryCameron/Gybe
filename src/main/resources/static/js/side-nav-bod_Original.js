@@ -1,5 +1,8 @@
-// Create a function to dynamically generate the sidenav content
+
+
 function createSidenavContent() {
+    const startYear = 1970;
+    const endYear = new Date().getFullYear(); // This will get the current year
     // Get the sidenav div
     const sidenav = document.getElementById('sidenav');
 
@@ -22,7 +25,7 @@ function createSidenavContent() {
     // Create the record label
     const recordLabel = document.createElement('label');
     recordLabel.id = 'numb-of-records';
-    recordLabel.textContent = 'Records: 201';
+    recordLabel.textContent = 'Records: placeholder';
 
     // Append the record label to the record content div
     recordContentDiv.appendChild(recordLabel);
@@ -37,16 +40,49 @@ function createSidenavContent() {
     yearSelect.className = 'sidenav-control';
     yearSelect.name = 'year';
 
-    const yearSelect1 = document.getElementById("sidenav-yearselect");
-
+    // Add an event listener to handle year selection change
+    yearSelect.addEventListener('change', function () {
+        const selectedYear = this.value;
+        fetchBoardOfDirectors(selectedYear);
+    });
 
     // Append the year select to the year container div
     yearContainerDiv.appendChild(yearSelect);
+
+    for (let i = endYear; i >= startYear; i--) {
+        let option1 = new Option(i, i);
+        // let option2 = new Option(i, i);
+        yearSelect.add(option1);
+        // yearSelect2.add(option2);
+    }
 
     // Append all the created elements to the sidenav div
     sidenav.appendChild(logoDiv);
     sidenav.appendChild(recordContentDiv);
     sidenav.appendChild(yearContainerDiv);
+}
+
+// Fetch the board of directors data for the selected year
+function fetchBoardOfDirectors(year) {
+    console.log("Rebuilding the data")
+    // Example AJAX request to fetch the updated data with a query parameter for year
+    fetch('/rb_bod?year=' + year)
+        .then(response => response.json())
+        .then(data => {
+            // Update the boardOfDirectors object
+            boardOfDirectors = data;
+            // Rebuild the page with the new data
+            buildBoardOfDirectorsPage();
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+// Function to dynamically build the Board of Directors page
+function buildBoardOfDirectorsPage() {
+    const mainDiv = document.getElementById("main");
+    mainDiv.innerHTML = "";
+    fillPositions();
+    sortPositions();
+    buildTables();
 }
 
 // Call the function to create the sidenav content
