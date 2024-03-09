@@ -13,23 +13,12 @@
     <link rel="stylesheet" href="/css/roster.css" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/bod.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
+    <script th:src="@{/js/side-nav-bod.js}" defer></script>
     <script th:src="@{/js/year.js}" defer></script>
     <script th:src="@{/js/bod.js}" defer></script>
-<!--    <script src="js/components.js"></script>-->
 </head>
 <body>
-<div class="sidenav">
-    <div id="logo">
-        <img src="images/ecsc_logo_small.png" alt="logo" />
-    </div>
-    <div id="record-content-div">
-        <label id="numb-of-records">Records: 201</label>
-    </div>
-
-    <div id="sidenav-year-container">
-        <select id="sidenav-yearselect" class="sidenav-control" name="year"></select>
-    </div>
-</div>
+<div class="sidenav" id="sidenav"></div>
 <!-- Top navigation bar -->
 <div class="topnav">
     <div id="list-select-div">
