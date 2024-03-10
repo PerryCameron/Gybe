@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentYear = new Date().getFullYear(); // Get the current year
 
   const links = [
-    {href: `lists?year=${currentYear}&rb=active`, text: "Rosters", id: "option1", target: "_blank"},
+    {href: "Rosters", text: "Rosters", id: "option1", target: "_blank"},
     {href: "bod", text: "Board of Directors", id: "option2", target: "_blank"},
     {href: "form-request-summary", text: "Form Requests", target: "_blank"},
     {href: "slip_chart", text: "Slips", target: "_blank"},

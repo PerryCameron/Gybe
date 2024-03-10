@@ -67,27 +67,6 @@ public class MembershipController {
 		return "membership";
 	}
 
-	@GetMapping("/lists")
-	public String getHomePage(Model model,
-							  @RequestParam(required = false) Integer year,
-							  @RequestParam(defaultValue = "active") String rb,
-							  @RequestParam(defaultValue = "byId") String sort,
-							  @RequestParam Map<String, String> allParams) {
-		// Set the year to current year if it's not provided
-		if (year == null) {
-			year = Year.now().getValue();
-		}
-		// Extract searchParams from allParams
-		List<String> searchParams = allParams.entrySet().stream()
-				.filter(e -> e.getKey().startsWith("param"))
-				.map(Map.Entry::getValue)
-				.collect(Collectors.toList());
-		List<MembershipListDTO> membershipList = rosterService.getRoster(year, rb, sort, searchParams);
-		model.addAttribute("list", membershipList);
-		model.addAttribute("listSize", membershipList.size());
-		return "lists";
-	}
-
 	// sets initial page AJAX updates
 	@GetMapping("/Rosters")
 	public String getRosters(Model model) {
