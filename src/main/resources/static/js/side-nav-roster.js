@@ -1,30 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
     const sidenav = document.querySelector(".sidenav");
-
-    const logoDiv = document.createElement("div");
-    logoDiv.id = "logo";
-    sidenav.appendChild(logoDiv);
-
-    const recordContentDiv = document.createElement("div");
-    recordContentDiv.id = "record-content-div";
-    const label = document.createElement("label");
-    label.id = "numb-of-records";
-    label.textContent = `Records: ${rosters.membershipListDTOS.length}`;
-    recordContentDiv.appendChild(label);
-    sidenav.appendChild(recordContentDiv);
+    sidenav.appendChild(createLogo());
+    sidenav.appendChild(createRecordDiv());
     sidenav.appendChild(createSearchBarDiv());
     sidenav.appendChild(createYearSelectDiv());
+    sidenav.appendChild(createButtons());
+});
 
-    const logoImg = document.createElement("img");
-    logoImg.src = "images/ecsc_logo_small.png";
-    logoImg.alt = "logo";
-    logoDiv.appendChild(logoImg);
-
+function createButtons() {
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "button-container";
-    sidenav.appendChild(buttonContainer);
-
-    // var currentYear = new Date().getFullYear(); // Get the current year
 
     let buttons = [
         { text: "All", value: "all" },
@@ -51,9 +36,22 @@ document.addEventListener("DOMContentLoaded", function () {
             fetchData(false);
         });
 
+        if(a.value === rosters.rosterType) a.classList.add("selected");
+
         buttonContainer.appendChild(a);
     });
-});
+    return buttonContainer;
+}
+
+function createLogo() {
+    const logoDiv = document.createElement("div");
+    logoDiv.id = "logo";
+    const logoImg = document.createElement("img");
+    logoImg.src = "images/ecsc_logo_small.png";
+    logoImg.alt = "logo";
+    logoDiv.appendChild(logoImg);
+    return logoDiv;
+}
 
 function handleKeyUp(event) {
     if (event.key === "Enter") {
@@ -65,10 +63,19 @@ function handleBlur() {
     fetchData(true);
 }
 
+function createRecordDiv() {
+    const recordContentDiv = document.createElement("div");
+    recordContentDiv.id = "record-content-div";
+    const label = document.createElement("label");
+    label.id = "numb-of-records";
+    label.textContent = `Records: ${rosters.membershipListDTOS.length}`;
+    recordContentDiv.appendChild(label);
+    return recordContentDiv;
+}
+
 function createSearchBarDiv() {
     const searchBarDiv = document.createElement("div");
     searchBarDiv.id = "search-bar-div";
-
     const input = document.createElement("input");
     input.id = "search";
     input.placeholder = "Search";
@@ -122,25 +129,20 @@ function fetchData(isSearch) {
 
     // Use the fetch API to send a GET request to the server
     fetch(url)
-        .then(response => {
-            if (response.ok) {
-                return response.json(); // Parse the JSON response
-            } else {
-                throw new Error('Failed to fetch roster data');
-            }
-        })
-        .then(rosterResponse => {
-            console.log('Roster Response:', rosterResponse);
-            // Handle the roster response data
+        .then(response => response.json())
+        .then(data => {
+            // Update the rosters.membershipListDTOS array with the new data
+            rosters.membershipListDTOS = data.membershipListDTOS;
+            // Rebuild the table with the updated data
+            replaceTable();
+            updateRecordDiv();
         })
         .catch(error => {
             console.error('Error fetching roster data:', error);
         });
-    rebuildTable();
 }
 
-function rebuildTable() {
-    const mainDiv = document.getElementById("main");
-    mainDiv.innerHTML = "";
-    mainDiv.appendChild(createTable());
+function updateRecordDiv() {
+    const label = document.getElementById("numb-of-records")
+    label.textContent = `Records: ${rosters.membershipListDTOS.length}`;
 }
