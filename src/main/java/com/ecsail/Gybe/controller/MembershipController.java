@@ -135,4 +135,10 @@ public class MembershipController {
 		model.addAttribute("slipStructure", slipStructureDTOS);
 		return "slip_back_end";
 	}
+
+	@GetMapping("/boat_list")
+	public String getBoatLit(Model model) {
+
+		return "boats";
+	}
 }

@@ -96,7 +96,6 @@ function createYearSelectDiv() {
     return yearContainer;
 }
 
-// I made some changes here
 function createSearchBarDiv() {
     const searchBarDiv = document.createElement("div");
     searchBarDiv.id = "search-bar-div";
@@ -131,8 +130,6 @@ function handleKeyUp() {
     }, 1000); // 1000 milliseconds = 1 second
 }
 
-
-
 function fetchData(searchParams = []) {
     let url = "";
     if (searchParams.length > 0) {
@@ -158,7 +155,6 @@ function fetchData(searchParams = []) {
             console.error('Error fetching roster data:', error);
         });
 }
-
 
 function updateRecordDiv() {
     const label = document.getElementById("numb-of-records")
