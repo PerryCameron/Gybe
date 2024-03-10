@@ -134,16 +134,15 @@ function handleKeyUp() {
 
 
 function fetchData(searchParams = []) {
-    let url = `/rb_roster?type=${rosters.rosterType}&year=${rosters.year}`;
-
+    let url = "";
     if (searchParams.length > 0) {
-        rosters.rosterType = "search"
+        url = `/rb_roster?type=search&year=${rosters.year}`;
         searchParams.forEach((param, index) => {
             url += `&param${index + 1}=${encodeURIComponent(param)}`;
         });
+    } else {
+        url = `/rb_roster?type=${rosters.rosterType}&year=${rosters.year}`;
     }
-
-    // if isSearch is true, we need to add &param1=foo&param2=foo
 
     // Use the fetch API to send a GET request to the server
     fetch(url)
@@ -159,6 +158,7 @@ function fetchData(searchParams = []) {
             console.error('Error fetching roster data:', error);
         });
 }
+
 
 function updateRecordDiv() {
     const label = document.getElementById("numb-of-records")
