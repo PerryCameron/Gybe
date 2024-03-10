@@ -34,10 +34,13 @@ function createTable() {
         <td>${member.lastName}</td>
         <td>${member.city}</td>
       `;
+
+        tr.addEventListener('click', () => {
+            window.open(`/membership?msId=${member.msId}&selectedYear=${rosters.year}`, '_blank');
+        });
         tbody.appendChild(tr);
     });
     table.appendChild(tbody);
-
     return table;
 }
 

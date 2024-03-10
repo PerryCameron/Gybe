@@ -1,20 +1,15 @@
 package com.ecsail.Gybe.controller;
 
-import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Year;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 public class MembershipRestController {
@@ -60,26 +55,5 @@ public class MembershipRestController {
         RosterResponse rosterResponse = rosterService.getRosterResponse(type, year, allParams);
         return ResponseEntity.ok(rosterResponse);
     }
-
-//    @GetMapping("/lists")
-//    public String getHomePage(Model model,
-//                              @RequestParam(required = false) Integer year,
-//                              @RequestParam(defaultValue = "active") String rb,
-//                              @RequestParam(defaultValue = "byId") String sort,
-//                              @RequestParam Map<String, String> allParams) {
-//        // Set the year to current year if it's not provided
-//        if (year == null) {
-//            year = Year.now().getValue();
-//        }
-//        // Extract searchParams from allParams
-//        List<String> searchParams = allParams.entrySet().stream()
-//                .filter(e -> e.getKey().startsWith("param"))
-//                .map(Map.Entry::getValue)
-//                .collect(Collectors.toList());
-//        List<MembershipListDTO> membershipList = rosterService.getRoster(year, rb, sort, searchParams);
-//        model.addAttribute("list", membershipList);
-//        model.addAttribute("listSize", membershipList.size());
-//        return "lists";
-//    }
 
 }
