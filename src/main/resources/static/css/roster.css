@@ -38,6 +38,7 @@ html {
   display: flex;
   text-decoration: none;
   color: #cacaca;
+  cursor: pointer;
 }
 
 .sidenav a.active {
@@ -197,4 +198,9 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.sort-arrow {
+  font-size: 0.8em;
+  margin-left: 5px;
 }

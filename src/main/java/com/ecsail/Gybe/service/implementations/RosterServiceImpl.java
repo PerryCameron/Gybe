@@ -6,6 +6,7 @@ import com.ecsail.Gybe.service.interfaces.RosterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +27,12 @@ public class RosterServiceImpl implements RosterService {
             rosterType = "search";
         List<MembershipListDTO> membershipList = getRosterType(year, rosterType, searchParams);
         sortList(sort, membershipList);
+        return membershipList;
+    }
+
+    @Override
+    public List<MembershipListDTO> getRoster() {
+        List<MembershipListDTO> membershipList = membershipRepository.getRoster(LocalDate.now().getYear(), true);
         return membershipList;
     }
 

@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.implementations.*;
 import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
+import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +86,17 @@ public class MembershipController {
 		model.addAttribute("list", membershipList);
 		model.addAttribute("listSize", membershipList.size());
 		return "lists";
+	}
+
+	// sets initial page AJAX updates
+	@GetMapping("/Rosters")
+	public String getRosters(Model model) {
+		RosterResponse rosterResponse = new RosterResponse();
+		rosterResponse.setMembershipListDTOS(rosterService.getRoster());
+		rosterResponse.setRosterType("active");
+		rosterResponse.setYear(LocalDate.now().getYear());
+		model.addAttribute("rosters", rosterResponse);
+		return "rosters";
 	}
 
 	// this is to forward to ecsail.org

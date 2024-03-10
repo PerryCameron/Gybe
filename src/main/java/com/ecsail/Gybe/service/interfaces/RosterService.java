@@ -7,6 +7,8 @@ import java.util.List;
 public interface RosterService {
     List<MembershipListDTO> getRoster(int year, String rosterType, String sort, List<String> searchParams);
 
+    List<MembershipListDTO> getRoster();
+
     List<MembershipListDTO> getRosterType(int year, String rosterType, List<String> searchParams);
 
     List<MembershipListDTO> getSlipWait();

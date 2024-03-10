@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                     ).permitAll();
                     auth.requestMatchers("/home/**").hasRole("USER");
                     auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
-                    auth.requestMatchers("/lists/**").hasAnyRole("ADMIN","MEMBERSHIP");
+                    auth.requestMatchers("/lists/**","/Rosters/**").hasAnyRole("ADMIN","MEMBERSHIP");
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(form -> form
