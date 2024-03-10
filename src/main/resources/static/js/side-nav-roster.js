@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sidenav.appendChild(createSearchBarDiv());
     sidenav.appendChild(createYearSelectDiv());
 
-    var logoImg = document.createElement("img");
+    const logoImg = document.createElement("img");
     logoImg.src = "images/ecsc_logo_small.png";
     logoImg.alt = "logo";
     logoDiv.appendChild(logoImg);
@@ -32,11 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
         { text: "Non-Renew", value: "non_renew" },
         { text: "New Members", value: "new_members" },
         { text: "Return Members", value: "return_members" },
-        { text: "Slip Waitlist", value: "slip_waitlist" },
+        { text: "Slip Wait-list", value: "slip_wait_list" },
     ];
 
     buttons.forEach(function (button) {
-        var a = document.createElement("a");
+        const a = document.createElement("a");
         a.textContent = button.text;
         if (button.value) a.value = button.value;
 
@@ -114,11 +114,33 @@ function createYearSelectDiv() {
 
 function fetchData(isSearch) {
     if (isSearch) {
+        rosters.rosterType = "search"
         const searchText = document.getElementById("search");
-        console.log(searchText.value);
         searchText.value = "";
-    } else {
-        console.log("Selected year:", rosters.year);
-        console.log("Roster type: " + rosters.rosterType);
     }
+    const url = `/rb_roster?type=${rosters.rosterType}&year=${rosters.year}`;
+
+    // Use the fetch API to send a GET request to the server
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Parse the JSON response
+            } else {
+                throw new Error('Failed to fetch roster data');
+            }
+        })
+        .then(rosterResponse => {
+            console.log('Roster Response:', rosterResponse);
+            // Handle the roster response data
+        })
+        .catch(error => {
+            console.error('Error fetching roster data:', error);
+        });
+    rebuildTable();
+}
+
+function rebuildTable() {
+    const mainDiv = document.getElementById("main");
+    mainDiv.innerHTML = "";
+    mainDiv.appendChild(createTable());
 }

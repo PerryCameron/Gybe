@@ -3,6 +3,7 @@ package com.ecsail.Gybe.service.implementations;
 import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import com.ecsail.Gybe.service.interfaces.RosterService;
+import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,8 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RosterServiceImpl implements RosterService {
@@ -22,17 +25,19 @@ public class RosterServiceImpl implements RosterService {
     }
 
     @Override
+    public RosterResponse getDefaultRosterResponse() {
+        RosterResponse rosterResponse = new RosterResponse();
+        rosterResponse.setMembershipListDTOS(membershipRepository.getRoster(LocalDate.now().getYear(), true));
+        rosterResponse.setRosterType("active");
+        rosterResponse.setYear(LocalDate.now().getYear());
+        return rosterResponse;
+    }
+
+    @Override
     public List<MembershipListDTO> getRoster(int year, String rosterType, String sort, List<String> searchParams) {
         if (!searchParams.isEmpty())
             rosterType = "search";
         List<MembershipListDTO> membershipList = getRosterType(year, rosterType, searchParams);
-        sortList(sort, membershipList);
-        return membershipList;
-    }
-
-    @Override
-    public List<MembershipListDTO> getRoster() {
-        List<MembershipListDTO> membershipList = membershipRepository.getRoster(LocalDate.now().getYear(), true);
         return membershipList;
     }
 
@@ -40,15 +45,15 @@ public class RosterServiceImpl implements RosterService {
     public List<MembershipListDTO> getRosterType(int year, String rosterType, List<String> searchParams) {
         if (rosterType.equals("active")) {
             return membershipRepository.getRoster(year, true);
-        } else if (rosterType.equals("non-renew")) {
+        } else if (rosterType.equals("non_renew")) {
             return membershipRepository.getRoster(year, false);
         } else if (rosterType.equals("all")) {
             return membershipRepository.getRosterOfAll(year);
-        } else if (rosterType.equals("new")) {
+        } else if (rosterType.equals("new_members")) {
             return membershipRepository.getNewMemberRoster(year);
-        } else if (rosterType.equals("return")) {
+        } else if (rosterType.equals("return_members")) {
             return membershipRepository.getReturnMembers(year);
-        } else if (rosterType.equals("slip")) {
+        } else if (rosterType.equals("slip_wait_list")) {
             return membershipRepository.getSlipWaitList();
         } else if (rosterType.equals("search")) {
             return membershipRepository.getSearchRoster(searchParams);
@@ -63,25 +68,18 @@ public class RosterServiceImpl implements RosterService {
         return waitList;
     }
 
-    private static void sortList(String sort, List<MembershipListDTO> membershipList) {
-        if (sort.equals("fname")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getFirstName));
-        } else if (sort.equals("byId")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getMembershipId));
-        } else if (sort.equals("lname")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getLastName));
-        } else if (sort.equals("date")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getJoinDate));
-        } else if (sort.equals("Type")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getMemType));
-        } else if (sort.equals("adrs")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getAddress));
-        } else if (sort.equals("city")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getCity));
-        } else if (sort.equals("state")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getState));
-        } else if (sort.equals("zip")) {
-            Collections.sort(membershipList, Comparator.comparing(MembershipListDTO::getZip));
-        }
+    @Override
+    public RosterResponse getRosterResponse(String type, Integer year, Map<String, String> allParams) {
+        RosterResponse rosterResponse = new RosterResponse();
+        List<String> searchParams = allParams.entrySet().stream()
+                .filter(e -> e.getKey().startsWith("param"))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        rosterResponse.setMembershipListDTOS(getRosterType(year, type, searchParams));
+        rosterResponse.setRosterType(type);
+        rosterResponse.setYear(year);
+        return rosterResponse;
     }
+
+
 }

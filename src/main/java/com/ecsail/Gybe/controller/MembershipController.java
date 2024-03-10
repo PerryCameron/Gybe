@@ -91,10 +91,7 @@ public class MembershipController {
 	// sets initial page AJAX updates
 	@GetMapping("/Rosters")
 	public String getRosters(Model model) {
-		RosterResponse rosterResponse = new RosterResponse();
-		rosterResponse.setMembershipListDTOS(rosterService.getRoster());
-		rosterResponse.setRosterType("active");
-		rosterResponse.setYear(LocalDate.now().getYear());
+		RosterResponse rosterResponse = rosterService.getDefaultRosterResponse();
 		model.addAttribute("rosters", rosterResponse);
 		return "rosters";
 	}
