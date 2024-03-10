@@ -28,6 +28,7 @@ public class MembershipController {
 	private final EmailService emailService;
 	private final GeneralService generalService;
 	private final FeeService feeService;
+	private final BoatService boatService;
 	SendMailService service;
 	RosterService rosterService;
 	MembershipService membershipService;
@@ -46,7 +47,8 @@ public class MembershipController {
 			MembershipService membershipService,
 			EmailService emailService,
 			GeneralService generalService,
-			FeeService feeService) {
+			FeeService feeService,
+			BoatService boatService) {
 		this.service = service;
 		this.rosterService = rosterService;
 		this.adminService = adminService;
@@ -54,6 +56,7 @@ public class MembershipController {
 		this.emailService = emailService;
 		this.generalService = generalService;
 		this.feeService = feeService;
+		this.boatService = boatService;
 	}
 
 	@GetMapping("/membership")
@@ -138,7 +141,8 @@ public class MembershipController {
 
 	@GetMapping("/boat_list")
 	public String getBoatLit(Model model) {
-
+		List<BoatListDTO> boatListDTOS = boatService.getBoatListByType("active_sailboats");
+		model.addAttribute("boatList", boatListDTOS);
 		return "boats";
 	}
 }
