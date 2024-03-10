@@ -1,3 +1,4 @@
+let timeout = null;
 document.addEventListener("DOMContentLoaded", function () {
     const sidenav = document.querySelector(".sidenav");
     sidenav.appendChild(createLogo());
@@ -53,16 +54,6 @@ function createLogo() {
     return logoDiv;
 }
 
-function handleKeyUp(event) {
-    if (event.key === "Enter") {
-        fetchData(true);
-    }
-}
-
-function handleBlur() {
-    fetchData(true);
-}
-
 function createRecordDiv() {
     const recordContentDiv = document.createElement("div");
     recordContentDiv.id = "record-content-div";
@@ -71,20 +62,6 @@ function createRecordDiv() {
     label.textContent = `Records: ${rosters.membershipListDTOS.length}`;
     recordContentDiv.appendChild(label);
     return recordContentDiv;
-}
-
-function createSearchBarDiv() {
-    const searchBarDiv = document.createElement("div");
-    searchBarDiv.id = "search-bar-div";
-    const input = document.createElement("input");
-    input.id = "search";
-    input.placeholder = "Search";
-    input.type = "text";
-    input.className = "sidenav-control";
-    input.addEventListener("keyup", handleKeyUp);
-    input.addEventListener("blur", handleBlur);
-    searchBarDiv.appendChild(input);
-    return searchBarDiv;
 }
 
 function createYearSelectDiv() {
@@ -112,20 +89,61 @@ function createYearSelectDiv() {
 
     yearSelect.addEventListener("change", function () {
         rosters.year = this.value;
-        fetchData(false);
+        fetchData();
     });
 
     yearContainer.appendChild(yearSelect);
     return yearContainer;
 }
 
-function fetchData(isSearch) {
-    if (isSearch) {
+// I made some changes here
+function createSearchBarDiv() {
+    const searchBarDiv = document.createElement("div");
+    searchBarDiv.id = "search-bar-div";
+    const input = document.createElement("input");
+    input.id = "search";
+    input.placeholder = "Search";
+    input.type = "text";
+    input.className = "sidenav-control";
+    input.addEventListener("keyup", handleKeyUp);
+    searchBarDiv.appendChild(input);
+    return searchBarDiv;
+}
+
+function handleKeyUp() {
+    // Clear the previous timeout if the user types something new before the timeout is reached
+    clearTimeout(timeout);
+
+    // Set a new timeout
+    timeout = setTimeout(() => {
+        // Get the value of the input
+        const searchValue = document.getElementById("search").value.trim();
+        // Check if searchValue is not an empty string
+        if (searchValue !== "") {
+            // Split the searchValue into an array
+            let valuesArray = searchValue.split(" "); // Splitting the string into an array
+            // Fetch data with the search parameters
+            fetchData(valuesArray);
+        } else {
+            // If the search field is empty, fetch data without search parameters
+            fetchData();
+        }
+    }, 1000); // 1000 milliseconds = 1 second
+}
+
+
+
+function fetchData(searchParams = []) {
+    let url = `/rb_roster?type=${rosters.rosterType}&year=${rosters.year}`;
+
+    if (searchParams.length > 0) {
         rosters.rosterType = "search"
-        const searchText = document.getElementById("search");
-        searchText.value = "";
+        searchParams.forEach((param, index) => {
+            url += `&param${index + 1}=${encodeURIComponent(param)}`;
+        });
     }
-    const url = `/rb_roster?type=${rosters.rosterType}&year=${rosters.year}`;
+
+    // if isSearch is true, we need to add &param1=foo&param2=foo
 
     // Use the fetch API to send a GET request to the server
     fetch(url)

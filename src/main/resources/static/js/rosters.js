@@ -68,7 +68,10 @@ function sortTable(column) {
 
         return sortDirection === "asc" ? comparison : -comparison;
     });
+
     replaceTable();
+
+
     lastSortedColumn = column; // Update the last sorted column
 
     // Set the arrow for the sorted column
