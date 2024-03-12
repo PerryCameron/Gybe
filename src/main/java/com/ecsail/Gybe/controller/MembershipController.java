@@ -1,25 +1,20 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
-import com.ecsail.Gybe.service.implementations.*;
 import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
+import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
-import java.time.Year;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -140,9 +135,9 @@ public class MembershipController {
 	}
 
 	@GetMapping("/boat_list")
-	public String getBoatLit(Model model) {
-		List<BoatListDTO> boatListDTOS = boatService.getBoatListByType("active_sailboats");
-		model.addAttribute("boatList", boatListDTOS);
-		return "boats";
+	public String getBoatLit(Model model, @RequestParam(defaultValue = "active_sailboats") String listType) {
+		BoatListResponse boatListResponse = boatService.getBoatListResponse(listType);
+		model.addAttribute("boatList", boatListResponse);
+		return "boatlist";
 	}
 }
