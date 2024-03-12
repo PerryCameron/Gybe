@@ -32,7 +32,7 @@ function createButtons() {
       // Add highlighted class to the clicked link
       this.classList.add("selected");
       boats.boatListType = this.value;
-      fetchData(false);
+      fetchData();
     });
     if (a.value === boats.boatListType) a.classList.add("selected");
     buttonContainer.appendChild(a);
@@ -97,28 +97,29 @@ function createLogo() {
 function fetchData(searchParams = []) {
   let url = "";
   if (searchParams.length > 0) {
-    url = `/rb_boats?type=search`;
+    url = `/rb_boat_list?type=search`;
     searchParams.forEach((param, index) => {
       url += `&param${index + 1}=${encodeURIComponent(param)}`;
     });
   } else {
-    url = `/rb_boats?type=${boats.boatListType}`;
+    url = `/rb_boat_list?type=${boats.boatListType}`;
+
   }
 
   console.log(url);
   // Use the fetch API to send a GET request to the server
-  // fetch(url)
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     // Update the rosters.membershipListDTOS array with the new data
-  //     rosters.membershipListDTOS = data.membershipListDTOS;
-  //     // Rebuild the table with the updated data
-  //     replaceTable();
-  //     updateRecordDiv();
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error fetching roster data:", error);
-  //   });
+  fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        // Update the rosters.membershipListDTOS array with the new data
+        boats.boatListDTOS = data.boatListDTOS;
+        // Rebuild the table with the updated data
+        replaceTable();
+        updateRecordDiv();
+      })
+      .catch(error => {
+        console.error('Error fetching boat List data:', error);
+      });
 }
 
 function updateRecordDiv() {

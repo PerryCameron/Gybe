@@ -2,6 +2,7 @@ package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
+import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,11 @@ public class MembershipRestController {
     private final EmailService emailService;
     private final GeneralService generalService;
     private final FeeService feeService;
-    SendMailService service;
-    RosterService rosterService;
-    MembershipService membershipService;
-    AdminService adminService;
+    private final BoatService boatService;
+    private final SendMailService service;
+    private final RosterService rosterService;
+    private final MembershipService membershipService;
+    private final AdminService adminService;
 
 
     @Autowired
@@ -31,7 +33,8 @@ public class MembershipRestController {
             MembershipService membershipService,
             EmailService emailService,
             GeneralService generalService,
-            FeeService feeService) {
+            FeeService feeService,
+            BoatService boatService) {
         this.service = service;
         this.rosterService = rosterService;
         this.adminService = adminService;
@@ -39,6 +42,7 @@ public class MembershipRestController {
         this.emailService = emailService;
         this.generalService = generalService;
         this.feeService = feeService;
+        this.boatService = boatService;
     }
 
     @GetMapping("/rb_bod")
@@ -54,6 +58,13 @@ public class MembershipRestController {
             @RequestParam Map<String, String> allParams) {
         RosterResponse rosterResponse = rosterService.getRosterResponse(type, year, allParams);
         return ResponseEntity.ok(rosterResponse);
+    }
+
+    @GetMapping("/rb_boat_list")
+    public ResponseEntity<BoatListResponse> getBoatLit(@RequestParam(defaultValue = "active_sailboats") String type) {
+        System.out.println("controller param: " + type);
+        BoatListResponse boatListResponse = boatService.getBoatListResponse(type);
+        return ResponseEntity.ok(boatListResponse);
     }
 
 }

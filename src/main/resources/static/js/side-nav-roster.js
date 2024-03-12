@@ -34,7 +34,7 @@ function createButtons() {
             // Add highlighted class to the clicked link
             this.classList.add("selected");
             rosters.rosterType = this.value;
-            fetchData(false);
+            fetchData();
         });
 
         if(a.value === rosters.rosterType) a.classList.add("selected");

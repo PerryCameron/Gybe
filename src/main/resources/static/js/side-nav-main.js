@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     {href: "bod", text: "Board of Directors", id: "option2", target: "_blank"},
     {href: "form-request-summary", text: "Form Requests", target: "_blank"},
     {href: "slip_chart", text: "Slips", target: "_blank"},
+    {href: "boat_list", text: "Boats", target: "_blank"},
   ];
 
   links.forEach(function (link) {

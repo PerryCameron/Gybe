@@ -20,21 +20,11 @@ public class BoatServiceImpl implements BoatService {
         this.boatRepository = boatRepository;
         
     }
-    @Override
-    public List<BoatListDTO> getBoatListByType(String boatListType) {
-        List<BoatListDTO> boats = new ArrayList<>();
-        switch (boatListType) {
-            case "active_sailboats" -> boats = boatRepository.getActiveSailBoats();
-            case "active_Auxiliary" -> boats = boatRepository.getActiveAuxBoats();
-            case "all_sailboats" -> boats = boatRepository.getAllSailBoats();
-            case "all_auxiliary" -> boats = boatRepository.getAllAuxBoats();
-            case "all_boats" -> boats = boatRepository.getAllBoats();
-        }
-        return boats;
-    }
+
     @Override
     public BoatListResponse getBoatListResponse(String boatListType) {
         BoatListResponse boatListResponse = new BoatListResponse();
+        System.out.println(boatListType);
         switch (boatListType) {
             case "active_sailboats" -> boatListResponse.setBoatListDTOS(boatRepository.getActiveSailBoats());
             case "active_paddlecraft" -> boatListResponse.setBoatListDTOS(boatRepository.getActiveAuxBoats());
