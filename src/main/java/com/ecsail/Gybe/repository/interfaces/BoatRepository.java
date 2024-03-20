@@ -27,10 +27,13 @@ public interface BoatRepository {
     int insertOwner(BoatOwnerDTO boatOwnerDTO);
     int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatListDTO boatListDTO);
 
-
     int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatDTO boatDTO);
 
     int setAllDefaultImagesToFalse(int boatId);
 
     int setDefaultImageTrue(int id);
+
+    List<BoatListDTO> getSearchResult(List<String> searchParams);
+    
+    List<BoatListDTO> findBoatsByWords(List<String> words);
 }

@@ -11,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -296,4 +294,41 @@ public class BoatRepositoryImpl implements BoatRepository {
         String query = "UPDATE boat_photos SET default_image = true WHERE ID = ?";
         return template.update(query, id);
     }
+
+    @Override
+    public List<BoatListDTO> getSearchResult(List<String> searchParams) {
+        return null;
+    }
+    @Override
+    public List<BoatListDTO> findBoatsByWords(List<String> words) {
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("""
+            SELECT id.membership_id, id.ms_id, p.l_name, p.f_name, b.*, nb.boat_count FROM boat b
+            LEFT JOIN boat_owner bo ON b.BOAT_ID = bo.BOAT_ID
+            LEFT JOIN membership m ON bo.MS_ID = m.MS_ID
+            LEFT JOIN (SELECT * FROM membership_id WHERE FISCAL_YEAR = (SELECT YEAR(NOW()))) id ON bo.MS_ID = id.MS_ID
+            LEFT JOIN person p ON m.P_ID = p.P_ID
+            LEFT JOIN (SELECT BOAT_ID, COUNT(BOAT_ID) AS boat_count FROM boat_photos
+                       GROUP BY BOAT_ID HAVING COUNT(BOAT_ID) > 0) nb ON b.BOAT_ID = nb.BOAT_ID
+            """);
+        MapSqlParameterSource sqlParameters = new MapSqlParameterSource();
+        if (!words.isEmpty()) {
+            queryBuilder.append("WHERE ");
+            for (int i = 0; i < words.size(); i++) {
+                if (i > 0) {
+                    queryBuilder.append(" OR ");
+                }
+                sqlParameters.addValue("word" + i, "%" + words.get(i) + "%");
+                queryBuilder.append("(b.manufacturer LIKE :word").append(i)
+                        .append(" OR b.model LIKE :word").append(i)
+                        .append(" OR b.boat_name LIKE :word").append(i)
+                        .append(" OR p.l_name LIKE :word").append(i)
+                        .append(" OR p.f_name LIKE :word").append(i)
+                        .append(")");
+            }
+        }
+        return namedParameterJdbcTemplate.query(queryBuilder.toString(), sqlParameters, new BoatListRowMapper());
+    }
+
+
 }

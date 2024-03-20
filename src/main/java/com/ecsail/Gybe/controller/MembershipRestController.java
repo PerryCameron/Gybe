@@ -61,9 +61,10 @@ public class MembershipRestController {
     }
 
     @GetMapping("/rb_boat_list")
-    public ResponseEntity<BoatListResponse> getBoatLit(@RequestParam(defaultValue = "active_sailboats") String type) {
-        System.out.println("controller param: " + type);
-        BoatListResponse boatListResponse = boatService.getBoatListResponse(type);
+    public ResponseEntity<BoatListResponse> getBoatLit(
+            @RequestParam(defaultValue = "active_sailboats") String type,
+            @RequestParam Map<String, String> allParams) {
+        BoatListResponse boatListResponse = boatService.getBoatListResponse(type, allParams);
         return ResponseEntity.ok(boatListResponse);
     }
 
