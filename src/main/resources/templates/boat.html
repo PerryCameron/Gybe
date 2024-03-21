@@ -7,6 +7,18 @@
         /*<![CDATA[*/
         let boat = /*[[${boat}]]*/ {};
         /*]]>*/
+        window.onload = function() {
+            let defaultPhoto = boat.photosDTOS.find(photo => photo.default === true);
+
+            if (defaultPhoto) {
+                let img = document.createElement("img");
+                img.src = "/boat_images/" + defaultPhoto.filename; // Assuming your images are served from /images/
+                img.alt = "Default Boat Photo";
+                document.body.appendChild(img);
+            } else {
+                console.log("No default photo found.");
+            }
+        };
     </script>
 </head>
 <body>
