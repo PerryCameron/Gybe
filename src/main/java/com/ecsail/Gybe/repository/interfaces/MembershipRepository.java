@@ -32,4 +32,6 @@ public interface MembershipRepository {
     MembershipListDTO getMembershipListFromMsidAndYear(int year, int msId);
 
     List<MembershipListDTO> getSearchRoster(List<String> searchParams);
+
+    List<MembershipListDTO> getOwnersOfBoat(Integer boatId);
 }

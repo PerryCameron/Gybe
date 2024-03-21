@@ -227,7 +227,7 @@ public class BoatRepositoryImpl implements BoatRepository {
     }
 
     @Override
-    public List<BoatPhotosDTO> getImagesByBoatId(int boatId) {
+    public List<BoatPhotosDTO> getImagesByBoatId(String boatId) {
         String query = "SELECT * FROM boat_photos WHERE BOAT_ID=?";
         return template.query(query, new BoatPhotosRowMapper(), boatId);
     }
@@ -335,4 +335,5 @@ public class BoatRepositoryImpl implements BoatRepository {
         String sql = "SELECT * FROM boat WHERE boat_id = ?";
         return template.queryForObject(sql, new Object[]{boatId}, new BoatRowMapper());
     }
+
 }

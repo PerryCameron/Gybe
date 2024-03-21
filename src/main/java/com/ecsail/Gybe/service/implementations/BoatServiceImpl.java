@@ -1,10 +1,11 @@
 package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.BoatDTO;
-import com.ecsail.Gybe.dto.BoatListDTO;
 import com.ecsail.Gybe.repository.interfaces.BoatRepository;
+import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import com.ecsail.Gybe.service.interfaces.BoatService;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
+import com.ecsail.Gybe.wrappers.BoatResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,12 @@ import java.util.stream.Collectors;
 public class BoatServiceImpl implements BoatService {
 
     private final BoatRepository boatRepository;
+    private final MembershipRepository membershipRepository;
 
     @Autowired
-    public BoatServiceImpl(BoatRepository boatRepository) {
+    public BoatServiceImpl(BoatRepository boatRepository, MembershipRepository membershipRepository) {
         this.boatRepository = boatRepository;
-        
+        this.membershipRepository = membershipRepository;
     }
 
     @Override
@@ -44,7 +46,11 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
-    public BoatDTO getBoatById(String boatId) {
-        return boatRepository.findBoatById(boatId);
+    public BoatResponse getBoatResponse(String boatId) {
+        BoatResponse boatResponse = new BoatResponse();
+        boatResponse.setBoatDTO(boatRepository.findBoatById(boatId));
+        boatResponse.setOwners(membershipRepository.getOwnersOfBoat(Integer.valueOf(boatId)));
+        boatResponse.setPhotosDTOS(boatRepository.getImagesByBoatId(boatId));
+        return boatResponse;
     }
 }

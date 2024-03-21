@@ -15,7 +15,7 @@ public interface BoatRepository {
     List<BoatDTO> getBoatsByMsId(int msId);
     List<BoatDTO> getOnlySailboatsByMsId(int msId);
     List<BoatOwnerDTO> getBoatOwnersByBoatId(int boatId);
-    List<BoatPhotosDTO> getImagesByBoatId(int boat_id);
+    List<BoatPhotosDTO> getImagesByBoatId(String boat_id);
     int update(BoatDTO o);
     int update(BoatListDTO boatListDTO);
     int update(BoatPhotosDTO boatPhotosDTO);
@@ -38,4 +38,5 @@ public interface BoatRepository {
     List<BoatListDTO> findBoatsByWords(List<String> words);
 
     BoatDTO findBoatById(String boatId);
+
 }

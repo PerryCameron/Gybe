@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
+import com.ecsail.Gybe.wrappers.BoatResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,8 +147,8 @@ public class MembershipController {
 
     @GetMapping("/boat")
     public String getBoat(Model model, @RequestParam String boatId) {
-        BoatDTO boatDTO = boatService.getBoatById(boatId);
-        model.addAttribute("boat", boatDTO);
+        BoatResponse boatResponse = boatService.getBoatResponse(boatId);
+        model.addAttribute("boat", boatResponse);
         return "boat";
     }
 }
