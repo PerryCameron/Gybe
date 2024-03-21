@@ -34,6 +34,9 @@ function createTable() {
           <td>${boat.boatName || ""}</td>
           <td>${boat.numberOfImages}</td>
         `;
+    tr.addEventListener('click', () => {
+      window.open(`/boat?boatId=${boat.boatId}`, '_blank');
+    });
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);

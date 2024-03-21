@@ -143,4 +143,11 @@ public class MembershipController {
         model.addAttribute("boatList", boatListResponse);
         return "boatlist";
     }
+
+    @GetMapping("/boat")
+    public String getBoat(Model model, @RequestParam String boatId) {
+        BoatDTO boatDTO = boatService.getBoatById(boatId);
+        model.addAttribute("boat", boatDTO);
+        return "boat";
+    }
 }

@@ -34,6 +34,8 @@ public interface BoatRepository {
     int setDefaultImageTrue(int id);
 
     List<BoatListDTO> getSearchResult(List<String> searchParams);
-    
+
     List<BoatListDTO> findBoatsByWords(List<String> words);
+
+    BoatDTO findBoatById(String boatId);
 }

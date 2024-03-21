@@ -330,6 +330,9 @@ public class BoatRepositoryImpl implements BoatRepository {
         }
         return namedParameterJdbcTemplate.query(queryBuilder.toString(), sqlParameters, new BoatListRowMapper());
     }
-
-
+    @Override
+    public BoatDTO findBoatById(String boatId) {
+        String sql = "SELECT * FROM boat WHERE boat_id = ?";
+        return template.queryForObject(sql, new Object[]{boatId}, new BoatRowMapper());
+    }
 }

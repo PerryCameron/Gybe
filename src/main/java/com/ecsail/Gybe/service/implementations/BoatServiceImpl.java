@@ -1,5 +1,7 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.dto.BoatDTO;
+import com.ecsail.Gybe.dto.BoatListDTO;
 import com.ecsail.Gybe.repository.interfaces.BoatRepository;
 import com.ecsail.Gybe.service.interfaces.BoatService;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
@@ -39,5 +41,10 @@ public class BoatServiceImpl implements BoatService {
         System.out.println(boatListType);
         boatListResponse.setBoatListType(boatListType);
         return boatListResponse;
+    }
+
+    @Override
+    public BoatDTO getBoatById(String boatId) {
+        return boatRepository.findBoatById(boatId);
     }
 }
