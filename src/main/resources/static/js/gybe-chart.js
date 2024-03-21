@@ -100,7 +100,7 @@ const doughnutChart = new Chart(age, {
     labels: ["0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "Not Reported"],
     datasets: [
       {
-        label: "My First Dataset",
+        label: "",
         data: agesArray,
         backgroundColor: [
           "#4B9CD3",

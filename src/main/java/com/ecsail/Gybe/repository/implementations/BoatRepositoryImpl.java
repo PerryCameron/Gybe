@@ -299,6 +299,7 @@ public class BoatRepositoryImpl implements BoatRepository {
     public List<BoatListDTO> getSearchResult(List<String> searchParams) {
         return null;
     }
+
     @Override
     public List<BoatListDTO> findBoatsByWords(List<String> words) {
         StringBuilder queryBuilder = new StringBuilder();
