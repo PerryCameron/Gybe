@@ -99,3 +99,34 @@ INSERT INTO invoice_item ()
 VALUES(@id_value,
        (select ID from invoice where FISCAL_YEAR='1985' and MS_ID=@msid),
        @msid,1985,'Beach Spot Board',false,0.00,0);
+
+## Spread sheet for Amy
+SELECT id.MEMBERSHIP_ID,
+       m.JOIN_DATE,
+       id.MEM_TYPE,
+       s.SLIP_NUM,
+       CONCAT(p.F_NAME, ' ', p.L_NAME) AS `Primary Name`,
+       p2.PHONE AS `Primary Phone`,
+       e1.EMAIL AS `Primary Email`,
+       p.BUSINESS AS `Primary Business`,
+       CONCAT(p3.F_NAME, ' ', p3.L_NAME) AS `Secondary Name`,
+       p4.PHONE AS `Secondary Phone`,
+       e2.EMAIL AS `Secondary Email`,
+       m.ADDRESS,
+       m.CITY,
+       m.STATE,
+       m.ZIP
+FROM slip s
+         RIGHT JOIN membership m ON m.MS_ID = s.MS_ID
+         LEFT JOIN membership_id id ON m.MS_ID = id.MS_ID
+         LEFT JOIN person p ON p.MS_ID = m.MS_ID AND p.MEMBER_TYPE = 1
+         LEFT JOIN phone p2 ON p2.P_ID = p.P_ID AND p2.PHONE_TYPE = 'C'
+         LEFT JOIN email e1 ON p.P_ID = e1.P_ID AND e1.PRIMARY_USE = true AND e1.EMAIL_LISTED=true
+         LEFT JOIN person p3 ON p3.MS_ID = m.MS_ID AND p3.MEMBER_TYPE = 2
+         LEFT JOIN phone p4 ON p4.P_ID = p3.P_ID AND p4.PHONE_TYPE = 'C'
+         LEFT JOIN email e2 ON p3.P_ID = e2.P_ID AND e2.PRIMARY_USE = true AND e2.EMAIL_LISTED=true
+
+WHERE id.FISCAL_YEAR = 2024
+  AND id.RENEW = TRUE
+  AND (p.MEMBER_TYPE = 1 OR p3.MEMBER_TYPE = 2)
+ORDER BY id.MEMBERSHIP_ID;
