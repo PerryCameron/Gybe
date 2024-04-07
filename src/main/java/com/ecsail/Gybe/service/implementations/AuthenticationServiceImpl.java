@@ -31,33 +31,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserDTO registerUser(String username, String password) {
-        System.out.println("registering the user");
         String encodedPassword = passwordEncoder.encode(password);
-        System.out.println("encoded password:" + encodedPassword);
         RoleDTO userRole = authenticationRepository.findByAuthority("ROLE_USER").get();
-        System.out.println("userRole=" + userRole);
         UserDTO userDTO = authenticationRepository.saveUser(new UserDTO(0, username, encodedPassword, 0));
-        System.out.println("userDTO" + userDTO);
         authenticationRepository.saveUserRole(userDTO, userRole);
         return userDTO;
     }
 
-//    public LoginResponseDTO loginUser(String username, String password) {
-//        try {
-//            // New authentication object, whenever we send in a request for a user login, it will pass
-//            // the user, pass to this authentication manager, it will use the UserDetailsService that we set up earlier
-//            // grab the user if user exists will create token for us to send, otherwise throw exception
-//            Authentication auth = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(username, password));
-//            // send token to our JWT
-//            String token = tokenService.generateJwt(auth);
-//            // return back the user as well as the token
-//            return new LoginResponseDTO(authenticationRepository.findUserWithAuthoritiesByUsername(username).get(),token);
-//        } catch (Exception e) {
-//            return  new LoginResponseDTO(null, "");
-//        }
-//
-//    }
+
+
+
 
 
 

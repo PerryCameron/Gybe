@@ -17,4 +17,6 @@ public interface PersonRepository {
 
     int delete(PersonDTO personDTO);
     public List<PersonDTO> getChildrenByMsId(int msId);
+
+    PersonDTO getPersonByEmail(String email);
 }

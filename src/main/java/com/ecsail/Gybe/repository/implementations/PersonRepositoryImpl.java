@@ -4,7 +4,7 @@ package com.ecsail.Gybe.repository.implementations;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.repository.interfaces.PersonRepository;
 import com.ecsail.Gybe.repository.rowmappers.PersonRowMapper;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -78,5 +78,21 @@ public class PersonRepositoryImpl implements PersonRepository {
         List<PersonDTO> personDTOS = template.query(QUERY, new PersonRowMapper(), msId);
         return personDTOS;
     }
+
+    @Override
+    public PersonDTO getPersonByEmail(String email) {
+        String query = """
+            select p.P_ID,p.MS_ID,p.MEMBER_TYPE,p.F_NAME,p.L_NAME,p.BIRTHDAY,
+                   p.OCCUPATION,p.BUSINESS,p.IS_ACTIVE,p.NICK_NAME,p.OLD_MSID from email e
+                     left join person p on e.P_ID = p.P_ID
+                     where EMAIL=?
+            """;
+        try {
+            return template.queryForObject(query, new PersonRowMapper(), email);
+        } catch (EmptyResultDataAccessException e) {
+            return new PersonDTO("none");
+        }
+    }
+
 
 }

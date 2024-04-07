@@ -35,6 +35,10 @@ public class PersonDTO {
 		this.oldMsid = oldMsid;
 	}
 
+	public PersonDTO(String firstName) {
+		this.firstName = firstName;
+	}
+
 	public int getpId() {
 		return pId;
 	}
