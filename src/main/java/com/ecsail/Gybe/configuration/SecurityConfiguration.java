@@ -46,7 +46,7 @@ public class SecurityConfiguration {
                             "/stats/**",
                             "/slips/**",
                             "/slips-in-template/**",
-                            "/useradd/**"
+                            "/upsert_user/**"
                     ).permitAll();
                     auth.requestMatchers("/home/**").hasRole("USER");
                     auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'

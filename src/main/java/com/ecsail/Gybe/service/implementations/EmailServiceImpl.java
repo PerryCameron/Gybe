@@ -33,6 +33,10 @@ public class EmailServiceImpl implements EmailService {
         this.generalRepository = generalRepository;
         this.settingsService = settingsService;
     }
+    @Override
+    public MailDTO sendPasswordReset(String email) {
+        return new MailDTO(email,"ECSC Password Reset", "email body");
+    }
 
     @Override
     public MailDTO processEmailSubmission(String email) {

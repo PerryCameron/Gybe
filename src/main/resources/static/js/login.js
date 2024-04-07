@@ -7,16 +7,16 @@ function showEmailField() {
 
   // Clear the form
   form.innerHTML = "";
-  form.action = '/useradd';
+  form.action = '/upsert_user';
 
-  let outterDiv = document.createElement("div");
-  outterDiv.classList.add("form-group");
+  let outerDiv = document.createElement("div");
+  outerDiv.classList.add("form-group");
   let buttonDiv = document.createElement("div");
   buttonDiv.classList.add("form-group", "submit-button-div");
 
   // Create a new input field for the email
-  outterDiv.appendChild(addEmailField());
-  outterDiv.appendChild(buttonDiv);
+  outerDiv.appendChild(addEmailField());
+  outerDiv.appendChild(buttonDiv);
 
   // Create a new submit button
   let submitButton = document.createElement("button");
@@ -25,7 +25,7 @@ function showEmailField() {
   buttonDiv.appendChild(submitButton);
 
   // Append the new fields to the form
-  form.appendChild(outterDiv);
+  form.appendChild(outerDiv);
 
   // Add the CSRF token field back to the form
   let csrfInput = document.createElement("input");
@@ -46,7 +46,7 @@ function addEmailField() {
   emailInput.placeholder = "Email";
   emailInput.required = true;
   emailDiv.appendChild(emailInput);
-  var subscript = document.createElement("label");
+  const subscript = document.createElement("label");
   subscript.htmlFor = "main-input";
   subscript.className = "subscript";
   subscript.textContent =

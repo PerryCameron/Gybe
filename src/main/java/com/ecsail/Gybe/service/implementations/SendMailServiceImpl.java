@@ -45,6 +45,7 @@ public class SendMailServiceImpl implements SendMailService {
         boolean html = true;
         helper.setText(mailDTO.getMessage(), html);
         javaMailSender.send(message);
+        logger.info("Sent email to " + mailDTO.getRecipient());
     }
 
     @Override

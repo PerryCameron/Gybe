@@ -12,6 +12,9 @@ public interface AuthenticationRepository {
     RoleDTO saveAuthority(String authority);
     UserDTO saveUser(UserDTO user);
     Void saveUserRole(UserDTO user, RoleDTO role);
+
+    boolean existsByUsername(String username);
+
     Set<RoleDTO> getAuthoritiesById(Integer userId);
 
     Optional<UserDTO> findUserWithAuthoritiesByUsername(String username);

@@ -3,7 +3,6 @@ package com.ecsail.Gybe.repository.implementations;
 import com.ecsail.Gybe.dto.RoleDTO;
 import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
-import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import com.ecsail.Gybe.repository.rowmappers.RoleRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.UserRowMapper;
 import org.slf4j.Logger;
@@ -45,6 +44,14 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        String query = "SELECT COUNT(*) FROM users WHERE username=?";
+        int count = template.queryForObject(query, Integer.class, username);
+        return count > 0;
+    }
+
 
     @Override
     public Set<RoleDTO> getAuthoritiesById(Integer userId) {

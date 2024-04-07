@@ -5,6 +5,8 @@ import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.dto.MailDTO;
 
 public interface EmailService {
+    MailDTO sendPasswordReset(String email);
+
     MailDTO processEmailSubmission(String email);
 
     HashDTO createHash(AuthDTO authDTO);
