@@ -3,22 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Login</title>
     <link rel="stylesheet" th:href="@{/css/login.css}" type="text/css" />
+    <script th:src="@{/js/login.js}" defer></script>
   </head>
   <body>
     <div class="container">
       <img src="images/ecsc_logo_white_big.png" alt="logo" />
-      <form action="/login" method="post">
+      <form id="loginForm" action="/login" method="post">
         <div class="form-group">
           <input type="text" id="username" name="username" placeholder="Username" />
         </div>
         <div class="form-group">
           <input type="password" id="password" name="password" placeholder="Password" />
         </div>
+        <div class="alt-path">
+          <a href="javascript:void(0)" onclick="showEmailField()">Register Account or Forgot Password?</a>
+        </div>
         <!-- CSRF Token Field -->
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <div class="form-group">
+        <div class="form-group login-div">
           <button type="submit">Login</button>
         </div>
         <!-- Optional: Display error message -->

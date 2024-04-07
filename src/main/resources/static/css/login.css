@@ -27,14 +27,16 @@ form {
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  font-size: 11px;
 }
 
 input[type="text"],
-input[type="password"] {
-  width: 100%;
+input[type="password"],
+input[type="email"] {
+  width: 250px;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
   border: none;
   border-radius: 5px;
 }
@@ -54,4 +56,21 @@ button:hover {
 
 .error {
   color: red;
+}
+
+.alt-path {
+  color: aliceblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alt-path a {
+  color: aliceblue;
+  font-size: 11px;
+  text-decoration: none; /* Optional: Removes the underline from the link */
+}
+
+.submit-button-div {
+  margin-top: 20px;
 }
