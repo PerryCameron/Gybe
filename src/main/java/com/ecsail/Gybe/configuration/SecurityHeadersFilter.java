@@ -14,11 +14,5 @@ public class SecurityHeadersFilter implements Filter {
         chain.doFilter(request, response);
     }
 }
-//    @Override
-//    public void init(FilterConfig filterConfig) {
-//    }
 
-//    @Override
-//    public void destroy() {
-//    }
 

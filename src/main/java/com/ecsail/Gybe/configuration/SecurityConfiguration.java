@@ -45,7 +45,8 @@ public class SecurityConfiguration {
                             "/slip-wait-list/**",
                             "/stats/**",
                             "/slips/**",
-                            "/slips-in-template/**"
+                            "/slips-in-template/**",
+                            "/useradd/**"
                     ).permitAll();
                     auth.requestMatchers("/home/**").hasRole("USER");
                     auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'

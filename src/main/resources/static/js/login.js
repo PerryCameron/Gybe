@@ -2,17 +2,19 @@ function showEmailField() {
   // Get the form element
   let form = document.getElementById("loginForm");
 
+  // Store the CSRF token value
+  let csrfToken = document.querySelector('input[name="_csrf"]').value;
+
   // Clear the form
   form.innerHTML = "";
+  form.action = '/useradd';
 
   let outterDiv = document.createElement("div");
-  outterDiv.classList.add("form-group"); // Add the form-group class to outterDiv
+  outterDiv.classList.add("form-group");
   let buttonDiv = document.createElement("div");
-
-  buttonDiv.classList.add("form-group", "submit-button-div"); // Add the submit-button-div class to buttonDiv for consistent styling
+  buttonDiv.classList.add("form-group", "submit-button-div");
 
   // Create a new input field for the email
-
   outterDiv.appendChild(addEmailField());
   outterDiv.appendChild(buttonDiv);
 
@@ -24,7 +26,15 @@ function showEmailField() {
 
   // Append the new fields to the form
   form.appendChild(outterDiv);
+
+  // Add the CSRF token field back to the form
+  let csrfInput = document.createElement("input");
+  csrfInput.type = "hidden";
+  csrfInput.name = "_csrf";
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
 }
+
 
 function addEmailField() {
   let emailDiv = document.createElement("div");
@@ -32,6 +42,7 @@ function addEmailField() {
   let emailInput = document.createElement("input");
   emailInput.type = "email";
   emailInput.name = "email";
+  emailInput.id = "email";
   emailInput.placeholder = "Email";
   emailInput.required = true;
   emailDiv.appendChild(emailInput);
