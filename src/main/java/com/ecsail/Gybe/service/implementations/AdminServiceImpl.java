@@ -9,6 +9,8 @@ import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.repository.interfaces.PersonRepository;
 import com.ecsail.Gybe.service.interfaces.AdminService;
+import com.ecsail.Gybe.utils.ApiKeyGenerator;
+import com.ecsail.Gybe.utils.ForgotPasswordHTML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,19 +43,22 @@ public class AdminServiceImpl implements AdminService {
         return hashRepository.getFormRequestSummariesForYear(year);
     }
     @Override
-    public MailDTO getPersonByEmail(String email) {
-        MailDTO mailDTO = null;
+    public MailDTO generateCredentialsEmail(String email) {
+        MailDTO mailDTO = new MailDTO();
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
         if(authenticationRepository.existsByUsername(email)) {
             // account exists, email about making a new password
-            mailDTO = new MailDTO(email,"ECSC Password Reset", "I heard you want to change your password");
-            System.out.println("Account Exists: " + email);
+            mailDTO = new MailDTO(email,"ECSC Password Reset", "");
+            mailDTO.setMessage(ForgotPasswordHTML.createEmail(generateLink()));
         } else {
             // account does not exist, we need to create one
             mailDTO = new MailDTO(email,"New Account", "I heard you want to create an account");
-            System.out.println("Account does not exist: " + email);
         }
         return mailDTO; // this will need to change
+    }
+
+    private String generateLink() {
+        return ApiKeyGenerator.generateApiKey(32);
     }
     
 }

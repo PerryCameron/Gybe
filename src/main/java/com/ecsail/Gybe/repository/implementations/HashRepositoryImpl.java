@@ -146,4 +146,20 @@ public class HashRepositoryImpl implements HashRepository {
         }
         return formRequestDTO;
     }
+    @Override
+    public int insertUserAuthRequest(String passKey, int pId) {
+        String sql = "INSERT INTO user_auth_request (pass_key, pid, updated_at, completed) VALUES (?, ?, CURRENT_TIMESTAMP, '0000-00-00 00:00:00')";
+        return template.update(sql, passKey, pId);
+    }
+    @Override
+    public int timeStampCompleted(String passKey) {
+        String sql = "UPDATE user_auth_request SET completed = CURRENT_TIMESTAMP WHERE pass_key = ?";
+        return template.update(sql, passKey);
+    }
+    @Override
+    public boolean isWithinTenMinutes(String passKey) {
+        String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pass_key = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
+        Integer count = template.queryForObject(sql, Integer.class, passKey);
+        return count != null && count > 0;
+    }
 }

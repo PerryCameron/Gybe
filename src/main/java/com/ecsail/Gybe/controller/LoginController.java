@@ -5,6 +5,7 @@ import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import com.ecsail.Gybe.utils.ApiKeyGenerator;
+import com.ecsail.Gybe.utils.ForgotPasswordHTML;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,8 +36,7 @@ public class LoginController {
 
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
-        MailDTO mailDTO = adminService.getPersonByEmail(email);
-        mailDTO.setMessage(ApiKeyGenerator.generateApiKey(32));
+        MailDTO mailDTO = adminService.generateCredentialsEmail(email);
         sendMailService.sendHTMLMail(mailDTO, fromEmail);
         return "login";
     }

@@ -8,5 +8,5 @@ import java.util.List;
 public interface AdminService {
     List<FormHashRequestDTO> getFormRequests(int year);
 
-    MailDTO getPersonByEmail(String email);
+    MailDTO generateCredentialsEmail(String email);
 }

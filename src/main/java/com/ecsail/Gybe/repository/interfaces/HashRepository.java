@@ -12,4 +12,10 @@ public interface HashRepository {
     FormHashRequestDTO insertHashRequestHistory(FormHashRequestDTO formHashRequestDTO);
     List<FormRequestSummaryDTO> getFormRequestSummariesForYear(int year);
     FormRequestDTO insertHashHistory(FormRequestDTO fr);
+
+    int insertUserAuthRequest(String passKey, int pId);
+
+    int timeStampCompleted(String passKey);
+
+    boolean isWithinTenMinutes(String passKey);
 }
