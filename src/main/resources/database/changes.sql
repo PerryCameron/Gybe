@@ -19,3 +19,12 @@ create table theme
 )
     collate = utf8mb4_unicode_ci;
 
+#added to test server [2024-04-07 20:42:20] completed in 48 ms
+CREATE TABLE user_auth_request
+(
+    pass_key   VARCHAR(255) NOT NULL PRIMARY KEY,
+    pid        INT,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    completed  TIMESTAMP,
+    FOREIGN KEY (pid) REFERENCES person(P_ID)
+);
