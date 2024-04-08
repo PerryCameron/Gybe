@@ -1,9 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
-import com.ecsail.Gybe.dto.FormHashRequestDTO;
-import com.ecsail.Gybe.dto.FormRequestSummaryDTO;
-import com.ecsail.Gybe.dto.MailDTO;
-import com.ecsail.Gybe.dto.PersonDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
@@ -13,6 +10,7 @@ import com.ecsail.Gybe.utils.ApiKeyGenerator;
 import com.ecsail.Gybe.utils.ForgotPasswordHTML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -44,12 +42,12 @@ public class AdminServiceImpl implements AdminService {
     }
     @Override
     public MailDTO generateCredentialsEmail(String email) {
-        MailDTO mailDTO = new MailDTO();
+        MailDTO mailDTO;
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
         if(authenticationRepository.existsByUsername(email)) {
             // account exists, email about making a new password
             mailDTO = new MailDTO(email,"ECSC Password Reset", "");
-            mailDTO.setMessage(ForgotPasswordHTML.createEmail(generateLink()));
+            mailDTO.setMessage(ForgotPasswordHTML.createEmail(generateLink(personDTO)));
         } else {
             // account does not exist, we need to create one
             mailDTO = new MailDTO(email,"New Account", "I heard you want to create an account");
@@ -57,8 +55,27 @@ public class AdminServiceImpl implements AdminService {
         return mailDTO; // this will need to change
     }
 
-    private String generateLink() {
-        return ApiKeyGenerator.generateApiKey(32);
+    private String generateLink(PersonDTO personDTO) {
+        String baseUrl = "https://membership.ecsail.org/update_creds";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
+        // make sure there is not a good key entry < 10 minutes old
+        if(!hashRepository.existsUserAuthRequestByPidWithinTenMinutes(personDTO.getpId())) {
+            // create a key
+            String key = ApiKeyGenerator.generateApiKey(32);
+            // we need to create a fresh new entry by add a key and a pid
+            hashRepository.insertUserAuthRequest(key,personDTO.getpId());
+            // let's add the key to our link
+            builder.queryParam("key",key);
+        } else {
+            // a good key entry already exists, we should reset the update_at field and use the existing key
+            hashRepository.updateUpdatedAtTimestamp(personDTO.getpId());
+            // let's get the updated object
+            UserAuthRequestDTO userAuthRequestDTO = hashRepository.findUserAuthRequestByPidWithinTenMinutes(personDTO.getpId());
+            // let's add the key to our link
+            builder.queryParam("key",userAuthRequestDTO.getPassKey());
+        }
+        // if not create an entry
+        return builder.toUriString();
     }
     
 }

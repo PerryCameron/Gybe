@@ -18,4 +18,10 @@ public interface HashRepository {
     int timeStampCompleted(String passKey);
 
     boolean isWithinTenMinutes(String passKey);
+
+    boolean existsUserAuthRequestByPidWithinTenMinutes(int pid);
+
+    int updateUpdatedAtTimestamp(int pid);
+
+    UserAuthRequestDTO findUserAuthRequestByPidWithinTenMinutes(int pid);
 }

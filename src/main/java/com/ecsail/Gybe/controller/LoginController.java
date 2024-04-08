@@ -37,7 +37,7 @@ public class LoginController {
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
         MailDTO mailDTO = adminService.generateCredentialsEmail(email);
-        sendMailService.sendHTMLMail(mailDTO, fromEmail);
+//        sendMailService.sendHTMLMail(mailDTO, fromEmail);
         return "login";
     }
 }

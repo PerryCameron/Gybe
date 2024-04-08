@@ -1,14 +1,13 @@
 package com.ecsail.Gybe.repository.implementations;
 
-import com.ecsail.Gybe.dto.FormHashRequestDTO;
-import com.ecsail.Gybe.dto.FormRequestDTO;
-import com.ecsail.Gybe.dto.FormRequestSummaryDTO;
-import com.ecsail.Gybe.dto.HashDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.repository.rowmappers.FormHashRequestRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.FormRequestSummaryRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.HashRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.UserAuthRequestRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -162,4 +161,27 @@ public class HashRepositoryImpl implements HashRepository {
         Integer count = template.queryForObject(sql, Integer.class, passKey);
         return count != null && count > 0;
     }
+    @Override
+    public boolean existsUserAuthRequestByPidWithinTenMinutes(int pid) {
+        String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
+        Integer count = template.queryForObject(sql, Integer.class, pid);
+        return count != null && count > 0;
+    }
+    @Override
+    public int updateUpdatedAtTimestamp(int pid) {
+        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ?";
+        return template.update(sql, pid);
+    }
+    @Override
+    public UserAuthRequestDTO findUserAuthRequestByPidWithinTenMinutes(int pid) {
+        String sql = "SELECT * FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
+        try {
+            return template.queryForObject(sql, new UserAuthRequestRowMapper(), pid);
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println("Object was null");
+            return null;
+        }
+    }
+
+
 }
