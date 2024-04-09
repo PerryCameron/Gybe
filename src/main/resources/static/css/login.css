@@ -74,3 +74,7 @@ button:hover {
 .submit-button-div {
   margin-top: 20px;
 }
+
+.highlight {
+  color: #00b28f; /* Change this to your desired color */
+}

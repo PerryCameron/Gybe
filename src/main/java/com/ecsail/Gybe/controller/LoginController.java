@@ -38,8 +38,7 @@ public class LoginController {
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
         MailWrapper mailWrapper = adminService.generateCredentialsEmail(email);
-        if(mailWrapper.sendEmail())
-        sendMailService.sendHTMLMail(mailWrapper.getMailDTO(), fromEmail);
+        if(mailWrapper.sendEmail()) sendMailService.sendHTMLMail(mailWrapper.getMailDTO(), fromEmail);
         model.addAttribute("message", mailWrapper.getMessage());
         model.addAttribute("button",!mailWrapper.sendEmail());
         return "message";
@@ -49,6 +48,6 @@ public class LoginController {
     public String updateCredentials(@RequestParam String key, @RequestParam String status) {
         System.out.println("Key: " + key);
         System.out.println("Status: " + status);
-        return "login";
+        return "set-pass";
     }
 }
