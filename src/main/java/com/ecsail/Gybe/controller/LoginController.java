@@ -38,6 +38,14 @@ public class LoginController {
     public String register(@RequestParam String email, Model model) throws MessagingException {
         MailDTO mailDTO = adminService.generateCredentialsEmail(email);
         sendMailService.sendHTMLMail(mailDTO, fromEmail);
+        model.addAttribute("message", "An email has been sent to your address with further instructions. If you don't receive it shortly, please check your spam or junk folder. For any assistance, feel free to <a href=\"mailto:register@ecsail.org?subject=Login%20Help\">contact the administrator</a>.");
+        return "message";
+    }
+
+    @GetMapping("/update_creds")
+    public String updateCredentials(@RequestParam String key, @RequestParam String status) {
+        System.out.println("Key: " + key);
+        System.out.println("Status: " + status);
         return "login";
     }
 }
