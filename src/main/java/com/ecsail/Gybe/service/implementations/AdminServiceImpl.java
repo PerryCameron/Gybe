@@ -9,6 +9,7 @@ import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.utils.ApiKeyGenerator;
 import com.ecsail.Gybe.utils.ForgotPasswordHTML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Service
 public class AdminServiceImpl implements AdminService {
+    @Value("${app.url}")
+    private String appURL;
 
     private final EmailRepository emailRepository;
     private final HashRepository hashRepository;
@@ -56,7 +59,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     private String generateLink(PersonDTO personDTO) {
-        String baseUrl = "https://membership.ecsail.org/update_creds";
+        String baseUrl = appURL + "/update_creds";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
         // make sure there is not a good key entry < 10 minutes old
         if(!hashRepository.existsUserAuthRequestByPidWithinTenMinutes(personDTO.getpId())) {
