@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const password1 = document.getElementById("password1");
   const password2 = document.getElementById("password2");
-  const resetPasswordButton = document.querySelector('button[type="button"]');
+  const resetPasswordButton = document.querySelector('form button[type="submit"]');
   const errorMessage = document.querySelector(".error");
 
   // Initially disable the button and hide the error message

@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Login</title>
-    <link rel="stylesheet" href="/css/login.css" type="text/css" />
+    <link rel="stylesheet" href="/css/login.css" type="text/css"/>
     <script th:src="@{/js/set-pass.js}" defer></script>
 </head>
 <body>
 <div class="container">
-    <img src="images/ecsc_logo_white_big.png" alt="logo" />
+    <img src="images/ecsc_logo_white_big.png" alt="logo"/>
     <div><p>Please update your password by putting it in twice.</p></div>
     <div>
-        <p><span class="highlight">Username</span>: perry.lee.cameron@gmail.com</p>
+        <p><span class="highlight">Username</span>: <span th:text="${email}"></span></p>
     </div>
-    <div class="form-group">
-        <input type="password" id="password1" name="password1" placeholder="Password" />
-    </div>
-    <div class="form-group">
-        <input type="password" id="password2" name="password2" placeholder="Password" />
-    </div>
+
+    <form action="/update_password" method="post">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <input type="hidden" name="key" th:value="${key}">
+        <input type="hidden" name="status" th:value="${status}">
+        <input type="hidden" name="email" th:value="${email}">
+        <div class="form-group">
+            <input type="password" id="password1" name="password1" placeholder="Password"/>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password2" name="password2" placeholder="Password"/>
+        </div>
+        <div class="form-group">
+            <button type="submit">Reset Password</button>
+
+        </div>
+    </form>
     <!-- Optional: Display error message -->
     <div class="error form-group">Passwords do not match</div>
-    <div class="form-group">
-        <button type="button" onclick="window.location.href='/login'">Reset Password</button>
-    </div>
 </div>
 </body>
 </html>

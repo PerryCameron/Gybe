@@ -1,11 +1,7 @@
 package com.ecsail.Gybe.controller;
 
-import com.ecsail.Gybe.dto.MailDTO;
-import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
-import com.ecsail.Gybe.utils.ApiKeyGenerator;
-import com.ecsail.Gybe.utils.ForgotPasswordHTML;
 import com.ecsail.Gybe.wrappers.MailWrapper;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +41,38 @@ public class LoginController {
     }
 
     @GetMapping("/update_creds")
-    public String updateCredentials(@RequestParam String key, @RequestParam String status) {
+    public String updateCredentials(@RequestParam String key,
+                                    @RequestParam String status,
+                                    @RequestParam String email, Model model) {
+    if(adminService.isValidKey(key)) {
+        // if(status.equals("EXISTING") return "set-pass";
+        // if(status.equals("NEW_ACCOUNT") do something else
+        model.addAttribute("email", email);
+        model.addAttribute("key", key);
+        model.addAttribute("status", status);
+        return "set-pass";
+    } else
+        model.addAttribute("message", "Your password reset has expired. You only have 10 minutes to complete the process.");
+        model.addAttribute("button",true);
+        return "message";
+    }
+
+    @PostMapping("/update_password")
+    public String updatePassword(@RequestParam String key,
+                                 @RequestParam String status,
+                                 @RequestParam String email,
+                                 @RequestParam String password1,
+                                 Model model) {
+        // Your logic to update the password
+
+        // For now, just print the received data
         System.out.println("Key: " + key);
         System.out.println("Status: " + status);
-        return "set-pass";
+        System.out.println("Email: " + email);
+        System.out.println("Password: " + password1);
+        // Redirect to a confirmation page or display a message
+        return "login";
     }
+
+
 }

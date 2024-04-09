@@ -9,5 +9,7 @@ import java.util.List;
 public interface AdminService {
     List<FormHashRequestDTO> getFormRequests(int year);
 
+    boolean isValidKey(String passKey);
+
     MailWrapper generateCredentialsEmail(String email);
 }

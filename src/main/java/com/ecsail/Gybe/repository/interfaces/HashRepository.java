@@ -17,7 +17,7 @@ public interface HashRepository {
 
     int timeStampCompleted(String passKey);
 
-    boolean isWithinTenMinutes(String passKey);
+    boolean isValidKey(String passKey);
 
     boolean existsUserAuthRequestByPidWithinTenMinutes(int pid);
 

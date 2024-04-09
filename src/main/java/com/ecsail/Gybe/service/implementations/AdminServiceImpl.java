@@ -45,6 +45,12 @@ public class AdminServiceImpl implements AdminService {
     public List<FormRequestSummaryDTO> getFormSummaries(Integer year) {
         return hashRepository.getFormRequestSummariesForYear(year);
     }
+
+    @Override
+    public boolean isValidKey(String passKey) {
+        return hashRepository.isValidKey(passKey);
+    }
+
     @Override
     public MailWrapper generateCredentialsEmail(String email) {
         MailWrapper mailWrapper = new MailWrapper();
@@ -56,7 +62,7 @@ public class AdminServiceImpl implements AdminService {
         } // account already exists we are here to fix a forgotten password
         else if(authenticationRepository.existsByUsername(email)) {
             mailWrapper.setMailDTO(new MailDTO(email,"ECSC Password Reset", ""));
-            mailWrapper.getMailDTO().setMessage(ForgotPasswordHTML.createEmail(generateLink(personDTO,AccountStatus.EXISTING)));
+            mailWrapper.getMailDTO().setMessage(ForgotPasswordHTML.createEmail(generateLink(personDTO, email, AccountStatus.EXISTING)));
             mailWrapper.setMessage("An email has been sent to your address with further instructions. " +
                     "If you don't receive it shortly, please check your spam or junk folder. For any assistance, " +
                     "feel free to <a href=\"mailto:register@ecsail.org?subject=Login%20Help\">contact the administrator</a>.");
@@ -67,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
         return mailWrapper;
     }
 
-    private String generateLink(PersonDTO personDTO, AccountStatus accountStatus) {
+    private String generateLink(PersonDTO personDTO, String email, AccountStatus accountStatus) {
         String baseUrl = appURL + "/update_creds";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
         // make sure there is not a good key entry < 10 minutes old
@@ -87,8 +93,11 @@ public class AdminServiceImpl implements AdminService {
             builder.queryParam("key",userAuthRequestDTO.getPassKey());
         }
         builder.queryParam("status",accountStatus.toString());
+        builder.queryParam("email", email);
         // if not create an entry
         return builder.toUriString();
     }
+
+
     
 }

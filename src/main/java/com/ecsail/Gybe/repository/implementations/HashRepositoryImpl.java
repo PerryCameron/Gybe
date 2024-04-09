@@ -156,7 +156,7 @@ public class HashRepositoryImpl implements HashRepository {
         return template.update(sql, passKey);
     }
     @Override
-    public boolean isWithinTenMinutes(String passKey) {
+    public boolean isValidKey(String passKey) {
         String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pass_key = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
         Integer count = template.queryForObject(sql, Integer.class, passKey);
         return count != null && count > 0;

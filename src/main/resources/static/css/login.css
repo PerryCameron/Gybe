@@ -78,3 +78,8 @@ button:hover {
 .highlight {
   color: #00b28f; /* Change this to your desired color */
 }
+
+.text-body {
+  width: 60%;
+  margin: 0 auto; /* Center the element horizontally */
+}
