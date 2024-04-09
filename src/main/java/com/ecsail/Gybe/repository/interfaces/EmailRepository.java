@@ -20,4 +20,6 @@ public interface EmailRepository {
     AuthDTO getAuthDTOFromEmail(int year, String email);
 
     void updateAuthDTOFromEmail(int year, AuthDTO authDTO);
+
+    boolean emailExists(String email);
 }

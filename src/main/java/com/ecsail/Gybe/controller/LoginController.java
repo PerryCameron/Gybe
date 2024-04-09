@@ -6,6 +6,7 @@ import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import com.ecsail.Gybe.utils.ApiKeyGenerator;
 import com.ecsail.Gybe.utils.ForgotPasswordHTML;
+import com.ecsail.Gybe.wrappers.MailWrapper;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,9 +37,11 @@ public class LoginController {
 
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
-        MailDTO mailDTO = adminService.generateCredentialsEmail(email);
-        sendMailService.sendHTMLMail(mailDTO, fromEmail);
-        model.addAttribute("message", "An email has been sent to your address with further instructions. If you don't receive it shortly, please check your spam or junk folder. For any assistance, feel free to <a href=\"mailto:register@ecsail.org?subject=Login%20Help\">contact the administrator</a>.");
+        MailWrapper mailWrapper = adminService.generateCredentialsEmail(email);
+        if(mailWrapper.sendEmail())
+        sendMailService.sendHTMLMail(mailWrapper.getMailDTO(), fromEmail);
+        model.addAttribute("message", mailWrapper.getMessage());
+        model.addAttribute("button",!mailWrapper.sendEmail());
         return "message";
     }
 

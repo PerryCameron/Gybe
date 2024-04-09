@@ -161,4 +161,10 @@ public class EmailRepositoryImpl implements EmailRepository {
             logger.error(e.getMessage());
         }
     }
+    @Override
+    public boolean emailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM email WHERE EMAIL = ?";
+        Integer count = template.queryForObject(sql, Integer.class, email);
+        return count != null && count > 0;
+    }
 }

@@ -9,6 +9,7 @@ import com.ecsail.Gybe.repository.interfaces.PersonRepository;
 import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.utils.ApiKeyGenerator;
 import com.ecsail.Gybe.utils.ForgotPasswordHTML;
+import com.ecsail.Gybe.wrappers.MailWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,18 +46,25 @@ public class AdminServiceImpl implements AdminService {
         return hashRepository.getFormRequestSummariesForYear(year);
     }
     @Override
-    public MailDTO generateCredentialsEmail(String email) {
-        MailDTO mailDTO;
+    public MailWrapper generateCredentialsEmail(String email) {
+        MailWrapper mailWrapper = new MailWrapper();
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
-        if(authenticationRepository.existsByUsername(email)) {
-            // account exists, email about making a new password
-            mailDTO = new MailDTO(email,"ECSC Password Reset", "");
-            mailDTO.setMessage(ForgotPasswordHTML.createEmail(generateLink(personDTO,AccountStatus.EXISTING)));
-        } else {
-            // account does not exist, we need to create one
-            mailDTO = new MailDTO(email,"New Account", "I heard you want to create an account");
+        // if email does not exist in system do something
+        if(!emailRepository.emailExists(email)) {
+            mailWrapper.setMessage(email + " was not found in the system");
+            mailWrapper.setSendEmail(false);
+        } // account already exists we are here to fix a forgotten password
+        else if(authenticationRepository.existsByUsername(email)) {
+            mailWrapper.setMailDTO(new MailDTO(email,"ECSC Password Reset", ""));
+            mailWrapper.getMailDTO().setMessage(ForgotPasswordHTML.createEmail(generateLink(personDTO,AccountStatus.EXISTING)));
+            mailWrapper.setMessage("An email has been sent to your address with further instructions. " +
+                    "If you don't receive it shortly, please check your spam or junk folder. For any assistance, " +
+                    "feel free to <a href=\"mailto:register@ecsail.org?subject=Login%20Help\">contact the administrator</a>.");
+        } else {   // account does not exist, we need to create one
+            mailWrapper.setMailDTO(new MailDTO(email,"New Account", "I heard you want to create an account"));
+            mailWrapper.setMessage("An email was sent to " + email);
         }
-        return mailDTO; // this will need to change
+        return mailWrapper;
     }
 
     private String generateLink(PersonDTO personDTO, AccountStatus accountStatus) {

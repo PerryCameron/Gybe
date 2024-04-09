@@ -15,6 +15,9 @@
                 An email has been sent to your address with further instructions. If you don't receive it shortly, please check your spam or junk folder. For any assistance, feel free to <a href="mailto:register@ecsail.org?subject=Login%20Help">contact the administrator</a>.
             </p>
         </div>
+    <div class="form-group" th:if="${button}">
+        <button type="button" onclick="window.location.href='/login'">Try Again</button>
+    </div>
 </div>
 </body>
 </html>
