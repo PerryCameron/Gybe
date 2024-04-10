@@ -38,6 +38,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userDTO;
     }
 
+    @Override
+    public String updatePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
 
 
 

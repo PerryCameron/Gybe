@@ -2,7 +2,9 @@ function buildEmailView() {
     const form = document.getElementById("loginForm");
     // Store the CSRF token value
     const csrfToken = document.querySelector('input[name="_csrf"]').value;
+    // Clear the form
     form.innerHTML = "";
+    form.action = '/upsert_user';
     const div = document.createElement("div");
     div.classList.add("form-group");
     div.appendChild(addSubScript());
@@ -50,7 +52,7 @@ function addSubScript() {
     let div = document.createElement("div");
     div.classList.add("subscript-div");
     const label = document.createElement("label");
-    label.htmlFor = "main-input";
+    // label.htmlFor = "main-input";
     label.className = "subscript";
     label.textContent =
         "Enter email used for account or to register for first time use any email listed in your membership";

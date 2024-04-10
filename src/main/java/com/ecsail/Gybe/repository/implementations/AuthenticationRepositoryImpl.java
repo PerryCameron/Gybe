@@ -136,4 +136,9 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
             return Optional.empty();
         }
     }
+    @Override
+    public int updatePassword(String encryptedPassword, int pid) {
+        String sql = "UPDATE users SET password = ? WHERE p_id = ?";
+        return template.update(sql, encryptedPassword, pid);
+    }
 }

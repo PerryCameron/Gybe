@@ -18,4 +18,6 @@ public interface AuthenticationRepository {
     Set<RoleDTO> getAuthoritiesById(Integer userId);
 
     Optional<UserDTO> findUserWithAuthoritiesByUsername(String username);
+
+    int updatePassword(String encryptedPassword, int pid);
 }

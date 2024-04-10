@@ -12,4 +12,6 @@ public interface AdminService {
     boolean isValidKey(String passKey);
 
     MailWrapper generateCredentialsEmail(String email);
+
+    void setUserPass(String key, String status, String email, String password1);
 }

@@ -65,12 +65,22 @@ public class AdminServiceImpl implements AdminService {
             mailWrapper.getMailDTO().setMessage(ForgotPasswordHTML.createEmail(generateLink(personDTO, email, AccountStatus.EXISTING)));
             mailWrapper.setMessage("An email has been sent to your address with further instructions. " +
                     "If you don't receive it shortly, please check your spam or junk folder. For any assistance, " +
-                    "feel free to <a href=\"mailto:register@ecsail.org?subject=Login%20Help\">contact the administrator</a>.");
+                    "feel free to <a href=\"mailto:register@ecsail.org?subject=Login%20Help\" style=\"color: #add8e6;\">contact the administrator</a>\n.");
         } else {   // account does not exist, we need to create one
             mailWrapper.setMailDTO(new MailDTO(email,"New Account", "I heard you want to create an account"));
             mailWrapper.setMessage("An email was sent to " + email);
         }
         return mailWrapper;
+    }
+
+    @Override
+    public void setUserPass(String key, String status, String email, String password) {
+        PersonDTO personDTO = personRepository.getPersonByEmail(email);
+        if(status.equals("EXISTING")) {
+            authenticationRepository.updatePassword(password, personDTO.getpId());
+        }
+        // may not need key
+
     }
 
     private String generateLink(PersonDTO personDTO, String email, AccountStatus accountStatus) {
@@ -97,6 +107,7 @@ public class AdminServiceImpl implements AdminService {
         // if not create an entry
         return builder.toUriString();
     }
+
 
 
     

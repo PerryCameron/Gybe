@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.service.interfaces.AdminService;
+import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import com.ecsail.Gybe.wrappers.MailWrapper;
 import jakarta.mail.MessagingException;
@@ -16,14 +17,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
     private final AdminService adminService;
     private final SendMailService sendMailService;
+    private final AuthenticationService authenticationService;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
 
     @Autowired
-    public LoginController(AdminService adminService, SendMailService sendMailService) {
+    public LoginController(AdminService adminService,
+                           SendMailService sendMailService, 
+                           AuthenticationService authenticationService) {
         this.adminService = adminService;
         this.sendMailService = sendMailService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/login")
@@ -63,8 +68,8 @@ public class LoginController {
                                  @RequestParam String email,
                                  @RequestParam String password1,
                                  Model model) {
-        // Your logic to update the password
-
+        String password = authenticationService.updatePassword(password1);
+        adminService.setUserPass(key, status, email, password);
         // For now, just print the received data
         System.out.println("Key: " + key);
         System.out.println("Status: " + status);
