@@ -28,7 +28,7 @@ form {
 label {
   display: block;
   margin-top: 10px;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 input[type="text"],
@@ -67,7 +67,7 @@ button:hover {
 
 .alt-path a {
   color: aliceblue;
-  font-size: 11px;
+  font-size: 14px;
   text-decoration: none; /* Optional: Removes the underline from the link */
 }
 
@@ -82,4 +82,11 @@ button:hover {
 .text-body {
   width: 60%;
   margin: 0 auto; /* Center the element horizontally */
+}
+
+.email-div {
+  display: flex; /* Use flexbox layout */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: center; /* Space out the children (input field and button) */
+  gap: 10px; /* Set a gap of 10px between the children */
 }
