@@ -20,11 +20,13 @@ create table theme
     collate = utf8mb4_unicode_ci;
 
 #added to test server [2024-04-07 20:42:20] completed in 48 ms
+#updated without auto timestamp on update[2024-04-11 19:22:08] completed in 46 ms
 CREATE TABLE user_auth_request
 (
-    pass_key   VARCHAR(255) NOT NULL PRIMARY KEY,
-    pid        INT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    completed  TIMESTAMP,
-    FOREIGN KEY (pid) REFERENCES person(P_ID)
+    pass_key   VARCHAR(255)                            NOT NULL
+        PRIMARY KEY,
+    pid        INT                                     NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP     NOT NULL,  -- Removed ON UPDATE CURRENT_TIMESTAMP
+    completed  TIMESTAMP DEFAULT '0000-00-00 00:00:00' NOT NULL,
+    FOREIGN KEY (pid) REFERENCES person (P_ID)
 );

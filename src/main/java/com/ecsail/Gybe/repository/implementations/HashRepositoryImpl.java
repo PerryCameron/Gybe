@@ -152,47 +152,44 @@ public class HashRepositoryImpl implements HashRepository {
     }
     @Override
     public int timeStampCompleted(String passKey) {
+        System.out.println("timeStampCompleted(String passKey)");
         String sql = "UPDATE user_auth_request SET completed = CURRENT_TIMESTAMP WHERE pass_key = ?";
         return template.update(sql, passKey);
     }
     @Override
     public boolean isValidKey(String passKey) {
+        System.out.println("isValidKey(String passKey)");
         String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pass_key = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10 AND completed = '0000-00-00 00:00:00'";
         Integer count = template.queryForObject(sql, Integer.class, passKey);
         return count != null && count > 0;
     }
     @Override
     public boolean existsUserAuthRequestByPidWithinTenMinutes(int pid) {
+        System.out.println("existsUserAuthRequestByPidWithinTenMinutes(int pid)");
         String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10 AND completed = '0000-00-00 00:00:00'";
         Integer count = template.queryForObject(sql, Integer.class, pid);
         return count != null && count > 0;
     }
+
 //    @Override
 //    public int updateUpdatedAtTimestamp(int pid) {
-//        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ?";
+//        System.out.println("updateUpdatedAtTimestamp(int pid)");
+//        // a good key entry already exists, we should reset the update_at field and use the existing key with the newest updated_at timestamp
+//        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at))";
 //        return template.update(sql, pid);
 //    }
 
     @Override
     public int updateUpdatedAtTimestamp(int pid) {
-        // a good key entry already exists, we should reset the update_at field and use the existing key with the newest updated_at timestamp
-        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at))";
-        return template.update(sql, pid);
+        System.out.println("updateUpdatedAtTimestamp(int pid)");
+        // Update the updated_at field for the entry with the newest updated_at timestamp and the specified pid
+        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at) FROM user_auth_request WHERE pid = ?)";
+        return template.update(sql, pid, pid);
     }
-
-
-//    public UserAuthRequestDTO findUserAuthRequestByPidWithinTenMinutes(int pid) {
-//        String sql = "SELECT * FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
-//        try {
-//            return template.queryForObject(sql, new UserAuthRequestRowMapper(), pid);
-//        } catch (EmptyResultDataAccessException e) {
-//            System.out.println("Object was null");
-//            return null;
-//        }
-//    }
 
     @Override
     public UserAuthRequestDTO findUserAuthRequestByPidWithinTenMinutes(int pid) {
+        System.out.println("findUserAuthRequestByPidWithinTenMinutes(int pid)");
         // SQL query to select the record where the 'completed' timestamp is not filled
         // and the time difference between 'updated_at' and the current timestamp is less than 10 minutes
         String sql = "SELECT * FROM user_auth_request WHERE pid = ? AND completed = '0000-00-00 00:00:00' AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
@@ -206,6 +203,7 @@ public class HashRepositoryImpl implements HashRepository {
 
     @Override
     public int completeUserAuthRequest(int pid) {
+        System.out.println("completeUserAuthRequest(int pid)");
         String sql = "UPDATE user_auth_request SET completed = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at) FROM user_auth_request WHERE pid = ?)";
         return template.update(sql, pid, pid);
     }
