@@ -24,4 +24,6 @@ public interface HashRepository {
     int updateUpdatedAtTimestamp(int pid);
 
     UserAuthRequestDTO findUserAuthRequestByPidWithinTenMinutes(int pid);
+
+    int completeUserAuthRequest(int pid);
 }

@@ -67,6 +67,7 @@ public class AdminServiceImpl implements AdminService {
         return hashRepository.isValidKey(passKey);
     }
 
+    // this checks if email is on the system.
     @Override
     public MailWrapper generateCredentialsEmail(String email) {
         MailWrapper mailWrapper = new MailWrapper();
@@ -95,7 +96,12 @@ public class AdminServiceImpl implements AdminService {
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
         String encodedPass = authenticationService.updatePassword(password);
         if(status.equals("EXISTING")) {
-            authenticationRepository.updatePassword(encodedPass, personDTO.getpId());
+            // if the password updates with success add completed timestamp
+            if(authenticationRepository.updatePassword(encodedPass, personDTO.getpId()) == 1) {
+                // fill in the completed column
+                hashRepository.completeUserAuthRequest(personDTO.getpId());
+            }
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, password)
             );

@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Controller
 public class LoginController {
@@ -38,6 +40,7 @@ public class LoginController {
         return "login"; // Name of the HTML file for the login page
     }
 
+    // When you submit an email, this checks to make sure it is on the system, etc..
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
         MailWrapper mailWrapper = adminService.generateCredentialsEmail(email);
@@ -81,6 +84,11 @@ public class LoginController {
         System.out.println("Email: " + email);
         System.out.println("Password: " + password1);
 
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        // Get the session from the request
+        HttpSession session2 = attr.getRequest().getSession();
+        String sessionId2 = session2.getId();
+        System.out.println("Session ID (setUserPass()): " + sessionId2);
         // Redirect to a confirmation page or display a message
         return "redirect:/";
     }

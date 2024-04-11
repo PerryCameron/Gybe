@@ -157,24 +157,45 @@ public class HashRepositoryImpl implements HashRepository {
     }
     @Override
     public boolean isValidKey(String passKey) {
-        String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pass_key = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
+        String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pass_key = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10 AND completed = '0000-00-00 00:00:00'";
         Integer count = template.queryForObject(sql, Integer.class, passKey);
         return count != null && count > 0;
     }
     @Override
     public boolean existsUserAuthRequestByPidWithinTenMinutes(int pid) {
-        String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
+        String sql = "SELECT COUNT(*) FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10 AND completed = '0000-00-00 00:00:00'";
         Integer count = template.queryForObject(sql, Integer.class, pid);
         return count != null && count > 0;
     }
+//    @Override
+//    public int updateUpdatedAtTimestamp(int pid) {
+//        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ?";
+//        return template.update(sql, pid);
+//    }
+
     @Override
     public int updateUpdatedAtTimestamp(int pid) {
-        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ?";
+        // a good key entry already exists, we should reset the update_at field and use the existing key with the newest updated_at timestamp
+        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at))";
         return template.update(sql, pid);
     }
+
+
+//    public UserAuthRequestDTO findUserAuthRequestByPidWithinTenMinutes(int pid) {
+//        String sql = "SELECT * FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
+//        try {
+//            return template.queryForObject(sql, new UserAuthRequestRowMapper(), pid);
+//        } catch (EmptyResultDataAccessException e) {
+//            System.out.println("Object was null");
+//            return null;
+//        }
+//    }
+
     @Override
     public UserAuthRequestDTO findUserAuthRequestByPidWithinTenMinutes(int pid) {
-        String sql = "SELECT * FROM user_auth_request WHERE pid = ? AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
+        // SQL query to select the record where the 'completed' timestamp is not filled
+        // and the time difference between 'updated_at' and the current timestamp is less than 10 minutes
+        String sql = "SELECT * FROM user_auth_request WHERE pid = ? AND completed = '0000-00-00 00:00:00' AND TIMESTAMPDIFF(MINUTE, updated_at, CURRENT_TIMESTAMP) < 10";
         try {
             return template.queryForObject(sql, new UserAuthRequestRowMapper(), pid);
         } catch (EmptyResultDataAccessException e) {
@@ -182,6 +203,14 @@ public class HashRepositoryImpl implements HashRepository {
             return null;
         }
     }
+
+    @Override
+    public int completeUserAuthRequest(int pid) {
+        String sql = "UPDATE user_auth_request SET completed = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at) FROM user_auth_request WHERE pid = ?)";
+        return template.update(sql, pid, pid);
+    }
+
+
 
 
 }
