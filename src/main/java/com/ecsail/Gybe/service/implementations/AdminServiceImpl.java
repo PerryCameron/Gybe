@@ -23,6 +23,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Enumeration;
 import java.util.List;
 
 @Service
@@ -107,9 +108,14 @@ public class AdminServiceImpl implements AdminService {
             ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             // Get the session from the request
             HttpSession session = attr.getRequest().getSession();
-
+            String sessionId = session.getId();
+            System.out.println("Session ID (setUserPass()): " + sessionId);
             System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
-
+            Enumeration<String> attributeNames = session.getAttributeNames();
+            while (attributeNames.hasMoreElements()) {
+                String attributeName = attributeNames.nextElement();
+                System.out.println("Session attribute: " + attributeName + " = " + session.getAttribute(attributeName));
+            }
 
             authentication = SecurityContextHolder.getContext().getAuthentication();
             System.out.println("Authentication: " + authentication);

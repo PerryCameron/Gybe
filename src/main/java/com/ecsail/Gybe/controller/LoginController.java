@@ -73,13 +73,14 @@ public class LoginController {
                                  HttpServletRequest request) {
         HttpSession session = request.getSession();
         String sessionId = session.getId();
-        System.out.println("Session ID: " + sessionId);
+        System.out.println("Session ID (/update_password): " + sessionId);
         adminService.setUserPass(key, status, email, password1);
         // For now, just print the received data
         System.out.println("Key: " + key);
         System.out.println("Status: " + status);
         System.out.println("Email: " + email);
         System.out.println("Password: " + password1);
+
         // Redirect to a confirmation page or display a message
         return "redirect:/";
     }
