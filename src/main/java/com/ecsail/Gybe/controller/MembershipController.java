@@ -6,6 +6,8 @@ import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.BoatResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +104,10 @@ public class MembershipController {
     }
 
     @GetMapping("/")
-    public String getStats(Model model) {
+    public String getStats(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String sessionId = session.getId();
+        System.out.println("Session ID: " + sessionId);
         List<StatsDTO> statsDTOS = generalService.getStats();
         AgesDTO agesDTO = generalService.getAges();
         model.addAttribute("stats", statsDTOS);

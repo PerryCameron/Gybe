@@ -7,21 +7,32 @@ import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
 import com.ecsail.Gybe.repository.interfaces.PersonRepository;
 import com.ecsail.Gybe.service.interfaces.AdminService;
+import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import com.ecsail.Gybe.utils.ApiKeyGenerator;
 import com.ecsail.Gybe.utils.ForgotPasswordHTML;
 import com.ecsail.Gybe.wrappers.MailWrapper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
 @Service
 public class AdminServiceImpl implements AdminService {
+
+
     @Value("${app.url}")
     private String appURL;
-
+    private final AuthenticationService authenticationService;
+    private final AuthenticationManager authenticationManager;
     private final EmailRepository emailRepository;
     private final HashRepository hashRepository;
     private final PersonRepository personRepository;
@@ -31,11 +42,15 @@ public class AdminServiceImpl implements AdminService {
     public AdminServiceImpl(HashRepository hashRepository,
                             EmailRepository emailRepository,
                             PersonRepository personRepository,
-                            AuthenticationRepository authenticationRepository) {
+                            AuthenticationRepository authenticationRepository,
+                            AuthenticationManager authenticationManager,
+                            AuthenticationService authenticationService) {
         this.hashRepository = hashRepository;
         this.emailRepository = emailRepository;
         this.personRepository = personRepository;
         this.authenticationRepository = authenticationRepository;
+        this.authenticationManager = authenticationManager;
+        this.authenticationService = authenticationService;
     }
     @Override
     public List<FormHashRequestDTO> getFormRequests(int year) {
@@ -75,12 +90,32 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void setUserPass(String key, String status, String email, String password) {
+        // using spring security 6.2.3
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
+        String encodedPass = authenticationService.updatePassword(password);
         if(status.equals("EXISTING")) {
-            authenticationRepository.updatePassword(password, personDTO.getpId());
-        }
-        // may not need key
+            authenticationRepository.updatePassword(encodedPass, personDTO.getpId());
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+            System.out.println("Authentication: " + authentication);
+            System.out.println("Authorities: " + authentication.getAuthorities());
+            System.out.println("Authenticated: " + authentication.isAuthenticated());
+            System.out.println("");
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Get the current HTTP request
+            ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+            // Get the session from the request
+            HttpSession session = attr.getRequest().getSession();
 
+            System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
+
+
+            authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("Authentication: " + authentication);
+            System.out.println("Authorities: " + authentication.getAuthorities());
+            System.out.println("Authenticated: " + authentication.isAuthenticated());
+        }
     }
 
     private String generateLink(PersonDTO personDTO, String email, AccountStatus accountStatus) {

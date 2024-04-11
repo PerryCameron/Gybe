@@ -5,6 +5,8 @@ import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import com.ecsail.Gybe.wrappers.MailWrapper;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -67,16 +69,19 @@ public class LoginController {
                                  @RequestParam String status,
                                  @RequestParam String email,
                                  @RequestParam String password1,
-                                 Model model) {
-        String password = authenticationService.updatePassword(password1);
-        adminService.setUserPass(key, status, email, password);
+                                 Model model,
+                                 HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String sessionId = session.getId();
+        System.out.println("Session ID: " + sessionId);
+        adminService.setUserPass(key, status, email, password1);
         // For now, just print the received data
         System.out.println("Key: " + key);
         System.out.println("Status: " + status);
         System.out.println("Email: " + email);
         System.out.println("Password: " + password1);
         // Redirect to a confirmation page or display a message
-        return "login";
+        return "redirect:/";
     }
 
 

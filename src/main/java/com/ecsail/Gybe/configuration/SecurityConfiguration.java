@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,7 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(UserDetailsService detailsService) {
         DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
         daoProvider.setUserDetailsService(detailsService);
+        daoProvider.setPasswordEncoder(passwordEncoder()); // Set the password encoder
         return new ProviderManager(daoProvider);
     }
 
@@ -50,11 +52,16 @@ public class SecurityConfiguration {
                             "/update_creds/**",
                             "/update_password/**"
                     ).permitAll();
-                    auth.requestMatchers("/home/**").hasRole("USER");
+                    auth.requestMatchers("/**","/chart/**").hasRole("USER");
                     auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
                     auth.requestMatchers("/rb_roster/**","/Rosters/**").hasAnyRole("ADMIN","MEMBERSHIP");
                     auth.anyRequest().authenticated();
                 })
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Create a session if needed
+                        .invalidSessionUrl("/login?invalid") // Redirect to login page for invalid sessions
+                        .maximumSessions(1) // Allow only one session per user
+                        .expiredUrl("/login?expired")) // Redirect to login page for expired sessions
                 .formLogin(form -> form
                         .loginPage("/login") // Specify your custom login page URL
                         .permitAll() // Allow all users to access the login page
