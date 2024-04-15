@@ -88,16 +88,16 @@ public class AuthController {
 		return "admin";
 	}
 
-	@PostMapping("/adduser")
-	public String addUser(@RequestParam String username, @RequestParam String password, Model model) {
-		// Call the registerUser method from AuthenticationServiceImpl
-		try {
-			System.out.println(username + " " + password);
-			authenticationService.registerUser(username, password);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return "admin"; // Redirect to the "admin" view or page
-	}
+//	@PostMapping("/adduser")
+//	public String addUser(@RequestParam String username, @RequestParam String password, Model model) {
+//		// Call the registerUser method from AuthenticationServiceImpl
+//		try {
+//			System.out.println(username + " " + password);
+//			authenticationService.registerUser(username, password);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//		}
+//		return "admin"; // Redirect to the "admin" view or page
+//	}
 
 }

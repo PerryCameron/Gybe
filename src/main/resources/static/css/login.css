@@ -82,6 +82,7 @@ button:hover {
 .text-body {
   width: 60%;
   margin: 0 auto; /* Center the element horizontally */
+  padding-top: 20px;
 }
 
 .email-div {

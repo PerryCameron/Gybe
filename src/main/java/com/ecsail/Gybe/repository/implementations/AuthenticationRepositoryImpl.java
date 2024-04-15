@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -107,6 +108,26 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
         return user;
     }
 
+//    @Override
+//    public int saveUser(UserDTO user) {
+//        String insertQuery = "INSERT INTO users (username, password, p_id) VALUES (?, ?, ?)";
+//        KeyHolder keyHolder = new GeneratedKeyHolder();
+//        try {
+//            template.update(connection -> {
+//                PreparedStatement ps = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+//                ps.setString(1, user.getUsername());
+//                ps.setString(2, user.getPassword());
+//                ps.setInt(3, user.getpId());
+//                return ps;
+//            }, keyHolder);
+//            // Success, the operation didn't throw any exception
+//            return 1;
+//        } catch (DataAccessException e) {
+//            logger.error(e.getMessage());
+//            // An exception was thrown, indicating failure
+//            return 0;
+//        }
+//    }
 
     @Override
     public Void saveUserRole(UserDTO user, RoleDTO role) {

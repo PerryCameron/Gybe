@@ -10,6 +10,7 @@ public interface AuthenticationRepository {
     Optional<UserDTO> findByUsername(String username);
     Optional<RoleDTO> findByAuthority(String authority);
     RoleDTO saveAuthority(String authority);
+
     UserDTO saveUser(UserDTO user);
     Void saveUserRole(UserDTO user, RoleDTO role);
 

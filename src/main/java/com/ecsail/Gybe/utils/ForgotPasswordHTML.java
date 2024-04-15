@@ -1,11 +1,20 @@
 package com.ecsail.Gybe.utils;
 
+import com.ecsail.Gybe.enums.AccountStatus;
+
 public class ForgotPasswordHTML {
-    public static String createEmail(String link) {
+    public static String createEmail(String link, AccountStatus status) {
         String imageLink = "https://eaglecreeksailing.com/images/ecsc_logo_small.png";
         String buttonText = "Set New Password";
-        String message = "A request has been made to retrieve your password for ECSC. If you did not request this you can safely ignore this email. If you need a new password you can click the button below";
-        String subject = "Forgot Password?";
+        String message;
+        String subject;
+        if(status.equals("EXISTING")) {
+            message = "A request has been made to retrieve your password for ECSC. If you did not request this you can safely ignore this email. If you need a new password you can click the button below";
+            subject = "Forgot Password?";
+        } else {
+            message = "A request has been made to create an account for ECSC. If you did not request this you can safely ignore this email. If you want to create and account click the button below";
+            subject = "Create ECSC Account";
+        }
         return "\n" +
                 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
                 "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +

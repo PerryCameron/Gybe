@@ -62,7 +62,7 @@ public class LoginController {
         model.addAttribute("status", status);
         return "set-pass";
     } else
-        model.addAttribute("message", "Your password reset has expired. You only have 10 minutes to complete the process.");
+        model.addAttribute("message", "Your account password reset has expired. You only have 10 minutes to complete the process.");
         model.addAttribute("button",true);
         return "message";
     }

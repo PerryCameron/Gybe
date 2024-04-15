@@ -123,7 +123,7 @@ public class HashRepositoryImpl implements HashRepository {
                       GROUP BY
                           fhr.MSID, id.MEMBERSHIP_ID
                       ORDER BY
-                          id.MEMBERSHIP_ID ASC;
+                          id.MEMBERSHIP_ID;
                 """;
         return template.query(sql, new Object[]{year, year, year, year, year}, new FormRequestSummaryRowMapper());
     }
@@ -150,6 +150,8 @@ public class HashRepositoryImpl implements HashRepository {
         String sql = "INSERT INTO user_auth_request (pass_key, pid, updated_at, completed) VALUES (?, ?, CURRENT_TIMESTAMP, '0000-00-00 00:00:00')";
         return template.update(sql, passKey, pId);
     }
+
+    // probably not going to use below
     @Override
     public int timeStampCompleted(String passKey) {
         System.out.println("timeStampCompleted(String passKey)");
@@ -170,14 +172,6 @@ public class HashRepositoryImpl implements HashRepository {
         Integer count = template.queryForObject(sql, Integer.class, pid);
         return count != null && count > 0;
     }
-
-//    @Override
-//    public int updateUpdatedAtTimestamp(int pid) {
-//        System.out.println("updateUpdatedAtTimestamp(int pid)");
-//        // a good key entry already exists, we should reset the update_at field and use the existing key with the newest updated_at timestamp
-//        String sql = "UPDATE user_auth_request SET updated_at = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at))";
-//        return template.update(sql, pid);
-//    }
 
     @Override
     public int updateUpdatedAtTimestamp(int pid) {
