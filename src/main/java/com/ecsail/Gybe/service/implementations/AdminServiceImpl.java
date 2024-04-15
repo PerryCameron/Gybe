@@ -111,7 +111,10 @@ public class AdminServiceImpl implements AdminService {
             // We successfully added a user
             if (userDTO.getUserId() > 0) {
                 // add role user
+                RoleDTO userRole = authenticationRepository.findByAuthority("ROLE_USER").get();
+                authenticationRepository.saveUserRole(userDTO,userRole);
                 // set correct user_aut-request to completed
+                hashRepository.completeUserAuthRequest(personDTO.getpId());
             }
         }
         authenticateUser(email, password);
