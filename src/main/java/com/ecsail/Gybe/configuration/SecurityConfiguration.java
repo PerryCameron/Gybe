@@ -5,12 +5,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
@@ -31,9 +35,13 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(auth -> {
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, LoggingAccessDecisionManager accessDecisionManager) throws Exception {
+        http.authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
                             "/css/**",
                             "/images/**",
@@ -50,17 +58,21 @@ public class SecurityConfiguration {
                             "/slips-in-template/**",
                             "/upsert_user/**",
                             "/update_creds/**",
-                            "/update_password/**"
+                            "/update_password/**",
+                            "/"
                     ).permitAll();
-                    auth.requestMatchers("/**","/chart/**").hasRole("USER");
+                    auth.requestMatchers("/main_controller","/chart/**").hasRole("USER");
                     auth.requestMatchers("/admin/**","/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
                     auth.requestMatchers("/rb_roster/**","/Rosters/**").hasAnyRole("ADMIN","MEMBERSHIP");
                     auth.anyRequest().authenticated();
                 })
+                // this was recently added to have better view of session management
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Create a session if needed
                         .invalidSessionUrl("/login?invalid") // Redirect to login page for invalid sessions
-                        .maximumSessions(1) // Allow only one session per user
+                        .maximumSessions(3) // Allow only one session per user
+                        .sessionRegistry(sessionRegistry())  // Ensure session registry is properly configured if used
+                        .maxSessionsPreventsLogin(true)
                         .expiredUrl("/login?expired")) // Redirect to login page for expired sessions
                 .formLogin(form -> form
                         .loginPage("/login") // Specify your custom login page URL
@@ -80,7 +92,13 @@ public class SecurityConfiguration {
                         .logoutSuccessUrl("/renew") // URL to redirect after logout
                         .invalidateHttpSession(true) // Invalidate session
                         .deleteCookies("JSESSIONID") // Delete session cookies
-                        .clearAuthentication(true)) // Clear authentication
-                .build();
+                        .clearAuthentication(true)); // Clear authentication
+        // this was recently added to have better visibly on what is going on with roles, etc..
+        FilterSecurityInterceptor interceptor = http.getSharedObject(FilterSecurityInterceptor.class);
+        if (interceptor != null) {
+            interceptor.setAccessDecisionManager(accessDecisionManager);
+        }
+
+        return http.build();
     }
 }

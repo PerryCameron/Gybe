@@ -21,7 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class LoginController {
     private final AdminService adminService;
     private final SendMailService sendMailService;
-    private final AuthenticationService authenticationService;
+//    private final AuthenticationService authenticationService;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
@@ -32,7 +32,7 @@ public class LoginController {
                            AuthenticationService authenticationService) {
         this.adminService = adminService;
         this.sendMailService = sendMailService;
-        this.authenticationService = authenticationService;
+//        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/login")
@@ -73,7 +73,6 @@ public class LoginController {
                                  @RequestParam String status,
                                  @RequestParam String email,
                                  @RequestParam String password1,
-                                 Model model,
                                  HttpServletRequest request) {
         HttpSession session = request.getSession();
         String sessionId = session.getId();
@@ -93,6 +92,4 @@ public class LoginController {
         // Redirect to a confirmation page or display a message
         return "redirect:/";
     }
-
-
 }

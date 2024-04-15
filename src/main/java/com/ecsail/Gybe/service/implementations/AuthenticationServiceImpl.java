@@ -42,13 +42,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public String updatePassword(String password) {
         return passwordEncoder.encode(password);
     }
-
-
-
-
-
-
-
 }
 
 

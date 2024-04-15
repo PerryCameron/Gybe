@@ -120,14 +120,8 @@ public class AdminServiceImpl implements AdminService {
         authenticateUser(email, password);
     }
 
-//
-//    private int userId;
-//    private String username;
-//    private String password;
-//    private int pId;
-//    private Set<RoleDTO> authorities;
-
     private void authenticateUser(String email, String password) {
+        System.out.println("-----------------authenticateUser begin------------------------->");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
@@ -141,6 +135,7 @@ public class AdminServiceImpl implements AdminService {
         // Get the session from the request
         HttpSession session = attr.getRequest().getSession();
         String sessionId = session.getId();
+        System.out.println("-----------------authenticateUser after------------------------->");
         System.out.println("Session ID (setUserPass()): " + sessionId);
         System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
         Enumeration<String> attributeNames = session.getAttributeNames();

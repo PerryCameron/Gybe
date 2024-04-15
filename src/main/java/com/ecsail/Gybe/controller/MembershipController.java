@@ -16,7 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -103,11 +106,35 @@ public class MembershipController {
         return "slip-wait-list";
     }
 
+//    @GetMapping("/")
+//    public String testSession(HttpServletRequest request) {
+//        HttpSession session = request.getSession();
+//        String sessionId = session.getId();
+//        System.out.println("Session ID: " + sessionId);
+//        System.out.println("-----------------chart page------------------------->");
+//        System.out.println("Session ID (setUserPass()): " + sessionId);
+//        System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
+//        Enumeration<String> attributeNames = session.getAttributeNames();
+//        while (attributeNames.hasMoreElements()) {
+//            String attributeName = attributeNames.nextElement();
+//            System.out.println("Session attribute: " + attributeName + " = " + session.getAttribute(attributeName));
+//        }
+//        return "redirect:/";
+//    }
+
     @GetMapping("/")
     public String getStats(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         String sessionId = session.getId();
         System.out.println("Session ID: " + sessionId);
+        System.out.println("-----------------chart page------------------------->");
+        System.out.println("Session ID (setUserPass()): " + sessionId);
+        System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
+        Enumeration<String> attributeNames = session.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            String attributeName = attributeNames.nextElement();
+            System.out.println("Session attribute: " + attributeName + " = " + session.getAttribute(attributeName));
+        }
         List<StatsDTO> statsDTOS = generalService.getStats();
         AgesDTO agesDTO = generalService.getAges();
         model.addAttribute("stats", statsDTOS);
