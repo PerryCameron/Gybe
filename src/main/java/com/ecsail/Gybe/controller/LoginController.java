@@ -40,6 +40,12 @@ public class LoginController {
         return "login"; // Name of the HTML file for the login page
     }
 
+    @GetMapping("/logout")
+    public String showLogoutPage() {
+        // This method handles the GET request to /logout and returns the logout.html view.
+        return "logout";  // Assuming the Thymeleaf template is named `logout.html` in the `/src/main/resources/templates` directory.
+    }
+
     // When you submit an email, this checks to make sure it is on the system, etc..
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
@@ -63,7 +69,7 @@ public class LoginController {
         return "set-pass";
     } else
         model.addAttribute("message", "Your account password reset has expired. You have either" +
-                "completed the process or it has been more than 10 minutes, since you made your request");
+                " completed the process or it has been more than 10 minutes, since you made your request");
         model.addAttribute("button",true);
         return "message";
     }
