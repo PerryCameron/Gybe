@@ -1,10 +1,15 @@
 package com.ecsail.Gybe.wrappers;
 
-class MessageResponse {
+public class MessageResponse {
     private String message;
+    private boolean success;
 
     public MessageResponse(String message) {
         this.message = message;
+    }
+
+    public MessageResponse() {
+        this.success = false;
     }
 
     public String getMessage() {
@@ -13,5 +18,13 @@ class MessageResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

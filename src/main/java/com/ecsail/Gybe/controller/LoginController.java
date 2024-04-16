@@ -1,24 +1,21 @@
 package com.ecsail.Gybe.controller;
 
+import com.ecsail.Gybe.dto.PasswordUpdateRequestDTO;
 import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
 import com.ecsail.Gybe.wrappers.MailWrapper;
+import com.ecsail.Gybe.wrappers.MessageResponse;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class LoginController {
@@ -31,7 +28,7 @@ public class LoginController {
 
     @Autowired
     public LoginController(AdminService adminService,
-                           SendMailService sendMailService, 
+                           SendMailService sendMailService,
                            AuthenticationService authenticationService) {
         this.adminService = adminService;
         this.sendMailService = sendMailService;
@@ -46,8 +43,8 @@ public class LoginController {
     @GetMapping("/logout")
     public String showLogoutPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            UserDTO user = (UserDTO) auth.getPrincipal();
-            model.addAttribute("username", user.getUsername());
+        UserDTO user = (UserDTO) auth.getPrincipal();
+        model.addAttribute("username", user.getUsername());
         return "logout";
     }
 
@@ -56,9 +53,9 @@ public class LoginController {
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
         MailWrapper mailWrapper = adminService.generateCredentialsEmail(email);
-        if(mailWrapper.sendEmail()) sendMailService.sendHTMLMail(mailWrapper.getMailDTO(), fromEmail);
+        if (mailWrapper.sendEmail()) sendMailService.sendHTMLMail(mailWrapper.getMailDTO(), fromEmail);
         model.addAttribute("message", mailWrapper.getMessage());
-        model.addAttribute("button",!mailWrapper.sendEmail());
+        model.addAttribute("button", !mailWrapper.sendEmail());
         return "message";
     }
 
@@ -68,42 +65,38 @@ public class LoginController {
     public String updateCredentials(@RequestParam String key,
                                     @RequestParam String status,
                                     @RequestParam String email, Model model) {
-    if(adminService.isValidKey(key)) {
-        // if(status.equals("EXISTING") return "set-pass";
-        // if(status.equals("NEW_ACCOUNT") do something else
-        model.addAttribute("email", email);
-        model.addAttribute("key", key);
-        model.addAttribute("status", status);
-        return "set-pass";
-    } else
-        model.addAttribute("message", "Your account password reset has expired. You have either" +
-                " completed the process or it has been more than 10 minutes, since you made your request");
-        model.addAttribute("button",true);
+        if (adminService.isValidKey(key)) {
+            // if(status.equals("EXISTING") return "set-pass";
+            // if(status.equals("NEW_ACCOUNT") do something else
+            model.addAttribute("email", email);
+            model.addAttribute("key", key);
+            model.addAttribute("status", status);
+            return "set-pass";
+        } else
+            model.addAttribute("message", "Your account password reset has expired. You have either" +
+                    " completed the process or it has been more than 10 minutes, since you made your request");
+        model.addAttribute("button", true);
         return "message";
     }
 
+    // This method is called from AJAX using the double password form.
     @PostMapping("/update_password")
-    public String updatePassword(@RequestParam String key,
-                                 @RequestParam String status,
-                                 @RequestParam String email,
-                                 @RequestParam String password1,
-                                 HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String sessionId = session.getId();
-        System.out.println("Session ID (/update_password): " + sessionId);
-        adminService.setUserPass(key, status, email, password1);
-        // For now, just print the received data
-        System.out.println("Key: " + key);
-        System.out.println("Status: " + status);
-        System.out.println("Email: " + email);
-        System.out.println("Password: " + password1);
+    @ResponseBody
+    public ResponseEntity<MessageResponse> updatePassword(@RequestBody PasswordUpdateRequestDTO request) {
+        System.out.println("Received key: " + request.getKey());
+        System.out.println("Received key: " + request.getEmail());
+        System.out.println("Received key: " + request.getStatus());
+        System.out.println("Received key: " + request.getPassword1());
+        System.out.println("Received key: " + request.getPassword2());
+        // Similar logs for other fields
+        MessageResponse messageResponse = adminService.setUserPass(request.getKey(), request.getStatus(), request.getEmail(), request.getPassword1());
+        System.out.println("password success: " + messageResponse.isSuccess());
+        System.out.println("password message: " + messageResponse.getMessage());
+        // More logs...
 
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        // Get the session from the request
-        HttpSession session2 = attr.getRequest().getSession();
-        String sessionId2 = session2.getId();
-        System.out.println("Session ID (setUserPass()): " + sessionId2);
-        // Redirect to a confirmation page or display a message
-        return "redirect:/";
+        if (messageResponse.isSuccess())
+            return ResponseEntity.ok(messageResponse);
+        else
+            return ResponseEntity.badRequest().body(messageResponse);
     }
 }

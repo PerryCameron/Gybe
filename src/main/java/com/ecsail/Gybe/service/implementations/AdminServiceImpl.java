@@ -10,7 +10,9 @@ import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import com.ecsail.Gybe.utils.ApiKeyGenerator;
 import com.ecsail.Gybe.utils.ForgotPasswordHTML;
+import com.ecsail.Gybe.utils.PasswordValidator;
 import com.ecsail.Gybe.wrappers.MailWrapper;
+import com.ecsail.Gybe.wrappers.MessageResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -94,8 +96,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void setUserPass(String key, String status, String email, String password) {
+    public MessageResponse setUserPass(String key, String status, String email, String password) {
+        MessageResponse messageResponse = new MessageResponse();
         // using spring security 6.2.3
+        if(!PasswordValidator.validatePassword(password)) {
+            messageResponse.setMessage("Invalid Password");
+            return messageResponse;
+        }
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
         String encodedPass = authenticationService.updatePassword(password);
         if (status.equals("EXISTING")) {
@@ -103,8 +110,10 @@ public class AdminServiceImpl implements AdminService {
             if (authenticationRepository.updatePassword(encodedPass, personDTO.getpId()) == 1) {
                 // fill in the completed column
                 hashRepository.completeUserAuthRequest(personDTO.getpId());
-            }
-        } else {
+                messageResponse.setSuccess(true);
+                messageResponse.setMessage("SUCCESS");
+            } else messageResponse.setMessage("FAIL");
+        } else { // This is a new account
             UserDTO userDTO = authenticationRepository
                     .saveUser(new UserDTO(0, email, encodedPass, personDTO.getpId()));
             // We successfully added a user
@@ -114,9 +123,12 @@ public class AdminServiceImpl implements AdminService {
                 authenticationRepository.saveUserRole(userDTO,userRole);
                 // set correct user_aut-request to completed
                 hashRepository.completeUserAuthRequest(personDTO.getpId());
-            }
+                messageResponse.setSuccess(true);
+                messageResponse.setMessage("SUCCESS");
+            } else messageResponse.setMessage("FAIL");
         }
-        authenticateUser(email, password);
+//        authenticateUser(email, password);
+        return messageResponse;
     }
 
     private void authenticateUser(String email, String password) {

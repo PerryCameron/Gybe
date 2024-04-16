@@ -30,35 +30,42 @@ document.addEventListener("DOMContentLoaded", function () {
   password2.addEventListener("input", checkPasswords);
 });
 
-document.getElementById('submitBtn').addEventListener('click', function() {
-  const csrfToken = document.getElementById('csrfToken').value;
-  let data = {
-    _csrf: csrfToken,
-    key: document.querySelector('input[name="key"]').value,
-    status: document.querySelector('input[name="status"]').value,
-    email: document.querySelector('input[name="email"]').value,
-    password1: document.getElementById('password1').value,
-    password2: document.getElementById('password2').value
-  };
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('updatePasswordForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-  fetch('/update_password', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'CSRF-Token': csrfToken // Ensure CSRF token header is set if needed
-    },
-    body: JSON.stringify(data)
-  })
-      .then(response => response.json())
-      .then(data => {
-        if (!response.ok) {
-          throw new Error(data.message); // Use the server's error message
-        }
-        console.log('Success:', data);
-        alert('Success: ' + data.message); // Show success message
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        alert('Failure: ' + error.message); // Show error message
-      });
+    const csrfToken = document.querySelector('input[name="_csrf"]').value; // Fetch the CSRF token from a hidden input
+
+    let data = {
+      key: document.querySelector('input[name="key"]').value,
+      status: document.querySelector('input[name="status"]').value,
+      email: document.querySelector('input[name="email"]').value,
+      password1: document.getElementById('password1').value,
+      password2: document.getElementById('password2').value
+    };
+
+    fetch('/update_password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken // Make sure the header name matches what Spring Security expects
+      },
+      body: JSON.stringify(data)
+    })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Server responded with status ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Success:', data);
+          alert('Success: ' + data.message);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Error: ' + error.message);
+        });
+  });
 });
+
