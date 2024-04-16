@@ -54,18 +54,28 @@ document.addEventListener('DOMContentLoaded', function() {
     })
         .then(response => {
           if (!response.ok) {
-            throw new Error('Server responded with status ' + response.status);
-          }
+            // If the response is not ok, parse it as JSON still to get the error message
+            return response.json().then(errData => {
+              // Throw an error that includes the JSON data
+              throw new Error(errData.message || 'Something went wrong');
+            });          }
           return response.json();
         })
         .then(data => {
           console.log('Success:', data);
-          alert('Success: ' + data.message);
+
         })
         .catch((error) => {
           console.error('Error:', error);
-          alert('Error: ' + error.message);
+          setNewMessage(data.status, error.message);
         });
   });
 });
 
+function setNewMessage(status, message) {
+  if(status === "EXISTING") {
+    let p = document.getElementById("existingMessage");
+    p.innerText = "";
+    p.innerText = message;
+  }
+}
