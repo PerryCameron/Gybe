@@ -93,7 +93,6 @@ public class AdminServiceImpl implements AdminService {
         return mailWrapper;
     }
 
-
     @Override
     public void setUserPass(String key, String status, String email, String password) {
         // using spring security 6.2.3

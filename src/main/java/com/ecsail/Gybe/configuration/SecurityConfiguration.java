@@ -2,6 +2,7 @@ package com.ecsail.Gybe.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
@@ -24,9 +24,15 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 public class SecurityConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
+    private final LoggingAuthorizationManager loggingAuthorizationManager;
 
     @Value("${security.rememberme.key}")
     private String rememberMeKey;
+
+    @Autowired
+    public SecurityConfiguration(LoggingAuthorizationManager loggingAuthorizationManager) {
+        this.loggingAuthorizationManager = loggingAuthorizationManager;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -47,7 +53,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, LoggingAccessDecisionManager accessDecisionManager) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> { auth
                             .requestMatchers(
                             "/css/**",
@@ -69,9 +75,11 @@ public class SecurityConfiguration {
                             "/login/**",
                             "/"
                     ).permitAll();
+
                     auth.requestMatchers("/main_controller", "/chart/**").hasRole("USER");
                     auth.requestMatchers("/admin/**", "/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
                     auth.requestMatchers("/rb_roster/**", "/Rosters/**").hasAnyRole("ADMIN", "MEMBERSHIP");
+                    auth.requestMatchers("/secured-endpoint/**").access(loggingAuthorizationManager);
                     auth.anyRequest().authenticated(); // ensures that any request not matched by prior rules must be authenticated, regardless of the user’s role
                 })
                 // this was recently added to customize session management
@@ -156,11 +164,6 @@ public class SecurityConfiguration {
                         // It helps prevent the previous user’s authentication from affecting subsequent
                         // users or sessions.
                         .clearAuthentication(true)); // Clear authentication
-        // this was recently added to have better visibly on what is going on with roles, etc..
-        FilterSecurityInterceptor interceptor = http.getSharedObject(FilterSecurityInterceptor.class);
-        if (interceptor != null) {
-            interceptor.setAccessDecisionManager(accessDecisionManager);
-        }
         return http.build();
     }
 }
