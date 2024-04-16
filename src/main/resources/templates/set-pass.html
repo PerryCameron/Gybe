@@ -19,7 +19,7 @@
     <div>
         <p><span class="highlight">Username</span>: <span th:text="${email}"></span></p>
     </div>
-
+    <div id="formContainer">
     <form id="updatePasswordForm" method="post">
         <input type="hidden"  id="csrfToken" name="_csrf" th:value="${_csrf.token}">
         <input type="hidden" name="key" th:value="${key}">
@@ -39,6 +39,7 @@
             </button>
         </div>
     </form>
+    </div>
     <!-- Optional: Display error message -->
     <div class="error form-group">Passwords do not match</div>
 </div>

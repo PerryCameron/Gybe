@@ -79,15 +79,15 @@ public class LoginController {
         return "message";
     }
 
-    // This method is called from AJAX using the double password form.
+    // This method is called from AJAX (set-pass.html) using the double password form.
     @PostMapping("/update_password")
     @ResponseBody
     public ResponseEntity<MessageResponse> updatePassword(@RequestBody PasswordUpdateRequestDTO request) {
         System.out.println("Received key: " + request.getKey());
-        System.out.println("Received key: " + request.getEmail());
-        System.out.println("Received key: " + request.getStatus());
-        System.out.println("Received key: " + request.getPassword1());
-        System.out.println("Received key: " + request.getPassword2());
+        System.out.println("Received Email: " + request.getEmail());
+        System.out.println("Received Status: " + request.getStatus());
+        System.out.println("Received Password1: " + request.getPassword1());
+        System.out.println("Received Password2: " + request.getPassword2());
         // Similar logs for other fields
         MessageResponse messageResponse = adminService.setUserPass(
                 request.getKey(), request.getStatus(), request.getEmail(),
