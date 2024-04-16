@@ -20,8 +20,25 @@
         <p><span class="highlight">Username</span>: <span th:text="${email}"></span></p>
     </div>
 
-    <form action="/update_password" method="post">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+<!--    <form action="/update_password" method="post">-->
+<!--        <input type="hidden" name="_csrf" th:value="${_csrf.token}">-->
+<!--        <input type="hidden" name="key" th:value="${key}">-->
+<!--        <input type="hidden" name="status" th:value="${status}">-->
+<!--        <input type="hidden" name="email" th:value="${email}">-->
+<!--        <div class="form-group">-->
+<!--            <input type="password" id="password1" name="password1" placeholder="Password"/>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <input type="password" id="password2" name="password2" placeholder="Password"/>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <button th:if="${status} == 'EXISTING'" type="submit">Reset Password</button>-->
+<!--            <button th:if="${status} == 'NEW_ACCOUNT'" type="submit">Create Account</button>-->
+<!--        </div>-->
+<!--    </form>-->
+
+    <form  id="updatePasswordForm">
+        <input type="hidden"  id="csrfToken" name="_csrf" th:value="${_csrf.token}">
         <input type="hidden" name="key" th:value="${key}">
         <input type="hidden" name="status" th:value="${status}">
         <input type="hidden" name="email" th:value="${email}">

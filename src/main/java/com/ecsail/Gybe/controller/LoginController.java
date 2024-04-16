@@ -52,6 +52,7 @@ public class LoginController {
     }
 
     // When you submit an email, this checks to make sure it is on the system, etc..
+    // Also sends reset password or create new Account email
     @PostMapping("/upsert_user")
     public String register(@RequestParam String email, Model model) throws MessagingException {
         MailWrapper mailWrapper = adminService.generateCredentialsEmail(email);
@@ -61,6 +62,8 @@ public class LoginController {
         return "message";
     }
 
+    // This method is called from an email
+    // http://localhost:8080/update_creds?key=l0CcXf6hUfIgxQFSiaJXr2pfIrX-JlHHMJPoMpb2ylM&status=EXISTING&email=perry.lee.cameron@gmail.com
     @GetMapping("/update_creds")
     public String updateCredentials(@RequestParam String key,
                                     @RequestParam String status,

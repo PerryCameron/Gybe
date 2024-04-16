@@ -29,3 +29,36 @@ document.addEventListener("DOMContentLoaded", function () {
   password1.addEventListener("input", checkPasswords);
   password2.addEventListener("input", checkPasswords);
 });
+
+document.getElementById('submitBtn').addEventListener('click', function() {
+  const csrfToken = document.getElementById('csrfToken').value;
+  let data = {
+    _csrf: csrfToken,
+    key: document.querySelector('input[name="key"]').value,
+    status: document.querySelector('input[name="status"]').value,
+    email: document.querySelector('input[name="email"]').value,
+    password1: document.getElementById('password1').value,
+    password2: document.getElementById('password2').value
+  };
+
+  fetch('/update_password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'CSRF-Token': csrfToken // Ensure CSRF token header is set if needed
+    },
+    body: JSON.stringify(data)
+  })
+      .then(response => response.json())
+      .then(data => {
+        if (!response.ok) {
+          throw new Error(data.message); // Use the server's error message
+        }
+        console.log('Success:', data);
+        alert('Success: ' + data.message); // Show success message
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Failure: ' + error.message); // Show error message
+      });
+});

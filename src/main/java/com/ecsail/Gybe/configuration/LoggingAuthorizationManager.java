@@ -1,7 +1,6 @@
 package com.ecsail.Gybe.configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
