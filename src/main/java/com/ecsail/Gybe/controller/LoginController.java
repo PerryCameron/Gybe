@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.controller;
 
+import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.service.interfaces.AdminService;
 import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import com.ecsail.Gybe.service.interfaces.SendMailService;
@@ -9,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +44,11 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public String showLogoutPage() {
-        // This method handles the GET request to /logout and returns the logout.html view.
-        return "logout";  // Assuming the Thymeleaf template is named `logout.html` in the `/src/main/resources/templates` directory.
+    public String showLogoutPage(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserDTO user = (UserDTO) auth.getPrincipal();
+            model.addAttribute("username", user.getUsername());
+        return "logout";
     }
 
     // When you submit an email, this checks to make sure it is on the system, etc..

@@ -12,10 +12,7 @@
     <form id="loginForm" action="/logout" method="post">
         <div class="alt-path">
             <!-- Display user's name if logged in -->
-            <p sec:authorize="isAuthenticated()">
-                Logout
-                <span sec:authentication="name">User</span>
-            </p>
+            <p>You are logged in as: <span th:text="${username}"></span></p>
         </div>
 
         <div class="form-group submit-button-div">
