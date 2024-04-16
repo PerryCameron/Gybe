@@ -67,15 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
           console.error('Error:', error);
-          setNewMessage(data.status, error.message);
+          setNewMessage(data.status, error);
         });
   });
 });
 
-function setNewMessage(status, message) {
+function setNewMessage(status, error) {
   if(status === "EXISTING") {
     let p = document.getElementById("existingMessage");
     p.innerText = "";
-    p.innerText = message;
+    p.innerText = error.message;
   }
 }

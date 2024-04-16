@@ -14,5 +14,5 @@ public interface AdminService {
 
     MailWrapper generateCredentialsEmail(String email);
 
-    MessageResponse setUserPass(String key, String status, String email, String password1);
+    MessageResponse setUserPass(String key, String status, String email, String password1, String password2);
 }

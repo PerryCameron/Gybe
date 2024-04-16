@@ -96,15 +96,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public MessageResponse setUserPass(String key, String status, String email, String password) {
+    public MessageResponse setUserPass(String key, String status, String email, String password1, String password2) {
         MessageResponse messageResponse = new MessageResponse();
         // using spring security 6.2.3
-        if(!PasswordValidator.validatePassword(password)) {
-            messageResponse.setMessage("Invalid Password");
+        if(!PasswordValidator.validatePassword(password1,password2)) {
+            // if password failed this will give us a more refined message
+            messageResponse.setMessage(PasswordValidator.passwordError(password1,password2));
             return messageResponse;
         }
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
-        String encodedPass = authenticationService.updatePassword(password);
+        String encodedPass = authenticationService.updatePassword(password1);
         if (status.equals("EXISTING")) {
             // if the password updates with success add completed timestamp
             if (authenticationRepository.updatePassword(encodedPass, personDTO.getpId()) == 1) {
