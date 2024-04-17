@@ -83,21 +83,10 @@ public class LoginController {
     @PostMapping("/update_password")
     @ResponseBody
     public ResponseEntity<MessageResponse> updatePassword(@RequestBody PasswordUpdateRequestDTO request) {
-        System.out.println("Received key: " + request.getKey());
-        System.out.println("Received Email: " + request.getEmail());
-        System.out.println("Received Status: " + request.getStatus());
-        System.out.println("Received Password1: " + request.getPassword1());
-        System.out.println("Received Password2: " + request.getPassword2());
         // Similar logs for other fields
         MessageResponse messageResponse = adminService.setUserPass(
                 request.getKey(), request.getStatus(), request.getEmail(),
                 request.getPassword1(), request.getPassword2());
-        System.out.println("password success: " + messageResponse.isSuccess());
-        System.out.println("password message: " + messageResponse.getMessage());
-        // More logs...
-        if (messageResponse.isSuccess())
             return ResponseEntity.ok(messageResponse);
-        else
-            return ResponseEntity.badRequest().body(messageResponse);
     }
 }
