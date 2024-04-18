@@ -55,7 +55,8 @@ public class LoginController {
         MailWrapper mailWrapper = adminService.generateCredentialsEmail(email);
         if (mailWrapper.sendEmail()) sendMailService.sendHTMLMail(mailWrapper.getMailDTO(), fromEmail);
         model.addAttribute("message", mailWrapper.getMessage());
-        model.addAttribute("button", !mailWrapper.sendEmail());
+        model.addAttribute("button", !mailWrapper.sendEmail()); // this should be false
+        // in the event it is true some more code here would be nice
         return "message";
     }
 
@@ -76,6 +77,8 @@ public class LoginController {
             model.addAttribute("message", "Your account password reset has expired. You have either" +
                     " completed the process or it has been more than 10 minutes, since you made your request");
         model.addAttribute("button", true);
+        model.addAttribute("link", "/login");
+        model.addAttribute("buttonText", "Go to login");
         return "message";
     }
 
@@ -89,4 +92,15 @@ public class LoginController {
                 request.getPassword1(), request.getPassword2());
             return ResponseEntity.ok(messageResponse);
     }
+
+    @GetMapping("/access-denied")
+    public String accessDenied(Model model) {
+        model.addAttribute("message", "You do not have permission to access this page.");
+        model.addAttribute("button", true);
+        model.addAttribute("link", "/");
+        model.addAttribute("buttonText", "Return Home");
+        return "message";  // Name of the template/view to be returned
+    }
+
+
 }

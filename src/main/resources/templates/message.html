@@ -3,21 +3,30 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Information</title>
+    <title>Access Denied</title>
     <link rel="stylesheet" th:href="@{/css/login.css}" type="text/css" />
 </head>
 <body>
 <div class="container">
     <img th:src="@{/images/ecsc_logo_white_big.png}" alt="logo" />
-        <div class="form-group text-body">
-            <p th:utext="${message}">
-                <!-- Default message if 'message' attribute is not present -->
-                This is a default message, if you see this something is broke.
-            </p>
-        </div>
-    <div class="form-group" th:if="${button}">
-        <button type="button" onclick="window.location.href='/login'">Try Again</button>
+
+    <div class="form-group text-body">
+        <p th:utext="${message} ?: 'This is a default message, if you see this something is broken.'">
+            <!-- Default message if 'message' attribute is not present -->
+            This is a default message, if you see this something is broke.
+        </p>
     </div>
+
+    <div class="form-group" th:if="${button}">
+        <button type="button" data-link="${link}" th:text="${buttonText}">Return Home</button>
+    </div>
+
+    <script>
+        document.querySelector('button[data-link]').addEventListener('click', function() {
+            window.location.href = this.getAttribute('data-link');
+        });
+    </script>
 </div>
 </body>
 </html>
+

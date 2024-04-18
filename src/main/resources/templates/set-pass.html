@@ -11,7 +11,7 @@
 <div class="container">
     <img src="images/ecsc_logo_white_big.png" alt="logo"/>
     <div th:if="${status} == 'NEW_ACCOUNT'">
-        <p>Please set the password for your account by putting it in twice.</p>
+        <p>Your username will be your email as seen below, Please set the password for your account by putting it in twice.</p>
     </div>
     <div th:if="${status} == 'EXISTING'">
         <p id="existingMessage">Please reset your password by putting it in twice.</p>

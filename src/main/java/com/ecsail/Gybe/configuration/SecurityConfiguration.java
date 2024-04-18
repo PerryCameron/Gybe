@@ -54,34 +54,30 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> { auth
-                            .requestMatchers(
-                            "/css/**",
-                            "/images/**",
-                            "/js/**",
-                            "/renew/**",
-                            "/register/**",
-                            "/error/**",
-                            "/email-error/**",
-                            "/bod/**",
-                            "/bod-stripped/**",
-                            "/slip-wait-list/**",
-                            "/stats/**",
-                            "/slips/**",
-                            "/slips-in-template/**",
-                            "/upsert_user/**",
-                            "/update_creds/**",
-                            "/update_password/**",
-                            "/login/**",
-                            "/"
-                    ).permitAll();
-
-                    auth.requestMatchers("/main_controller", "/chart/**").hasRole("USER");
+        // Spring Security evaluates rules in the order they are defined. If a rule that permits broader access
+        // (permitAll() or authenticated()) is processed before a more restrictive rule (hasRole(), hasAuthority()),
+        // it can lead to unintended access.
+        http.authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/admin/**", "/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
                     auth.requestMatchers("/rb_roster/**", "/Rosters/**").hasAnyRole("ADMIN", "MEMBERSHIP");
-                    auth.requestMatchers("/secured-endpoint/**").access(loggingAuthorizationManager);
+                    auth.requestMatchers(
+                            "/css/**", "/images/**", "/js/**", "/renew/**", "/register/**",
+                            "/error/**", "/email-error/**", "/bod/**", "/bod-stripped/**",
+                            "/slip-wait-list/**", "/stats/**", "/slips/**", "/slips-in-template/**",
+                            "/upsert_user/**", "/update_creds/**", "/update_password/**", "/login/**",
+                            "/access-denied/**"
+                    ).permitAll();
+
+                    auth.requestMatchers("/**", "/chart/**").hasRole("USER");
+                // auth.requestMatchers("/secured-endpoint/**").access(loggingAuthorizationManager);
                     auth.anyRequest().authenticated(); // ensures that any request not matched by prior rules must be authenticated, regardless of the user’s role
                 })
+                // a custom AccessDeniedHandler to handle cases where users try to access resources they are not
+                // permitted to access. This handler allows you to customize the response, whether it’s redirecting
+                // the user to a specific page, returning a custom error message, or logging the incident.
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                )
                 // this was recently added to customize session management
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Create a session if needed
