@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     private final AdminService adminService;
     private final SendMailService sendMailService;
-//    private final AuthenticationService authenticationService;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
@@ -32,7 +31,6 @@ public class LoginController {
                            AuthenticationService authenticationService) {
         this.adminService = adminService;
         this.sendMailService = sendMailService;
-//        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/login")
@@ -96,9 +94,9 @@ public class LoginController {
     @GetMapping("/access-denied")
     public String accessDenied(Model model) {
         model.addAttribute("message", "You do not have permission to access this page.");
-        model.addAttribute("button", true);
-        model.addAttribute("link", "/");
-        model.addAttribute("buttonText", "Return Home");
+        model.addAttribute("button", false);
+        model.addAttribute("link", "/"); // don't need
+        model.addAttribute("buttonText", "Return Home"); // don't need
         return "message";  // Name of the template/view to be returned
     }
 

@@ -10,11 +10,11 @@
 <body>
 <div class="container">
     <img src="images/ecsc_logo_white_big.png" alt="logo"/>
-    <div th:if="${status} == 'NEW_ACCOUNT'">
-        <p>Your username will be your email as seen below, Please set the password for your account by putting it in twice.</p>
+    <div th:if="${status} == 'NEW_ACCOUNT'" id="existingMessage1">
+        <p>Your username will be your username as seen below, Please set the password for your account by putting it in twice.</p>
     </div>
-    <div th:if="${status} == 'EXISTING'">
-        <p id="existingMessage">Please reset your password by putting it in twice.</p>
+    <div th:if="${status} == 'EXISTING'" id="existingMessage2">
+        <p>Please reset your password by putting it in twice.</p>
     </div>
     <div id="displayedName">
         <p><span class="highlight">Username</span>: <span th:text="${email}"></span></p>

@@ -132,36 +132,6 @@ public class AdminServiceImpl implements AdminService {
         return messageResponse;
     }
 
-    // may go back to this, but I could never get it to work correctly - strange
-//    private void authenticateUser(String email, String password) {
-//        System.out.println("-----------------authenticateUser begin------------------------->");
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(email, password)
-//        );
-//        System.out.println("Authentication: " + authentication);
-//        System.out.println("Authorities: " + authentication.getAuthorities());
-//        System.out.println("Authenticated: " + authentication.isAuthenticated());
-//        System.out.println("");
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        // Get the current HTTP request
-//        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-//        // Get the session from the request
-//        HttpSession session = attr.getRequest().getSession();
-//        String sessionId = session.getId();
-//        System.out.println("-----------------authenticateUser after------------------------->");
-//        System.out.println("Session ID (setUserPass()): " + sessionId);
-//        System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
-//        Enumeration<String> attributeNames = session.getAttributeNames();
-//        while (attributeNames.hasMoreElements()) {
-//            String attributeName = attributeNames.nextElement();
-//            System.out.println("Session attribute: " + attributeName + " = " + session.getAttribute(attributeName));
-//        }
-//        authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("Authentication: " + authentication);
-//        System.out.println("Authorities: " + authentication.getAuthorities());
-//        System.out.println("Authenticated: " + authentication.isAuthenticated());
-//    }
-
     private String generateLink(PersonDTO personDTO, String email, AccountStatus accountStatus) {
         String baseUrl = appURL + "/update_creds";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);

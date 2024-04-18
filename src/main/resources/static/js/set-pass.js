@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Data success: ' + messagedata.success); // temp
                 if (messagedata.success === true)
                     createNewLogin(data);
-                setNewMessage(messagedata.message);
+                setNewMessage(messagedata.message, data.status);
+
             })
             .catch((error) => {  // still broken
                 console.error('Error:', error);
@@ -86,8 +87,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
 
-        function setNewMessage(message) {
-            let p = document.getElementById("existingMessage");
+        function setNewMessage(message, status) {
+            let divId = "existingMessage2"
+            if(status === "NEW_ACCOUNT")  divId = "existingMessage1"
+            const p = document.getElementById(divId);
             p.innerText = "";
             p.innerText = message;
         }
@@ -95,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function () {
         function createNewLogin(data) {
             // Retrieve the CSRF token from the old form before removing it
             const csrfToken = document.querySelector('input[name="_csrf"]').value;
-            console.log('Data in createNewLogin:', data); // the data prints here correctly so it is getting here
             const displayedName = document.getElementById('displayedName');
             const container = document.getElementById('formContainer'); // Ensure this container exists in your HTML
             if (!container) console.error('Container element not found');
@@ -132,8 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
             passwordInput.name = 'password';
             passwordInput.placeholder = 'Password';
             passwordInput.autocomplete = 'current-password';
-            console.log("password1: " + data.password1) // this is undefined, how?
-            console.log("Data inside needed part: " + data);  // no object found
             passwordInput.value = data.password1; // this is undefined
             passwordDiv.appendChild(passwordInput);
 
