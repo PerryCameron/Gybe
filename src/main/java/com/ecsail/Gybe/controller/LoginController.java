@@ -54,6 +54,7 @@ public class LoginController {
         if (mailWrapper.sendEmail()) sendMailService.sendHTMLMail(mailWrapper.getMailDTO(), fromEmail);
         model.addAttribute("message", mailWrapper.getMessage());
         model.addAttribute("button", !mailWrapper.sendEmail()); // this should be false
+        model.addAttribute("title", "Email Sent!");
         // in the event it is true some more code here would be nice
         return "message";
     }
@@ -71,12 +72,13 @@ public class LoginController {
             model.addAttribute("key", key);
             model.addAttribute("status", status);
             return "set-pass";
-        } else
-            model.addAttribute("message", "Your account password reset has expired. You have either" +
+        }
+        model.addAttribute("message", "Your account password reset has expired. You have either" +
                     " completed the process or it has been more than 10 minutes, since you made your request");
         model.addAttribute("button", true);
         model.addAttribute("link", "/login");
         model.addAttribute("buttonText", "Go to login");
+        model.addAttribute("title", "Reset no longer valid");
         return "message";
     }
 
@@ -88,7 +90,7 @@ public class LoginController {
         MessageResponse messageResponse = adminService.setUserPass(
                 request.getKey(), request.getStatus(), request.getEmail(),
                 request.getPassword1(), request.getPassword2());
-            return ResponseEntity.ok(messageResponse);
+        return ResponseEntity.ok(messageResponse);
     }
 
     @GetMapping("/access-denied")
@@ -97,6 +99,7 @@ public class LoginController {
         model.addAttribute("button", false);
         model.addAttribute("link", "/"); // don't need
         model.addAttribute("buttonText", "Return Home"); // don't need
+        model.addAttribute("title", "Access Denied");
         return "message";  // Name of the template/view to be returned
     }
 

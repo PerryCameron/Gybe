@@ -125,7 +125,7 @@ public class AdminServiceImpl implements AdminService {
                 // set correct user_aut-request to completed
                 hashRepository.completeUserAuthRequest(personDTO.getpId());
                 messageResponse.setSuccess(true);
-                messageResponse.setMessage("Account created: Please log in for first time.");
+                messageResponse.setMessage("Account created: Please log in for the first time.");
             } else messageResponse.setMessage("FAIL");
         }
 //        authenticateUser(email, password);
