@@ -1,7 +1,6 @@
 package com.ecsail.Gybe.service.interfaces;
 
 import com.ecsail.Gybe.dto.FormHashRequestDTO;
-import com.ecsail.Gybe.dto.MailDTO;
 import com.ecsail.Gybe.wrappers.MailWrapper;
 import com.ecsail.Gybe.wrappers.MessageResponse;
 
@@ -14,5 +13,5 @@ public interface AdminService {
 
     MailWrapper generateCredentialsEmail(String email);
 
-    MessageResponse setUserPass(String key, String status, String email, String password1, String password2);
+    MessageResponse createOrUpdateUser(String key, String status, String email, String password1, String password2);
 }

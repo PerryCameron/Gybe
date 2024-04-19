@@ -51,17 +51,11 @@ public class SendMailServiceImpl implements SendMailService {
     @Override
     public void sendMailWithAttachments(MailDTO mailDTO) throws MessagingException {
         MimeMessage msg = javaMailSender.createMimeMessage();
-
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-
         helper.setTo("to_@email");
-
         helper.setSubject("Testing from Spring Boot");
-
         helper.setText("Find the attached image", true);
-
         helper.addAttachment("hero.jpg", new ClassPathResource("hero.jpg"));
-
         javaMailSender.send(msg);
     }
 }

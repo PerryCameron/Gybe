@@ -92,9 +92,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public MessageResponse setUserPass(String key, String status, String email, String password1, String password2) {
+    public MessageResponse createOrUpdateUser(String key, String status, String email, String password1, String password2) {
         MessageResponse messageResponse = new MessageResponse();
-        // using spring security 6.2.3
+        // To make sure the password passes muster at the server side
         if(!PasswordValidator.validatePassword(password1,password2)) {
             // if password failed this will give us a more refined message
             messageResponse.setMessage(PasswordValidator.passwordError(password1,password2));
@@ -107,18 +107,29 @@ public class AdminServiceImpl implements AdminService {
         } else { // This is a new account
             UserDTO userDTO = authenticationRepository
                     .saveUser(new UserDTO(0, email, encodedPass, personDTO.getpId()));
+            createAccount(messageResponse, personDTO, userDTO);
+        }
+        return messageResponse;
+    }
+
+    private void createAccount(MessageResponse messageResponse, PersonDTO personDTO, UserDTO userDTO) {
+        try {
             // We successfully added a user
             if (userDTO.getUserId() > 0) {
                 // add role user
                 RoleDTO userRole = authenticationRepository.findByAuthority("ROLE_USER").get();
-                authenticationRepository.saveUserRole(userDTO,userRole);
+                authenticationRepository.saveUserRole(userDTO, userRole);
                 // set correct user_aut-request to completed
                 hashRepository.completeUserAuthRequest(personDTO.getpId());
                 messageResponse.setSuccess(true);
                 messageResponse.setMessage("Account created: Please log in for the first time.");
-            } else messageResponse.setMessage("FAIL");
+            } else messageResponse.setMessage("Account not created: there was an error");
+        } catch (Exception e) {
+            // Log the exception and set the failure message
+            logger.error("Failed to create Account: ", e);
+            messageResponse.setSuccess(false);
+            messageResponse.setMessage("Unable to update password due to an error." + e.getMessage());
         }
-        return messageResponse;
     }
 
     private void updateUserPassword(String email, MessageResponse messageResponse, PersonDTO personDTO, String encodedPass) {
@@ -141,7 +152,7 @@ public class AdminServiceImpl implements AdminService {
             // Log the exception and set the failure message
             logger.error("Failed to update password for p_id: " + personDTO.getpId(), e);
             messageResponse.setSuccess(false);
-            messageResponse.setMessage("Unable to update password due to an error.");
+            messageResponse.setMessage("Unable to update password due to an error: " + e.getMessage());
         }
     }
 

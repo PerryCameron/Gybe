@@ -87,7 +87,7 @@ public class LoginController {
     @ResponseBody
     public ResponseEntity<MessageResponse> updatePassword(@RequestBody PasswordUpdateRequestDTO request) {
         // Similar logs for other fields
-        MessageResponse messageResponse = adminService.setUserPass(
+        MessageResponse messageResponse = adminService.createOrUpdateUser(
                 request.getKey(), request.getStatus(), request.getEmail(),
                 request.getPassword1(), request.getPassword2());
         return ResponseEntity.ok(messageResponse);

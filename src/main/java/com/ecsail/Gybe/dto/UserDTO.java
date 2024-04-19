@@ -13,6 +13,7 @@ public class UserDTO implements UserDetails {
     private String password;
     private int pId;
     private Set<RoleDTO> authorities;
+    private PersonDTO personDTO;
 
     public UserDTO() {
         super();
@@ -93,6 +94,14 @@ public class UserDTO implements UserDetails {
 
     public void setpId(Integer pId) {
         this.pId = pId;
+    }
+
+    public PersonDTO getPersonDTO() {
+        return personDTO;
+    }
+
+    public void setPersonDTO(PersonDTO personDTO) {
+        this.personDTO = personDTO;
     }
 
     @Override
