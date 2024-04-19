@@ -91,3 +91,7 @@ button:hover {
   justify-content: center; /* Space out the children (input field and button) */
   gap: 10px; /* Set a gap of 10px between the children */
 }
+
+.block-info {
+  padding-top: 20px;
+}

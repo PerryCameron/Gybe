@@ -13,21 +13,16 @@ import com.ecsail.Gybe.utils.ForgotPasswordHTML;
 import com.ecsail.Gybe.utils.PasswordValidator;
 import com.ecsail.Gybe.wrappers.MailWrapper;
 import com.ecsail.Gybe.wrappers.MessageResponse;
-import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -41,6 +36,7 @@ public class AdminServiceImpl implements AdminService {
     private final HashRepository hashRepository;
     private final PersonRepository personRepository;
     private final AuthenticationRepository authenticationRepository;
+    public static Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     @Autowired
     public AdminServiceImpl(HashRepository hashRepository,
@@ -107,13 +103,7 @@ public class AdminServiceImpl implements AdminService {
         PersonDTO personDTO = personRepository.getPersonByEmail(email);
         String encodedPass = authenticationService.updatePassword(password1);
         if (status.equals("EXISTING")) {
-            // if the password updates with success add completed timestamp
-            if (authenticationRepository.updatePassword(encodedPass, personDTO.getpId()) == 1) {
-                // fill in the completed column
-                hashRepository.completeUserAuthRequest(personDTO.getpId());
-                messageResponse.setSuccess(true);
-                messageResponse.setMessage("You have successfully changed your password. Please log in.");
-            } else messageResponse.setMessage("FAIL");
+            updateUserPassword(email, messageResponse, personDTO, encodedPass);
         } else { // This is a new account
             UserDTO userDTO = authenticationRepository
                     .saveUser(new UserDTO(0, email, encodedPass, personDTO.getpId()));
@@ -128,8 +118,31 @@ public class AdminServiceImpl implements AdminService {
                 messageResponse.setMessage("Account created: Please log in for the first time.");
             } else messageResponse.setMessage("FAIL");
         }
-//        authenticateUser(email, password);
         return messageResponse;
+    }
+
+    private void updateUserPassword(String email, MessageResponse messageResponse, PersonDTO personDTO, String encodedPass) {
+        try {
+            // Attempt to update the password
+            int updateCount = authenticationRepository.updatePassword(encodedPass, personDTO.getpId());
+            if (updateCount == 1) {
+                // If the password updates successfully, add completed timestamp
+                hashRepository.completeUserAuthRequest(personDTO.getpId());
+                messageResponse.setSuccess(true);
+                messageResponse.setMessage("You have successfully changed your password. Please log in.");
+            } else {
+                // If no rows were updated, handle accordingly
+                messageResponse.setSuccess(false);
+                messageResponse.setMessage("No matching record found: password not updated.");
+                logger.info("During an attempt to update password for " + email
+                        + " the system was unable to secure a record with a matching P_ID. ");
+            }
+        } catch (Exception e) {
+            // Log the exception and set the failure message
+            logger.error("Failed to update password for p_id: " + personDTO.getpId(), e);
+            messageResponse.setSuccess(false);
+            messageResponse.setMessage("Unable to update password due to an error.");
+        }
     }
 
     private String generateLink(PersonDTO personDTO, String email, AccountStatus accountStatus) {
