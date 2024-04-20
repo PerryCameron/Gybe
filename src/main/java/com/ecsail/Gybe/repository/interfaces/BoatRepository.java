@@ -39,4 +39,5 @@ public interface BoatRepository {
 
     BoatDTO findBoatById(String boatId);
 
+    List<DbBoatSettingsDTO> getBoatSettings();
 }

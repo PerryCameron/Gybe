@@ -3,10 +3,7 @@ package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.BoatRepository;
-import com.ecsail.Gybe.repository.rowmappers.BoatListRowMapper;
-import com.ecsail.Gybe.repository.rowmappers.BoatOwnerRowMapper;
-import com.ecsail.Gybe.repository.rowmappers.BoatPhotosRowMapper;
-import com.ecsail.Gybe.repository.rowmappers.BoatRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,7 +193,7 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public int delete(BoatDTO boatDTO) {
         String deleteSql = "DELETE FROM boat WHERE BOAT_ID = ?";
-        return template.update(deleteSql, boatDTO.getBoat_id());
+        return template.update(deleteSql, boatDTO.getBoatId());
     }
 
     @Override
@@ -210,7 +207,7 @@ public class BoatRepositoryImpl implements BoatRepository {
                 ":hasTrailer, :loa, :displacement, :keel, :phrf, :draft, :beam, :lwl, :aux)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
-        boatDTO.setBoat_id(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        boatDTO.setBoatId(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return affectedRows;
     }
 
@@ -280,7 +277,7 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatDTO boatDTO) {
         String sql = "DELETE FROM boat_owner WHERE MS_ID = ? and BOAT_ID = ?";
-        return template.update(sql, membershipListDTO.getMsId(), boatDTO.getBoat_id());
+        return template.update(sql, membershipListDTO.getMsId(), boatDTO.getBoatId());
     }
 
     @Override
@@ -334,6 +331,14 @@ public class BoatRepositoryImpl implements BoatRepository {
     public BoatDTO findBoatById(String boatId) {
         String sql = "SELECT * FROM boat WHERE boat_id = ?";
         return template.queryForObject(sql, new Object[]{boatId}, new BoatRowMapper());
+    }
+
+    @Override
+    public List<DbBoatSettingsDTO> getBoatSettings() {
+        String query = "SELECT * from db_boat_list_settings";
+        List<DbBoatSettingsDTO> dbBoatSettingsDTOS
+                = template.query(query,new DbBoatSettingsRowMapper());
+        return dbBoatSettingsDTOS;
     }
 
 }

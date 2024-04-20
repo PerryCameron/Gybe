@@ -206,24 +206,24 @@ public class FormRequestServiceImpl implements FormRequestService {
 
                 setParameter("addBoat" + count, "Yes", builder);
 
-                if(boatDTO.getBoat_id() != null)
-                setParameter("boat_id" + count, String.valueOf(boatDTO.getBoat_id()), builder);
+                if(boatDTO.getBoatId() != null)
+                setParameter("boat_id" + count, String.valueOf(boatDTO.getBoatId()), builder);
                 else logger.error("boatDTO.getBoat_id() is null");
 
-                if(boatDTO.getBoat_name() != null)
-                setParameter("boatName" + count, boatDTO.getBoat_name(), builder);
+                if(boatDTO.getBoatName() != null)
+                setParameter("boatName" + count, boatDTO.getBoatName(), builder);
                 else logger.error("boatDTO.getBoat_name() is null");
 
-                if(boatDTO.getRegistration_num() != null)
-                setParameter("registrationNumber" + count, boatDTO.getRegistration_num(), builder);
+                if(boatDTO.getRegistrationNum() != null)
+                setParameter("registrationNumber" + count, boatDTO.getRegistrationNum(), builder);
                 else logger.error("boatDTO.getRegistration_num() is null");
 
                 if(boatDTO.getManufacturer() != null)
                 setParameter("manufacturer" + count, boatDTO.getManufacturer(), builder);
                 else logger.error("boatDTO.getManufacturer() is null");
 
-                if(boatDTO.getManufacture_year() != null)
-                setParameter("manufactureYear" + count, boatDTO.getManufacture_year(), builder);
+                if(boatDTO.getManufactureYear() != null)
+                setParameter("manufactureYear" + count, boatDTO.getManufactureYear(), builder);
                 else logger.error("boatDTO.getManufacture_year() is null");
 
                 if(boatDTO.getModel() != null)
@@ -238,8 +238,8 @@ public class FormRequestServiceImpl implements FormRequestService {
                 setParameter("draft" + count, boatDTO.getDraft(), builder);
                 else logger.error("boatDTO.getDraft() is null");
 
-                if(boatDTO.getSail_number() != null)
-                setParameter("sail" + count, boatDTO.getSail_number(), builder);
+                if(boatDTO.getSailNumber() != null)
+                setParameter("sail" + count, boatDTO.getSailNumber(), builder);
                 else logger.error("boatDTO.getSail_number() is null");
 
                 if(boatDTO.getHasTrailer() != null)

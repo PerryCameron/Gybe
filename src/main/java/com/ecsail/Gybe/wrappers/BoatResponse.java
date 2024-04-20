@@ -2,6 +2,7 @@ package com.ecsail.Gybe.wrappers;
 
 import com.ecsail.Gybe.dto.BoatDTO;
 import com.ecsail.Gybe.dto.BoatPhotosDTO;
+import com.ecsail.Gybe.dto.DbBoatSettingsDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class BoatResponse {
     private BoatDTO boatDTO;
     private List<MembershipListDTO> owners;
     private List<BoatPhotosDTO> photosDTOS;
+    private List<DbBoatSettingsDTO> boatSettingsDTOS;
 
     public BoatResponse() {
     }
@@ -36,5 +38,13 @@ public class BoatResponse {
 
     public void setPhotosDTOS(List<BoatPhotosDTO> photosDTOS) {
         this.photosDTOS = photosDTOS;
+    }
+
+    public List<DbBoatSettingsDTO> getBoatSettingsDTOS() {
+        return boatSettingsDTOS;
+    }
+
+    public void setBoatSettingsDTOS(List<DbBoatSettingsDTO> boatSettingsDTOS) {
+        this.boatSettingsDTOS = boatSettingsDTOS;
     }
 }

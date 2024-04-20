@@ -51,6 +51,7 @@ public class BoatServiceImpl implements BoatService {
         boatResponse.setBoatDTO(boatRepository.findBoatById(boatId));
         boatResponse.setOwners(membershipRepository.getOwnersOfBoat(Integer.valueOf(boatId)));
         boatResponse.setPhotosDTOS(boatRepository.getImagesByBoatId(boatId));
+        boatResponse.setBoatSettingsDTOS(boatRepository.getBoatSettings());
         return boatResponse;
     }
 }

@@ -2,14 +2,14 @@ package com.ecsail.Gybe.dto;
 
 public class BoatDTO {
 	
-	private Integer boat_id;
-	private Integer ms_id;
+	private Integer boatId;
+	private Integer msId;
 	private String manufacturer;
-	private String manufacture_year;
-	private String registration_num;
+	private String manufactureYear;
+	private String registrationNum;
 	private String model;
-	private String boat_name;
-	private String sail_number;
+	private String boatName;
+	private String sailNumber;
 	private Boolean hasTrailer;
 	private String length;
 	private String weight;
@@ -20,15 +20,15 @@ public class BoatDTO {
 	private String lwl;
 	private Boolean aux;
 
-	public BoatDTO(Integer boat_id, Integer ms_id, String manufacturer, String manufacture_year, String registration_num, String model, String boat_name, String sail_number, Boolean hasTrailer, String length, String weight, String keel, String phrf, String draft, String beam, String lwl, Boolean aux) {
-		this.boat_id = boat_id;
-		this.ms_id = ms_id;
+	public BoatDTO(Integer boatId, Integer msId, String manufacturer, String manufactureYear, String registrationNum, String model, String boatName, String sailNumber, Boolean hasTrailer, String length, String weight, String keel, String phrf, String draft, String beam, String lwl, Boolean aux) {
+		this.boatId = boatId;
+		this.msId = msId;
 		this.manufacturer = manufacturer;
-		this.manufacture_year = manufacture_year;
-		this.registration_num = registration_num;
+		this.manufactureYear = manufactureYear;
+		this.registrationNum = registrationNum;
 		this.model = model;
-		this.boat_name = boat_name;
-		this.sail_number = sail_number;
+		this.boatName = boatName;
+		this.sailNumber = sailNumber;
 		this.hasTrailer = hasTrailer;
 		this.length = length;
 		this.weight = weight;
@@ -43,20 +43,20 @@ public class BoatDTO {
 	public BoatDTO() {
 	}
 
-	public Integer getBoat_id() {
-		return boat_id;
+	public Integer getBoatId() {
+		return boatId;
 	}
 
-	public void setBoat_id(Integer boat_id) {
-		this.boat_id = boat_id;
+	public void setBoatId(Integer boatId) {
+		this.boatId = boatId;
 	}
 
-	public Integer getMs_id() {
-		return ms_id;
+	public Integer getMsId() {
+		return msId;
 	}
 
-	public void setMs_id(Integer ms_id) {
-		this.ms_id = ms_id;
+	public void setMsId(Integer msId) {
+		this.msId = msId;
 	}
 
 	public String getManufacturer() {
@@ -67,20 +67,20 @@ public class BoatDTO {
 		this.manufacturer = manufacturer;
 	}
 
-	public String getManufacture_year() {
-		return manufacture_year;
+	public String getManufactureYear() {
+		return manufactureYear;
 	}
 
-	public void setManufacture_year(String manufacture_year) {
-		this.manufacture_year = manufacture_year;
+	public void setManufactureYear(String manufactureYear) {
+		this.manufactureYear = manufactureYear;
 	}
 
-	public String getRegistration_num() {
-		return registration_num;
+	public String getRegistrationNum() {
+		return registrationNum;
 	}
 
-	public void setRegistration_num(String registration_num) {
-		this.registration_num = registration_num;
+	public void setRegistrationNum(String registrationNum) {
+		this.registrationNum = registrationNum;
 	}
 
 	public String getModel() {
@@ -91,20 +91,20 @@ public class BoatDTO {
 		this.model = model;
 	}
 
-	public String getBoat_name() {
-		return boat_name;
+	public String getBoatName() {
+		return boatName;
 	}
 
-	public void setBoat_name(String boat_name) {
-		this.boat_name = boat_name;
+	public void setBoatName(String boatName) {
+		this.boatName = boatName;
 	}
 
-	public String getSail_number() {
-		return sail_number;
+	public String getSailNumber() {
+		return sailNumber;
 	}
 
-	public void setSail_number(String sail_number) {
-		this.sail_number = sail_number;
+	public void setSailNumber(String sailNumber) {
+		this.sailNumber = sailNumber;
 	}
 
 	public Boolean getHasTrailer() {
@@ -182,14 +182,14 @@ public class BoatDTO {
 	@Override
 	public String toString() {
 		return "BoatDTO{" +
-				"boat_id=" + boat_id +
-				", ms_id=" + ms_id +
+				"boat_id=" + boatId +
+				", ms_id=" + msId +
 				", manufacturer='" + manufacturer + '\'' +
-				", manufacture_year='" + manufacture_year + '\'' +
-				", registration_num='" + registration_num + '\'' +
+				", manufacture_year='" + manufactureYear + '\'' +
+				", registration_num='" + registrationNum + '\'' +
 				", model='" + model + '\'' +
-				", boat_name='" + boat_name + '\'' +
-				", sail_number='" + sail_number + '\'' +
+				", boat_name='" + boatName + '\'' +
+				", sail_number='" + sailNumber + '\'' +
 				", hasTrailer=" + hasTrailer +
 				", length='" + length + '\'' +
 				", weight='" + weight + '\'' +
