@@ -230,8 +230,8 @@ public class FormRequestServiceImpl implements FormRequestService {
                 setParameter("model" + count, boatDTO.getModel(), builder);
                 else logger.error("boatDTO.getModel() is null");
 
-                if(boatDTO.getLength() != null)
-                setParameter("length" + count, boatDTO.getLength(), builder);
+                if(boatDTO.getLoa() != null)
+                setParameter("length" + count, boatDTO.getLoa(), builder);
                 else logger.error("boatDTO.getLength() is null");
 
                 if(boatDTO.getDraft() != null)

@@ -11,8 +11,8 @@ public class BoatDTO {
 	private String boatName;
 	private String sailNumber;
 	private Boolean hasTrailer;
-	private String length;
-	private String weight;
+	private String loa;
+	private String displacement;
 	private String keel;
 	private String phrf;
 	private String draft;
@@ -20,7 +20,7 @@ public class BoatDTO {
 	private String lwl;
 	private Boolean aux;
 
-	public BoatDTO(Integer boatId, Integer msId, String manufacturer, String manufactureYear, String registrationNum, String model, String boatName, String sailNumber, Boolean hasTrailer, String length, String weight, String keel, String phrf, String draft, String beam, String lwl, Boolean aux) {
+	public BoatDTO(Integer boatId, Integer msId, String manufacturer, String manufactureYear, String registrationNum, String model, String boatName, String sailNumber, Boolean hasTrailer, String loa, String displacement, String keel, String phrf, String draft, String beam, String lwl, Boolean aux) {
 		this.boatId = boatId;
 		this.msId = msId;
 		this.manufacturer = manufacturer;
@@ -30,8 +30,8 @@ public class BoatDTO {
 		this.boatName = boatName;
 		this.sailNumber = sailNumber;
 		this.hasTrailer = hasTrailer;
-		this.length = length;
-		this.weight = weight;
+		this.loa = loa;
+		this.displacement = displacement;
 		this.keel = keel;
 		this.phrf = phrf;
 		this.draft = draft;
@@ -115,20 +115,20 @@ public class BoatDTO {
 		this.hasTrailer = hasTrailer;
 	}
 
-	public String getLength() {
-		return length;
+	public String getLoa() {
+		return loa;
 	}
 
-	public void setLength(String length) {
-		this.length = length;
+	public void setLoa(String loa) {
+		this.loa = loa;
 	}
 
-	public String getWeight() {
-		return weight;
+	public String getDisplacement() {
+		return displacement;
 	}
 
-	public void setWeight(String weight) {
-		this.weight = weight;
+	public void setDisplacement(String displacement) {
+		this.displacement = displacement;
 	}
 
 	public String getKeel() {
@@ -191,8 +191,8 @@ public class BoatDTO {
 				", boat_name='" + boatName + '\'' +
 				", sail_number='" + sailNumber + '\'' +
 				", hasTrailer=" + hasTrailer +
-				", length='" + length + '\'' +
-				", weight='" + weight + '\'' +
+				", length='" + loa + '\'' +
+				", weight='" + displacement + '\'' +
 				", keel='" + keel + '\'' +
 				", phrf='" + phrf + '\'' +
 				", draft='" + draft + '\'' +

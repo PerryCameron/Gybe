@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Boat</title>
+    <link rel="stylesheet" th:href="@{/css/side-top-nav-main.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/boat.css}" type="text/css" />
+    <script th:src="@{js/side-nav-boat.js}" defer></script>
+    <script th:src="@{js/top-nav-main.js}" defer></script>
+    <script th:src="@{js/boat.js}" defer></script>
     <script th:inline="javascript">
-        /*<![CDATA[*/
         let boat = /*[[${boat}]]*/ {};
-        /*]]>*/
-        window.onload = function() {
-            let defaultPhoto = boat.photosDTOS.find(photo => photo.default === true);
-
-            if (defaultPhoto) {
-                let img = document.createElement("img");
-                img.src = "/boat_images/" + defaultPhoto.filename; // Assuming your images are served from /images/
-                img.alt = "Default Boat Photo";
-                document.body.appendChild(img);
-            } else {
-                console.log("No default photo found.");
-            }
-        };
     </script>
 </head>
 <body>
-
+<div class="sidenav"></div>
+<div class="topnav" id="top-nav"></div>
+<div class="main-content" id="main"></div>
 </body>
 </html>

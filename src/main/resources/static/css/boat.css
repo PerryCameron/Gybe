@@ -1,0 +1,33 @@
+:root {
+  --main-color: #00b28f; /* Define a color variable */
+  --main-color2: #007f6b;
+  --component-width: 50%; /* Define a padding size variable */
+}
+
+/* .container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+} */
+
+.row {
+  display: flex;
+  margin-bottom: 10px;
+}
+.label {
+  width: 90px; /* Adjust this width based on the longest label */
+  text-align: left;
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--main-color);
+}
+.data {
+  text-align: left;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.side-container {
+  padding-left: 15px;
+}
