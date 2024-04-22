@@ -180,8 +180,20 @@ input.mem-id-textfield {
 }
 
 .photo-container {
-  text-align: center;
-  width: 95%;
+  width: 100%; /* Adjust this as needed to fit the design */
+  height: 80vh; /* Example: 80% of the viewport height, adjust based on your needs */
+  overflow: hidden; /* Ensures nothing extends outside the container */
+  display: flex; /* Centers the image within */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  object-fit: contain; /* Ensures the image is scaled to be as large as possible while seeing the whole image */
+}
+
+.photo-container img {
+  max-width: 100%; /* Maximum width of the image is the full width of the container */
+  max-height: 100%; /* Maximum height is constrained to the container's height */
+  height: auto; /* Maintain the aspect ratio */
+  width: auto; /* Adjust width based on the height adjustment */
 }
 
 /* I can't round the corners of the table, why? */
