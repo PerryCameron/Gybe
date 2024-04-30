@@ -70,7 +70,7 @@ public class SlipRepositoryImpl implements SlipRepository {
                        ALT_TEXT AS alt_text
                 from slip s
                 left join membership m on m.MS_ID = s.MS_ID
-                left join membership_id id on id.MS_ID=m.MS_ID
+                left join membership_id id on id.MS_ID=m.MS_ID AND id.FISCAL_YEAR = YEAR(NOW())
                 left join person p on p.P_ID=m.P_ID
                 left join membership slm on slm.MS_ID=s.SUBLEASED_TO
                 left join person po on po.P_ID=slm.P_ID
