@@ -3,18 +3,18 @@ const ctx = canvas.getContext("2d");
 let slipPopup = [];
 
 dockPlacement = {
-  a: { x: 430, y: 40, dock: "B" },
-  b: { x: 720, y: 40, dock: "C" },
-  c: { x: 1010, y: 40, dock: "D" },
-  d: { x: 140, y: 40, dock: "A" },
+  a: { x: 140, y: 40, dock: "A" },
+  b: { x: 430, y: 40, dock: "B" },
+  c: { x: 720, y: 40, dock: "C" },
+  d: { x: 1010, y: 40, dock: "D" },
   f: { x: 140, y: 610, dock: "F" },
 };
 
-addDock(dockPlacement["f"], setDock("F"));
-addDock(dockPlacement["a"], setDock("A"));
-addDock(dockPlacement["b"], setDock("B"));
-addDock(dockPlacement["c"], setDock("C"));
-addDock(dockPlacement["d"], setDock("D"));
+for (const key in dockPlacement) {
+  if (dockPlacement.hasOwnProperty(key)) {
+    addDock(dockPlacement[key], setDock(dockPlacement[key].dock));
+  }
+}
 
 addLegend();
 
