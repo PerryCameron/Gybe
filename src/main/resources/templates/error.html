@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Error</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}" type="text/css" />
 </head>
 <body>
+<!--I want the background to be black-->
+<!--I want this imaged centered on the page-->
+<img th:src="@{/images/ecsc_logo_white_big.png}" alt="logo">
+<!--I want all the below to be white and centered below the image-->
 <h1>An error occurred</h1>
 <p>Status: <span th:text="${status}"></span></p>
 <p>Error: <span th:text="${error}"></span></p>

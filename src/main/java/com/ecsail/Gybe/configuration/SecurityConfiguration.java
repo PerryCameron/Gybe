@@ -58,7 +58,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/actuator/**", "/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
                     auth.requestMatchers("/rb_roster/**", "/Rosters/**").hasAnyRole("ADMIN", "MEMBERSHIP");
-                    auth.requestMatchers("/**", "/chart/**").hasRole("USER");
+
                     auth.requestMatchers(
                             "/css/**", "/images/**", "/js/**", "/renew/**", "/register/**",
                             "/error/**", "/email-error/**", "/bod/**", "/bod-stripped/**",
@@ -67,7 +67,7 @@ public class SecurityConfiguration {
                             "/access-denied/**"
                     ).permitAll();
 
-
+                    auth.requestMatchers("/**", "/chart/**").hasRole("USER");
                 // auth.requestMatchers("/secured-endpoint/**").access(loggingAuthorizationManager);
                     auth.anyRequest().authenticated(); // ensures that any request not matched by prior rules must be authenticated, regardless of the user’s role
                 })
