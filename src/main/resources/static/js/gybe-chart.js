@@ -1,3 +1,7 @@
+const currentYear = new Date().getFullYear();
+
+const { regular, years, family, lakeAssociate, lifeMember, social } = extractRegular(stats);
+
 function extractRegular(stats) {
   // Sort the stats array by fiscalYear
   stats.sort((a, b) => a.fiscalYear - b.fiscalYear);
@@ -24,7 +28,24 @@ let agesArray = [
   ages.notReported,
 ];
 
-const { regular, years, family, lakeAssociate, lifeMember, social } = extractRegular(stats);
+function getCurrentStats() {
+  // Get the current year
+  const currentYear = new Date().getFullYear();
+  // Find the stats for the current year
+  const currentYearStats = stats.find((stat) => stat.fiscalYear === currentYear);
+  if (currentYearStats) {
+    // Extract the relevant properties
+    const relevantStats = [
+      currentYearStats.family,
+      currentYearStats.regular,
+      currentYearStats.social,
+      currentYearStats.lakeAssociates,
+      currentYearStats.lifeMembers,
+    ];
+    return relevantStats;
+  }
+  return []; // Return an empty array if no stats are found for the current year
+}
 
 const ctx = document.getElementById("membership-chart");
 
@@ -37,7 +58,7 @@ const stackedBar = new Chart(ctx, {
         label: "Family",
         data: family,
         borderWidth: 1,
-        backgroundColor: "#2A2B2E",
+        backgroundColor: "#2A2B2E", //black
       },
       {
         label: "Regular",
@@ -93,6 +114,7 @@ const stackedBar = new Chart(ctx, {
 });
 
 const age = document.getElementById("age-chart");
+const membershipType = document.getElementById("membership-type-chart");
 
 const doughnutChart = new Chart(age, {
   type: "pie",
@@ -100,17 +122,17 @@ const doughnutChart = new Chart(age, {
     labels: ["0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "Not Reported"],
     datasets: [
       {
-        label: " ",
+        label: "People",
         data: agesArray,
         backgroundColor: [
           "#4B9CD3",
           "#C62828",
-          "#FFCD56",
+          "rgb(255, 205, 86)",
           "#7A306C",
-          "#9966FF",
-          "#FF9F40",
+          "rgb(153, 102, 255)",
+          "rgb(255, 159, 64)",
           "#2A2B2E",
-          "#EC1A1A",
+          "rgb(255, 99, 132)",
           "#FFE45E",
           "#2E7D32",
         ],
@@ -124,7 +146,43 @@ const doughnutChart = new Chart(age, {
     plugins: {
       title: {
         display: true,
-        text: "Age Distribution 2024", // Add your description here
+        text: `Age Distribution ${currentYear}`, // Add your description here
+        font: {
+          size: 18, // You can adjust the font size and other properties
+        },
+        padding: {
+          top: 10,
+          bottom: 30, // Adjust padding as needed
+        },
+      },
+      legend: {
+        display: true,
+        position: "top",
+      },
+    },
+  },
+});
+
+const membershipTypeChart = new Chart(membershipType, {
+  type: "pie",
+  data: {
+    labels: ["Family", "Regular", "Social", "Lake Associate", "Life Membership"],
+    datasets: [
+      {
+        label: "Memberships",
+        data: getCurrentStats(),
+        backgroundColor: ["#2A2B2E", "#4B9CD3", "#F9A825", "#C62828", "#2E7D32"],
+        hoverOffset: 4,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: `Membership Types ${currentYear}`, // Add your description here
         font: {
           size: 18, // You can adjust the font size and other properties
         },

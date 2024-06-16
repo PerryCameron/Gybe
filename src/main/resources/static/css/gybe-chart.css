@@ -1,15 +1,33 @@
-.charts {
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 50%;
-}
 .main-content {
-  height: 100%; /* Make sure the parent container has a defined height */
+  height: 100%; /* Ensure the parent container has a defined height */
 }
 
 .charts {
-  display: block;
+  display: flex;
   padding-left: 20px;
   padding-right: 20px;
-  height: 45%; /* Each chart container takes up 50% of the height */
+}
+
+.charts.top-chart {
+  justify-content: center; /* Center the top chart */
+  height: 45%; /* Top chart container takes up 45% of the height */
+}
+
+.charts.bottom-charts {
+  justify-content: space-between; /* Distribute space evenly between bottom charts */
+  height: 45%; /* Bottom chart container takes up 45% of the height */
+}
+
+.charts canvas {
+  height: auto; /* Ensure the canvas takes the appropriate height */
+}
+
+.charts.top-chart canvas {
+  width: 100%; /* Top chart takes the full width */
+}
+
+.charts.bottom-charts canvas {
+  flex: 1; /* Allow each canvas to grow and shrink equally */
+  max-width: 48%; /* Set maximum width for each canvas to ensure even spacing */
+  margin: 0 1%; /* Add margin to ensure there is space between the charts */
 }
