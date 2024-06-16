@@ -1,7 +1,5 @@
 package com.ecsail.Gybe.service.implementations;
 
-import com.ecsail.Gybe.dto.RoleDTO;
-import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
 import com.ecsail.Gybe.service.interfaces.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 //        authenticationRepository.saveUserRole(userDTO, userRole);
 //        return userDTO;
 //    }
+    @Override
+    public int recordLoginEvent(String username, boolean status) {
+        return authenticationRepository.recordLoginEvent(username, status);
+    }
 
     @Override
     public String updatePassword(String password) {

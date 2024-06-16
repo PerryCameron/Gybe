@@ -1,3 +1,13 @@
+# added to test server 6/16/2023
+CREATE TABLE logins (
+                        id           INT AUTO_INCREMENT PRIMARY KEY,
+                        username     VARCHAR(50) NOT NULL,
+                        p_id         INT NOT NULL,
+                        req_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                        login_status BOOLEAN NOT NULL
+);
+
+
 # added 12/15/2023  is on test server, not sure about production UPDATE: table existed on production
 # but I needed to add the column group
 CREATE TABLE ECSC_SQL.app_settings

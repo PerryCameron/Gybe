@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -161,5 +160,18 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     public int updatePassword(String encryptedPassword, int pid) {
         String sql = "UPDATE users SET password = ? WHERE p_id = ?";
         return template.update(sql, encryptedPassword, pid);
+    }
+    @Override
+    public int recordLoginEvent(String username, boolean status) {
+        String fetchUserIdQuery = "SELECT p_id FROM users WHERE username = ?";
+        Integer pId = template.queryForObject(fetchUserIdQuery, new Object[]{username}, Integer.class);
+
+        if (pId != null) {
+            String insertLoginQuery = "INSERT INTO logins (username, p_id, login_status) VALUES (?, ?, ?)";
+            return template.update(insertLoginQuery, username, pId, status);
+        } else {
+            logger.error("User not found with username: " + username);
+            throw new IllegalArgumentException("User not found with username: " + username);
+        }
     }
 }

@@ -18,8 +18,8 @@ import java.util.List;
 
 @Repository
 public class PersonRepositoryImpl implements PersonRepository {
-    private JdbcTemplate template;
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate template;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public PersonRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -29,7 +29,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public List<PersonDTO> getActivePeopleByMsId(int msId) {
         String query = "SELECT * FROM person WHERE IS_ACTIVE=true AND ms_id=?";
-        return template.query(query, new PersonRowMapper(), new Object[]{msId});
+        return template.query(query, new PersonRowMapper(), msId);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PersonRepositoryImpl implements PersonRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query =
                 """
-                    INSERT INTO person (MS_ID, member_type, F_NAME, L_NAME, OCCUPATION, BUSINESS, 
+                    INSERT INTO person (MS_ID, member_type, F_NAME, L_NAME, OCCUPATION, BUSINESS,
                     birthday, IS_ACTIVE, NICK_NAME, OLD_MSID) VALUES (:msId, :memberType, :firstName,
                     :lastName, :occupation, :business, :birthday, :active, :nickName, :oldMsid)
                 """;
@@ -75,8 +75,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     public List<PersonDTO> getChildrenByMsId(int msId) {
         String QUERY = "select * from person p left join membership m on m.MS_ID = p.MS_ID where p.MEMBER_TYPE=3" +
                 " and p.IS_ACTIVE=true and m.MS_ID=?";
-        List<PersonDTO> personDTOS = template.query(QUERY, new PersonRowMapper(), msId);
-        return personDTOS;
+        return template.query(QUERY, new PersonRowMapper(), msId);
     }
 
     @Override

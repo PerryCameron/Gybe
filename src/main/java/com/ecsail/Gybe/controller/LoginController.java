@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.controller;
 
+import com.ecsail.Gybe.configuration.AuthenticationSuccessListener;
 import com.ecsail.Gybe.dto.PasswordUpdateRequestDTO;
 import com.ecsail.Gybe.dto.UserDTO;
 import com.ecsail.Gybe.service.interfaces.AdminService;
@@ -8,6 +9,8 @@ import com.ecsail.Gybe.service.interfaces.SendMailService;
 import com.ecsail.Gybe.wrappers.MailWrapper;
 import com.ecsail.Gybe.wrappers.MessageResponse;
 import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     private final AdminService adminService;
     private final SendMailService sendMailService;
+    private final AuthenticationService authenticationService;
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
 
     @Value("${spring.mail.username}")
     private String fromEmail;
@@ -31,6 +37,7 @@ public class LoginController {
                            AuthenticationService authenticationService) {
         this.adminService = adminService;
         this.sendMailService = sendMailService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/login")
@@ -41,8 +48,12 @@ public class LoginController {
     @GetMapping("/logout")
     public String showLogoutPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDTO user = (UserDTO) auth.getPrincipal();
-        model.addAttribute("username", user.getUsername());
+        if (auth != null && auth.isAuthenticated()) {
+            UserDTO user = (UserDTO) auth.getPrincipal();
+            if(authenticationService.recordLoginEvent(user.getUsername(), false) == 1)
+            logger.info(user.getUsername() + " successfully logged out ");
+            model.addAttribute("username", user.getUsername());
+        }
         return "logout";
     }
 

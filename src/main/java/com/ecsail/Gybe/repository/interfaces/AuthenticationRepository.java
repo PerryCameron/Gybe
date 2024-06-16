@@ -21,4 +21,6 @@ public interface AuthenticationRepository {
     Optional<UserDTO> findUserWithAuthoritiesByUsername(String username);
 
     int updatePassword(String encryptedPassword, int pid);
+
+    int recordLoginEvent(String username, boolean status);
 }
