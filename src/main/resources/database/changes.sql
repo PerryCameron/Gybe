@@ -1,4 +1,4 @@
-# added to test server 6/16/2023
+# added to production server 6/16/2023
 CREATE TABLE logins (
                         id           INT AUTO_INCREMENT PRIMARY KEY,
                         username     VARCHAR(50) NOT NULL,

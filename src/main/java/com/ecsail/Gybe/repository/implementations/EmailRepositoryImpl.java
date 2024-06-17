@@ -6,6 +6,7 @@ import com.ecsail.Gybe.dto.Email_InformationDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.rowmappers.AuthRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.EmailInformationRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.EmailRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.Year;
 import java.util.List;
 
 @Repository
@@ -37,7 +39,14 @@ public class EmailRepositoryImpl implements EmailRepository {
 
     @Override
     public List<Email_InformationDTO> getEmailInfo() {
-        return null;
+        String sql = "SELECT id.membership_id, m.join_date, p.l_name, p.f_name, email, primary_use " +
+                "FROM email e " +
+                "INNER JOIN person p ON p.p_id = e.p_id " +
+                "INNER JOIN membership m ON m.ms_id = p.ms_id " +
+                "INNER JOIN membership_id id ON id.ms_id = m.ms_id " +
+                "WHERE id.fiscal_year = YEAR(NOW()) AND id.renew = true " +
+                "ORDER BY id.membership_id";
+        return template.query(sql, new EmailInformationRowMapper());
     }
 
     @Override

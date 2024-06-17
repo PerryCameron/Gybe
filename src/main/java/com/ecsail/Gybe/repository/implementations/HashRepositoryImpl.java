@@ -201,8 +201,4 @@ public class HashRepositoryImpl implements HashRepository {
         String sql = "UPDATE user_auth_request SET completed = CURRENT_TIMESTAMP WHERE pid = ? AND updated_at = (SELECT MAX(updated_at) FROM user_auth_request WHERE pid = ?)";
         return template.update(sql, pid, pid);
     }
-
-
-
-
 }
