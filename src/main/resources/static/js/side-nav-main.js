@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     {href: "Rosters", text: "Rosters", id: "option1", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
     {href: "bod", text: "Board of Directors", id: "option2", target: "_blank", roles: ["ROLE_USER"]},
     {href: "form-request-summary", text: "Form Requests", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
-    {href: "slip_chart", text: "Slips", target: "_blank", roles: ["ROLE_USER"]},
+    {href: "javascript:slipChart()", text: "Slips", target: "", roles: ["ROLE_USER"]},
     {href: "boat_list", text: "Boats", target: "_blank", roles: ["ROLE_MEMBERSHIP","ROLE_HARBORMASTER"]},
     {href: "publicity", text: "Publicity", target: "_blank", roles: ["ROLE_PUBLICITY"]},
   ];
@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const hasRole = link.roles.some(role => userRoles.includes(role));
     if (hasRole) {
       const a = document.createElement("a");
+      // if href starts with function- method is after, so link to the function
       a.href = link.href;
       a.textContent = link.text;
       if (link.id) a.id = link.id;
@@ -37,3 +38,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+function slipChart() {
+  const mainDiv = document.getElementById("main-content");
+  mainDiv.innerHTML = '<canvas id="slipChart" width="1200" height="1000"></canvas>';
+
+  fetch('/api/slip_chart')
+      .then(response => response.json())
+      .then(data => {
+        // Dynamically load slips.js and then call buildDock
+        const script = document.createElement('script');
+        script.src = '/js/slip-rest.js';
+        script.onload = function() {
+          buildDock(data);
+        };
+        document.body.appendChild(script);
+      })
+      .catch(error => {
+        console.error('Error fetching slip chart data:', error);
+      });
+}
