@@ -1,7 +1,9 @@
 package com.ecsail.Gybe.controller;
 
+import com.ecsail.Gybe.dto.AgesDTO;
 import com.ecsail.Gybe.dto.SlipInfoDTO;
 import com.ecsail.Gybe.dto.SlipStructureDTO;
+import com.ecsail.Gybe.dto.StatsDTO;
 import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
@@ -81,6 +83,18 @@ public class MembershipRestController {
         Map<String, Object> response = new HashMap<>();
         response.put("slipOwners", slipInfoDTOS);
         response.put("slipStructure", slipStructureDTOS);
+        return response;
+    }
+
+    @GetMapping("/api/gybe_chart_data")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Map<String, Object> getGybeChartData() {
+        // Replace with actual service calls to fetch data
+        List<StatsDTO> statsDTOS = generalService.getStats();
+        AgesDTO agesDTO = generalService.getAges();
+        Map<String, Object> response = new HashMap<>();
+        response.put("stats", statsDTOS);
+        response.put("ages", agesDTO);
         return response;
     }
 

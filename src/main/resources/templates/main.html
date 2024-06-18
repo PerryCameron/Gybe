@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <title>ECSC Main</title>
     <script th:inline="javascript">
-        let stats = /*[[${stats}]]*/ {};
-        let ages = [[${ages}]];
+        // let stats = /*[[${stats}]]*/ {};
+        // let ages = [[${ages}]];
         let userRoles = /*[[${roles}]]*/ [];
     </script>
     <link rel="stylesheet" th:href="@{/css/gybe-chart.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/roster.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
     <script th:src="@{/js/side-nav-main.js}"></script>
-    <script th:src="@{/js/gybe-chart.js}" defer></script>
     <script th:src="@{/js/chart.js}"></script>
 <!--    <script th:src="@{https://cdn.jsdelivr.net/npm/chart.js}"></script>-->
 </head>
@@ -43,14 +42,6 @@
     </div>
 </div>
 
-<div class="main-content" id="main-content">
-    <div class="charts top-chart">
-        <canvas id="membership-chart"></canvas>
-    </div>
-    <div class="charts bottom-charts">
-        <canvas id="age-chart"></canvas>
-        <canvas id="membership-type-chart"></canvas>
-    </div>
-</div>
+<div class="main-content" id="main-content"></div>
 </body>
 </html>
