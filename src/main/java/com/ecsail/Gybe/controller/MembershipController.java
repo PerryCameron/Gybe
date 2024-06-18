@@ -12,16 +12,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.security.Principal;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -31,6 +34,8 @@ public class MembershipController {
     private final GeneralService generalService;
     private final FeeService feeService;
     private final BoatService boatService;
+    private final XLSService xlsService;
+    private final FileController finalContrller;
     SendMailService service;
     RosterService rosterService;
     MembershipService membershipService;
@@ -50,7 +55,9 @@ public class MembershipController {
             EmailService emailService,
             GeneralService generalService,
             FeeService feeService,
-            BoatService boatService) {
+            BoatService boatService,
+            XLSService xlsService,
+            FileController fileController) {
         this.service = service;
         this.rosterService = rosterService;
         this.adminService = adminService;
@@ -59,6 +66,8 @@ public class MembershipController {
         this.generalService = generalService;
         this.feeService = feeService;
         this.boatService = boatService;
+        this.xlsService = xlsService;
+        this.finalContrller = fileController;
     }
 
     @GetMapping("/membership")
@@ -106,40 +115,20 @@ public class MembershipController {
         return "slip-wait-list";
     }
 
-//    @GetMapping("/")
-//    public String testSession(HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        String sessionId = session.getId();
-//        System.out.println("Session ID: " + sessionId);
-//        System.out.println("-----------------chart page------------------------->");
-//        System.out.println("Session ID (setUserPass()): " + sessionId);
-//        System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
-//        Enumeration<String> attributeNames = session.getAttributeNames();
-//        while (attributeNames.hasMoreElements()) {
-//            String attributeName = attributeNames.nextElement();
-//            System.out.println("Session attribute: " + attributeName + " = " + session.getAttribute(attributeName));
-//        }
-//        return "redirect:/";
-//    }
-
     @GetMapping("/")
-    public String getStats(Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        String sessionId = session.getId();
-        System.out.println("Session ID: " + sessionId);
-        System.out.println("-----------------chart page------------------------->");
-        System.out.println("Session ID (setUserPass()): " + sessionId);
-        System.out.println("Session attributes after setting authentication: " + session.getAttributeNames());
-        Enumeration<String> attributeNames = session.getAttributeNames();
-        while (attributeNames.hasMoreElements()) {
-            String attributeName = attributeNames.nextElement();
-            System.out.println("Session attribute: " + attributeName + " = " + session.getAttribute(attributeName));
+    public String getStats(Model model, HttpServletRequest request, Principal principal) {
+        if (principal != null) {
+            Authentication authentication = (Authentication) principal;
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            model.addAttribute("roles", authorities.stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList()));
         }
         List<StatsDTO> statsDTOS = generalService.getStats();
         AgesDTO agesDTO = generalService.getAges();
         model.addAttribute("stats", statsDTOS);
         model.addAttribute("ages", agesDTO);
-        return "charts";
+        return "main";
     }
 
     @GetMapping("/ecsc-pricing")
@@ -182,5 +171,12 @@ public class MembershipController {
         BoatResponse boatResponse = boatService.getBoatResponse(boatId);
         model.addAttribute("boat", boatResponse);
         return "boat";
+    }
+
+    @GetMapping("/directory")
+    public String getDirectory(Model model) {
+        xlsService.createEmailList();
+        finalContrller.downloadFile("Email_List.xlsx");
+        return "download/Email_List.xlsx";
     }
 }
