@@ -5,6 +5,10 @@ function buildDock(data) {
     const slipOwners = data.slipOwners;
     const slipStructure = data.slipStructure;
 
+    const tooltip = document.createElement("div");
+    tooltip.id = "tooltip"; // changed
+    document.body.appendChild(tooltip); // changed
+
     const dockPlacement = {
         a: { x: 140, y: 40, dock: "A" },
         b: { x: 430, y: 40, dock: "B" },
@@ -254,4 +258,13 @@ function buildDock(data) {
 
         return popText;
     }
+
+    tooltip.style.position = "absolute";
+    tooltip.style.display = "none";
+    tooltip.style.background = "rgba(0, 0, 0, 0.8)"; // Black background with 70% opacity
+    tooltip.style.color = "white"; // White text color
+    tooltip.style.padding = "8px"; // Padding around the text
+    tooltip.style.borderRadius = "8px"; // Rounded corners
+    tooltip.style.fontSize = "16px"; // Font size
+    tooltip.style.pointerEvents = "none"; // Prevents the tooltip from interfering with mouse events
 }
