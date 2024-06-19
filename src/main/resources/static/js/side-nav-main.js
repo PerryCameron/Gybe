@@ -48,9 +48,6 @@ function slipChart() {
         unloadScript(lastLoadedScript); // changed
     }
 
-    const mainDiv = document.getElementById("main-content");
-    mainDiv.innerHTML = '<canvas id="slipChart" width="1200" height="1000"></canvas>';
-
     fetch('/api/slip_chart')
         .then(response => response.json())
         .then(data => {

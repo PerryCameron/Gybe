@@ -1,4 +1,6 @@
 function buildDock(data) {
+    const mainDiv = document.getElementById("main-content");
+    mainDiv.innerHTML = '<canvas id="slipChart" width="1200" height="1000"></canvas>';
     const controlDiv = document.getElementById('controls');
     controlDiv.innerHTML = "";
     const canvas = document.getElementById("slipChart");
@@ -9,7 +11,7 @@ function buildDock(data) {
 
     const tooltip = document.createElement("div");
     tooltip.id = "tooltip"; // changed
-    document.body.appendChild(tooltip); // changed
+    mainDiv.appendChild(tooltip); // changed
 
     const dockPlacement = {
         a: { x: 140, y: 40, dock: "A" },

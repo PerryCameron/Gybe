@@ -145,15 +145,6 @@ public class MembershipController {
         return "slips";
     }
 
-    @GetMapping("/slip_chart")
-    public String getSlipChart(Model model) {
-        List<SlipInfoDTO> slipInfoDTOS = generalService.getSlipInfo();
-        List<SlipStructureDTO> slipStructureDTOS = generalService.getSlipStructure();
-        model.addAttribute("slipOwners", slipInfoDTOS);
-        model.addAttribute("slipStructure", slipStructureDTOS);
-        return "slip_back_end";
-    }
-
     @GetMapping("/boat_list")
     public String getBoatLit(Model model,
                              @RequestParam(defaultValue = "active_sailboats") String listType,
