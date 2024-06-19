@@ -18,50 +18,7 @@ html {
   font-family: "Poppins", sans-serif;
 }
 
-.sidenav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 250px; /* width of the sidebar */
-  background-color: #333;
-  overflow-x: hidden;
-  padding-top: 20px;
-  z-index: 2;
-}
 
-.sidenav a {
-  padding: 6px 8px 6px 25px;
-  text-decoration: none;
-  font-size: 25px;
-  width: 250px;
-  display: flex;
-  text-decoration: none;
-  color: #cacaca;
-  cursor: pointer;
-}
-
-.sidenav a.active {
-  color: #f1f1f1;
-}
-
-.sidenav a:hover {
-  background-image: linear-gradient(
-    to right,
-    #2a88e6 7px,
-    rgba(255, 255, 255, 0.1) 7px
-  );
-  color: #ffffff;
-}
-
-.sidenav a.selected {
-  background-image: linear-gradient(
-          to right,
-          #2a88e6 7px,
-          rgba(255, 255, 255, 0.1) 7px
-  );
-  color: #ffffff;
-}
 
 .main-content {
   margin-left: 250px; /* should be the same as the width of the sidebar */
@@ -78,11 +35,7 @@ html {
   .topnav-child-div {
     display: inline;
   }
-  /* Adjust this value as needed */
-  .sidenav {
-    width: 0;
-    display: none; /* Or adjust for a small icon menu */
-  }
+
   .main-content {
     margin-left: 0;
   }
@@ -92,12 +45,7 @@ html {
   }
 }
 
-#logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 50px;
-}
+
 
 input[type="text"],
 input[type="password"] {

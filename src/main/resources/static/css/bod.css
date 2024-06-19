@@ -53,6 +53,10 @@
 }
 
 .table-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the contents horizontally */
+  width: 100%; /* Make the container take up the full width */
   margin-bottom: 30px; /* Adjust the value to increase or decrease the space */
 }
 

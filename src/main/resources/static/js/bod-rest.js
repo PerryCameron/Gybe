@@ -63,7 +63,8 @@ function buildBOD(data) {
     mainDiv.append(chairDiv);
     chairDiv.append(createChairTable());
     if (assistants.length !== 0) chairDiv.append(createAssistantChairTable());
-    mainDiv.append(createBoardTable());
+    boardDiv.appendChild(createBoardTable());
+    mainDiv.append(boardDiv);
     document.querySelectorAll("th").forEach(function (header) {
       header.style.color = data.theme.yearColor;
     });
