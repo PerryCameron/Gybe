@@ -1,9 +1,6 @@
 package com.ecsail.Gybe.controller;
 
-import com.ecsail.Gybe.dto.AgesDTO;
-import com.ecsail.Gybe.dto.SlipInfoDTO;
-import com.ecsail.Gybe.dto.SlipStructureDTO;
-import com.ecsail.Gybe.dto.StatsDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
@@ -11,6 +8,7 @@ import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -95,6 +93,18 @@ public class MembershipRestController {
         Map<String, Object> response = new HashMap<>();
         response.put("stats", statsDTOS);
         response.put("ages", agesDTO);
+        return response;
+    }
+
+    @GetMapping("/api/bod")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Map<String, Object> getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+        List<LeadershipDTO> leadershipDTOS = membershipService.getLeadershipByYear(year);
+        ThemeDTO themeDTO = membershipService.getThemeByYear(year);
+        Map<String, Object> response = new HashMap<>();
+        response.put("boardOfDirectors", leadershipDTOS);
+        response.put("theme", themeDTO);
+        response.put("year", year);
         return response;
     }
 

@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <title>ECSC Main</title>
     <script th:inline="javascript">
-        // let stats = /*[[${stats}]]*/ {};
-        // let ages = [[${ages}]];
         let userRoles = /*[[${roles}]]*/ [];
     </script>
     <link rel="stylesheet" th:href="@{/css/gybe-chart.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/roster.css}" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/bod.css}" type="text/css" />
     <link rel="stylesheet" th:href="@{/css/normalize.css}" type="text/css" />
     <script th:src="@{/js/side-nav-main.js}"></script>
     <script th:src="@{/js/chart.js}"></script>
 <!--    <script th:src="@{https://cdn.jsdelivr.net/npm/chart.js}"></script>-->
 </head>
 <body>
-<div class="sidenav"></div>
+<div class="sidenav">
+    <div id="logo"></div>
+    <div id="links"></div>
+    <div id="controls"></div>
+</div>
 <!-- Top navigation bar -->
 <div class="topnav" id="top-nav">
     <div class="topnav-child-div" id="topnav-yearselect-div">

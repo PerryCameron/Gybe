@@ -1,4 +1,6 @@
 function buildDock(data) {
+    const controlDiv = document.getElementById('controls');
+    controlDiv.innerHTML = "";
     const canvas = document.getElementById("slipChart");
     const ctx = canvas.getContext("2d");
     const slipPopup = [];

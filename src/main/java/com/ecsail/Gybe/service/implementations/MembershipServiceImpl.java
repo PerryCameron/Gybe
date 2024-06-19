@@ -76,7 +76,7 @@ public class MembershipServiceImpl implements MembershipService {
         return officerRepository.getLeadershipByYear(year);
     }
     @Override
-    public ThemeDTO getTheme(Integer year) {
+    public ThemeDTO getThemeByYear(Integer year) {
         return settingsRepository.findThemeByYear(year);
     }
     @Override
@@ -87,6 +87,13 @@ public class MembershipServiceImpl implements MembershipService {
         bodResponse.setTheme(settingsRepository.findThemeByYear(year));
         return bodResponse;
     }
+
+    @Override
+    public List<LeadershipDTO> getLeadershipByYear(int year) {
+        return officerRepository.getLeadershipByYear(year);
+    }
+
+
 
 
 

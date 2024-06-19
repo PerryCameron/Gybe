@@ -13,7 +13,10 @@ public interface MembershipService {
     List<BoardPositionDTO> getBoardPositions();
     List<LeadershipDTO> getLeaderShip(int number);
 
-    ThemeDTO getTheme(Integer year);
+    ThemeDTO getThemeByYear(Integer year);
 
     BoardOfDirectorsResponse getBodResponse(int year);
+
+    List<LeadershipDTO> getLeadershipByYear(int year);
+
 }

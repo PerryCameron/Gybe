@@ -7,7 +7,6 @@ import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.BoatResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -93,7 +91,7 @@ public class MembershipController {
     @GetMapping("/bod-stripped")
     public String getBodStrippedVersion(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
         List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
-        ThemeDTO themeDTO = membershipService.getTheme(year);
+        ThemeDTO themeDTO = membershipService.getThemeByYear(year);
         model.addAttribute("year", year);
         model.addAttribute("bod", leadershipDTOS);
         model.addAttribute("theme", themeDTO);
@@ -102,7 +100,6 @@ public class MembershipController {
 
     @GetMapping("/bod")
     public String getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
-        List<LeadershipDTO> leadershipDTOS = membershipService.getLeaderShip(year);
         BoardOfDirectorsResponse bodResponse = membershipService.getBodResponse(year);
         model.addAttribute("bodResponse", bodResponse);
         return "bod";
