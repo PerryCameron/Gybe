@@ -58,6 +58,7 @@ public class AdminServiceImpl implements AdminService {
         return hashRepository.getFormHashRequests(year);
     }
 
+    @Override
     public List<FormRequestSummaryDTO> getFormSummaries(Integer year) {
         return hashRepository.getFormRequestSummariesForYear(year);
     }

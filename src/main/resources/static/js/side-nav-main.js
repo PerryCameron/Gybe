@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         {href: "javascript:charts()", text: "Charts", target: "", roles: ["ROLE_USER"]},
         {href: "Rosters", text: "Rosters", id: "option1", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
         {href: "javascript:bod()", text: "Board of Directors", id: "option2", target: "", roles: ["ROLE_USER"]},
-        {href: "form-request-summary", text: "Form Requests", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
+        {href: "javascript:loadFormRequests()", text: "Form Requests", target: "", roles: ["ROLE_MEMBERSHIP"]},
         {href: "javascript:slipChart()", text: "Slips", target: "", roles: ["ROLE_USER"]},
         {href: "boat_list", text: "Boats", target: "_blank", roles: ["ROLE_MEMBERSHIP", "ROLE_HARBORMASTER"]},
         {href: "javascript:loadPublicityScript()", text: "Publicity", target: "", roles: ["ROLE_PUBLICITY"]},
@@ -41,7 +41,32 @@ document.addEventListener("DOMContentLoaded", function () {
     charts();
 });
 
-// this is used through a button
+function loadFormRequests() {
+    if (lastLoadedScript) { // changed
+        console.log('Unloading script:', lastLoadedScript); // changed
+        unloadScript(lastLoadedScript); // changed
+    }
+
+    fetch('/api/form-request-summary')
+        .then(response => response.json())
+        .then(data => {
+            // Dynamically load slips.js and then call buildDock
+            const script = document.createElement('script');
+            script.src = '/js/form-request-summary-rest.js';
+            script.id = 'dynamicScript'; // changed
+            script.onload = function () {
+                console.log(`Script with URL ${script.src} has been loaded.`);
+                lastLoadedScript = script.id; // changed
+                createFormRequest(data);
+            };
+            document.body.appendChild(script);
+        })
+        .catch(error => {
+            console.error('Error fetching slip chart data:', error);
+        });
+}
+
+
 function slipChart() {
     if (lastLoadedScript) { // changed
         console.log('Unloading script:', lastLoadedScript); // changed

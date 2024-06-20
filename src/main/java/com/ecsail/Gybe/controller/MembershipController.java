@@ -161,10 +161,4 @@ public class MembershipController {
         return "boat";
     }
 
-    @GetMapping("/directory")
-    public String getDirectory(Model model) {
-        xlsService.createEmailList();
-        finalContrller.downloadFile("Email_List.xlsx");
-        return "download/Email_List.xlsx";
-    }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.time.Year;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +119,7 @@ public class MembershipRestController {
     }
 
     @GetMapping("/api/publicity")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_PUBLICITY')")
     public ResponseEntity<InputStreamResource> getPublicity(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
         xlsService.createEmailList(); // this creates an xlsx file
         String filePath = System.getProperty("user.home") + "/Email_List.xlsx";
@@ -136,6 +137,17 @@ public class MembershipRestController {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
         }
+    }
+
+    @GetMapping("/api/form-request-summary")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, Object> getFormRequest(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+        if (year == null) year = Year.now().getValue(); // Get the current year if 'year' is not provided
+        List<FormRequestSummaryDTO> formRequestSummaryDTOS = adminService.getFormSummaries(year);
+        Map<String, Object> response = new HashMap<>();
+        response.put("formSummaryData", formRequestSummaryDTOS);
+        response.put("year", year);
+        return response;
     }
 
 }
