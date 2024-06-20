@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         {href: "form-request-summary", text: "Form Requests", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
         {href: "javascript:slipChart()", text: "Slips", target: "", roles: ["ROLE_USER"]},
         {href: "boat_list", text: "Boats", target: "_blank", roles: ["ROLE_MEMBERSHIP", "ROLE_HARBORMASTER"]},
-        {href: "publicity", text: "Publicity", target: "_blank", roles: ["ROLE_PUBLICITY"]},
+        {href: "javascript:loadPublicityScript()", text: "Publicity", target: "", roles: ["ROLE_PUBLICITY"]},
     ];
 
     links.forEach(function (link) {
@@ -111,6 +111,28 @@ function bod() {
         .catch(error => {
             console.error('Error fetching gybe chart data:', error);
         });
+}
+
+function loadPublicityScript() {
+    console.log("loading publicity script");
+    if (lastLoadedScript) {
+        console.log('Unloading script:', lastLoadedScript);
+        unloadScript(lastLoadedScript);
+    }
+
+    // Dynamically load publicity.js and then call a function if needed
+    const script = document.createElement('script');
+    script.src = '/js/publicity.js';
+    script.id = 'dynamicScript';
+    script.onload = function () {
+        console.log(`Script with URL ${script.src} has been loaded.`);
+        lastLoadedScript = script.id;
+        // Call a function from publicity.js if needed
+        if (typeof buildPublicity() === 'function') {
+            buildPublicity();
+        }
+    };
+    document.body.appendChild(script);
 }
 
 function unloadScript(id) { // changed

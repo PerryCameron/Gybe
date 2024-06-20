@@ -6,6 +6,9 @@ import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +34,7 @@ public class MembershipRestController {
     private final RosterService rosterService;
     private final MembershipService membershipService;
     private final AdminService adminService;
+    private final XLSService xlsService;
 
 
     @Autowired
@@ -39,7 +46,8 @@ public class MembershipRestController {
             EmailService emailService,
             GeneralService generalService,
             FeeService feeService,
-            BoatService boatService) {
+            BoatService boatService,
+            XLSService xlsService) {
         this.service = service;
         this.rosterService = rosterService;
         this.adminService = adminService;
@@ -48,6 +56,7 @@ public class MembershipRestController {
         this.generalService = generalService;
         this.feeService = feeService;
         this.boatService = boatService;
+        this.xlsService = xlsService;
     }
 
     @GetMapping("/rb_bod")
@@ -108,5 +117,25 @@ public class MembershipRestController {
         return response;
     }
 
+    @GetMapping("/api/publicity")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<InputStreamResource> getPublicity(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+        xlsService.createEmailList(); // this creates an xlsx file
+        String filePath = System.getProperty("user.home") + "/Email_List.xlsx";
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new RuntimeException("File not found: " + filePath);
+        }
+        try {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Email_List.xlsx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(file.length())
+                    .body(resource);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found", e);
+        }
+    }
 
 }
