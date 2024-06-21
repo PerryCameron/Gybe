@@ -1,24 +1,28 @@
 function createFormRequest(data) {
+    console.log('Data received:', data);
+
+    if (!data || !data.formSummaryData) {
+        console.error('Invalid data format:', data);
+        return;
+    }
+
     const mainDiv = document.getElementById("main-content");
     mainDiv.innerHTML = '';
     const formRequestDiv = document.createElement("div");
     mainDiv.appendChild(formRequestDiv);
 
-    const yearSelect = document.createElement("select");
-    // yearSelect.id = "sidenav-yearselect";
-    yearSelect.className = "sidenav-control";
-    yearSelect.name = "year";
+    createSidenavContent();
 
-    // <div id="formRequestTable"></div>
     const startYear = 2023;
-    const endYear = new Date().getFullYear(); // This will get the current year
+    const endYear = new Date().getFullYear();
     populateYearSelect(startYear, endYear);
     setSelectedYear();
 
     function populateYearSelect(startYear, endYear) {
+        const yearSelect = document.getElementById("sidenav-year-container");
         for (let i = endYear; i >= startYear; i--) {
-            let option1 = new Option(i, i);
-            yearSelect.add(option1);
+            let option = new Option(i, i);
+            yearSelect.add(option);
         }
         yearSelect.addEventListener('change', function () {
             updatePage(this.value);
@@ -26,45 +30,42 @@ function createFormRequest(data) {
     }
 
     function updatePage(selectedYear) {
-        // Get the current URL
-        let currentUrl = new URL(window.location.href);
-
-        // Check if the URL already has a 'year' query parameter
-        if (currentUrl.searchParams.has('year')) {
-            // Update the 'year' parameter
-            currentUrl.searchParams.set('year', selectedYear);
-        } else {
-            // Add the 'year' parameter
-            currentUrl.searchParams.append('year', selectedYear);
-        }
-
-        // Update the browser's URL without reloading the page
-        // window.history.pushState({}, '', currentUrl);
-
-        // Update the browser's URL
-        window.location.href = currentUrl;
-
-        // Add your logic here to refresh or update the content of the page
-        // based on the selected year
+        console.log(`Updating page for year: ${selectedYear}`);
+        fetch(`/api/form-request-summary?year=${selectedYear}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.json();
+            })
+            .then(newData => {
+                console.log('New data received:', newData);
+                formRequestDiv.innerHTML = ''; // Clear the main content
+                renderTable(newData); // Rebuild the table with new data
+                updateRecordCount(newData.formSummaryData);
+            })
+            .catch(error => {
+                console.error('Error fetching form request summaries:', error);
+            });
     }
 
     function setSelectedYear() {
-        // Get the current year from the URL parameter 'year'
         const params = new URLSearchParams(window.location.search);
         const year = params.get('year');
+        const yearSelect = document.getElementById("sidenav-year-container");
 
         if (year) {
             yearSelect.value = year;
         }
     }
 
-    let table = "<table class='styled-table'><thead class='header-link'>";
-    table +=
-        "<tr><th>ID</th><th>Email Request Date</th><th>Primary Member</th><th>Link</th><th>Email</th><th>Email Attempts</th><th>Form Request Date</th><th>Form Attempts</th></tr></thead>";
+    function renderTable(data) {
+        console.log('Rendering table with data:', data);
+        let table = "<table class='styled-table'><thead class='header-link'>";
+        table += "<tr><th>ID</th><th>Email Request Date</th><th>Primary Member</th><th>Link</th><th>Email</th><th>Email Attempts</th><th>Form Request Date</th><th>Form Attempts</th></tr></thead><tbody>";
 
-// Your forEach loop and table generation code here
-    data.formSummaryData.forEach((request) => {
-        table += `<tr>
+        data.formSummaryData.forEach((request) => {
+            table += `<tr>
                 <td>${request.membershipId}</td>
                 <td>${request.newestHashReqDate}</td>
                 <td>${request.priMem}</td>
@@ -74,19 +75,49 @@ function createFormRequest(data) {
                 <td>${request.newestFormReqDate}</td>
                 <td>${request.numFormAttempts}</td>
               </tr>`;
-    });
+        });
 
-    table += "</table>";
-    formRequestDiv.innerHTML = table;
-    updateRecordCount(data.formSummaryData);
+        table += "</tbody></table>";
+        console.log('Generated table HTML:', table);
+        formRequestDiv.innerHTML = table;
+
+        // Check if the table has been correctly added to the DOM
+        if (formRequestDiv.innerHTML.includes('<table')) {
+            console.log('Table successfully added to the DOM.');
+        } else {
+            console.error('Failed to add the table to the DOM.');
+        }
+    }
 
     function updateRecordCount(array) {
-        // Retrieve the element by ID
         let recordLabel = document.getElementById("numb-of-records");
 
-        // Update the content of the element
         if (recordLabel) {
             recordLabel.textContent = "Records: " + array.length;
         }
     }
+
+    function createSidenavContent() {
+        const controlDiv = document.getElementById('controls');
+        controlDiv.innerHTML = "";
+
+        const labelDiv = document.createElement("div");
+        labelDiv.id = "record-content-div";
+
+        const label = document.createElement("label");
+        label.id = "numb-of-records";
+        labelDiv.appendChild(label);
+
+        const yearSelect = document.createElement("select");
+        yearSelect.id = "sidenav-year-container";
+        yearSelect.className = "sidenav-control";
+        yearSelect.name = "year";
+
+        controlDiv.appendChild(labelDiv);
+        controlDiv.appendChild(yearSelect);
+    }
+
+    renderTable(data);
+    updateRecordCount(data.formSummaryData);
 }
+

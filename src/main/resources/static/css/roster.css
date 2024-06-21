@@ -85,12 +85,6 @@ label {
   margin-left: 0; /* Adjust this value as needed */
 }
 
-#sidenav-year-container {
-  /* Adjust the width as needed */
-  margin-left: 25px;
-  margin-bottom: 30px;
-}
-
 /* For all controls on sidenav */
 .sidenav-control {
   line-height: 1.5;

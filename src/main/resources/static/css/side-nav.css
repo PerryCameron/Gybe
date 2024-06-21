@@ -67,3 +67,10 @@
         display: none; /* Or adjust for a small icon menu */
     }
 }
+
+#sidenav-year-container {
+    /* Adjust the width as needed */
+    margin-left: 25px;
+    margin-bottom: 30px;
+}
+
