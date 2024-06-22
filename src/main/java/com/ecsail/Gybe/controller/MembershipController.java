@@ -98,13 +98,6 @@ public class MembershipController {
         return "bod-stripped";
     }
 
-    @GetMapping("/bod")
-    public String getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
-        BoardOfDirectorsResponse bodResponse = membershipService.getBodResponse(year);
-        model.addAttribute("bodResponse", bodResponse);
-        return "bod";
-    }
-
     @GetMapping("/slip-wait-list")
     public String getSlipWaitList(Model model) {
         List<MembershipListDTO> membershipListDTOS = rosterService.getSlipWait();
