@@ -5,6 +5,7 @@ import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -147,6 +148,14 @@ public class MembershipRestController {
         Map<String, Object> response = new HashMap<>();
         response.put("formSummaryData", formRequestSummaryDTOS);
         response.put("year", year);
+        return response;
+    }
+
+    @GetMapping("/directory-rest")
+    public Map<String, Object> getDirectory(@RequestParam String listNumber) {
+        List<JsonNode> memberships = membershipService.getMembershipAsJson();
+        Map<String, Object> response = new HashMap<>();
+        response.put("membership", memberships.get(Integer.parseInt(listNumber)));
         return response;
     }
 
