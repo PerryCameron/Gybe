@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function () {
             a.textContent = link.text;
             if (link.id) a.id = link.id;
             if (link.target) a.target = link.target;
+            a.addEventListener("click", function () {
+                document.querySelectorAll('.sidenav a').forEach(el => el.classList.remove('selected'));
+                a.classList.add('selected');
+            });
             buttonContainer.appendChild(a);
         }
     });

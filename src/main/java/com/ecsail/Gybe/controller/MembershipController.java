@@ -154,4 +154,9 @@ public class MembershipController {
         return "boat";
     }
 
+    @GetMapping("/directory")
+    public String getDirectory(Model model) {
+        return "directory";
+    }
+
 }
