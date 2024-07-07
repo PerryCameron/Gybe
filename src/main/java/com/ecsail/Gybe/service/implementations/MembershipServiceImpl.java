@@ -1,10 +1,13 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.controller.MembershipController;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.MembershipService;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,8 @@ public class MembershipServiceImpl implements MembershipService {
     private final NotesRepository notesRepository;
     private final BoardPositionsRepository boardPositionsRepository;
     private final SettingsRepository settingsRepository;
+    private static final Logger logger = LoggerFactory.getLogger(MembershipServiceImpl.class);
+
 
 
     @Autowired
@@ -54,18 +59,26 @@ public class MembershipServiceImpl implements MembershipService {
     }
     @Override
     public MembershipListDTO getMembership(int msId, int selectedYear) {
-        MembershipListDTO membership = membershipRepository.getMembershipByMsId(msId, selectedYear);
-        membership.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(msId));
-        membership.getPersonDTOS().forEach(personDTO -> {
-            personDTO.setPhones((ArrayList<PhoneDTO>) phoneRepository.getPhoneByPid(personDTO.getpId()));
-            personDTO.setEmail((ArrayList<EmailDTO>) emailRepository.getEmail(personDTO.getpId()));
-            personDTO.setAwards((ArrayList<AwardDTO>) awardRepository.getAwards(personDTO));
-            personDTO.setOfficer((ArrayList<OfficerDTO>) officerRepository.getOfficer(personDTO));
-        });
-        membership.setBoatDTOS((ArrayList<BoatDTO>) boatRepository.getBoatsByMsId(msId));
-        membership.setMembershipIdDTOS((ArrayList<MembershipIdDTO>) membershipIdRepository.getIds(msId));
-        membership.setNotesDTOS((ArrayList<NotesDTO>) notesRepository.getMemosByMsId(msId));
-        return membership;
+        try {
+            MembershipListDTO membership = membershipRepository.getMembershipByMsId(msId, selectedYear);
+            membership.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(msId));
+            System.out.println("List size: " + membership.getPersonDTOS().size());
+            membership.getPersonDTOS().forEach(personDTO -> {
+                personDTO.setPhones(phoneRepository.getPhoneByPid(personDTO.getPId()));
+                personDTO.setEmails(emailRepository.getEmail(personDTO.getPId()));
+                System.out.println("Number of Emails: " + personDTO.getEmails().size());
+                personDTO.setAwards(awardRepository.getAwards(personDTO));
+                personDTO.setOfficers(officerRepository.getOfficer(personDTO));
+            });
+            membership.setBoatDTOS((ArrayList<BoatDTO>) boatRepository.getBoatsByMsId(msId));
+            membership.setMembershipIdDTOS((ArrayList<MembershipIdDTO>) membershipIdRepository.getIds(msId));
+            membership.setNotesDTOS((ArrayList<NotesDTO>) notesRepository.getMemosByMsId(msId));
+            return membership;
+        } catch (Exception e) {
+            System.out.println(e);
+            logger.error(e.getMessage());
+        }
+        return null;
     }
     @Override
     public List<BoardPositionDTO> getBoardPositions() {

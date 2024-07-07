@@ -61,14 +61,14 @@ public class PersonRepositoryImpl implements PersonRepository {
                 """;
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(personDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
-        personDTO.setpId(keyHolder.getKey().intValue());
+        personDTO.setPId(keyHolder.getKey().intValue());
         return affectedRows;
     }
 
     @Override
     public int delete(PersonDTO personDTO) {
         String deleteSql = "DELETE FROM person WHERE P_ID = ?";
-        return template.update(deleteSql, personDTO.getpId());
+        return template.update(deleteSql, personDTO.getPId());
     }
 
     @Override

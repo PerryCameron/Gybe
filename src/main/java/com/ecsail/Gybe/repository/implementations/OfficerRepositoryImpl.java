@@ -44,7 +44,7 @@ public class OfficerRepositoryImpl implements OfficerRepository {
     @Override
     public List<OfficerDTO> getOfficer(PersonDTO person) {
         String query = "SELECT * FROM officer WHERE P_ID = ?";
-        return template.query(query,new OfficerRowMapper(), person.getpId());
+        return template.query(query,new OfficerRowMapper(), person.getPId());
     }
 
     @Override

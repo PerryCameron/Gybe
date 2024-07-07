@@ -107,7 +107,7 @@ public class AdminServiceImpl implements AdminService {
             updateUserPassword(email, messageResponse, personDTO, encodedPass);
         } else { // This is a new account
             UserDTO userDTO = authenticationRepository
-                    .saveUser(new UserDTO(0, email, encodedPass, personDTO.getpId()));
+                    .saveUser(new UserDTO(0, email, encodedPass, personDTO.getPId()));
             createAccount(messageResponse, personDTO, userDTO);
         }
         return messageResponse;
@@ -121,7 +121,7 @@ public class AdminServiceImpl implements AdminService {
                 RoleDTO userRole = authenticationRepository.findByAuthority("ROLE_USER").get();
                 authenticationRepository.saveUserRole(userDTO, userRole);
                 // set correct user_aut-request to completed
-                hashRepository.completeUserAuthRequest(personDTO.getpId());
+                hashRepository.completeUserAuthRequest(personDTO.getPId());
                 messageResponse.setSuccess(true);
                 messageResponse.setMessage("Account created: Please log in for the first time.");
             } else messageResponse.setMessage("Account not created: there was an error");
@@ -136,10 +136,10 @@ public class AdminServiceImpl implements AdminService {
     private void updateUserPassword(String email, MessageResponse messageResponse, PersonDTO personDTO, String encodedPass) {
         try {
             // Attempt to update the password
-            int updateCount = authenticationRepository.updatePassword(encodedPass, personDTO.getpId());
+            int updateCount = authenticationRepository.updatePassword(encodedPass, personDTO.getPId());
             if (updateCount == 1) {
                 // If the password updates successfully, add completed timestamp
-                hashRepository.completeUserAuthRequest(personDTO.getpId());
+                hashRepository.completeUserAuthRequest(personDTO.getPId());
                 messageResponse.setSuccess(true);
                 messageResponse.setMessage("You have successfully changed your password. Please log in.");
             } else {
@@ -151,7 +151,7 @@ public class AdminServiceImpl implements AdminService {
             }
         } catch (Exception e) {
             // Log the exception and set the failure message
-            logger.error("Failed to update password for p_id: " + personDTO.getpId(), e);
+            logger.error("Failed to update password for p_id: " + personDTO.getPId(), e);
             messageResponse.setSuccess(false);
             messageResponse.setMessage("Unable to update password due to an error: " + e.getMessage());
         }
@@ -161,18 +161,18 @@ public class AdminServiceImpl implements AdminService {
         String baseUrl = appURL + "/update_creds";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
         // make sure there is not a good key entry < 10 minutes old and also not completed
-        if (!hashRepository.existsUserAuthRequestByPidWithinTenMinutes(personDTO.getpId())) {
+        if (!hashRepository.existsUserAuthRequestByPidWithinTenMinutes(personDTO.getPId())) {
             // create a key
             String key = ApiKeyGenerator.generateApiKey(32);
             // we need to create a fresh new entry by add a key and a pid
-            hashRepository.insertUserAuthRequest(key, personDTO.getpId());
+            hashRepository.insertUserAuthRequest(key, personDTO.getPId());
             // let's add the key and transaction type to our link
             builder.queryParam("key", key);
         } else {
             // a good key entry already exists, we should reset the update_at field and use the existing key
-            hashRepository.updateUpdatedAtTimestamp(personDTO.getpId());
+            hashRepository.updateUpdatedAtTimestamp(personDTO.getPId());
             // let's get the updated object
-            UserAuthRequestDTO userAuthRequestDTO = hashRepository.findUserAuthRequestByPidWithinTenMinutes(personDTO.getpId());
+            UserAuthRequestDTO userAuthRequestDTO = hashRepository.findUserAuthRequestByPidWithinTenMinutes(personDTO.getPId());
             // let's add the key to our link
             builder.queryParam("key", userAuthRequestDTO.getPassKey());
         }

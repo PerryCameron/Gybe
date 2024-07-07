@@ -7,6 +7,7 @@ import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.BoatResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

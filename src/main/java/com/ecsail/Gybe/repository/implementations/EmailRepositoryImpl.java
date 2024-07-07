@@ -54,6 +54,7 @@ public class EmailRepositoryImpl implements EmailRepository {
         String query = "SELECT * FROM email";
         if(p_id != 0)
             query += " WHERE p_id=" + p_id;
+        System.out.println("query is " + query);
         return template.query(query, new EmailRowMapper());
     }
 
@@ -61,7 +62,7 @@ public class EmailRepositoryImpl implements EmailRepository {
     public EmailDTO getPrimaryEmail(PersonDTO person) {
         String query = "select * from email where P_ID=? and PRIMARY_USE=true limit 1;";
         try {
-            return template.queryForObject(query, new EmailRowMapper(), person.getpId());
+            return template.queryForObject(query, new EmailRowMapper(), person.getPId());
         } catch (EmptyResultDataAccessException e) {
             return null; // Return null if no email is found
         }

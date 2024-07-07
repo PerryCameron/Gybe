@@ -1,72 +1,72 @@
 package com.ecsail.Gybe.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SlipDTO {
-    private Integer slip_id;
-    private Integer ms_id;
-    private String slip_num;
-    private Integer subleased_to;
-    private String alt_text;
+    @JsonProperty("slipId")
+    private Integer slipId;
+
+    @JsonProperty("msId")
+    private Integer msId;
+
+    @JsonProperty("slipNum")
+    private String slipNum;
+
+    @JsonProperty("subleasedTo")
+    private Integer subleasedTo;
+
+    @JsonProperty("altText")
+    private String altText;
 
     public SlipDTO() {
         super();
     }
 
-    public SlipDTO(Integer slip_id, Integer ms_id, String slip_num, Integer subleased_to, String alt_text) {
-        this.slip_id = slip_id;
-        this.ms_id = ms_id;
-        this.slip_num = slip_num;
-        this.subleased_to = subleased_to;
-        this.alt_text = alt_text;
+    public SlipDTO(Integer slipId, Integer msId, String slipNum, Integer subleasedTo, String altText) {
+        this.slipId = slipId;
+        this.msId = msId;
+        this.slipNum = slipNum;
+        this.subleasedTo = subleasedTo;
+        this.altText = altText;
     }
 
-    public Integer getSlip_id() {
-        return slip_id;
+    public Integer getSlipId() {
+        return slipId;
     }
 
-    public void setSlip_id(Integer slip_id) {
-        this.slip_id = slip_id;
+    public void setSlipId(Integer slipId) {
+        this.slipId = slipId;
     }
 
-    public Integer getMs_id() {
-        return ms_id;
+    public Integer getMsId() {
+        return msId;
     }
 
-    public void setMs_id(Integer ms_id) {
-        this.ms_id = ms_id;
+    public void setMsId(Integer msId) {
+        this.msId = msId;
     }
 
-    public String getSlip_num() {
-        return slip_num;
+    public String getSlipNum() {
+        return slipNum;
     }
 
-    public void setSlip_num(String slip_num) {
-        this.slip_num = slip_num;
+    public void setSlipNum(String slipNum) {
+        this.slipNum = slipNum;
     }
 
-    public Integer getSubleased_to() {
-        return subleased_to;
+    public Integer getSubleasedTo() {
+        return subleasedTo;
     }
 
-    public void setSubleased_to(Integer subleased_to) {
-        this.subleased_to = subleased_to;
+    public void setSubleasedTo(Integer subleasedTo) {
+        this.subleasedTo = subleasedTo;
     }
 
-    public String getAlt_text() {
-        return alt_text;
+    public String getAltText() {
+        return altText;
     }
 
-    public void setAlt_text(String alt_text) {
-        this.alt_text = alt_text;
-    }
-
-    @Override
-    public String toString() {
-        return "SlipDTO{" +
-                "slip_id=" + slip_id +
-                ", ms_id=" + ms_id +
-                ", slip_num='" + slip_num + '\'' +
-                ", subleased_to=" + subleased_to +
-                ", alt_text='" + alt_text + '\'' +
-                '}';
+    public void setAltText(String altText) {
+        this.altText = altText;
     }
 }

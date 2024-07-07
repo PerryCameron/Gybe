@@ -1,9 +1,13 @@
 package com.ecsail.Gybe.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class BoatDTO {
 	
 	private Integer boatId;
-	private Integer msId;
+	@JsonIgnore // This field is set elsewhere and not mapped directly from the JSON
+	private Integer msId; // this is not in database
 	private String manufacturer;
 	private String manufactureYear;
 	private String registrationNum;
@@ -20,7 +24,43 @@ public class BoatDTO {
 	private String lwl;
 	private Boolean aux;
 
-	public BoatDTO(Integer boatId, Integer msId, String manufacturer, String manufactureYear, String registrationNum, String model, String boatName, String sailNumber, Boolean hasTrailer, String loa, String displacement, String keel, String phrf, String draft, String beam, String lwl, Boolean aux) {
+//	public BoatDTO(Integer boatId, Integer msId, String manufacturer, String manufactureYear, String registrationNum, String model, String boatName, String sailNumber, Boolean hasTrailer, String loa, String displacement, String keel, String phrf, String draft, String beam, String lwl, Boolean aux) {
+//		this.boatId = boatId;
+//		this.msId = msId;
+//		this.manufacturer = manufacturer;
+//		this.manufactureYear = manufactureYear;
+//		this.registrationNum = registrationNum;
+//		this.model = model;
+//		this.boatName = boatName;
+//		this.sailNumber = sailNumber;
+//		this.hasTrailer = hasTrailer;
+//		this.loa = loa;
+//		this.displacement = displacement;
+//		this.keel = keel;
+//		this.phrf = phrf;
+//		this.draft = draft;
+//		this.beam = beam;
+//		this.lwl = lwl;
+//		this.aux = aux;
+//	}
+
+	public BoatDTO(@JsonProperty("BOAT_ID") Integer boatId,
+				   @JsonProperty("MS_ID") Integer msId,
+				   @JsonProperty("MANUFACTURER") String manufacturer,
+				   @JsonProperty("MANUFACTURE_YEAR") String manufactureYear,
+				   @JsonProperty("REGISTRATION_NUM") String registrationNum,
+				   @JsonProperty("MODEL") String model,
+				   @JsonProperty("BOAT_NAME") String boatName,
+				   @JsonProperty("SAIL_NUMBER") String sailNumber,
+				   @JsonProperty("HAS_TRAILER") Boolean hasTrailer,
+				   @JsonProperty("LENGTH") String loa,
+				   @JsonProperty("WEIGHT") String displacement,
+				   @JsonProperty("KEEL") String keel,
+				   @JsonProperty("PHRF") String phrf,
+				   @JsonProperty("DRAFT") String draft,
+				   @JsonProperty("BEAM") String beam,
+				   @JsonProperty("LWL") String lwl,
+				   @JsonProperty("AUX") Boolean aux) {
 		this.boatId = boatId;
 		this.msId = msId;
 		this.manufacturer = manufacturer;
@@ -43,6 +83,7 @@ public class BoatDTO {
 	public BoatDTO() {
 	}
 
+	@JsonProperty("BOAT_ID")
 	public Integer getBoatId() {
 		return boatId;
 	}
@@ -59,6 +100,7 @@ public class BoatDTO {
 		this.msId = msId;
 	}
 
+	@JsonProperty("MANUFACTURER")
 	public String getManufacturer() {
 		return manufacturer;
 	}
@@ -67,6 +109,7 @@ public class BoatDTO {
 		this.manufacturer = manufacturer;
 	}
 
+	@JsonProperty("MANUFACTURE_YEAR")
 	public String getManufactureYear() {
 		return manufactureYear;
 	}
@@ -75,6 +118,7 @@ public class BoatDTO {
 		this.manufactureYear = manufactureYear;
 	}
 
+	@JsonProperty("REGISTRATION_NUM")
 	public String getRegistrationNum() {
 		return registrationNum;
 	}
@@ -83,6 +127,7 @@ public class BoatDTO {
 		this.registrationNum = registrationNum;
 	}
 
+	@JsonProperty("MODEL")
 	public String getModel() {
 		return model;
 	}
@@ -91,6 +136,7 @@ public class BoatDTO {
 		this.model = model;
 	}
 
+	@JsonProperty("BOAT_NAME")
 	public String getBoatName() {
 		return boatName;
 	}
@@ -99,6 +145,7 @@ public class BoatDTO {
 		this.boatName = boatName;
 	}
 
+	@JsonProperty("SAIL_NUMBER")
 	public String getSailNumber() {
 		return sailNumber;
 	}
@@ -107,6 +154,7 @@ public class BoatDTO {
 		this.sailNumber = sailNumber;
 	}
 
+	@JsonProperty("HAS_TRAILER")
 	public Boolean getHasTrailer() {
 		return hasTrailer;
 	}
@@ -115,6 +163,7 @@ public class BoatDTO {
 		this.hasTrailer = hasTrailer;
 	}
 
+	@JsonProperty("LENGTH")
 	public String getLoa() {
 		return loa;
 	}
@@ -123,6 +172,7 @@ public class BoatDTO {
 		this.loa = loa;
 	}
 
+	@JsonProperty("WEIGHT")
 	public String getDisplacement() {
 		return displacement;
 	}
@@ -131,6 +181,7 @@ public class BoatDTO {
 		this.displacement = displacement;
 	}
 
+	@JsonProperty("KEEL")
 	public String getKeel() {
 		return keel;
 	}
@@ -139,6 +190,7 @@ public class BoatDTO {
 		this.keel = keel;
 	}
 
+	@JsonProperty("PHRF")
 	public String getPhrf() {
 		return phrf;
 	}
@@ -147,6 +199,7 @@ public class BoatDTO {
 		this.phrf = phrf;
 	}
 
+	@JsonProperty("DRAFT")
 	public String getDraft() {
 		return draft;
 	}
@@ -155,6 +208,7 @@ public class BoatDTO {
 		this.draft = draft;
 	}
 
+	@JsonProperty("BEAM")
 	public String getBeam() {
 		return beam;
 	}
@@ -163,6 +217,7 @@ public class BoatDTO {
 		this.beam = beam;
 	}
 
+	@JsonProperty("LWL")
 	public String getLwl() {
 		return lwl;
 	}
@@ -171,6 +226,7 @@ public class BoatDTO {
 		this.lwl = lwl;
 	}
 
+	@JsonProperty("AUX")
 	public Boolean getAux() {
 		return aux;
 	}

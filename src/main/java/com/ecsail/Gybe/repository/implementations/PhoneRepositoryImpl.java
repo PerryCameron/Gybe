@@ -36,14 +36,14 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     @Override
     public List<PhoneDTO> getPhoneByPerson(PersonDTO personDTO) {
         String query = "SELECT * FROM phone WHERE p_id = ?";
-        return template.query(query, new PhoneRowMapper(), personDTO.getpId());
+        return template.query(query, new PhoneRowMapper(), personDTO.getPId());
     }
 
     @Override
     public PhoneDTO getListedPhoneByType(PersonDTO p, String phoneType) {
         String query = "SELECT * FROM phone WHERE p_id = ? AND phone_listed = true AND phone_type = ? limit 1";
         try {
-            return template.queryForObject(query, new PhoneRowMapper(), p.getpId(), phoneType);
+            return template.queryForObject(query, new PhoneRowMapper(), p.getPId(), phoneType);
         } catch (EmptyResultDataAccessException e) {
             return null; // Return null if no phone is found
         }

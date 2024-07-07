@@ -90,14 +90,14 @@ public class FormRequestServiceImpl implements FormRequestService {
         // primary
         model.setPrimary(getPerson(model.getPersonDTOS(), 1));
         model.setPrimaryEmail(emailRepository.getPrimaryEmail(model.getPrimary()));
-        model.setPrimaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(), "C"));
-        model.setPrimaryEmergencyPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getpId(), "E"));
+        model.setPrimaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getPId(), "C"));
+        model.setPrimaryEmergencyPhone(phoneRepository.getPhoneByPersonAndType(model.getPrimary().getPId(), "E"));
 
         // secondary
         model.setSecondary(getPerson(model.getPersonDTOS(), 2));
         if (model.getSecondary() != null) {
             model.setSecondaryEmail(emailRepository.getPrimaryEmail(model.getSecondary()));
-            model.setSecondaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getSecondary().getpId(), "C"));
+            model.setSecondaryCellPhone(phoneRepository.getPhoneByPersonAndType(model.getSecondary().getPId(), "C"));
         }
         // separate our dependents if they exist
         model.setDependents(model.extractDependentsFromPeople());
@@ -112,7 +112,7 @@ public class FormRequestServiceImpl implements FormRequestService {
                 .path(settingService.getFormId().getValue());
 
         if(model.getSlip() != null)
-            setParameter("sln", model.getSlip().getSlip_num(), builder);
+            setParameter("sln", model.getSlip().getSlipNum(), builder);
         else logger.error("model.getSlip() is null");
 
         builder.queryParam("nod", model.getNumberOfDependents())

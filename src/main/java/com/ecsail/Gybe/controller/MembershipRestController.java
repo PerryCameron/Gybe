@@ -5,7 +5,9 @@ import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -152,8 +154,11 @@ public class MembershipRestController {
     }
 
     @GetMapping("/directory-rest")
-    public Map<String, Object> getDirectory(@RequestParam String listNumber) {
+    public Map<String, Object> getDirectory(@RequestParam String listNumber) throws JsonProcessingException {
         List<JsonNode> memberships = membershipService.getMembershipAsJson();
+        ObjectMapper objectMapper = new ObjectMapper();
+        MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(1), MembershipInfoDTO.class);
+        System.out.println(membershipInfo);
         Map<String, Object> response = new HashMap<>();
         response.put("membership", memberships.get(Integer.parseInt(listNumber)));
         return response;

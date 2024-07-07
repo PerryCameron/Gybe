@@ -1,182 +1,262 @@
 package com.ecsail.Gybe.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PersonDTO {
-	private int pId;
-	private int msId;
-	private int memberType; // 1 == primary 2 == secondary 3 == dependant
-	private String firstName;
-	private String lastName;
-	private String occupation;
-	private String business;
-	private LocalDate birthday;
-	private boolean active;
-	private String nickName;
-	private int oldMsid;
-	private ArrayList<PhoneDTO> phones = new ArrayList<>();
-	private ArrayList<EmailDTO> email = new ArrayList<>();
-	private ArrayList<AwardDTO> awards = new ArrayList<>();
-	private ArrayList<OfficerDTO> officer = new ArrayList<>();
+    @JsonProperty("pId")
+    private int pId;
+    @JsonProperty("msId")
+    private int msId;
+    @JsonProperty("memberType")
+    private int memberType; // 1 == primary 2 == secondary 3 == dependant
+    @JsonProperty("firstName")
+    private String firstName;
+    @JsonProperty("lastName")
+    private String lastName;
+    @JsonProperty("occupation")
+    private String occupation;
+    @JsonProperty("business")
+    private String business;
+    @JsonProperty("birthday")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate birthday;
+    @JsonProperty("active")
+    private boolean active;
+    @JsonProperty("nickName")
+    private String nickName;
+    @JsonProperty("oldMsid")
+    private int oldMsid;
+    @JsonProperty("phones")
+    private ArrayList<PhoneDTO> phones = new ArrayList<>();
+    @JsonProperty("email")
+    private ArrayList<EmailDTO> email = new ArrayList<>();
+    @JsonProperty("awards")
+    private ArrayList<AwardDTO> awards = new ArrayList<>();
+    @JsonProperty("officer")
+    private ArrayList<OfficerDTO> officer = new ArrayList<>();
+
+    public PersonDTO() {
+        super();
+    }
+
+    public PersonDTO(int pId,
+                     int msId,
+                     int memberType,
+                     String firstName,
+                     String lastName,
+                     String occupation,
+                     String business,
+                     LocalDate birthday,
+                     boolean active,
+                     String nickName,
+                     int oldMsid,
+                     List<PhoneDTO> phones,
+                     List<EmailDTO> email,
+                     List<AwardDTO> awards,
+                     List<OfficerDTO> officer) {
+        this.pId = pId;
+        this.msId = msId;
+        this.memberType = memberType;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.occupation = occupation;
+        this.business = business;
+        this.birthday = birthday;
+        this.active = active;
+        this.nickName = nickName;
+        this.oldMsid = oldMsid;
+        this.phones = phones != null ? (ArrayList<PhoneDTO>) phones : new ArrayList<>();
+        this.email = email != null ? (ArrayList<EmailDTO>) email : new ArrayList<>();
+        this.awards = awards != null ? (ArrayList<AwardDTO>) awards : new ArrayList<>();
+        this.officer = officer != null ? (ArrayList<OfficerDTO>) officer : new ArrayList<>();
+    }
+
+    public PersonDTO(int pId,
+                     int msId,
+                     int memberType,
+                     String firstName,
+                     String lastName,
+                     String occupation,
+                     String business,
+                     LocalDate birthday,
+                     boolean active,
+                     String nickName,
+                     int oldMsid) {
+        this.pId = pId;
+        this.msId = msId;
+        this.memberType = memberType;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.occupation = occupation;
+        this.business = business;
+        this.birthday = birthday;
+        this.active = active;
+        this.nickName = nickName;
+        this.oldMsid = oldMsid;
+    }
+
+    public PersonDTO(String firstName) {
+        this.pId = 0;
+        this.msId = 0;
+        this.memberType = 0;
+        this.firstName = firstName;
+        this.lastName = "";
+        this.occupation = "";
+        this.business = "";
+        this.active = true;
+        this.nickName = "";
+        this.oldMsid = 0;
+    }
 
 
-	public PersonDTO(int pId, int msId, int memberType, String firstName, String lastName, String occupation, String business, LocalDate birthday, boolean active, String nickName, int oldMsid) {
-		this.pId = pId;
-		this.msId = msId;
-		this.memberType = memberType;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.occupation = occupation;
-		this.business = business;
-		this.birthday = birthday;
-		this.active = active;
-		this.nickName = nickName;
-		this.oldMsid = oldMsid;
-	}
+    public int getPId() {
+        return pId;
+    }
 
-	public PersonDTO(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setPId(int pId) {
+        this.pId = pId;
+    }
 
-	public int getpId() {
-		return pId;
-	}
 
-	public void setpId(int pId) {
-		this.pId = pId;
-	}
+    public int getMsId() {
+        return msId;
+    }
 
-	public int getMsId() {
-		return msId;
-	}
+    public void setMsId(int msId) {
+        this.msId = msId;
+    }
 
-	public void setMsId(int msId) {
-		this.msId = msId;
-	}
+    public int getMemberType() {
+        return memberType;
+    }
 
-	public int getMemberType() {
-		return memberType;
-	}
+    public void setMemberType(int memberType) {
+        this.memberType = memberType;
+    }
 
-	public void setMemberType(int memberType) {
-		this.memberType = memberType;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public String getOccupation() {
+        return occupation;
+    }
 
-	public String getOccupation() {
-		return occupation;
-	}
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
 
-	public void setOccupation(String occupation) {
-		this.occupation = occupation;
-	}
+    public String getBusiness() {
+        return business;
+    }
 
-	public String getBusiness() {
-		return business;
-	}
+    public void setBusiness(String business) {
+        this.business = business;
+    }
 
-	public void setBusiness(String business) {
-		this.business = business;
-	}
+    public LocalDate getBirthday() {
+        return birthday;
+    }
 
-	public LocalDate getBirthday() {
-		return birthday;
-	}
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
 
-	public void setBirthday(LocalDate birthday) {
-		this.birthday = birthday;
-	}
+    public boolean isActive() {
+        return active;
+    }
 
-	public boolean isActive() {
-		return active;
-	}
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+    public String getNickName() {
+        return nickName;
+    }
 
-	public String getNickName() {
-		return nickName;
-	}
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
+    public int getOldMsid() {
+        return oldMsid;
+    }
 
-	public int getOldMsid() {
-		return oldMsid;
-	}
+    public void setOldMsid(int oldMsid) {
+        this.oldMsid = oldMsid;
+    }
 
-	public void setOldMsid(int oldMsid) {
-		this.oldMsid = oldMsid;
-	}
+    public List<PhoneDTO> getPhones() {
+        return phones;
+    }
 
-	public ArrayList<PhoneDTO> getPhones() {
-		return phones;
-	}
+    public void setPhones(List<PhoneDTO> phones) {
+        this.phones = (ArrayList<PhoneDTO>) phones;
+    }
 
-	public void setPhones(ArrayList<PhoneDTO> phones) {
-		this.phones = phones;
-	}
+    public List<EmailDTO> getEmails() {
+        return email;
+    }
 
-	public ArrayList<EmailDTO> getEmail() {
-		return email;
-	}
+    public void setEmails(List<EmailDTO> email) {
+        this.email = (ArrayList<EmailDTO>) email;
+    }
 
-	public void setEmail(ArrayList<EmailDTO> email) {
-		this.email = email;
-	}
+    public List<AwardDTO> getAwards() {
+        return awards;
+    }
 
-	public ArrayList<AwardDTO> getAwards() {
-		return awards;
-	}
+    public void setAwards(List<AwardDTO> awards) {
+        this.awards = (ArrayList<AwardDTO>) awards;
+    }
 
-	public void setAwards(ArrayList<AwardDTO> awards) {
-		this.awards = awards;
-	}
+    public List<OfficerDTO> getOfficers() {
+        return officer;
+    }
 
-	public ArrayList<OfficerDTO> getOfficer() {
-		return officer;
-	}
+    public void setOfficers(List<OfficerDTO> officer) {
+        this.officer = (ArrayList<OfficerDTO>) officer;
+    }
 
-	public void setOfficer(ArrayList<OfficerDTO> officer) {
-		this.officer = officer;
-	}
-
-	@Override
-	public String toString() {
-		return "PersonDTO{" +
-				"pId=" + pId +
-				", msId=" + msId +
-				", memberType=" + memberType +
-				", firstName='" + firstName + '\'' +
-				", lastName='" + lastName + '\'' +
-				", occupation='" + occupation + '\'' +
-				", business='" + business + '\'' +
-				", birthday=" + birthday +
-				", active=" + active +
-				", nickName='" + nickName + '\'' +
-				", oldMsid=" + oldMsid +
-				", phones=" + phones +
-				", email=" + email +
-				", awards=" + awards +
-				", officer=" + officer +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "PersonDTO{" +
+                "pId=" + pId +
+                ", msId=" + msId +
+                ", memberType=" + memberType +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", occupation='" + occupation + '\'' +
+                ", business='" + business + '\'' +
+                ", birthday=" + birthday +
+                ", active=" + active +
+                ", nickName='" + nickName + '\'' +
+                ", oldMsid=" + oldMsid +
+                ", phones=" + phones +
+                ", email=" + email +
+                ", awards=" + awards +
+                ", officer=" + officer +
+                '}';
+    }
 }
