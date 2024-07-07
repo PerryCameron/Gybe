@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.MembershipService;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,9 +94,10 @@ public class MembershipServiceImpl implements MembershipService {
         return officerRepository.getLeadershipByYear(year);
     }
 
-
-
-
+    @Override
+    public List<JsonNode> getMembershipAsJson() {
+        return membershipRepository.getMembershipsAsJson();
+    }
 
 
 }

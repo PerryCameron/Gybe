@@ -6,6 +6,7 @@ import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.BoatResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,6 +157,8 @@ public class MembershipController {
 
     @GetMapping("/directory")
     public String getDirectory(Model model) {
+        List<JsonNode> memberships = membershipService.getMembershipAsJson();
+        System.out.println("Number of nodes=" + memberships.size());
         return "directory";
     }
 

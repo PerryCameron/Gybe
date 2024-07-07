@@ -2,6 +2,7 @@ package com.ecsail.Gybe.repository.interfaces;
 
 
 import com.ecsail.Gybe.dto.MembershipListDTO;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
 
@@ -34,4 +35,6 @@ public interface MembershipRepository {
     List<MembershipListDTO> getSearchRoster(List<String> searchParams);
 
     List<MembershipListDTO> getOwnersOfBoat(Integer boatId);
+
+    List<JsonNode> getMembershipsAsJson();
 }

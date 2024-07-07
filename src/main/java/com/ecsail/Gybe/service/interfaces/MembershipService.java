@@ -1,10 +1,8 @@
 package com.ecsail.Gybe.service.interfaces;
 
-import com.ecsail.Gybe.dto.BoardPositionDTO;
-import com.ecsail.Gybe.dto.LeadershipDTO;
-import com.ecsail.Gybe.dto.MembershipListDTO;
-import com.ecsail.Gybe.dto.ThemeDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
 
@@ -19,4 +17,5 @@ public interface MembershipService {
 
     List<LeadershipDTO> getLeadershipByYear(int year);
 
+    List<JsonNode> getMembershipAsJson();
 }
