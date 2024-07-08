@@ -157,7 +157,7 @@ public class MembershipRestController {
     public Map<String, Object> getDirectory(@RequestParam String listNumber) throws JsonProcessingException {
         List<JsonNode> memberships = membershipService.getMembershipAsJson();
         ObjectMapper objectMapper = new ObjectMapper();
-        MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(1), MembershipInfoDTO.class);
+        MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(Integer.parseInt(listNumber)), MembershipInfoDTO.class);
         System.out.println(membershipInfo);
         Map<String, Object> response = new HashMap<>();
         response.put("membership", memberships.get(Integer.parseInt(listNumber)));

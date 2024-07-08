@@ -2,13 +2,22 @@ package com.ecsail.Gybe.dto;
 
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Year;
 
 public class AwardDTO {
-	
+
+	@JsonProperty("awardId")
 	private int awardId;
+
+	@JsonProperty("pId")
 	private int pId;
+
+	@JsonProperty("awardYear")
 	private String awardYear;
+
+	@JsonProperty("awardType")
 	private String awardType;
 
 	public AwardDTO(int awardId, int pId, String awardYear, String awardType) {
@@ -16,6 +25,9 @@ public class AwardDTO {
 		this.pId = pId;
 		this.awardYear = awardYear;
 		this.awardType = awardType;
+	}
+
+	public AwardDTO() {
 	}
 
 	public int getAwardId() {

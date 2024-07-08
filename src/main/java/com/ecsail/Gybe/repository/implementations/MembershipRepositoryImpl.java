@@ -466,8 +466,8 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                                         JSON_OBJECT(
                                             'officerId', o.O_ID,
                                             'boardYear', o.BOARD_YEAR,
-                                            'offType', o.OFF_TYPE,
-                                            'offYear', o.OFF_YEAR
+                                            'officerType', o.OFF_TYPE,
+                                            'fiscalYear', o.OFF_YEAR
                                         )
                                     )
                                     FROM officer o

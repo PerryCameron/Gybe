@@ -1,15 +1,28 @@
 package com.ecsail.Gybe.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class PhoneDTO {
 
+	@JsonProperty("phoneId")
 	private int phoneId;
+
+	@JsonProperty("pId")
 	private int pId;
+
+	@JsonProperty("phoneListed")
 	private boolean phoneListed;
+
+	@JsonProperty("phone")
 	private String phone;
+
+	@JsonProperty("phoneType")
 	private String phoneType;
+
+	@JsonProperty("membershipTypes")
 	private ArrayList<String> membershipTypes;
 
 
@@ -19,6 +32,10 @@ public class PhoneDTO {
 		this.phoneListed = phoneListed;
 		this.phone = phone;
 		this.phoneType = phoneType;
+	}
+
+	// Default constructor
+	public PhoneDTO() {
 	}
 
 	public int getPhoneId() {
@@ -80,4 +97,5 @@ public class PhoneDTO {
 				", membershipTypes=" + membershipTypes +
 				'}';
 	}
+
 }

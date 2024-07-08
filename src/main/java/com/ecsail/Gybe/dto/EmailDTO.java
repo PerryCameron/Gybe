@@ -1,11 +1,18 @@
 package com.ecsail.Gybe.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class EmailDTO {
 
+	@JsonProperty("emailId")
 	private Integer emailId;
+	@JsonProperty("pId")
 	private Integer pId;
+	@JsonProperty("primaryUse")
 	private Boolean primaryUse;
+	@JsonProperty("email")
 	private String email;
+	@JsonProperty("emailListed")
 	private Boolean emailListed;
 
 	public EmailDTO(Integer emailId, Integer pId, Boolean primaryUse, String email, Boolean emailListed) {
@@ -62,11 +69,12 @@ public class EmailDTO {
 	@Override
 	public String toString() {
 		return "EmailDTO{" +
-				"email_id=" + emailId +
-				", p_id=" + pId +
-				", primary_use=" + primaryUse +
+				"emailId=" + emailId +
+				", pId=" + pId +
+				", primaryUse=" + primaryUse +
 				", email='" + email + '\'' +
-				", email_listed=" + emailListed +
+				", emailListed=" + emailListed +
 				'}';
 	}
+
 }

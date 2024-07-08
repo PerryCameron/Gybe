@@ -46,10 +46,9 @@ public class MembershipInfoDTO {
 
     @JsonProperty("zip")
     private String zip;
-    @JsonIgnore
     @JsonProperty("slip")
     private SlipDTO slipDTO;
-    @JsonIgnore
+
     @JsonProperty("people")
      private List<PersonDTO> people;
     @JsonIgnore
@@ -199,6 +198,24 @@ public class MembershipInfoDTO {
 
     @Override
     public String toString() {
+        StringBuilder peopleStr = new StringBuilder();
+        if (people != null) {
+            for (PersonDTO person : people) {
+                peopleStr.append("\t").append(person).append("\n");
+            }
+        } else {
+            peopleStr.append("\tpeople: null\n");
+        }
+
+        StringBuilder boatsStr = new StringBuilder();
+        if (boats != null) {
+            for (BoatDTO boat : boats) {
+                boatsStr.append("\t").append(boat).append("\n");
+            }
+        } else {
+            boatsStr.append("\tboats: null\n");
+        }
+
         return "MembershipInfoDTO{" +
                 "mid=" + mid +
                 ", fiscalYear=" + fiscalYear +
@@ -214,9 +231,10 @@ public class MembershipInfoDTO {
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", zip='" + zip + '\'' +
-                ", slipDTO=" + slipDTO +
-                ", people=" + people +
-                ", boats=" + boats +
+                ", \n--slipDTO---" + slipDTO +
+                ", \n---people---\n" + peopleStr +
+                ", \n---boats---\n" + boatsStr +
                 '}';
     }
+
 }

@@ -69,4 +69,15 @@ public class SlipDTO {
     public void setAltText(String altText) {
         this.altText = altText;
     }
+
+    @Override
+    public String toString() {
+        return "\n\tSlipDTO{" +
+                "slipId=" + slipId +
+                ", msId=" + msId +
+                ", slipNum='" + slipNum + '\'' +
+                ", subleasedTo=" + subleasedTo +
+                ", altText='" + altText + '\'' +
+                '}';
+    }
 }

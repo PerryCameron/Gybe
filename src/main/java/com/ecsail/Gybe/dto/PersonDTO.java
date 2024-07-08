@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -39,8 +40,10 @@ public class PersonDTO {
     private ArrayList<PhoneDTO> phones = new ArrayList<>();
     @JsonProperty("email")
     private ArrayList<EmailDTO> email = new ArrayList<>();
+    @JsonIgnore
     @JsonProperty("awards")
     private ArrayList<AwardDTO> awards = new ArrayList<>();
+    @JsonIgnore
     @JsonProperty("officer")
     private ArrayList<OfficerDTO> officer = new ArrayList<>();
 
@@ -241,6 +244,42 @@ public class PersonDTO {
 
     @Override
     public String toString() {
+        StringBuilder phonesStr = new StringBuilder();
+        if (phones != null) {
+            for (PhoneDTO phone : phones) {
+                phonesStr.append("\t\t").append(phone).append("\n");
+            }
+        } else {
+            phonesStr.append("\t\tphones: null\n");
+        }
+
+        StringBuilder emailStr = new StringBuilder();
+        if (email != null) {
+            for (EmailDTO email : email) {
+                emailStr.append("\t\t").append(email).append("\n");
+            }
+        } else {
+            emailStr.append("\t\temail: null\n");
+        }
+
+        StringBuilder awardsStr = new StringBuilder();
+        if (awards != null) {
+            for (AwardDTO award : awards) {
+                awardsStr.append("\t\t").append(award).append("\n");
+            }
+        } else {
+            awardsStr.append("\t\tawards: null\n");
+        }
+
+        StringBuilder officerStr = new StringBuilder();
+        if (officer != null) {
+            for (OfficerDTO officer : officer) {
+                officerStr.append("\t\t").append(officer).append("\n");
+            }
+        } else {
+            officerStr.append("\t\tofficer: null\n");
+        }
+
         return "PersonDTO{" +
                 "pId=" + pId +
                 ", msId=" + msId +
@@ -253,10 +292,12 @@ public class PersonDTO {
                 ", active=" + active +
                 ", nickName='" + nickName + '\'' +
                 ", oldMsid=" + oldMsid +
-                ", phones=" + phones +
-                ", email=" + email +
-                ", awards=" + awards +
-                ", officer=" + officer +
+                ", phones=\n" + phonesStr +
+                ", email=\n" + emailStr +
+                ", awards=\n" + awardsStr +
+                ", officer=\n" + officerStr +
                 '}';
     }
+
+
 }

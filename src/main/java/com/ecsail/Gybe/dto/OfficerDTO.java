@@ -1,14 +1,25 @@
 package com.ecsail.Gybe.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Year;
 
 public class OfficerDTO {
 
+	@JsonProperty("officerId")
 	private int officerId;
+
+	@JsonProperty("pId")
 	private int pId;
+
+	@JsonProperty("boardYear")
 	private String boardYear;
+
+	@JsonProperty("officerType")
 	private String officerType;
+
+	@JsonProperty("fiscalYear")
 	private String fiscalYear;
 
 	public OfficerDTO(int officerId, int pId, String boardYear, String officerType, String fiscalYear) {
@@ -17,6 +28,9 @@ public class OfficerDTO {
 		this.boardYear = boardYear;
 		this.officerType = officerType;
 		this.fiscalYear = fiscalYear;
+	}
+
+	public OfficerDTO() {
 	}
 
 	public int getOfficerId() {
