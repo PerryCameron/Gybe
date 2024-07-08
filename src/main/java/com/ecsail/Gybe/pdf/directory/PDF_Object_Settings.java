@@ -41,7 +41,7 @@ public class PDF_Object_Settings {
 	
 	public PDF_Object_Settings(Year selectedYear) {
 		super();
-		this.logoPath = "/Stickers/2024.png";
+		this.logoPath = System.getProperty("user.home") + "/Stickers/2024.png";
 		this.selectedYear = String.valueOf(selectedYear);
 		this.normalFontSize = 10;
 		this.slipFontSize = 6;

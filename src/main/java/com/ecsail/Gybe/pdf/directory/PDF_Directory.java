@@ -6,17 +6,14 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.AreaBreak;
+import com.itextpdf.layout.properties.AreaBreakType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 
 public class PDF_Directory {
@@ -25,7 +22,6 @@ public class PDF_Directory {
 	private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
 
 	PDF_Object_Settings set;
-	String message;
 	static Document doc;
 
 
@@ -61,9 +57,8 @@ public class PDF_Directory {
 	
 	private void createDirectoryTask() {
 
-//				doc.add(new PDF_Cover(1, set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created Cover\n");
+				doc.add(new PDF_Cover(1, set));
+				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
 //				doc.add(new PDF_CommodoreMessage(1, set));
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
