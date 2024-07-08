@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class MembershipRestController {
     private final MembershipService membershipService;
     private final AdminService adminService;
     private final XLSService xlsService;
+    private final PDFService pdfService;
 
 
     @Autowired
@@ -51,7 +53,8 @@ public class MembershipRestController {
             GeneralService generalService,
             FeeService feeService,
             BoatService boatService,
-            XLSService xlsService) {
+            XLSService xlsService,
+            PDFService pdfService) {
         this.service = service;
         this.rosterService = rosterService;
         this.adminService = adminService;
@@ -61,6 +64,7 @@ public class MembershipRestController {
         this.feeService = feeService;
         this.boatService = boatService;
         this.xlsService = xlsService;
+        this.pdfService = pdfService;
     }
 
     @GetMapping("/rb_bod")
@@ -123,7 +127,7 @@ public class MembershipRestController {
 
     @GetMapping("/api/publicity")
     @PreAuthorize("hasRole('ROLE_PUBLICITY')")
-    public ResponseEntity<InputStreamResource> getPublicity(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+    public ResponseEntity<InputStreamResource> getPublicity(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
         xlsService.createEmailList(); // this creates an xlsx file
         String filePath = System.getProperty("user.home") + "/Email_List.xlsx";
         File file = new File(filePath);
@@ -153,8 +157,9 @@ public class MembershipRestController {
         return response;
     }
 
-    @GetMapping("/directory-rest")
-    public Map<String, Object> getDirectory(@RequestParam String listNumber) throws JsonProcessingException {
+    @GetMapping("/api/directory-test")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, Object> getDirectoryTest(@RequestParam String listNumber) throws JsonProcessingException {
         List<JsonNode> memberships = membershipService.getMembershipAsJson();
         ObjectMapper objectMapper = new ObjectMapper();
         MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(Integer.parseInt(listNumber)), MembershipInfoDTO.class);
@@ -164,4 +169,25 @@ public class MembershipRestController {
         return response;
     }
 
+    @GetMapping("/api/directory-rest")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<InputStreamResource> getDirectory() {
+        List<JsonNode> memberships = membershipService.getMembershipAsJson();
+        pdfService.createDirectory(memberships);
+        String filePath = System.getProperty("user.home") + "/Email_List.xlsx";
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new RuntimeException("File not found: " + filePath);
+        }
+        try {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Email_List.xlsx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(file.length())
+                    .body(resource);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found", e);
+        }
+    }
 }
