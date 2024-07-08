@@ -174,7 +174,7 @@ public class MembershipRestController {
     public ResponseEntity<InputStreamResource> getDirectory() {
         List<JsonNode> memberships = membershipService.getMembershipAsJson();
         pdfService.createDirectory(memberships);
-        String filePath = System.getProperty("user.home") + "/Email_List.xlsx";
+        String filePath = System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf";
         File file = new File(filePath);
         if (!file.exists()) {
             throw new RuntimeException("File not found: " + filePath);
@@ -182,7 +182,7 @@ public class MembershipRestController {
         try {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Email_List.xlsx")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + Year.now() + "_ECSC_directory.pdf")
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .contentLength(file.length())
                     .body(resource);

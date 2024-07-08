@@ -1,5 +1,6 @@
 function buildDirectory() {
     const mainDiv = document.getElementById("main-content");
+    const currentYear = new Date().getFullYear();
     mainDiv.innerHTML = '';
 
     // Create the button
@@ -33,7 +34,7 @@ function buildDirectory() {
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = 'Email_List.xlsx'; // The name of the file
+                a.download = `${currentYear}_ECSC_directory.pdf`; // The name of the file with the current year
                 a.id = 'download-link'; // Add an ID to the link element
                 document.body.appendChild(a);
                 a.click();

@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.service.implementations;
 
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
+import com.ecsail.Gybe.pdf.directory.PDF_Directory;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.PDFService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -56,10 +57,10 @@ public class PDFServiceImpl implements PDFService {
         this.settingsRepository = settingsRepository;
     }
 
-
     @Override
     public void createDirectory(List<JsonNode> memberships) {
         ArrayList<MembershipInfoDTO> membershipInfoDTOS = convertJSONToPOJO(memberships);
+        new PDF_Directory(membershipInfoDTOS);
         System.out.println("membershipInfoDTOS.size()" + membershipInfoDTOS.size());
     }
 
