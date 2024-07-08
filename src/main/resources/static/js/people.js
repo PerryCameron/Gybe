@@ -358,7 +358,7 @@ function addOfficer(person) {
   content.classList.add("position-content");
   content.appendChild(createHorizontalLine("line-half"));
   content.appendChild(addHeader(4, "Officer", "setOfficerEdit", person.pId, "edit.svg"));
-  person.officer.forEach((officer) => {
+  person.officers.forEach((officer) => {
     let position = getPositionByIdentifier(officer.officerType, boardPositions);
     htmlEmailContent = `<p>${officer.fiscalYear} -  ${position}</p>`;
     content.innerHTML += htmlEmailContent; // Append, don't overwrite

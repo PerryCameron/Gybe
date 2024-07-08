@@ -291,13 +291,11 @@ public class PersonDTO {
                 ", birthday=" + birthday +
                 ", active=" + active +
                 ", nickName='" + nickName + '\'' +
-                ", oldMsid=" + oldMsid +
-                ", phones=\n" + phonesStr +
-                ", email=\n" + emailStr +
-                ", awards=\n" + awardsStr +
-                ", officer=\n" + officerStr +
-                '}';
+                ", oldMsid=" + oldMsid + "\n" +
+                phonesStr + "\n" +
+                emailStr +
+                awardsStr +
+                officerStr + "\n" +
+                "\t\t}";
     }
-
-
 }

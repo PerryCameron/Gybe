@@ -2,6 +2,12 @@ package com.ecsail.Gybe.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public class MembershipInfoDTO {
@@ -31,9 +37,10 @@ public class MembershipInfoDTO {
 
     @JsonProperty("pId")
     private int pId;
-
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonProperty("joinDate")
-    private String joinDate;
+    private LocalDate joinDate;
 
     @JsonProperty("address")
     private String address;
@@ -54,10 +61,6 @@ public class MembershipInfoDTO {
     @JsonIgnore
     @JsonProperty("boats")
     private List<BoatDTO> boats;
-
-
-
-    // Getters and setters
 
     public int getMid() {
         return mid;
@@ -131,11 +134,11 @@ public class MembershipInfoDTO {
         this.pId = pId;
     }
 
-    public String getJoinDate() {
+    public LocalDate getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(String joinDate) {
+    public void setJoinDate(LocalDate joinDate) {
         this.joinDate = joinDate;
     }
 
@@ -179,14 +182,13 @@ public class MembershipInfoDTO {
         this.slipDTO = slipDTO;
     }
 
-    // Uncomment and use if needed
-    // public List<Person> getPersons() {
-    //     return persons;
-    // }
+    public List<PersonDTO> getPeople() {
+        return people;
+    }
 
-    // public void setPersons(List<Person> persons) {
-    //     this.persons = persons;
-    // }
+    public void setPeople(List<PersonDTO> people) {
+        this.people = people;
+    }
 
     public List<BoatDTO> getBoats() {
         return boats;
@@ -231,9 +233,9 @@ public class MembershipInfoDTO {
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", zip='" + zip + '\'' +
-                ", \n--slipDTO---" + slipDTO +
-                ", \n---people---\n" + peopleStr +
-                ", \n---boats---\n" + boatsStr +
+                slipDTO + "\n" +
+                peopleStr + "\n" +
+                boatsStr +
                 '}';
     }
 
