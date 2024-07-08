@@ -1,3 +1,17 @@
+# added to test server 7/8/2023
+create table commodore_message
+(
+    id   int auto_increment
+        primary key,
+    fiscal_year int,
+    salutation varchar(300) not null,
+    message varchar(3000) not null,
+    commodore varchar(100) not null,
+    pid int not null
+)
+    collate = utf8mb4_unicode_ci;
+
+
 # added to production server 6/16/2023
 CREATE TABLE logins (
                         id           INT AUTO_INCREMENT PRIMARY KEY,

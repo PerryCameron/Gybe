@@ -20,7 +20,6 @@ public class PDF_Directory {
 
 	public static Logger logger = LoggerFactory.getLogger(PDF_Directory.class);
 	private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
-
 	PDF_Object_Settings set;
 	static Document doc;
 
@@ -59,14 +58,12 @@ public class PDF_Directory {
 
 				doc.add(new PDF_Cover(1, set));
 				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
+				doc.add(new PDF_CommodoreMessage(1, set));
+				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
-//				doc.add(new PDF_CommodoreMessage(1, set));
+//				doc.add(new PDF_BoardOfDirectors(1, this));
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created Commodore Message\n");
-//
-//				doc.add(new PDF_BoardOfDirectors(1, set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created Board of Directors\n");
 //
 //				doc.add(new PDF_TableOfContents(1, set));
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -141,4 +138,16 @@ public class PDF_Directory {
 //		}
 //	}
 
+
+	public ArrayList<MembershipInfoDTO> getMembershipInfoDTOS() {
+		return membershipInfoDTOS;
+	}
+
+	public PDF_Object_Settings getSet() {
+		return set;
+	}
+
+	public void setSet(PDF_Object_Settings set) {
+		this.set = set;
+	}
 }
