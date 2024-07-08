@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.pdf.directory.PDF_Directory;
 import com.ecsail.Gybe.repository.interfaces.*;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,8 @@ public class PDFServiceImpl implements PDFService {
     @Override
     public void createDirectory(List<JsonNode> memberships) {
         ArrayList<MembershipInfoDTO> membershipInfoDTOS = convertJSONToPOJO(memberships);
-        new PDF_Directory(membershipInfoDTOS);
+        CommodoreMessageDTO commodoreMessage = personRepository.getCommodoreMessageByYear(Year.now().getValue());
+        new PDF_Directory(membershipInfoDTOS, commodoreMessage);
         System.out.println("membershipInfoDTOS.size()" + membershipInfoDTOS.size());
     }
 

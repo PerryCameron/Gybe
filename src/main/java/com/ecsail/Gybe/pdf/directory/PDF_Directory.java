@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.pdf.directory;
 
 
+import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -18,49 +19,44 @@ import java.util.ArrayList;
 
 public class PDF_Directory {
 
-	public static Logger logger = LoggerFactory.getLogger(PDF_Directory.class);
-	private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
-	PDF_Object_Settings set;
-	static Document doc;
+    public static Logger logger = LoggerFactory.getLogger(PDF_Directory.class);
+    private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
+    PDF_Object_Settings set;
+    static Document doc;
 
 
-	public PDF_Directory(ArrayList<MembershipInfoDTO> membershipInfoDTOS) {
-		this.membershipInfoDTOS = membershipInfoDTOS;
-		set = new PDF_Object_Settings(Year.now());
+    public PDF_Directory(ArrayList<MembershipInfoDTO> membershipInfoDTOS, CommodoreMessageDTO commodoreMessage) {
+        this.membershipInfoDTOS = membershipInfoDTOS;
+        set = new PDF_Object_Settings(Year.now());
 
 
 //		this.rosters = (ArrayList<MembershipListDTO>) membershipRepository.getRoster(year, true);
 //		HalyardPaths.checkPath(HalyardPaths.DIRECTORIES);
 
-		PdfWriter writer = null;
-		try {
-			writer = new PdfWriter(System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// Initialize PDF document
-		assert writer != null;
-		PdfDocument pdf = new PdfDocument(writer);
-		//PageSize A5v = new PageSize(PageSize.A5.getWidth(), PageSize.A5.getHeight());
-		PDF_Directory.doc = new Document(pdf, new PageSize(set.getPageSize()));
-		doc.setLeftMargin(0.5f);
-		doc.setRightMargin(0.5f);
-		doc.setTopMargin(1f);
-		doc.setBottomMargin(0.5f);
-		
+        PdfWriter writer = null;
+        try {
+            writer = new PdfWriter(System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // Initialize PDF document
+        assert writer != null;
+        PdfDocument pdf = new PdfDocument(writer);
+        //PageSize A5v = new PageSize(PageSize.A5.getWidth(), PageSize.A5.getHeight());
+        PDF_Directory.doc = new Document(pdf, new PageSize(set.getPageSize()));
+        doc.setLeftMargin(0.5f);
+        doc.setRightMargin(0.5f);
+        doc.setTopMargin(1f);
+        doc.setBottomMargin(0.5f);
+
 //		rosters.sort(Comparator.comparing(MembershipListDTO::getLastName));
-		
-		createDirectoryTask();
-	}
-	
-	private void createDirectoryTask() {
 
-				doc.add(new PDF_Cover(1, set));
-				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        doc.add(new PDF_Cover(1, set));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-				doc.add(new PDF_CommodoreMessage(1, set));
-				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        doc.add(new PDF_CommodoreMessage(1, set, commodoreMessage));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
 //				doc.add(new PDF_BoardOfDirectors(1, this));
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -95,12 +91,12 @@ public class PDF_Directory {
 //				doc.add(new PDF_CommodoreList(2, set));
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //				textArea.appendText("Created directory page\n");
-				doc.close();
+        doc.close();
 
-				logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
+        logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
 //				File file = new File(System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
 
-				// Open the document
+        // Open the document
 //				try {
 //					desktop.open(file);
 //				} catch (IOException e) {
@@ -117,8 +113,7 @@ public class PDF_Directory {
 //	    task.setOnFailed(e -> System.out.println("This failed" + e.getSource().getMessage()));
 //	    exec.execute(task);
 
-	}
-	
+    }
 
 
 //	private void createMemberInfoPages(Document doc) {
@@ -139,15 +134,15 @@ public class PDF_Directory {
 //	}
 
 
-	public ArrayList<MembershipInfoDTO> getMembershipInfoDTOS() {
-		return membershipInfoDTOS;
-	}
+    public ArrayList<MembershipInfoDTO> getMembershipInfoDTOS() {
+        return membershipInfoDTOS;
+    }
 
-	public PDF_Object_Settings getSet() {
-		return set;
-	}
+    public PDF_Object_Settings getSet() {
+        return set;
+    }
 
-	public void setSet(PDF_Object_Settings set) {
-		this.set = set;
-	}
+    public void setSet(PDF_Object_Settings set) {
+        this.set = set;
+    }
 }

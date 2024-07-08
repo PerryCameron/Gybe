@@ -1,8 +1,10 @@
 package com.ecsail.Gybe.repository.implementations;
 
 
+import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.repository.interfaces.PersonRepository;
+import com.ecsail.Gybe.repository.rowmappers.CommodoreMessageRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.PersonRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -91,6 +93,11 @@ public class PersonRepositoryImpl implements PersonRepository {
         } catch (EmptyResultDataAccessException e) {
             return new PersonDTO("none");
         }
+    }
+    @Override
+    public CommodoreMessageDTO getCommodoreMessageByYear(int year) {
+        String sql = "SELECT * FROM commodore_message WHERE fiscal_year = ?";
+        return template.queryForObject(sql, new Object[]{year}, new CommodoreMessageRowMapper());
     }
 
 

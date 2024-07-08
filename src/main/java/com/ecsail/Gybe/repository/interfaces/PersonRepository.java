@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.repository.interfaces;
 
 
+import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface PersonRepository {
     public List<PersonDTO> getChildrenByMsId(int msId);
 
     PersonDTO getPersonByEmail(String email);
+
+    CommodoreMessageDTO getCommodoreMessageByYear(int year);
 }
