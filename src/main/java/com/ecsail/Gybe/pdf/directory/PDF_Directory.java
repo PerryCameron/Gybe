@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.pdf.directory;
 
 
+import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.itextpdf.kernel.geom.PageSize;
@@ -21,12 +22,14 @@ public class PDF_Directory {
 
     public static Logger logger = LoggerFactory.getLogger(PDF_Directory.class);
     private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
+    private final ArrayList<BoardPositionDTO> positionData;
     PDF_Object_Settings set;
     static Document doc;
 
 
-    public PDF_Directory(ArrayList<MembershipInfoDTO> membershipInfoDTOS, CommodoreMessageDTO commodoreMessage) {
+    public PDF_Directory(ArrayList<MembershipInfoDTO> membershipInfoDTOS, CommodoreMessageDTO commodoreMessage, ArrayList<BoardPositionDTO> positionData) {
         this.membershipInfoDTOS = membershipInfoDTOS;
+        this.positionData = positionData;
         set = new PDF_Object_Settings(Year.now());
 
 
@@ -58,8 +61,8 @@ public class PDF_Directory {
         doc.add(new PDF_CommodoreMessage(1, set, commodoreMessage));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
-//				doc.add(new PDF_BoardOfDirectors(1, this));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        doc.add(new PDF_BoardOfDirectors(1, this));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
 //				doc.add(new PDF_TableOfContents(1, set));
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -144,5 +147,9 @@ public class PDF_Directory {
 
     public void setSet(PDF_Object_Settings set) {
         this.set = set;
+    }
+
+    public ArrayList<BoardPositionDTO> getPositionData() {
+        return positionData;
     }
 }

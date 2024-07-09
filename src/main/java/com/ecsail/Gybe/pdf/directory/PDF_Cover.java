@@ -49,7 +49,6 @@ public class PDF_Cover extends Table {
 	private Image getLogoImage(String imagePath) {
 		Image logoImage = null;
 		try (InputStream in = new FileInputStream(imagePath)) {
-			System.out.println("Image path: " + imagePath);
 			logoImage = new Image(ImageDataFactory.create(toByteArray(in)));
 		} catch (IOException e) {
 			e.printStackTrace();

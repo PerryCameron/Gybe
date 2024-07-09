@@ -1,6 +1,10 @@
 package com.ecsail.Gybe.pdf.directory;
 
+import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
+import com.ecsail.Gybe.dto.OfficerDTO;
+import com.ecsail.Gybe.dto.PersonDTO;
+import com.ecsail.Gybe.pdf.tools.PdfTable;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -8,33 +12,36 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.time.Year;
+import java.util.*;
+import java.util.function.Predicate;
 
 
 public class PDF_BoardOfDirectors extends Table {
+    private final ArrayList<BoardPositionDTO> positionData;
     PDF_Object_Settings set;
     ArrayList<MembershipInfoDTO> memberships;
-//    ArrayList<PDF_Object_Officer> pdfObjectOfficers;
-
-//    PDFRepository pdfRepository = new PDFRepositoryImpl();
+    ArrayList<OfficerDTO> positions;
+    Set<PersonDTO> people = new HashSet<>();
 
     public PDF_BoardOfDirectors(int numColumns, PDF_Directory pdfDirectory) {
         super(numColumns);
         this.set = pdfDirectory.getSet();
         this.memberships = pdfDirectory.getMembershipInfoDTOS();
-//        pdfObjectOfficers = (ArrayList<PDF_Object_Officer>) pdfRepository.getOfficersByYear(set.getSelectedYear());
-//        pdfObjectOfficers.sort(Comparator.comparing(PDF_Object_Officer::getLastName));
+        this.positions = extractPositions(Year.now().toString());
+        this.positionData = pdfDirectory.getPositionData();
+        // sort positions by order
+        positionData.sort(Comparator.comparingInt(BoardPositionDTO::order));
         setWidth(set.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
         setHorizontalAlignment(HorizontalAlignment.CENTER);
         Cell cell = new Cell();
         cell.setBorder(Border.NO_BORDER);
-        //cell.add(new Paragraph("\n"));
+//        cell.add(new Paragraph("\n"));
         cell.add(createOfficersTable());
-        //cell.add(new Paragraph("\n"));
+        cell.add(new Paragraph("\n"));
         cell.add(createChairmenTable());
         //cell.add(new Paragraph("\n"));
-        cell.add(createBODTable());
+//        cell.add(createBODTable());
         addCell(cell);
 
         cell = new Cell();
@@ -51,10 +58,33 @@ public class PDF_BoardOfDirectors extends Table {
         addCell(cell);
     }
 
+    private ArrayList<OfficerDTO> extractPositions(String year) {
+        ArrayList<OfficerDTO> officers = new ArrayList<>();
+        for (MembershipInfoDTO membership : memberships) {
+            for (PersonDTO person : membership.getPeople()) {
+                // crack open the list of officers
+                List<OfficerDTO> personOfficers = person.getOfficers();
+                if (personOfficers != null) {
+                    for (OfficerDTO officer : personOfficers) {
+                        // get correct officer that matches year
+                        if (officer.getFiscalYear().equals(year)) {
+                            // populate pid since it comes null by default
+                            officer.setpId(person.getPId());
+                            // this is a set to prevent duplicating people
+                            people.add(person);
+                            officers.add(officer);
+                        }
+                    }
+                }
+            }
+        }
+        return officers;
+    }
+
     public Table createOfficersTable() {
-        Table officerTable = new Table(2);
-        officerTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        officerTable.setWidth(this.getWidth().getValue() * 0.6f);
+        Table table = new Table(2);
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.setWidth(this.getWidth().getValue() * 0.6f);
         //mainTable.setWidth(590);
         Cell cell;
         Paragraph p;
@@ -66,21 +96,44 @@ public class PDF_BoardOfDirectors extends Table {
         p.setTextAlignment(TextAlignment.CENTER);
         p.setFontColor(set.getMainColor());
         cell.add(p);
-        officerTable.addCell(cell);
+        table.addCell(cell);
+        Cell[] cells = processPositions(BoardPositionDTO::isOfficer); // what if I want to also have the ablity to process conditon or condition?
+        for (Cell c : cells) table.addCell(c);
+        return table;
+    }
 
-        addOfficerToTable(officerTable, "CO");
-        addOfficerToTable(officerTable, "VC");
-        addOfficerToTable(officerTable, "PC");
-        addOfficerToTable(officerTable, "FM");
-        addOfficerToTable(officerTable, "TR");
-        addOfficerToTable(officerTable, "SE");
-        return officerTable;
+    public Cell[] processPositions(Predicate<BoardPositionDTO> condition) {
+        List<Cell> cellList = new ArrayList<>();
+        for (BoardPositionDTO position : positionData) {
+            if (condition.test(position)) {
+                for (OfficerDTO officer : positions) {
+                    if (officer.getOfficerType().equals(position.identifier())) {
+                        cellList.add(addPersonCell(position.position()));
+                        for (PersonDTO person : people) {
+                            if (officer.getpId() == person.getPId()) {
+                                cellList.add(addPersonCell(person.getFirstName() + " " + person.getLastName()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return cellList.toArray(new Cell[0]);
+    }
+
+    private Cell addPersonCell(String cellContent) {
+        Cell cell = new Cell();
+        Paragraph p;
+        p = new Paragraph(cellContent);
+        p.setFontSize(set.getNormalFontSize());
+        p.setFont(set.getColumnHead());
+        p.setFixedLeading(set.getFixedLeading() - 15);  // sets spacing between lines of text
+        cell.setBorder(Border.NO_BORDER).add(p).setHorizontalAlignment(HorizontalAlignment.CENTER);
+        return cell;
     }
 
     public Table createChairmenTable() {
-        Table chairTable = new Table(2);
-        chairTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        chairTable.setWidth(this.getWidth().getValue() * 0.7f);
+        Table table = PdfTable.TableOf(2,HorizontalAlignment.CENTER, this.getWidth().getValue() * 0.7f);
         Cell cell;
         Paragraph p;
         cell = new Cell(1, 2);
@@ -91,30 +144,13 @@ public class PDF_BoardOfDirectors extends Table {
         p.setFontColor(set.getMainColor());
         p.setTextAlignment(TextAlignment.CENTER);
         cell.add(p);
-        chairTable.addCell(cell);
-
-        addOfficerToTable(chairTable, "HM");
-        addOfficerToTable(chairTable, "AH");
-        addOfficerToTable(chairTable, "MS");
-        addOfficerToTable(chairTable, "AM");
-        addOfficerToTable(chairTable, "PU");
-        addOfficerToTable(chairTable, "RA");
-
-        addOfficerToTable(chairTable, "AR");
-        addOfficerToTable(chairTable, "SK");
-//		addOfficerToTable(chairTable, "AR");
-        addOfficerToTable(chairTable, "SM");
-        addOfficerToTable(chairTable, "JP");
-        addOfficerToTable(chairTable, "AJ");
-//        addOfficerToTable(chairTable, "AJ");
-        addOfficerToTable(chairTable, "SO");
-        addOfficerToTable(chairTable, "SA");
-        addOfficerToTable(chairTable, "GC");
-        addOfficerToTable(chairTable, "AG");
-        addOfficerToTable(chairTable, "TE");
-        addOfficerToTable(chairTable, "AT");
-        return chairTable;
+        table.addCell(cell);
+        Cell[] cells = processPositions(position -> position.isChair() || position.isAssist()); // what if I want to also have the ablity to process conditon or condition?
+        for (Cell c : cells) table.addCell(c);
+        return table;
     }
+
+
 
     private Table createBODTable() {
 
@@ -146,14 +182,6 @@ public class PDF_BoardOfDirectors extends Table {
         int nextYear = thisYear + 1;
         int afterNextYear = thisYear + 2;
 
-//        for (PDF_Object_Officer o : pdfObjectOfficers) {
-//            if (Integer.parseInt(o.getBoardTermEndYear()) == thisYear)
-//                currentYearList.add(o.firstName + " " + o.lastName);
-//            if (Integer.parseInt(o.getBoardTermEndYear()) == nextYear)
-//                nextYearList.add(o.firstName + " " + o.lastName);
-//            if (Integer.parseInt(o.getBoardTermEndYear()) == afterNextYear)
-//                afterNextYearList.add(o.firstName + " " + o.lastName);
-//        }
 
         Cell cell;
 
@@ -199,26 +227,7 @@ public class PDF_BoardOfDirectors extends Table {
         return columnTable;
     }
 
-    private void addOfficerToTable(Table mainTable, String type) {
-            Cell cell;
-            Paragraph p = null;
-            cell = new Cell();
-//            p = new Paragraph(Officer.getByCode(type) + ":");
-            p.setFontSize(set.getNormalFontSize());
-            p.setFont(set.getColumnHead());
-            p.setFixedLeading(set.getFixedLeading() - 15);  // sets spacing between lines of text
-            cell.setBorder(Border.NO_BORDER).add(p).setHorizontalAlignment(HorizontalAlignment.CENTER);
-            mainTable.addCell(cell);
 
-            cell = new Cell();
-//            PDF_Object_Officer o = getOfficer(type);
-//            if (o == null) p = new Paragraph("none");
-//            else p = new Paragraph(o.getFirstName() + " " + o.getLastName());
-            p.setFontSize(set.getNormalFontSize());
-            p.setFixedLeading(set.getFixedLeading() - 15);  // sets spacing between lines of text
-            cell.setBorder(Border.NO_BORDER).add(p).setHorizontalAlignment(HorizontalAlignment.CENTER);
-            mainTable.addCell(cell);
-    }
 
 //    public PDF_Object_Officer getOfficer(String type) {
 //        return pdfObjectOfficers.stream()

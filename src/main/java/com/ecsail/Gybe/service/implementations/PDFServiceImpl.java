@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.pdf.directory.PDF_Directory;
@@ -63,8 +64,8 @@ public class PDFServiceImpl implements PDFService {
     public void createDirectory(List<JsonNode> memberships) {
         ArrayList<MembershipInfoDTO> membershipInfoDTOS = convertJSONToPOJO(memberships);
         CommodoreMessageDTO commodoreMessage = personRepository.getCommodoreMessageByYear(Year.now().getValue());
-        new PDF_Directory(membershipInfoDTOS, commodoreMessage);
-        System.out.println("membershipInfoDTOS.size()" + membershipInfoDTOS.size());
+        ArrayList<BoardPositionDTO> positions = (ArrayList<BoardPositionDTO>) boardPositionsRepository.getPositions();
+        new PDF_Directory(membershipInfoDTOS, commodoreMessage, positions);
     }
 
     private ArrayList<MembershipInfoDTO> convertJSONToPOJO(List<JsonNode> memberships) {
@@ -84,6 +85,4 @@ public class PDFServiceImpl implements PDFService {
         }
         return (ArrayList<MembershipInfoDTO>) membershipInfos;
     }
-
-
 }
