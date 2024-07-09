@@ -132,48 +132,41 @@ public class PDF_BoardOfDirectors extends Table {
     }
 
     private void createBoardMemberTables(Table bodTable) {
-        ArrayList<String> currentYearList = new ArrayList<>();
-        ArrayList<String> nextYearList = new ArrayList<>();
-        ArrayList<String> afterNextYearList = new ArrayList<>();
-        int thisYear = Integer.parseInt(set.getSelectedYear());
-        int nextYear = thisYear + 1;
-        int afterNextYear = thisYear + 2;
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-//        cell.add(createBoardMemberColumn(currentYearList, String.valueOf(thisYear)));
+        cell.add(createBoardMemberColumn(Integer.parseInt(set.getSelectedYear())));
         bodTable.addCell(cell);
 
         cell = PdfCell.cellOf(Border.NO_BORDER);
-//        cell.add(createBoardMemberColumn(nextYearList, String.valueOf(nextYear)));
-
+        cell.add(createBoardMemberColumn(Integer.parseInt(set.getSelectedYear()) + 1));
         bodTable.addCell(cell);
 
         cell = PdfCell.cellOf(Border.NO_BORDER);
-//        cell.add(createBoardMemberColumn(afterNextYearList, String.valueOf(afterNextYear)));
-        positions.forEach(System.out::println);
+        cell.add(createBoardMemberColumn(Integer.parseInt(set.getSelectedYear()) + 2));
         bodTable.addCell(cell);
     }
 
-//    private String[] selectBoardMemberListFor(int year) {
-//        List<String> personList = new ArrayList<>();
-//        for (OfficerDTO officer : positions) {
-//            if (officer.getBoardYear() == year) {
-//                cellList.add(addPersonCell(position.position()));
-//                for (PersonDTO person : people) {
-//                    if (officer.getpId() == person.getPId()) {
-//                        cellList.add(addPersonCell(person.getFullName()));
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
+    private String[] selectBoardMemberListFor(int year) {
+        List<String> personList = new ArrayList<>();
+        for (OfficerDTO officer : positions) {
+            if (officer.getBoardYear() == year) {
+                for (PersonDTO person : people) {
+                    if (officer.getpId() == person.getPId()) {
+                        personList.add(person.getFullName());
+                    }
+                }
+            }
+        }
+        personList.sort(Comparator.comparing(PDF_BoardOfDirectors::getLastName));
+        return personList.toArray(new String[0]);
+    }
 
-    private Table createBoardMemberColumn(ArrayList<String> yearList, String year) {
+    private Table createBoardMemberColumn(int year) {
+        String[] boardMemberList = selectBoardMemberListFor(year);
         Table columnTable = new Table(1);
         Cell cell;
         Paragraph p;
         cell = new Cell();
-        p = new Paragraph(year);
+        p = new Paragraph(String.valueOf(year));
         p.setFontSize(12);
         p.setFont(set.getColumnHead());
         p.setFixedLeading(set.getFixedLeading() - 15);  // sets spacing between lines of text
@@ -181,7 +174,7 @@ public class PDF_BoardOfDirectors extends Table {
         cell.setBorder(Border.NO_BORDER).add(p);
         columnTable.addCell(cell);
 
-        for (String name : yearList) {
+        for (String name : boardMemberList) {
             cell = new Cell();
             p = new Paragraph(name);
             p.setFontSize(set.getNormalFontSize());
@@ -189,11 +182,11 @@ public class PDF_BoardOfDirectors extends Table {
             cell.setBorder(Border.NO_BORDER).add(p);
             columnTable.addCell(cell);
         }
-
         return columnTable;
     }
+
+    private static String getLastName(String fullName) {
+        String[] parts = fullName.split(" ");
+        return parts[parts.length - 1];
+    }
 }
-//    private final ArrayList<BoardPositionDTO> positionData;
-//    PDF_Object_Settings set;
-//    ArrayList<MembershipInfoDTO> memberships;
-//    ArrayList<OfficerDTO> positions;
