@@ -15,6 +15,13 @@ public class PdfCell {
         return cell;
     }
 
+    public static Cell cellOf(Border border, VerticalAlignment verticalAlignment) {
+        Cell cell = new Cell();
+        cell.setBorder(border);
+        cell.setVerticalAlignment(verticalAlignment);
+        return cell;
+    }
+
     public static Cell cellOf(Border border, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
         Cell cell = new Cell();
         cell.setBorder(border);

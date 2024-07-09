@@ -45,10 +45,10 @@ public class PDF_TableOfContents extends Table {
 
     private Cell addPageCell(String content, int fixLeadOffset, int fontSize, Color color) {
         Cell cell = PdfCell.cellOf(Border.NO_BORDER, HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE);
-        Paragraph p = PdfParagraph.paragraphOf(content, fontSize, TextAlignment.CENTER);
-        if (fixLeadOffset != 0) p.setFixedLeading(fixLeadOffset);
-        if (color != null) p.setFontColor(color);
-        cell.add(p);
+        Paragraph paragraph = PdfParagraph.paragraphOf(content, fontSize, TextAlignment.CENTER);
+        if (fixLeadOffset != 0) paragraph.setFixedLeading(fixLeadOffset);
+        if (color != null) paragraph.setFontColor(color);
+        cell.add(paragraph);
         return cell;
     }
 

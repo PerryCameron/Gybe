@@ -48,16 +48,16 @@ public class PDF_Directory {
 
         doc.add(new PDF_CommodoreMessage(1, this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//
+
         doc.add(new PDF_BoardOfDirectors(1, this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//
+
 		doc.add(new PDF_TableOfContents(1, set));
 		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//
-//				doc.add(new PDF_ChapterPage(1, "Membership Information", set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created Membership Information Chapter Page\n");
+
+        doc.add(new PDF_ChapterPage(1, "Membership Information", set));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
 //
 ////				createMemberInfoPages(doc);  // creates info pages
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
