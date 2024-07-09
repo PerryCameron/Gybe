@@ -23,26 +23,16 @@ public class PDF_Directory {
     public static Logger logger = LoggerFactory.getLogger(PDF_Directory.class);
     private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
     private final ArrayList<BoardPositionDTO> positionData;
+    private final CommodoreMessageDTO commodoreMessage;
     PDF_Object_Settings set;
     static Document doc;
-
 
     public PDF_Directory(ArrayList<MembershipInfoDTO> membershipInfoDTOS, CommodoreMessageDTO commodoreMessage, ArrayList<BoardPositionDTO> positionData) {
         this.membershipInfoDTOS = membershipInfoDTOS;
         this.positionData = positionData;
+        this.commodoreMessage = commodoreMessage;
         set = new PDF_Object_Settings(Year.now());
-
-
-//		this.rosters = (ArrayList<MembershipListDTO>) membershipRepository.getRoster(year, true);
-//		HalyardPaths.checkPath(HalyardPaths.DIRECTORIES);
-
-        PdfWriter writer = null;
-        try {
-            writer = new PdfWriter(System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        PdfWriter writer = getPdfWriter();
         // Initialize PDF document
         assert writer != null;
         PdfDocument pdf = new PdfDocument(writer);
@@ -53,20 +43,17 @@ public class PDF_Directory {
         doc.setTopMargin(1f);
         doc.setBottomMargin(0.5f);
 
-//		rosters.sort(Comparator.comparing(MembershipListDTO::getLastName));
-
         doc.add(new PDF_Cover(1, set));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_CommodoreMessage(1, set, commodoreMessage));
+        doc.add(new PDF_CommodoreMessage(1, this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
         doc.add(new PDF_BoardOfDirectors(1, this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
-//				doc.add(new PDF_TableOfContents(1, set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created Table of Contents\n");
+		doc.add(new PDF_TableOfContents(1, set));
+		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //
 //				doc.add(new PDF_ChapterPage(1, "Membership Information", set));
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -97,25 +84,17 @@ public class PDF_Directory {
         doc.close();
 
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
-//				File file = new File(System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
+    }
 
-        // Open the document
-//				try {
-//					desktop.open(file);
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				return "Directory Successfully Created!";
-//			}
-//		};
-//	    task.setOnScheduled(e -> System.out.println("scheduled"));
-//	    task.setOnSucceeded(e -> {
-//	    	textArea.setText((String) e.getSource().getValue());
-//	    	logger.info("Finished making directory");});
-//	    task.setOnFailed(e -> System.out.println("This failed" + e.getSource().getMessage()));
-//	    exec.execute(task);
-
+    private static PdfWriter getPdfWriter() {
+        PdfWriter writer = null;
+        try {
+            writer = new PdfWriter(System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return writer;
     }
 
 
@@ -151,5 +130,9 @@ public class PDF_Directory {
 
     public ArrayList<BoardPositionDTO> getPositionData() {
         return positionData;
+    }
+
+    public CommodoreMessageDTO getCommodoreMessage() {
+        return commodoreMessage;
     }
 }

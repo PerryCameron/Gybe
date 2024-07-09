@@ -5,12 +5,21 @@ import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.VerticalAlignment;
 
 public class PdfCell {
     public static Cell cellOf(Border border, HorizontalAlignment horizontalAlignment) {
         Cell cell = new Cell();
         cell.setBorder(border);
         cell.setHorizontalAlignment(horizontalAlignment);
+        return cell;
+    }
+
+    public static Cell cellOf(Border border, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+        Cell cell = new Cell();
+        cell.setBorder(border);
+        cell.setHorizontalAlignment(horizontalAlignment);
+        cell.setVerticalAlignment(verticalAlignment);
         return cell;
     }
 

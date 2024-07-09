@@ -7,18 +7,26 @@ import com.itextpdf.layout.properties.TextAlignment;
 
 public class PdfParagraph {
     public static Paragraph paragraphOf(String cellContent, float fontSize, PdfFont font, float fixedLeading) {
-        Paragraph p = new Paragraph(cellContent);
-        p.setFontSize(fontSize);
-        p.setFont(font);
-        p.setFixedLeading(fixedLeading);
-        return p;
+        Paragraph paragraph = new Paragraph(cellContent);
+        paragraph.setFontSize(fontSize);
+        paragraph.setFont(font);
+        paragraph.setFixedLeading(fixedLeading);
+        return paragraph;
     }
 
     public static Paragraph paragraphOf(String cellContent, float fontSize, float fixedLeading) {
-        Paragraph p = new Paragraph(cellContent);
-        p.setFontSize(fontSize);
-        p.setFixedLeading(fixedLeading);
-        return p;
+        Paragraph paragraph = new Paragraph(cellContent);
+        paragraph.setFontSize(fontSize);
+        paragraph.setFixedLeading(fixedLeading);
+        return paragraph;
+    }
+
+    public static Paragraph paragraphOf(String cellContent, float fontSize, float fixedLeading, TextAlignment textAlignment) {
+        Paragraph paragraph = new Paragraph(cellContent);
+        paragraph.setFontSize(fontSize);
+        paragraph.setFixedLeading(fixedLeading);
+        paragraph.setTextAlignment(textAlignment);
+        return paragraph;
     }
 
     public static Paragraph paragraphOf(String cellContent, float fontSize, PdfFont font, Color color, TextAlignment textAlignment) {
