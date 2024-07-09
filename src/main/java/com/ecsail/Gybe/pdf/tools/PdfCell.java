@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.pdf.tools;
 
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -37,4 +38,17 @@ public class PdfCell {
         cell.setBorder(Border.NO_BORDER);
         return cell;
     }
+
+    public static Cell verticalSpaceCellWithPadding(float padding, boolean isTest) {
+        Cell cell = new Cell();
+        cell.add(new Paragraph("")); // Add an empty paragraph to the cell
+        cell.setPaddingTop(padding);
+        cell.setPaddingBottom(padding);
+        cell.setBorder(Border.NO_BORDER);
+        if (isTest) {
+            cell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
+        }
+        return cell;
+    }
+
 }

@@ -36,17 +36,17 @@ public class PDF_BoardOfDirectors extends Table {
         positionData.sort(Comparator.comparingInt(BoardPositionDTO::order));
         setWidth(set.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
         setHorizontalAlignment(HorizontalAlignment.CENTER);
+        addCell(PdfCell.verticalSpaceCellWithPadding(10, false));
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
         cell.add(createOfficersTable());
+        cell.add(PdfCell.verticalSpaceCellWithPadding(5, false));
         cell.add(createChairmenTable());
+        cell.add(PdfCell.verticalSpaceCellWithPadding(5, false));
         cell.add(createBODTable());
         addCell(cell);
-        addCell(PdfCell.verticalSpaceCell(1));
         cell = PdfCell.cellOf(Border.NO_BORDER);
-        Paragraph p = new Paragraph("©Eagle Creek Sailing club 1969-" + set.getSelectedYear() + " - This directory may not be used for commercial purposes");
-        p.setTextAlignment(TextAlignment.CENTER);
-        p.setFontSize(8);  // Set the desired font size here
-        cell.add(p);
+        String footerText = "©Eagle Creek Sailing club 1969-" + set.getSelectedYear() + " - This directory may not be used for commercial purposes";
+        cell.add(PdfParagraph.paragraphOf(footerText, 8, TextAlignment.CENTER));
         addCell(cell);
     }
 
@@ -163,23 +163,16 @@ public class PDF_BoardOfDirectors extends Table {
     private Table createBoardMemberColumn(int year) {
         String[] boardMemberList = selectBoardMemberListFor(year);
         Table columnTable = new Table(1);
-        Cell cell;
-        Paragraph p;
-        cell = new Cell();
-        p = new Paragraph(String.valueOf(year));
-        p.setFontSize(12);
-        p.setFont(set.getColumnHead());
-        p.setFixedLeading(set.getFixedLeading() - 15);  // sets spacing between lines of text
-        p.setTextAlignment(TextAlignment.LEFT);
-        cell.setBorder(Border.NO_BORDER).add(p);
+        Cell cell = PdfCell.cellOf(Border.NO_BORDER);
+        Paragraph paragraph = PdfParagraph.paragraphOf(String.valueOf(year),12, set.getColumnHead(),set.getFixedLeading() - 15);
+        paragraph.setTextAlignment(TextAlignment.LEFT);
+        cell.add(paragraph);
         columnTable.addCell(cell);
 
         for (String name : boardMemberList) {
-            cell = new Cell();
-            p = new Paragraph(name);
-            p.setFontSize(set.getNormalFontSize());
-            p.setFixedLeading(set.getFixedLeading() - 15);  // sets spacing between lines of text
-            cell.setBorder(Border.NO_BORDER).add(p);
+            cell = PdfCell.cellOf(Border.NO_BORDER);
+            paragraph = PdfParagraph.paragraphOf(name, set.getNormalFontSize(), set.getFixedLeading() - 15);
+            cell.add(paragraph);
             columnTable.addCell(cell);
         }
         return columnTable;

@@ -19,12 +19,12 @@ public class PDF_CommodoreMessage extends Table {
 		String[] paragraphs = extractTextBetweenPTags(commodoreMessage.getMessage());
 		setWidth(set.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
 		setHorizontalAlignment(HorizontalAlignment.CENTER);
-		addCell(PdfCell.verticalSpaceCell(2));
+		addCell(PdfCell.verticalSpaceCellWithPadding(10,false));
 		addCell(newParagraph(commodoreMessage.getSalutation()));
-		addCell(PdfCell.verticalSpaceCell(1));
+		addCell(PdfCell.verticalSpaceCellWithPadding(5,false));
 		for (String paragraph : paragraphs) {
 			addCell(newParagraph(paragraph));
-			addCell(PdfCell.verticalSpaceCell(1));
+			addCell(PdfCell.verticalSpaceCellWithPadding(5, false));
 		}
 		addCell(newParagraph(commodoreMessage.getCommodore() + "                           "
 				+ commodoreMessage.getFiscalYear() + " ECSC Commodore"));

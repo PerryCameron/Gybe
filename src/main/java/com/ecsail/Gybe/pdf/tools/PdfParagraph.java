@@ -14,19 +14,32 @@ public class PdfParagraph {
         return p;
     }
 
-    public static Paragraph paragraphOf(String cellContent, float fontSize, PdfFont font, Color color, TextAlignment textAlignment) {
+    public static Paragraph paragraphOf(String cellContent, float fontSize, float fixedLeading) {
         Paragraph p = new Paragraph(cellContent);
         p.setFontSize(fontSize);
-        p.setFont(font);
-        p.setFontColor(color);
-        p.setTextAlignment(textAlignment);
+        p.setFixedLeading(fixedLeading);
         return p;
     }
 
+    public static Paragraph paragraphOf(String cellContent, float fontSize, PdfFont font, Color color, TextAlignment textAlignment) {
+        Paragraph paragraph = new Paragraph(cellContent);
+        paragraph.setFontSize(fontSize);
+        paragraph.setFont(font);
+        paragraph.setFontColor(color);
+        paragraph.setTextAlignment(textAlignment);
+        return paragraph;
+    }
     public static Paragraph paragraphOf(String cellContent, float fontSize) {
-        Paragraph p = new Paragraph(cellContent);
-        p.setFontSize(fontSize);
-        return p;
+        Paragraph paragraph = new Paragraph(cellContent);
+        paragraph.setFontSize(fontSize);
+        return paragraph;
+    }
+
+    public static Paragraph paragraphOf(String cellContent, float fontSize, TextAlignment textAlignment) {
+        Paragraph paragraph = new Paragraph(cellContent);
+        paragraph.setFontSize(fontSize);
+        paragraph.setTextAlignment(textAlignment);
+        return paragraph;
     }
 
 }
