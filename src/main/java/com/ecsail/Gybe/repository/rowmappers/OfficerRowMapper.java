@@ -13,8 +13,8 @@ public class OfficerRowMapper implements RowMapper<OfficerDTO> {
         return new OfficerDTO(
                 rs.getInt("O_ID"),
                 rs.getInt("P_ID"),
-                rs.getString("BOARD_YEAR"), // beginning of board term
+                rs.getInt("BOARD_YEAR"), // beginning of board term
                 rs.getString("OFF_TYPE"),
-                rs.getString("OFF_YEAR"));
+                rs.getInt("OFF_YEAR"));
     }
 }

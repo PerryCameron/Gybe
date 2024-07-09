@@ -120,7 +120,9 @@ public class PersonDTO {
         this.oldMsid = 0;
     }
 
-
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
     public int getPId() {
         return pId;
     }
@@ -128,7 +130,6 @@ public class PersonDTO {
     public void setPId(int pId) {
         this.pId = pId;
     }
-
 
     public int getMsId() {
         return msId;

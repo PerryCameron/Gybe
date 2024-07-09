@@ -14,15 +14,15 @@ public class OfficerDTO {
 	private int pId;
 
 	@JsonProperty("boardYear")
-	private String boardYear;
+	private int boardYear;
 
 	@JsonProperty("officerType")
 	private String officerType;
 
 	@JsonProperty("fiscalYear")
-	private String fiscalYear;
+	private int fiscalYear;
 
-	public OfficerDTO(int officerId, int pId, String boardYear, String officerType, String fiscalYear) {
+	public OfficerDTO(int officerId, int pId, int boardYear, String officerType, int fiscalYear) {
 		this.officerId = officerId;
 		this.pId = pId;
 		this.boardYear = boardYear;
@@ -49,11 +49,11 @@ public class OfficerDTO {
 		this.pId = pId;
 	}
 
-	public String getBoardYear() {
+	public int getBoardYear() {
 		return boardYear;
 	}
 
-	public void setBoardYear(String boardYear) {
+	public void setBoardYear(int boardYear) {
 		this.boardYear = boardYear;
 	}
 
@@ -65,11 +65,11 @@ public class OfficerDTO {
 		this.officerType = officerType;
 	}
 
-	public String getFiscalYear() {
+	public int getFiscalYear() {
 		return fiscalYear;
 	}
 
-	public void setFiscalYear(String fiscalYear) {
+	public void setFiscalYear(int fiscalYear) {
 		this.fiscalYear = fiscalYear;
 	}
 

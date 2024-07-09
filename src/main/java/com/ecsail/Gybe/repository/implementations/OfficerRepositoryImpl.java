@@ -83,9 +83,9 @@ public class OfficerRepositoryImpl implements OfficerRepository {
                 "VALUES (:pId, :boardYear, :officerType, :fiscalYear)";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("pId", officerDTO.getpId());
-        namedParameters.addValue("boardYear", Integer.parseInt(officerDTO.getBoardYear()));
+        namedParameters.addValue("boardYear", officerDTO.getBoardYear());
         namedParameters.addValue("officerType", officerDTO.getOfficerType());
-        namedParameters.addValue("fiscalYear", Integer.parseInt(officerDTO.getFiscalYear()));
+        namedParameters.addValue("fiscalYear", officerDTO.getFiscalYear());
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         officerDTO.setOfficerId(keyHolder.getKey().intValue());
         return affectedRows;
