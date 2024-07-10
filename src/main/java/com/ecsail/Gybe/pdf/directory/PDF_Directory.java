@@ -1,11 +1,9 @@
 package com.ecsail.Gybe.pdf.directory;
 
-import com.ecsail.Gybe.dto.PersonDTO;
-import com.ecsail.Gybe.dto.BoardPositionDTO;
-import com.ecsail.Gybe.dto.CommodoreMessageDTO;
-import com.ecsail.Gybe.dto.MembershipInfoDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -26,6 +24,7 @@ public class PDF_Directory {
     public static Logger logger = LoggerFactory.getLogger(PDF_Directory.class);
     private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
     private final ArrayList<BoardPositionDTO> positionData;
+    private final ArrayList<AppSettingsDTO> settings;
     private final CommodoreMessageDTO commodoreMessage;
     PDF_Object_Settings set;
     static Document doc;
@@ -34,19 +33,20 @@ public class PDF_Directory {
         this.membershipInfoDTOS = directoryDataWrapper.getMembershipInfoDTOS();
         this.positionData = directoryDataWrapper.getPositionData();
         this.commodoreMessage = directoryDataWrapper.getCommodoreMessage();
+        this.settings = directoryDataWrapper.getAppSettingsDTOS();
         set = new PDF_Object_Settings(Year.now());
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document
         assert writer != null;
         PdfDocument pdf = new PdfDocument(writer);
         //PageSize A5v = new PageSize(PageSize.A5.getWidth(), PageSize.A5.getHeight());
-        PDF_Directory.doc = new Document(pdf, new PageSize(set.getPageSize()));
+        PDF_Directory.doc = new Document(pdf, new PageSize(getPageSize()));
         doc.setLeftMargin(0.5f);
         doc.setRightMargin(0.5f);
         doc.setTopMargin(1f);
         doc.setBottomMargin(0.5f);
 
-        doc.add(new PDF_Cover(1, set));
+        doc.add(new PDF_Cover(1, this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
         doc.add(new PDF_CommodoreMessage(1, this));
@@ -61,14 +61,14 @@ public class PDF_Directory {
         doc.add(new PDF_ChapterPage(1, "Membership Information", set));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        sortMemberships(); // put them in alphabetical order by last name
-        int batchSize = 6; // 6 per page
-        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(1, this);
-        for (int i = 0; i < membershipInfoDTOS.size(); i += batchSize) {
-            // Get the sublist for the current batch
-            List<MembershipInfoDTO> batch = membershipInfoDTOS.subList(i, Math.min(i + batchSize, membershipInfoDTOS.size()));
-            doc.add(membershipInfo.createPage(batch));
-        }
+//        sortMemberships(); // put them in alphabetical order by last name
+//        int batchSize = 6; // 6 per page
+//        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(1, this);
+//        for (int i = 0; i < membershipInfoDTOS.size(); i += batchSize) {
+//            // Get the sublist for the current batch
+//            List<MembershipInfoDTO> batch = membershipInfoDTOS.subList(i, Math.min(i + batchSize, membershipInfoDTOS.size()));
+//            doc.add(membershipInfo.createPage(batch));
+//        }
 
 
 
@@ -101,6 +101,30 @@ public class PDF_Directory {
         doc.close();
 
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
+    }
+    @SuppressWarnings("unchecked")
+    protected  <T> T setting(String name) {
+        for (AppSettingsDTO setting : settings) {
+            if (name.equals(setting.getKey())) {  // this is PDF_Directory.java:108
+                String value = setting.getValue();
+                if (setting.getDataType().equals("integer")) {
+                    return (T) Integer.valueOf(value);
+                } else if (setting.getDataType().equals("float")) {
+                    return (T) Float.valueOf(value);
+                } else { // is a string
+                    return (T) value;
+                }
+            }
+        }
+        logger.error("No setting found for: " + name);
+        return null; // or throw an exception if the setting is not found
+    }
+
+    private com.itextpdf.kernel.geom.Rectangle getPageSize() {
+        float widthPoints = 72 * (float) setting("width");
+        float heightPoints = 72 * (float) setting("height");
+        Rectangle sheet = new Rectangle(widthPoints, heightPoints);
+        return sheet;
     }
 
     private static PdfWriter getPdfWriter() {
@@ -151,4 +175,9 @@ public class PDF_Directory {
     public CommodoreMessageDTO getCommodoreMessage() {
         return commodoreMessage;
     }
+
+    public ArrayList<AppSettingsDTO> getSettings() {
+        return settings;
+    }
+
 }

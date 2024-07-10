@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.dto.AppSettingsDTO;
 import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
@@ -67,6 +68,7 @@ public class PDFServiceImpl implements PDFService {
         directoryData.setMembershipInfoDTOS(convertJSONToPOJO(memberships));
         directoryData.setCommodoreMessage(personRepository.getCommodoreMessageByYear(Year.now().getValue()));
         directoryData.setPositionData((ArrayList<BoardPositionDTO>) boardPositionsRepository.getPositions());
+        directoryData.setAppSettingsDTOS((ArrayList<AppSettingsDTO>) settingsRepository.getAppSettingsByGroupName("directory"));
         new PDF_Directory(directoryData);
     }
 

@@ -1,9 +1,6 @@
 package com.ecsail.Gybe.wrappers;
 
-import com.ecsail.Gybe.dto.BoardPositionDTO;
-import com.ecsail.Gybe.dto.CommodoreMessageDTO;
-import com.ecsail.Gybe.dto.MembershipInfoDTO;
-import com.ecsail.Gybe.dto.SlipStructureDTO;
+import com.ecsail.Gybe.dto.*;
 
 import java.util.ArrayList;
 
@@ -12,6 +9,15 @@ public class DirectoryDataWrapper {
     CommodoreMessageDTO commodoreMessage;
     ArrayList<BoardPositionDTO> positionData;
     ArrayList<SlipStructureDTO> slipStructureDTOS;
+    ArrayList<AppSettingsDTO> appSettingsDTOS;
+
+    public ArrayList<AppSettingsDTO> getAppSettingsDTOS() {
+        return appSettingsDTOS;
+    }
+
+    public void setAppSettingsDTOS(ArrayList<AppSettingsDTO> appSettingsDTOS) {
+        this.appSettingsDTOS = appSettingsDTOS;
+    }
 
     public ArrayList<MembershipInfoDTO> getMembershipInfoDTOS() {
         return membershipInfoDTOS;
