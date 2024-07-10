@@ -6,6 +6,7 @@ import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.pdf.directory.PDF_Directory;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.PDFService;
+import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -62,14 +63,15 @@ public class PDFServiceImpl implements PDFService {
 
     @Override
     public void createDirectory(List<JsonNode> memberships) {
-        ArrayList<MembershipInfoDTO> membershipInfoDTOS = convertJSONToPOJO(memberships);
-        CommodoreMessageDTO commodoreMessage = personRepository.getCommodoreMessageByYear(Year.now().getValue());
-        ArrayList<BoardPositionDTO> positions = (ArrayList<BoardPositionDTO>) boardPositionsRepository.getPositions();
-        new PDF_Directory(membershipInfoDTOS, commodoreMessage, positions);
+        DirectoryDataWrapper directoryData = new DirectoryDataWrapper();
+        directoryData.setMembershipInfoDTOS(convertJSONToPOJO(memberships));
+        directoryData.setCommodoreMessage(personRepository.getCommodoreMessageByYear(Year.now().getValue()));
+        directoryData.setPositionData((ArrayList<BoardPositionDTO>) boardPositionsRepository.getPositions());
+        new PDF_Directory(directoryData);
     }
 
     private ArrayList<MembershipInfoDTO> convertJSONToPOJO(List<JsonNode> memberships) {
-        List<MembershipInfoDTO> membershipInfos = new ArrayList<>();
+        ArrayList<MembershipInfoDTO> membershipInfos = new ArrayList<>();
         try {
             // Assuming 'memberships' is a JsonNode that contains an array of membership JSON objects
             ObjectMapper objectMapper = new ObjectMapper();
@@ -83,6 +85,6 @@ public class PDFServiceImpl implements PDFService {
             logger.error(e.getMessage());
             e.printStackTrace();
         }
-        return (ArrayList<MembershipInfoDTO>) membershipInfos;
+        return membershipInfos;
     }
 }

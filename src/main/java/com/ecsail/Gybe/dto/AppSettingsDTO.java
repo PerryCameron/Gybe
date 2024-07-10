@@ -1,16 +1,16 @@
 package com.ecsail.Gybe.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
-public class AppSettingDTO {
+public class AppSettingsDTO {
     private String key;
     private String value;
     private String description;
     private String dataType;
-    private Date dateTime;
+    private Timestamp dateTime;
     private String groupName;
 
-    public AppSettingDTO(String key, String value, String description, String dataType, Date dateTime, String groupName) {
+    public AppSettingsDTO(String key, String value, String description, String dataType, Timestamp dateTime, String groupName) {
         this.key = key;
         this.value = value;
         this.description = description;
@@ -51,11 +51,11 @@ public class AppSettingDTO {
         this.dataType = dataType;
     }
 
-    public Date getDateTime() {
+    public Timestamp getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Date dateTime) {
+    public void setDateTime(Timestamp dateTime) {
         this.dateTime = dateTime;
     }
 

@@ -4,6 +4,7 @@ import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
+import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -29,10 +30,10 @@ public class PDF_Directory {
     PDF_Object_Settings set;
     static Document doc;
 
-    public PDF_Directory(ArrayList<MembershipInfoDTO> membershipInfoDTOS, CommodoreMessageDTO commodoreMessage, ArrayList<BoardPositionDTO> positionData) {
-        this.membershipInfoDTOS = membershipInfoDTOS;
-        this.positionData = positionData;
-        this.commodoreMessage = commodoreMessage;
+    public PDF_Directory(DirectoryDataWrapper directoryDataWrapper) {
+        this.membershipInfoDTOS = directoryDataWrapper.getMembershipInfoDTOS();
+        this.positionData = directoryDataWrapper.getPositionData();
+        this.commodoreMessage = directoryDataWrapper.getCommodoreMessage();
         set = new PDF_Object_Settings(Year.now());
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document

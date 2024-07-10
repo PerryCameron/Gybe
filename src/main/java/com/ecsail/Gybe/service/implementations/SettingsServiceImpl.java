@@ -1,6 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
-import com.ecsail.Gybe.dto.AppSettingDTO;
+import com.ecsail.Gybe.dto.AppSettingsDTO;
 import com.ecsail.Gybe.repository.interfaces.SettingsRepository;
 import com.ecsail.Gybe.service.interfaces.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,45 +11,45 @@ import java.util.ArrayList;
 @Service
 public class SettingsServiceImpl implements SettingsService {
 
-    private ArrayList<AppSettingDTO> appSettingDTOS;
+    private ArrayList<AppSettingsDTO> appSettingDTOS;
     private SettingsRepository settingsRepository;
 
     @Autowired
-    public SettingsServiceImpl(ArrayList<AppSettingDTO> appSettingDTOS, SettingsRepository settingsRepository) {
+    public SettingsServiceImpl(ArrayList<AppSettingsDTO> appSettingDTOS, SettingsRepository settingsRepository) {
         this.appSettingDTOS = appSettingDTOS;
         this.settingsRepository = settingsRepository;
-        this.appSettingDTOS = (ArrayList<AppSettingDTO>) settingsRepository.getAppSettingsByGroupName("gybe");
+        this.appSettingDTOS = (ArrayList<AppSettingsDTO>) settingsRepository.getAppSettingsByGroupName("gybe");
     }
     @Override
     public void refreshSettings() {
         appSettingDTOS.clear();
-        this.appSettingDTOS = (ArrayList<AppSettingDTO>) settingsRepository.getAppSettingsByGroupName("gybe");
+        this.appSettingDTOS = (ArrayList<AppSettingsDTO>) settingsRepository.getAppSettingsByGroupName("gybe");
     }
     @Override
-    public AppSettingDTO getScheme() {
+    public AppSettingsDTO getScheme() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("scheme"))
                 .findFirst().orElse(null);
     }
     @Override
-    public AppSettingDTO getHostName() {
+    public AppSettingsDTO getHostName() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("host_name"))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public AppSettingDTO getAppPort() {
+    public AppSettingsDTO getAppPort() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("app_port"))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public AppSettingDTO getFormURL() {
+    public AppSettingsDTO getFormURL() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_url"))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public AppSettingDTO getFormId() {
+    public AppSettingsDTO getFormId() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_id"))
                 .findFirst().orElse(null);
     }
@@ -73,37 +73,37 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-    public AppSettingDTO getFormButtonColor() {
+    public AppSettingsDTO getFormButtonColor() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("button_color"))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public AppSettingDTO getFormButtonBorderColor() {
+    public AppSettingsDTO getFormButtonBorderColor() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("button_border_color"))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public AppSettingDTO getFormButtonTextColor() {
+    public AppSettingsDTO getFormButtonTextColor() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("button_text_color"))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public AppSettingDTO getFormBackgroundColor() {
+    public AppSettingsDTO getFormBackgroundColor() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_background_color"))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public AppSettingDTO getFormImage() {
+    public AppSettingsDTO getFormImage() {
         return appSettingDTOS.stream().filter(appSettingDTO -> appSettingDTO.getKey().equals("form_image"))
                 .findFirst().orElse(null);
     }
     @Override
     public boolean isTestMode() {
-        AppSettingDTO appSettingDTO = appSettingDTOS.stream().filter(settingDTO -> settingDTO.getKey().equals("test_mode"))
+        AppSettingsDTO appSettingDTO = appSettingDTOS.stream().filter(settingDTO -> settingDTO.getKey().equals("test_mode"))
                 .findFirst().orElse(null);
         if(appSettingDTO != null) {
          if(appSettingDTO.getValue().equals("true")) return true;

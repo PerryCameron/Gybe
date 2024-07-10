@@ -1,31 +1,31 @@
 package com.ecsail.Gybe.service.interfaces;
 
-import com.ecsail.Gybe.dto.AppSettingDTO;
+import com.ecsail.Gybe.dto.AppSettingsDTO;
 
 public interface SettingsService {
     void refreshSettings();
 
-    AppSettingDTO getScheme();
+    AppSettingsDTO getScheme();
 
-    AppSettingDTO getHostName();
+    AppSettingsDTO getHostName();
 
-    AppSettingDTO getAppPort();
+    AppSettingsDTO getAppPort();
 
-    AppSettingDTO getFormURL();
+    AppSettingsDTO getFormURL();
 
-    AppSettingDTO getFormId();
+    AppSettingsDTO getFormId();
 
     int getSelectedYear();
 
-    AppSettingDTO getFormButtonColor();
+    AppSettingsDTO getFormButtonColor();
 
-    AppSettingDTO getFormButtonBorderColor();
+    AppSettingsDTO getFormButtonBorderColor();
 
-    AppSettingDTO getFormButtonTextColor();
+    AppSettingsDTO getFormButtonTextColor();
 
-    AppSettingDTO getFormBackgroundColor();
+    AppSettingsDTO getFormBackgroundColor();
 
-    AppSettingDTO getFormImage();
+    AppSettingsDTO getFormImage();
 
     boolean isTestMode();
 }

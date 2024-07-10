@@ -8,12 +8,17 @@ import java.util.List;
 
 public interface SettingsRepository {
 
-    List<AppSettingDTO> getAppSettingsByGroupName(String groupName);
+    List<AppSettingsDTO> getAppSettingsByGroupName(String groupName);
+
+    AppSettingsDTO getSettingFromKey(String key);
+
+    AppSettingsDTO getSettingByGroup(String group);
+
     List<DbRosterSettingsDTO> getSearchableListItems();
     List<MembershipListRadioDTO> getRadioChoices();
     List<DbBoatSettingsDTO> getBoatSettings();
     List<BoatListRadioDTO> getBoatRadioChoices();
-    AppSettingDTO getSelectedYear();
+    AppSettingsDTO getSelectedYear();
 
     ThemeDTO findThemeByYear(int year);
 }
