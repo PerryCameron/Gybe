@@ -1,6 +1,6 @@
 package com.ecsail.Gybe.pdf.directory;
 
-
+import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.BoardPositionDTO;
 import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class PDF_Directory {
@@ -58,6 +60,20 @@ public class PDF_Directory {
         doc.add(new PDF_ChapterPage(1, "Membership Information", set));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
+        sortMemberships(); // put them in alphabetical order by last name
+        int batchSize = 6; // 6 per page
+        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(1, this);
+        for (int i = 0; i < membershipInfoDTOS.size(); i += batchSize) {
+            // Get the sublist for the current batch
+            List<MembershipInfoDTO> batch = membershipInfoDTOS.subList(i, Math.min(i + batchSize, membershipInfoDTOS.size()));
+            doc.add(membershipInfo.createPage(batch));
+        }
+
+
+
+//        membershipInfoDTOS
+//        doc.add(new P);
+
 //
 ////				createMemberInfoPages(doc);  // creates info pages
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -97,25 +113,24 @@ public class PDF_Directory {
         return writer;
     }
 
+    private void  sortMemberships() {
+        Comparator<MembershipInfoDTO> comparator = (m1, m2) -> {
+            String lastName1 = m1.getPeople().stream()
+                    .filter(person -> person.getMemberType() == 1)
+                    .map(PersonDTO::getLastName)
+                    .findFirst()
+                    .orElse("");
 
-//	private void createMemberInfoPages(Document doc) {
-//			int count = 0;
-//			doc.add(new Paragraph("\n"));
-//			for(MembershipListDTO l: rosters) {
-//			textArea.appendText("Creating entry for " + l.getFirstName() + " " + l.getLastName() + "\n");
-//			doc.add(new PDF_MemberShipInformation(2,l,set));
-//			count++;
-//			if(count % 6 == 0) {
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("<----New Page---->");
-//				if(count < rosters.size()) // prevents adding a return for after this section
-//					doc.add(new Paragraph("\n")); // I think this is screwing up
-//			}
-//			//if(count == 60) break;  // this reduces pages made for testing
-//		}
-//	}
+            String lastName2 = m2.getPeople().stream()
+                    .filter(person -> person.getMemberType() == 1)
+                    .map(PersonDTO::getLastName)
+                    .findFirst()
+                    .orElse("");
 
-
+            return lastName1.compareTo(lastName2);
+        };
+        membershipInfoDTOS.sort(comparator);
+    }
     public ArrayList<MembershipInfoDTO> getMembershipInfoDTOS() {
         return membershipInfoDTOS;
     }
