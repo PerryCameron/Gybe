@@ -7,6 +7,7 @@ import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.pdf.tools.PdfCell;
 import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.ecsail.Gybe.pdf.tools.PdfTable;
+import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -21,40 +22,45 @@ import java.util.function.Predicate;
 
 public class PDF_BoardOfDirectors extends Table {
     private final ArrayList<BoardPositionDTO> positionData;
-    PDF_Object_Settings set;
-    ArrayList<MembershipInfoDTO> memberships;
+    private final PDF_Directory pdfDirectory;
     ArrayList<OfficerDTO> positions;
     Set<PersonDTO> people = new HashSet<>();
+    float fixedLeading;
+//    PDF_Object_Settings set;
+    PdfFont mainFont;
 
     public PDF_BoardOfDirectors(int numColumns, PDF_Directory pdfDirectory) {
         super(numColumns);
-        this.set = pdfDirectory.getSet();
-        this.memberships = pdfDirectory.getMembershipInfoDTOS();
+        this.pdfDirectory = pdfDirectory;
         this.positions = extractPositions(Year.now().getValue());
         this.positionData = pdfDirectory.getPositionData();
+        fixedLeading = pdfDirectory.setting("positionFixedLeading");
+        this.mainFont = pdfDirectory.constructFontHeading(pdfDirectory.setting("mainFont"));
         // sort positions by order
         positionData.sort(Comparator.comparingInt(BoardPositionDTO::order));
-        setWidth(set.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
+        setWidth(pdfDirectory.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
         setHorizontalAlignment(HorizontalAlignment.CENTER);
-        addCell(PdfCell.verticalSpaceCellWithPadding(10, false));
+        addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("bodTopPadding"), false));
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
         cell.add(createOfficersTable());
-        cell.add(PdfCell.verticalSpaceCellWithPadding(5, false));
+        cell.add(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("bodTablePadding"), false));
         cell.add(createChairmenTable());
-        cell.add(PdfCell.verticalSpaceCellWithPadding(5, false));
+        cell.add(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("bodTablePadding"), false));
         cell.add(createBODTable());
         addCell(cell);
         cell = PdfCell.cellOf(Border.NO_BORDER);
-        String footerText = "©Eagle Creek Sailing club 1969-" + set.getSelectedYear() + " - This directory may not be used for commercial purposes";
-        cell.add(PdfParagraph.paragraphOf(footerText, 8, TextAlignment.CENTER));
+        int selectedYear = pdfDirectory.setting("selectedYear");
+        String footerText = "©Eagle Creek Sailing club 1969-" + selectedYear + " - This directory may not be used for commercial purposes";
+        cell.add(PdfParagraph.paragraphOf(footerText, pdfDirectory.setting("bodFooterFontSize"), TextAlignment.CENTER));
         addCell(cell);
     }
 
     public Table createOfficersTable() {
         Table table = PdfTable.TableOf(2,HorizontalAlignment.CENTER, this.getWidth().getValue() * 0.6f);
         Cell cell = PdfCell.cellOf(1,2,Border.NO_BORDER);
-        Paragraph paragraph = PdfParagraph.paragraphOf(set.getSelectedYear() + " Officers",set.getNormalFontSize() + 4,
-                set.getColumnHead(),set.getMainColor(),TextAlignment.CENTER);
+        int selectedYear = pdfDirectory.setting("selectedYear");
+        Paragraph paragraph = PdfParagraph.paragraphOf(selectedYear + " Officers", pdfDirectory.setting("PositionHeadingFontSize"),
+                mainFont,pdfDirectory.setting("mainColor"),TextAlignment.CENTER);
         table.addCell(cell.add(paragraph));
         Cell[] cells = processPositions(BoardPositionDTO::isOfficer); // what if I want to also have the ablity to process conditon or condition?
         for (Cell c : cells) table.addCell(c);
@@ -64,8 +70,8 @@ public class PDF_BoardOfDirectors extends Table {
     public Table createChairmenTable() {
         Table table = PdfTable.TableOf(2,HorizontalAlignment.CENTER, this.getWidth().getValue() * 0.7f);
         Cell cell = PdfCell.cellOf(1,2,Border.NO_BORDER);
-        Paragraph paragraph = PdfParagraph.paragraphOf("Committee Chairs",set.getNormalFontSize() + 4,
-                set.getColumnHead(),set.getMainColor(),TextAlignment.CENTER);
+        Paragraph paragraph = PdfParagraph.paragraphOf("Committee Chairs",pdfDirectory.setting("PositionHeadingFontSize"),
+                mainFont,pdfDirectory.setting("mainColor"),TextAlignment.CENTER);
         table.addCell(cell.add(paragraph));
         Cell[] cells = processPositions(position -> position.isChair() || position.isAssist()); // what if I want to also have the ablity to process conditon or condition?
         for (Cell c : cells) table.addCell(c);
@@ -93,7 +99,7 @@ public class PDF_BoardOfDirectors extends Table {
 
     private ArrayList<OfficerDTO> extractPositions(int year) {
         ArrayList<OfficerDTO> officers = new ArrayList<>();
-        for (MembershipInfoDTO membership : memberships) {
+        for (MembershipInfoDTO membership : pdfDirectory.getMembershipInfoDTOS()) {
             for (PersonDTO person : membership.getPeople()) {
                 // crack open the list of officers
                 List<OfficerDTO> personOfficers = person.getOfficers();
@@ -116,8 +122,8 @@ public class PDF_BoardOfDirectors extends Table {
 
     private Cell addPersonCell(String content) {
         Cell cell = PdfCell.cellOf(Border.NO_BORDER, HorizontalAlignment.CENTER);
-        cell.add(PdfParagraph.paragraphOf(content,set.getNormalFontSize(),
-                set.getColumnHead(),set.getFixedLeading() - 15));
+        cell.add(PdfParagraph.paragraphOf(content,pdfDirectory.setting("normalFontSize"),
+                mainFont,fixedLeading));
         return cell;
     }
 
@@ -125,23 +131,24 @@ public class PDF_BoardOfDirectors extends Table {
         Table table = PdfTable.TableOf(3,HorizontalAlignment.CENTER, this.getWidth().getValue());
         Cell cell = PdfCell.cellOf(1,3,Border.NO_BORDER);
         Paragraph paragraph = PdfParagraph.paragraphOf("Current Board Members",
-                set.getNormalFontSize() + 4,set.getColumnHead(),set.getMainColor(),TextAlignment.CENTER);
+                pdfDirectory.setting("PositionHeadingFontSize"),mainFont,pdfDirectory.setting("mainColor"),TextAlignment.CENTER);
         table.addCell(cell.add(paragraph));
         createBoardMemberTables(table); // will create 3 more cells and put a table in each
         return table;
     }
 
     private void createBoardMemberTables(Table bodTable) {
+        int selectedYear = pdfDirectory.setting("selectedYear");
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-        cell.add(createBoardMemberColumn(Integer.parseInt(set.getSelectedYear())));
+        cell.add(createBoardMemberColumn(selectedYear));
         bodTable.addCell(cell);
 
         cell = PdfCell.cellOf(Border.NO_BORDER);
-        cell.add(createBoardMemberColumn(Integer.parseInt(set.getSelectedYear()) + 1));
+        cell.add(createBoardMemberColumn(selectedYear + 1));
         bodTable.addCell(cell);
 
         cell = PdfCell.cellOf(Border.NO_BORDER);
-        cell.add(createBoardMemberColumn(Integer.parseInt(set.getSelectedYear()) + 2));
+        cell.add(createBoardMemberColumn(selectedYear + 2));
         bodTable.addCell(cell);
     }
 
@@ -164,14 +171,14 @@ public class PDF_BoardOfDirectors extends Table {
         String[] boardMemberList = selectBoardMemberListFor(year);
         Table columnTable = new Table(1);
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-        Paragraph paragraph = PdfParagraph.paragraphOf(String.valueOf(year),12, set.getColumnHead(),set.getFixedLeading() - 15);
+        Paragraph paragraph = PdfParagraph.paragraphOf(String.valueOf(year),12, mainFont,fixedLeading);
         paragraph.setTextAlignment(TextAlignment.LEFT);
         cell.add(paragraph);
         columnTable.addCell(cell);
 
         for (String name : boardMemberList) {
             cell = PdfCell.cellOf(Border.NO_BORDER);
-            paragraph = PdfParagraph.paragraphOf(name, set.getNormalFontSize(), set.getFixedLeading() - 15);
+            paragraph = PdfParagraph.paragraphOf(name, pdfDirectory.setting("normalFontSize"), fixedLeading);
             cell.add(paragraph);
             columnTable.addCell(cell);
         }

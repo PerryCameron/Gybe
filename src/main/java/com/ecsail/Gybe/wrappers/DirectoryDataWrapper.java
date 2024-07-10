@@ -5,11 +5,20 @@ import com.ecsail.Gybe.dto.*;
 import java.util.ArrayList;
 
 public class DirectoryDataWrapper {
-    ArrayList<MembershipInfoDTO> membershipInfoDTOS;
-    CommodoreMessageDTO commodoreMessage;
-    ArrayList<BoardPositionDTO> positionData;
-    ArrayList<SlipStructureDTO> slipStructureDTOS;
-    ArrayList<AppSettingsDTO> appSettingsDTOS;
+    private ArrayList<MembershipInfoDTO> membershipInfoDTOS;
+    private CommodoreMessageDTO commodoreMessage;
+    private ArrayList<BoardPositionDTO> positionData;
+    private ArrayList<SlipStructureDTO> slipStructureDTOS;
+    private ArrayList<AppSettingsDTO> appSettingsDTOS;
+    private String fontPath;
+
+    public String getFontPath() {
+        return fontPath;
+    }
+
+    public void setFontPath(String fontPath) {
+        this.fontPath = fontPath;
+    }
 
     public ArrayList<AppSettingsDTO> getAppSettingsDTOS() {
         return appSettingsDTOS;

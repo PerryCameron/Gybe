@@ -2,6 +2,12 @@ package com.ecsail.Gybe.pdf.directory;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.kernel.colors.DeviceCmyk;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -13,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,6 +34,8 @@ public class PDF_Directory {
     private final CommodoreMessageDTO commodoreMessage;
     private final Rectangle pageSize;
 
+    private String fontPath;
+
 
     PDF_Object_Settings set;
     static Document doc;
@@ -37,6 +46,8 @@ public class PDF_Directory {
         this.commodoreMessage = directoryDataWrapper.getCommodoreMessage();
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
         this.pageSize = calculatePageSize();
+        this.fontPath = directoryDataWrapper.getFontPath();
+        System.out.println(fontPath);
         set = new PDF_Object_Settings(Year.now());
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document
@@ -114,6 +125,13 @@ public class PDF_Directory {
                     return (T) Integer.valueOf(value);
                 } else if (setting.getDataType().equals("float")) {
                     return (T) Float.valueOf(value);
+                } else if (setting.getDataType().equals("DeviceCmyk")) {
+                    String[] colorStrings = setting.getValue().split(",");
+                    float[] col = new float[colorStrings.length];
+                    for (int i = 0; i < colorStrings.length; i++) {
+                        col[i] = Float.parseFloat(colorStrings[i]);
+                    }
+                    return (T) new DeviceCmyk(col[0],col[1],col[2],col[3]);
                 } else { // is a string
                     return (T) value;
                 }
@@ -121,6 +139,17 @@ public class PDF_Directory {
         }
         logger.error("No setting found for: " + name);
         return null; // or throw an exception if the setting is not found
+    }
+
+    protected PdfFont constructFontHeading(String font) {
+        PdfFont pdfFont = null;
+        try {
+            FontProgram fontProgram = FontProgramFactory.createFont(fontPath + font);
+            pdfFont = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return pdfFont;
     }
 
     private com.itextpdf.kernel.geom.Rectangle calculatePageSize() {

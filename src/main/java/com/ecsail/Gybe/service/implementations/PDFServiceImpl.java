@@ -6,6 +6,7 @@ import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.pdf.directory.PDF_Directory;
 import com.ecsail.Gybe.repository.interfaces.*;
+import com.ecsail.Gybe.service.interfaces.FontService;
 import com.ecsail.Gybe.service.interfaces.PDFService;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -34,6 +35,7 @@ public class PDFServiceImpl implements PDFService {
     private final BoardPositionsRepository boardPositionsRepository;
     private final SettingsRepository settingsRepository;
     private static final Logger logger = LoggerFactory.getLogger(PDFServiceImpl.class);
+    private final FontService fontService;
 
     @Autowired
     public PDFServiceImpl(
@@ -47,7 +49,8 @@ public class PDFServiceImpl implements PDFService {
             OfficerRepository officerRepository,
             NotesRepository notesRepository,
             BoardPositionsRepository boardPositionsRepository,
-            SettingsRepository settingsRepository
+            SettingsRepository settingsRepository,
+            FontService fontService
     ) {
         this.membershipRepository = membershipRepository;
         this.personRepository = personRepository;
@@ -60,6 +63,7 @@ public class PDFServiceImpl implements PDFService {
         this.notesRepository = notesRepository;
         this.boardPositionsRepository = boardPositionsRepository;
         this.settingsRepository = settingsRepository;
+        this.fontService = fontService;
     }
 
     @Override
@@ -69,6 +73,7 @@ public class PDFServiceImpl implements PDFService {
         directoryData.setCommodoreMessage(personRepository.getCommodoreMessageByYear(Year.now().getValue()));
         directoryData.setPositionData((ArrayList<BoardPositionDTO>) boardPositionsRepository.getPositions());
         directoryData.setAppSettingsDTOS((ArrayList<AppSettingsDTO>) settingsRepository.getAppSettingsByGroupName("directory"));
+        directoryData.setFontPath(fontService.getFontLocation());
         new PDF_Directory(directoryData);
     }
 
