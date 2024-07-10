@@ -16,7 +16,6 @@ import java.io.FileNotFoundException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 
 public class PDF_Directory {
@@ -26,6 +25,9 @@ public class PDF_Directory {
     private final ArrayList<BoardPositionDTO> positionData;
     private final ArrayList<AppSettingsDTO> settings;
     private final CommodoreMessageDTO commodoreMessage;
+    private final Rectangle pageSize;
+
+
     PDF_Object_Settings set;
     static Document doc;
 
@@ -34,13 +36,14 @@ public class PDF_Directory {
         this.positionData = directoryDataWrapper.getPositionData();
         this.commodoreMessage = directoryDataWrapper.getCommodoreMessage();
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
+        this.pageSize = calculatePageSize();
         set = new PDF_Object_Settings(Year.now());
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document
         assert writer != null;
         PdfDocument pdf = new PdfDocument(writer);
         //PageSize A5v = new PageSize(PageSize.A5.getWidth(), PageSize.A5.getHeight());
-        PDF_Directory.doc = new Document(pdf, new PageSize(getPageSize()));
+        PDF_Directory.doc = new Document(pdf, new PageSize(calculatePageSize()));
         doc.setLeftMargin(0.5f);
         doc.setRightMargin(0.5f);
         doc.setTopMargin(1f);
@@ -120,7 +123,7 @@ public class PDF_Directory {
         return null; // or throw an exception if the setting is not found
     }
 
-    private com.itextpdf.kernel.geom.Rectangle getPageSize() {
+    private com.itextpdf.kernel.geom.Rectangle calculatePageSize() {
         float widthPoints = 72 * (float) setting("width");
         float heightPoints = 72 * (float) setting("height");
         Rectangle sheet = new Rectangle(widthPoints, heightPoints);
@@ -180,4 +183,7 @@ public class PDF_Directory {
         return settings;
     }
 
+    public Rectangle getPageSize() {
+        return pageSize;
+    }
 }

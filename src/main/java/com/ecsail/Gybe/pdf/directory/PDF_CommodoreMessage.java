@@ -11,21 +11,21 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import static com.ecsail.Gybe.statictools.HtmlParser.extractTextBetweenPTags;
 // TODO Give ability to make bold and italic by making the text HTML
 public class PDF_CommodoreMessage extends Table {
-	private final CommodoreMessageDTO commodoreMessage;
-	PDF_Object_Settings set;
+	private final PDF_Directory pdfDirectory;
+
 	public PDF_CommodoreMessage(int numColumns, PDF_Directory pdfDirectory) {
 		super(numColumns);
-		this.set = pdfDirectory.getSet();
-		this.commodoreMessage = pdfDirectory.getCommodoreMessage();
+		this.pdfDirectory = pdfDirectory;
+		CommodoreMessageDTO commodoreMessage = pdfDirectory.getCommodoreMessage();
 		String[] paragraphs = extractTextBetweenPTags(commodoreMessage.getMessage());
-		setWidth(set.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
+		setWidth(pdfDirectory.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
 		setHorizontalAlignment(HorizontalAlignment.CENTER);
-		addCell(PdfCell.verticalSpaceCellWithPadding(10,false));
+		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("salutationTopPadding"),false));
 		addCell(newParagraph(commodoreMessage.getSalutation()));
-		addCell(PdfCell.verticalSpaceCellWithPadding(5,false));
+		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("messageTopPadding"),false));
 		for (String paragraph : paragraphs) {
 			addCell(newParagraph(paragraph));
-			addCell(PdfCell.verticalSpaceCellWithPadding(5, false));
+			addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("paragraphPadding"), false));
 		}
 		addCell(newParagraph(commodoreMessage.getCommodore() + "                           "
 				+ commodoreMessage.getFiscalYear() + " ECSC Commodore"));
@@ -33,7 +33,8 @@ public class PDF_CommodoreMessage extends Table {
 	
 	private Cell newParagraph(String text) {
 		Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-		cell.add(PdfParagraph.paragraphOf(text, set.getNormalFontSize()));
+		float fontSize = pdfDirectory.setting("normalFontSize");
+		cell.add(PdfParagraph.paragraphOf(text, fontSize)); //normalFontSize
 		return cell;
 	}
 
