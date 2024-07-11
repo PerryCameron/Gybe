@@ -34,8 +34,8 @@ public class PDF_Directory {
     private final CommodoreMessageDTO commodoreMessage;
     private final Rectangle pageSize;
     private String fontPath;
-    private PdfFont headingFont;
-//    private PdfFont textFont;
+    private PdfFont font;
+    private DeviceCmyk mainColor;
     PDF_Object_Settings set;
     static Document doc;
 
@@ -46,9 +46,9 @@ public class PDF_Directory {
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
         this.pageSize = calculatePageSize();
         this.fontPath = directoryDataWrapper.getFontPath();
-        this.headingFont = constructFontHeading(setting("headingFont"));
+        this.font = constructFontHeading(setting("font"));
+        this.mainColor = setting("mainColor");
 //        this.textFont = constructFontHeading(setting("textFont"));
-        System.out.println(fontPath);
         set = new PDF_Object_Settings(Year.now());
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document
@@ -70,7 +70,7 @@ public class PDF_Directory {
         doc.add(new PDF_BoardOfDirectors(1, this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-		doc.add(new PDF_TableOfContents(1, set));
+		doc.add(new PDF_TableOfContents(1, this));
 		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
         doc.add(new PDF_ChapterPage(1, "Membership Information", set));
@@ -217,11 +217,15 @@ public class PDF_Directory {
         return pageSize;
     }
 
-    public PdfFont getHeadingFont() {
-        return headingFont;
+    public PdfFont getFont() {
+        return font;
     }
 
-//    public PdfFont getTextFont() {
+    public DeviceCmyk getMainColor() {
+        return mainColor;
+    }
+
+    //    public PdfFont getTextFont() {
 //        return textFont;
 //    }
 }

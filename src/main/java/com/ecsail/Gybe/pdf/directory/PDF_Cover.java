@@ -82,7 +82,7 @@ public class PDF_Cover extends Table {
 			p = new Paragraph(heading);
 			p.setFontSize(pdfDirectory.setting("titleFontSize"));
 			// TODO add font ability + bold
-			p.setFont(pdfDirectory.getHeadingFont());
+			p.setFont(pdfDirectory.getFont());
 			p.setFixedLeading(pdfDirectory.setting("titleFixedLeading"));  // sets spacing between lines of text
 			p.setTextAlignment(TextAlignment.CENTER);
 			cell.add(p);
