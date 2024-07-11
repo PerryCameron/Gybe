@@ -33,10 +33,9 @@ public class PDF_Directory {
     private final ArrayList<AppSettingsDTO> settings;
     private final CommodoreMessageDTO commodoreMessage;
     private final Rectangle pageSize;
-
     private String fontPath;
-
-
+    private PdfFont headingFont;
+//    private PdfFont textFont;
     PDF_Object_Settings set;
     static Document doc;
 
@@ -47,6 +46,8 @@ public class PDF_Directory {
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
         this.pageSize = calculatePageSize();
         this.fontPath = directoryDataWrapper.getFontPath();
+        this.headingFont = constructFontHeading(setting("headingFont"));
+//        this.textFont = constructFontHeading(setting("textFont"));
         System.out.println(fontPath);
         set = new PDF_Object_Settings(Year.now());
         PdfWriter writer = getPdfWriter();
@@ -215,4 +216,12 @@ public class PDF_Directory {
     public Rectangle getPageSize() {
         return pageSize;
     }
+
+    public PdfFont getHeadingFont() {
+        return headingFont;
+    }
+
+//    public PdfFont getTextFont() {
+//        return textFont;
+//    }
 }
