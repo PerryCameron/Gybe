@@ -19,9 +19,9 @@ import java.time.format.DateTimeFormatter;
 public class PDF_ChapterPage extends Table {
 
 	PDF_Object_Settings set;
-	public PDF_ChapterPage(int numColumns, String chapterText, PDF_Object_Settings set) {
+	public PDF_ChapterPage(int numColumns, String chapterText, PDF_Directory pdfDirectory) {
 		super(numColumns);
-		this.set = set;
+		this.set = pdfDirectory.getSet();
 		setWidth(PageSize.A5.getWidth() * 0.9f);  // makes table 90% of page width
 		setHorizontalAlignment(HorizontalAlignment.CENTER);
 
@@ -38,16 +38,16 @@ public class PDF_ChapterPage extends Table {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		String formattedDate = today.format(formatter);
 		String line1 = "Includes paid members as of " + formattedDate;
-		cell.add(PdfParagraph.paragraphOf(line1, set.getNormalFontSize(), TextAlignment.CENTER));
+		cell.add(PdfParagraph.paragraphOf(line1, pdfDirectory.setting("normalFontSize"), TextAlignment.CENTER));
 		addCell(cell);
 
 		cell = PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
 		String line2 = ("Please notify the ECSC Membership Chair of any updates: ");
-		cell.add(PdfParagraph.paragraphOf(line2, set.getNormalFontSize(), TextAlignment.CENTER));
+		cell.add(PdfParagraph.paragraphOf(line2, pdfDirectory.setting("normalFontSize"), TextAlignment.CENTER));
 		addCell(cell);
 
 		cell = PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
-		paragraph = PdfParagraph.paragraphOf("membership@ecsail.org", set.getNormalFontSize(), TextAlignment.CENTER);
+		paragraph = PdfParagraph.paragraphOf("membership@ecsail.org", pdfDirectory.setting("normalFontSize"), TextAlignment.CENTER);
 		paragraph.setFontColor(ColorConstants.BLUE);
 		cell.add(paragraph);
 		addCell(cell);

@@ -73,7 +73,7 @@ public class PDF_Directory {
 		doc.add(new PDF_TableOfContents(1, this));
 		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_ChapterPage(1, "Membership Information", set));
+        doc.add(new PDF_ChapterPage(1, "Membership Information", this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
 //        sortMemberships(); // put them in alphabetical order by last name
