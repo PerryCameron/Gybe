@@ -16,23 +16,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 
-public class PDF_ChapterPage extends Table {
+public class PDF_MembershipInfoTitlePage extends Table {
 
-	PDF_Object_Settings set;
-	public PDF_ChapterPage(int numColumns, String chapterText, PDF_Directory pdfDirectory) {
+	public PDF_MembershipInfoTitlePage(int numColumns, String chapterText, PDF_Directory pdfDirectory) {
 		super(numColumns);
-		this.set = pdfDirectory.getSet();
 		setWidth(PageSize.A5.getWidth() * 0.9f);  // makes table 90% of page width
 		setHorizontalAlignment(HorizontalAlignment.CENTER);
 
-		addCell(PdfCell.verticalSpaceCellWithPadding(90, false));
+		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("membershipInfoTitlePaddingTop"), false));
 		Cell cell = PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
-		Paragraph paragraph = PdfParagraph.paragraphOf(chapterText, set.getNormalFontSize() + 18,
-				set.getColumnHead(),set.getMainColor(),TextAlignment.CENTER);
+		Paragraph paragraph = PdfParagraph.paragraphOf(chapterText, pdfDirectory.setting("membershipInformationTitleFontSize"),
+				pdfDirectory.getFont(),pdfDirectory.getMainColor(),TextAlignment.CENTER);
 		cell.add(paragraph);
 		addCell(cell);
 
-		addCell(PdfCell.verticalSpaceCellWithPadding(40, false));
+		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("membershipInfoTitlePaddingBottom"), false));
 		cell= PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
 		LocalDate today = LocalDate.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");

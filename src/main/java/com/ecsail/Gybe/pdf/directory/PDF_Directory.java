@@ -36,7 +36,6 @@ public class PDF_Directory {
     private String fontPath;
     private PdfFont font;
     private DeviceCmyk mainColor;
-    PDF_Object_Settings set;
     static Document doc;
 
     public PDF_Directory(DirectoryDataWrapper directoryDataWrapper) {
@@ -49,7 +48,6 @@ public class PDF_Directory {
         this.font = constructFontHeading(setting("font"));
         this.mainColor = setting("mainColor");
 //        this.textFont = constructFontHeading(setting("textFont"));
-        set = new PDF_Object_Settings(Year.now());
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document
         assert writer != null;
@@ -73,7 +71,7 @@ public class PDF_Directory {
 		doc.add(new PDF_TableOfContents(1, this));
 		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_ChapterPage(1, "Membership Information", this));
+        doc.add(new PDF_MembershipInfoTitlePage(1, "Membership Information", this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
 //        sortMemberships(); // put them in alphabetical order by last name
@@ -193,13 +191,6 @@ public class PDF_Directory {
         return membershipInfoDTOS;
     }
 
-    public PDF_Object_Settings getSet() {
-        return set;
-    }
-
-    public void setSet(PDF_Object_Settings set) {
-        this.set = set;
-    }
 
     public ArrayList<BoardPositionDTO> getPositionData() {
         return positionData;
