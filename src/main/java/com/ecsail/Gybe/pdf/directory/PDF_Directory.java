@@ -48,6 +48,7 @@ public class PDF_Directory {
         this.fontPath = directoryDataWrapper.getFontPath();
         this.font = constructFontHeading(setting("font"));
         this.mainColor = setting("mainColor");
+        logger.info("Creating directory");
 //        this.textFont = constructFontHeading(setting("textFont"));
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document

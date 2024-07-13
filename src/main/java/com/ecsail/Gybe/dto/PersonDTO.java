@@ -123,6 +123,10 @@ public class PersonDTO {
     public String getFullName() {
         return firstName + " " + lastName;
     }
+    public String getReversedFullName() {
+        return lastName + ", " + firstName;
+    }
+
     public int getPId() {
         return pId;
     }

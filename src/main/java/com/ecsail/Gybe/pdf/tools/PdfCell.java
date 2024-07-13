@@ -1,7 +1,9 @@
 package com.ecsail.Gybe.pdf.tools;
 
 import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceCmyk;
 import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.HorizontalAlignment;
@@ -42,18 +44,22 @@ public class PdfCell {
         return cell;
     }
 
-    public static Cell verticalSpaceCell(int space) {
-        String carrageReturn = "";
-        for(int i = 0; i < space; i++) {
-            carrageReturn += "\n";
-        }
+    public static Cell cellOf(Border border, HorizontalAlignment horizontalAlignment
+            , VerticalAlignment verticalAlignment, Border borderTop, DeviceCmyk backGroundColor, float width) {
         Cell cell = new Cell();
-        Paragraph p = new Paragraph(carrageReturn);
-        p.setFixedLeading(7);
-        cell.add(p);
-        cell.setBorder(Border.NO_BORDER);
+        cell.setBorder(border);
+        cell.setHorizontalAlignment(horizontalAlignment);
+        cell.setVerticalAlignment(verticalAlignment);
+        cell.setBorderTop(borderTop);
+        cell.setBackgroundColor(backGroundColor);
+        cell.setWidth(width);
         return cell;
     }
+
+//    cell[0] = new Cell();
+//    cell[0].setBorder(Border.NO_BORDER).setBorderTop(new SolidBorder(0.5f))
+//            .setBackgroundColor(pdfDirectory.getMainColor()).setVerticalAlignment(VerticalAlignment.MIDDLE)
+//                .setWidth(tableWidth * 0.5f).setHorizontalAlignment(HorizontalAlignment.CENTER).add(paragraph);
 
     public static Cell verticalSpaceCellWithPadding(float padding, boolean isTest) {
         Cell cell = new Cell();
