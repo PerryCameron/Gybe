@@ -58,7 +58,7 @@ public class MembershipInfoDTO {
 
     @JsonProperty("people")
      private List<PersonDTO> people;
-    @JsonIgnore
+
     @JsonProperty("boats")
     private List<BoatDTO> boats;
 
@@ -180,6 +180,10 @@ public class MembershipInfoDTO {
 
     public void setSlip(SlipDTO slipDTO) {
         this.slipDTO = slipDTO;
+    }
+
+    public String getFullAddress() {
+        return address + " " + city + " " + state + " " + zip;
     }
 
     public List<PersonDTO> getPeople() {

@@ -18,36 +18,42 @@ import java.time.format.DateTimeFormatter;
 
 public class PDF_MembershipInfoTitlePage extends Table {
 
-	public PDF_MembershipInfoTitlePage(int numColumns, String chapterText, PDF_Directory pdfDirectory) {
-		super(numColumns);
-		setWidth(PageSize.A5.getWidth() * 0.9f);  // makes table 90% of page width
-		setHorizontalAlignment(HorizontalAlignment.CENTER);
 
-		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("membershipInfoTitlePaddingTop"), false));
-		Cell cell = PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
-		Paragraph paragraph = PdfParagraph.paragraphOf(chapterText, pdfDirectory.setting("membershipInformationTitleFontSize"),
-				pdfDirectory.getFont(),pdfDirectory.getMainColor(),TextAlignment.CENTER);
-		cell.add(paragraph);
-		addCell(cell);
+    public PDF_MembershipInfoTitlePage(int numColumns, String chapterText, PDF_Directory pdfDirectory) {
+        super(numColumns);
+        float paddingTop = pdfDirectory.setting("membershipInfoTitlePaddingTop");
+        float titleFontSize = pdfDirectory.setting("membershipInformationTitleFontSize");
+        float titlePaddingBottom = pdfDirectory.setting("membershipInfoTitlePaddingBottom");
+        float normalFontSize = pdfDirectory.setting("normalFontSize");
+        String membershipEmail = pdfDirectory.setting("membershipEmail");
+        setWidth(PageSize.A5.getWidth() * 0.9f);  // makes table 90% of page width
+        setHorizontalAlignment(HorizontalAlignment.CENTER);
 
-		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("membershipInfoTitlePaddingBottom"), false));
-		cell= PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
-		LocalDate today = LocalDate.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-		String formattedDate = today.format(formatter);
-		String line1 = "Includes paid members as of " + formattedDate;
-		cell.add(PdfParagraph.paragraphOf(line1, pdfDirectory.setting("normalFontSize"), TextAlignment.CENTER));
-		addCell(cell);
+        addCell(PdfCell.verticalSpaceCellWithPadding(paddingTop, false));
+        Cell cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);
+        Paragraph paragraph = PdfParagraph.paragraphOf(chapterText, titleFontSize,
+                pdfDirectory.getFont(), pdfDirectory.getMainColor(), TextAlignment.CENTER);
+        cell.add(paragraph);
+        addCell(cell);
 
-		cell = PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
-		String line2 = ("Please notify the ECSC Membership Chair of any updates: ");
-		cell.add(PdfParagraph.paragraphOf(line2, pdfDirectory.setting("normalFontSize"), TextAlignment.CENTER));
-		addCell(cell);
+        addCell(PdfCell.verticalSpaceCellWithPadding(titlePaddingBottom, false));
+        cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        String formattedDate = today.format(formatter);
+        String line1 = "Includes paid members as of " + formattedDate;
+        cell.add(PdfParagraph.paragraphOf(line1, normalFontSize, TextAlignment.CENTER));
+        addCell(cell);
 
-		cell = PdfCell.cellOf(Border.NO_BORDER,VerticalAlignment.MIDDLE);
-		paragraph = PdfParagraph.paragraphOf("membership@ecsail.org", pdfDirectory.setting("normalFontSize"), TextAlignment.CENTER);
-		paragraph.setFontColor(ColorConstants.BLUE);
-		cell.add(paragraph);
-		addCell(cell);
-	}
+        cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);
+        String line2 = ("Please notify the ECSC Membership Chair of any updates: ");
+        cell.add(PdfParagraph.paragraphOf(line2, normalFontSize, TextAlignment.CENTER));
+        addCell(cell);
+
+        cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);
+        paragraph = PdfParagraph.paragraphOf(membershipEmail, normalFontSize, TextAlignment.CENTER);
+        paragraph.setFontColor(ColorConstants.BLUE);
+        cell.add(paragraph);
+        addCell(cell);
+    }
 }
