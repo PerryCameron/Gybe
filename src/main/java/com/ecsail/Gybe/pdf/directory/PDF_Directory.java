@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 
 public class PDF_Directory {
@@ -74,14 +75,15 @@ public class PDF_Directory {
         doc.add(new PDF_MembershipInfoTitlePage(1, "Membership Information", this));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-//        sortMemberships(); // put them in alphabetical order by last name
-//        int batchSize = 6; // 6 per page
-//        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(1, this);
-//        for (int i = 0; i < membershipInfoDTOS.size(); i += batchSize) {
-//            // Get the sublist for the current batch
-//            List<MembershipInfoDTO> batch = membershipInfoDTOS.subList(i, Math.min(i + batchSize, membershipInfoDTOS.size()));
-//            doc.add(membershipInfo.createPage(batch));
-//        }
+        sortMemberships(); // put them in alphabetical order by last name
+        int batchSize = 6; // 6 per page
+        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(this);
+        for (int i = 0; i < membershipInfoDTOS.size(); i += batchSize) {
+            // Get the sublist for the current batch
+            List<MembershipInfoDTO> batch = membershipInfoDTOS.subList(i, Math.min(i + batchSize, membershipInfoDTOS.size()));
+            doc.add(membershipInfo.createPage(batch, 2));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
 
 
 
@@ -216,7 +218,4 @@ public class PDF_Directory {
         return mainColor;
     }
 
-    //    public PdfFont getTextFont() {
-//        return textFont;
-//    }
 }
