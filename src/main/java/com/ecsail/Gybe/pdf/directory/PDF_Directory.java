@@ -1,11 +1,11 @@
 package com.ecsail.Gybe.pdf.directory;
 
-import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.dto.MembershipInfoDTO;
+import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.io.font.PdfEncodings;
-import com.itextpdf.kernel.colors.DeviceCmyk;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,27 +28,13 @@ import java.util.List;
 public class PDF_Directory {
 
     public static Logger logger = LoggerFactory.getLogger(PDF_Directory.class);
-    private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
-    private final ArrayList<BoardPositionDTO> positionData;
-    private final ArrayList<AppSettingsDTO> settings;
-    private final CommodoreMessageDTO commodoreMessage;
-    private final Rectangle pageSize;
-    private final String fontPath;
-    private final PdfFont font;
-    private final DeviceCmyk mainColor;
     static Document doc;
+    private final DirectoryModel model;
 
     public PDF_Directory(DirectoryDataWrapper directoryDataWrapper) {
-        this.membershipInfoDTOS = directoryDataWrapper.getMembershipInfoDTOS();
-        this.positionData = directoryDataWrapper.getPositionData();
-        this.commodoreMessage = directoryDataWrapper.getCommodoreMessage();
-        this.settings = directoryDataWrapper.getAppSettingsDTOS();
-        this.pageSize = calculatePageSize();
-        this.fontPath = directoryDataWrapper.getFontPath();
-        this.font = constructFontHeading(setting("font"));
-        this.mainColor = setting("mainColor");
-        logger.info("Creating directory");
-//        this.textFont = constructFontHeading(setting("textFont"));
+        this.model = new DirectoryModel(directoryDataWrapper);
+        model.setPageSize(calculatePageSize());
+        model.setFont(constructFontHeading(model.getFontName()));
         PdfWriter writer = getPdfWriter();
         // Initialize PDF document
         assert writer != null;
@@ -61,35 +46,32 @@ public class PDF_Directory {
         doc.setTopMargin(1f);
         doc.setBottomMargin(0.5f);
 
-        doc.add(new PDF_Cover(this).createCover(1));
+        doc.add(new PDF_Cover(model).createCover());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_CommodoreMessage(this).createMessage(1));
+        doc.add(new PDF_CommodoreMessage(model).createMessage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_BoardOfDirectors(this).createBodPage());
+        doc.add(new PDF_BoardOfDirectors( model).createBodPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-		doc.add(new PDF_TableOfContents(1, this));
+		doc.add(new PDF_TableOfContents(model).createTocPage());
 		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_MembershipInfoTitlePage(1, "Membership Information", this));
+        doc.add(new PDF_MembershipInfoTitlePage(model).createTitlePage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
         sortMemberships(); // put them in alphabetical order by last name
         int batchSize = 6; // 6 per page
-        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(this);
-        for (int i = 0; i < membershipInfoDTOS.size(); i += batchSize) {
+        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
+        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
             // Get the sublist for the current batch
-            List<MembershipInfoDTO> batch = membershipInfoDTOS.subList(i, Math.min(i + batchSize, membershipInfoDTOS.size()));
-            doc.add(membershipInfo.createPage(batch, 2));
-            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        }
-        // add another page if they are even.
-        if ((membershipInfoDTOS.size() / batchSize) % 2 != 0) {
+            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
+            doc.add(membershipInfo.createPage(batch));
             doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         }
 
+//
 //				new PDF_MembersByNumber(set, doc, rosters);
 //
 //				doc.add(new PDF_SlipPageL(2, set));
@@ -108,51 +90,10 @@ public class PDF_Directory {
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //				textArea.appendText("Created directory page\n");
         doc.close();
+
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
     }
 
-    @SuppressWarnings("unchecked")
-    protected  <T> T setting(String name) {
-        for (AppSettingsDTO setting : settings) {
-            if (name.equals(setting.getKey())) {  // this is PDF_Directory.java:108
-                String value = setting.getValue();
-                if (setting.getDataType().equals("integer")) {
-                    return (T) Integer.valueOf(value);
-                } else if (setting.getDataType().equals("float")) {
-                    return (T) Float.valueOf(value);
-                } else if (setting.getDataType().equals("DeviceCmyk")) {
-                    String[] colorStrings = setting.getValue().split(",");
-                    float[] col = new float[colorStrings.length];
-                    for (int i = 0; i < colorStrings.length; i++) {
-                        col[i] = Float.parseFloat(colorStrings[i]);
-                    }
-                    return (T) new DeviceCmyk(col[0],col[1],col[2],col[3]);
-                } else { // is a string
-                    return (T) value;
-                }
-            }
-        }
-        logger.error("No setting found for: " + name);
-        return null; // or throw an exception if the setting is not found
-    }
-
-    protected PdfFont constructFontHeading(String font) {
-        PdfFont pdfFont = null;
-        try {
-            FontProgram fontProgram = FontProgramFactory.createFont(fontPath + font);
-            pdfFont = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return pdfFont;
-    }
-
-    private com.itextpdf.kernel.geom.Rectangle calculatePageSize() {
-        float widthPoints = 72 * (float) setting("width");
-        float heightPoints = 72 * (float) setting("height");
-        Rectangle sheet = new Rectangle(widthPoints, heightPoints);
-        return sheet;
-    }
 
     private static PdfWriter getPdfWriter() {
         PdfWriter writer = null;
@@ -181,35 +122,28 @@ public class PDF_Directory {
 
             return lastName1.compareTo(lastName2);
         };
-        membershipInfoDTOS.sort(comparator);
-    }
-    public ArrayList<MembershipInfoDTO> getMembershipInfoDTOS() {
-        return membershipInfoDTOS;
+        model.getMembershipInfoDTOS().sort(comparator);
     }
 
-
-    public ArrayList<BoardPositionDTO> getPositionData() {
-        return positionData;
+    protected PdfFont constructFontHeading(String font) {
+        PdfFont pdfFont = null;
+        try {
+            FontProgram fontProgram = FontProgramFactory.createFont(model.getFontPath() + font);
+            pdfFont = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return pdfFont;
     }
 
-    public CommodoreMessageDTO getCommodoreMessage() {
-        return commodoreMessage;
+    private Rectangle calculatePageSize() {
+        float widthPoints = 72 * model.getWidth();
+        float heightPoints = 72 * model.getHeight();
+        Rectangle sheet = new Rectangle(widthPoints, heightPoints);
+        return sheet;
     }
 
-    public ArrayList<AppSettingsDTO> getSettings() {
-        return settings;
+    public DirectoryModel getModel() {
+        return model;
     }
-
-    public Rectangle getPageSize() {
-        return pageSize;
-    }
-
-    public PdfFont getFont() {
-        return font;
-    }
-
-    public DeviceCmyk getMainColor() {
-        return mainColor;
-    }
-
 }

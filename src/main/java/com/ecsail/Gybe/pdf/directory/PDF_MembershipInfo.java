@@ -4,7 +4,9 @@ import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.enums.MemberType;
 import com.ecsail.Gybe.pdf.tools.PdfCell;
 import com.ecsail.Gybe.pdf.tools.PdfParagraph;
+import com.ecsail.Gybe.pdf.tools.PdfTable;
 import com.itextpdf.kernel.colors.DeviceCmyk;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
@@ -15,34 +17,18 @@ import com.itextpdf.layout.properties.VerticalAlignment;
 import java.util.List;
 
 public class PDF_MembershipInfo {
+    private final DirectoryModel model;
 
-    private final PDF_Directory pdfDirectory;
-    private final float normalFontSize;
-    private final float fixedLeadingNarrow;
-    private final DeviceCmyk mipHeaderColor;
-    private final DeviceCmyk mipEmailColor;
-    private final float mipTopPadding;
-    private final float mipPadding;
-    private float tableWidth;
-
-
-    public PDF_MembershipInfo(PDF_Directory pdfDirectory) {
-        this.pdfDirectory = pdfDirectory;
-        this.normalFontSize = pdfDirectory.setting("normalFontSize");
-        this.fixedLeadingNarrow = pdfDirectory.setting("fixedLeadingNarrow");
-        this.mipHeaderColor = pdfDirectory.setting("mipHeaderColor");
-        this.mipEmailColor = pdfDirectory.setting("mipEmailColor");
-        this.mipTopPadding = pdfDirectory.setting("mipTopPadding");
-        this.mipPadding = pdfDirectory.setting("mipPadding");
+    public PDF_MembershipInfo(DirectoryModel model) {
+        this.model = model;
     }
 
-    public Table createPage(List<MembershipInfoDTO> batch, int numberOfColumns) {
-        Table table = new Table(numberOfColumns);
-        this.tableWidth = pdfDirectory.getPageSize().getWidth() * 0.9f;
-        table.setWidth(tableWidth);  // makes table 90% of page width
+    public Table createPage(List<MembershipInfoDTO> batch) {
+        Table table = PdfTable.TableOf(2, HorizontalAlignment.CENTER, model.getMainTableWidth());
+        table.setWidth(model.getMainTableWidth());  // makes table 90% of page width
         table.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        table.addCell(PdfCell.verticalSpaceCellWithPadding(mipTopPadding, false));
-        table.addCell(PdfCell.verticalSpaceCellWithPadding(mipTopPadding, false));
+        table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getMipTopPadding(), false));
+        table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getMipTopPadding(), false));
         for (MembershipInfoDTO membership : batch) {
             table.addCell(createHeadingCell("#" + membership.getMembershipId() + "  Type: " + membership.getMemType()
                     + "    " + getSlipNumber(membership)));
@@ -68,34 +54,34 @@ public class PDF_MembershipInfo {
             String children = getPerson(membership, MemberType.DEPENDANT);
             if (!children.equals(""))
                 table.addCell(createDoubleTextCell(children));
-            table.addCell(PdfCell.verticalSpaceCellWithPadding(mipPadding, false));
-            table.addCell(PdfCell.verticalSpaceCellWithPadding(mipPadding, false));
+            table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getMipPadding(), false));
+            table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getMipPadding(), false));
         }
         return table;
     }
 
     private Cell createHeadingCell(String text) {
         Cell cell = PdfCell.cellOf(Border.NO_BORDER, HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE,
-                new SolidBorder(0.5f), pdfDirectory.getMainColor(), tableWidth * 0.5f);
-        cell.add(PdfParagraph.paragraphOf(text, normalFontSize, fixedLeadingNarrow, mipHeaderColor));
+                new SolidBorder(0.5f), model.getMainColor(), model.getMainTableWidth() * 0.5f);
+        cell.add(PdfParagraph.paragraphOf(text, model.getNormalFontSize(), model.getFixedLeadingNarrow(), model.getMipHeaderColor()));
         return cell;
     }
 
     private Cell createTextCell(String text) {
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-        cell.add(PdfParagraph.paragraphOf(text, normalFontSize, fixedLeadingNarrow));
+        cell.add(PdfParagraph.paragraphOf(text, model.getNormalFontSize(), model.getFixedLeadingNarrow()));
         return cell;
     }
 
     private Cell createDoubleTextCell(String text) {
         Cell cell = PdfCell.cellOf(1, 2, Border.NO_BORDER);
-        cell.add(PdfParagraph.paragraphOf(text, normalFontSize, fixedLeadingNarrow));
+        cell.add(PdfParagraph.paragraphOf(text, model.getNormalFontSize(), model.getFixedLeadingNarrow()));
         return cell;
     }
 
     private Cell createEmailCell(String text) {
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-        cell.add(PdfParagraph.paragraphOf(text, normalFontSize, fixedLeadingNarrow, mipEmailColor));
+        cell.add(PdfParagraph.paragraphOf(text, model.getNormalFontSize(), model.getFixedLeadingNarrow(), model.getMipEmailColor()));
         return cell;
     }
 

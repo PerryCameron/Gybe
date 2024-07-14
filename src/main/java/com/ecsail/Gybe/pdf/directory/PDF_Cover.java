@@ -20,33 +20,28 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class PDF_Cover {
+	private final DirectoryModel model;
 
-	private final PDF_Directory pdfDirectory;
-	private final String logoPath;
-	private final float logoTopPadding;
-	private final float titleTopPadding;
-	private final float titleFontSize;
-	private final float titleFixedLeading;
+//	private final String logoPath;
+//	private final float logoTopPadding;
+//	private final float titleTopPadding;
+//	private final float titleFontSize;
+//	private final float titleFixedLeading;
 
-	public PDF_Cover(PDF_Directory pdfDirectory) {
-		this.pdfDirectory = pdfDirectory;
-		this.logoPath = pdfDirectory.setting("logoPath");
-		this.logoTopPadding = pdfDirectory.setting("logoTopPadding");
-		this.titleTopPadding = pdfDirectory.setting("titleTopPadding");
-		this.titleFontSize = pdfDirectory.setting("titleFontSize");
-		this.titleFixedLeading = pdfDirectory.setting("titleFixedLeading");
+	public PDF_Cover(DirectoryModel model) {
+		this.model = model;
 	}
 
-	public Table createCover(int numberOfColumns) {
-		Table table = PdfTable.TableOf(numberOfColumns,HorizontalAlignment.CENTER,PageSize.A5.getWidth() * 0.9f);
-		Image logoImage = getLogoImage(System.getProperty("user.home") + logoPath);
+	public Table createCover() {
+		Table table = PdfTable.TableOf(1,HorizontalAlignment.CENTER,model.getMainTableWidth());
+		Image logoImage = getLogoImage(System.getProperty("user.home") + model.getLogoPath());
 		logoImage.scaleToFit(table.getWidth().getValue(), table.getWidth().getValue());
 		logoImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
-		table.addCell(PdfCell.verticalSpaceCellWithPadding(logoTopPadding, false));
+		table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getLogoTopPadding(), false));
 		Cell cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);
 		cell.add(logoImage);
 		table.addCell(cell);
-		table.addCell(PdfCell.verticalSpaceCellWithPadding(titleTopPadding, false));
+		table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getTitleTopPadding(), false));
 		table.addCell(addTitle("Membership"));
 		table.addCell(addTitle("Directory"));
 		return table;
@@ -77,8 +72,8 @@ public class PDF_Cover {
 		
 		private Cell addTitle(String heading) {
 			Cell cell = PdfCell.cellOf(Border.NO_BORDER,HorizontalAlignment.CENTER,VerticalAlignment.MIDDLE);
-			Paragraph paragraph = PdfParagraph.paragraphOfA(heading,titleFontSize,pdfDirectory.getFont(),
-					titleFixedLeading,TextAlignment.CENTER);
+			Paragraph paragraph = PdfParagraph.paragraphOfA(heading,model.getTitleFontSize(), model.getFont(),
+					model.getTitleFixedLeading(), TextAlignment.CENTER);
 			cell.add(paragraph);
 			return cell;
 		}
