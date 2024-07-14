@@ -64,7 +64,7 @@ public class PDF_Directory {
         doc.add(new PDF_Cover(this).createCover(1));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_CommodoreMessage(1, this));
+        doc.add(new PDF_CommodoreMessage(this).createMessage(1));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
         doc.add(new PDF_BoardOfDirectors(1, this));
@@ -108,9 +108,9 @@ public class PDF_Directory {
 //				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 //				textArea.appendText("Created directory page\n");
         doc.close();
-
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
     }
+
     @SuppressWarnings("unchecked")
     protected  <T> T setting(String name) {
         for (AppSettingsDTO setting : settings) {
