@@ -29,7 +29,7 @@ public class PDF_MembershipInfoTitlePage {
         Table table = PdfTable.TableOf(1,HorizontalAlignment.CENTER,model.getMainTableWidth());
         table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getPaddingTop(), false));
         Cell cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);
-        Paragraph paragraph = PdfParagraph.paragraphOf("Membership Information", model.getTitleFontSize(),
+        Paragraph paragraph = PdfParagraph.paragraphOf("Membership Information", model.getMembershipInformationTitleFontSize(),
                 model.getFont(), model.getMainColor(), TextAlignment.CENTER);
         cell.add(paragraph);
         table.addCell(cell);
