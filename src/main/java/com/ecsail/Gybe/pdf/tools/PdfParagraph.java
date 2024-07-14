@@ -15,18 +15,19 @@ public class PdfParagraph {
         return paragraph;
     }
 
+    public static Paragraph paragraphOfA(String cellContent, float fontSize, PdfFont font, float fixedLeading, TextAlignment textAlignment) {
+        Paragraph paragraph = new Paragraph(cellContent);
+        paragraph.setFontSize(fontSize);
+        paragraph.setFont(font);
+        paragraph.setFixedLeading(fixedLeading);
+        paragraph.setTextAlignment(textAlignment);
+        return paragraph;
+    }
+
     public static Paragraph paragraphOf(String cellContent, float fontSize, float fixedLeading) {
         Paragraph paragraph = new Paragraph(cellContent);
         paragraph.setFontSize(fontSize);
         paragraph.setFixedLeading(fixedLeading);
-        return paragraph;
-    }
-
-    public static Paragraph paragraphOf(String cellContent, float fontSize, float fixedLeading, TextAlignment textAlignment) {
-        Paragraph paragraph = new Paragraph(cellContent);
-        paragraph.setFontSize(fontSize);
-        paragraph.setFixedLeading(fixedLeading);
-        paragraph.setTextAlignment(textAlignment);
         return paragraph;
     }
 

@@ -34,9 +34,9 @@ public class PDF_Directory {
     private final ArrayList<AppSettingsDTO> settings;
     private final CommodoreMessageDTO commodoreMessage;
     private final Rectangle pageSize;
-    private String fontPath;
-    private PdfFont font;
-    private DeviceCmyk mainColor;
+    private final String fontPath;
+    private final PdfFont font;
+    private final DeviceCmyk mainColor;
     static Document doc;
 
     public PDF_Directory(DirectoryDataWrapper directoryDataWrapper) {
@@ -61,7 +61,7 @@ public class PDF_Directory {
         doc.setTopMargin(1f);
         doc.setBottomMargin(0.5f);
 
-        doc.add(new PDF_Cover(1, this));
+        doc.add(new PDF_Cover(this).createCover(1));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
         doc.add(new PDF_CommodoreMessage(1, this));
@@ -85,18 +85,11 @@ public class PDF_Directory {
             doc.add(membershipInfo.createPage(batch, 2));
             doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         }
+        // add another page if they are even.
+        if ((membershipInfoDTOS.size() / batchSize) % 2 != 0) {
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
 
-
-
-//        membershipInfoDTOS
-//        doc.add(new P);
-
-//
-////				createMemberInfoPages(doc);  // creates info pages
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-////				 this one below added in if book needs an extra page (should be even number of pages)
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//
 //				new PDF_MembersByNumber(set, doc, rosters);
 //
 //				doc.add(new PDF_SlipPageL(2, set));

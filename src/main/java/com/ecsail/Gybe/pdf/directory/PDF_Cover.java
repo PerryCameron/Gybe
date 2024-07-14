@@ -1,6 +1,8 @@
 package com.ecsail.Gybe.pdf.directory;
 
 import com.ecsail.Gybe.pdf.tools.PdfCell;
+import com.ecsail.Gybe.pdf.tools.PdfParagraph;
+import com.ecsail.Gybe.pdf.tools.PdfTable;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.layout.borders.Border;
@@ -17,37 +19,37 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PDF_Cover extends Table {
-
+public class PDF_Cover {
 
 	private final PDF_Directory pdfDirectory;
+	private final String logoPath;
+	private final float logoTopPadding;
+	private final float titleTopPadding;
+	private final float titleFontSize;
+	private final float titleFixedLeading;
 
-	public PDF_Cover(int numColumns, PDF_Directory pdfDirectory) {
-		super(numColumns);
+	public PDF_Cover(PDF_Directory pdfDirectory) {
 		this.pdfDirectory = pdfDirectory;
-		String logoPath = pdfDirectory.setting("logoPath");
+		this.logoPath = pdfDirectory.setting("logoPath");
+		this.logoTopPadding = pdfDirectory.setting("logoTopPadding");
+		this.titleTopPadding = pdfDirectory.setting("titleTopPadding");
+		this.titleFontSize = pdfDirectory.setting("titleFontSize");
+		this.titleFixedLeading = pdfDirectory.setting("titleFixedLeading");
+	}
 
-		////////////////// Table Properties //////////////////
-		setWidth(PageSize.A5.getWidth() * 0.9f);  // makes table 90% of page width
-		setHorizontalAlignment(HorizontalAlignment.CENTER);
-
-
+	public Table createCover(int numberOfColumns) {
+		Table table = PdfTable.TableOf(numberOfColumns,HorizontalAlignment.CENTER,PageSize.A5.getWidth() * 0.9f);
 		Image logoImage = getLogoImage(System.getProperty("user.home") + logoPath);
-		logoImage.scaleToFit(this.getWidth().getValue(), this.getWidth().getValue());
+		logoImage.scaleToFit(table.getWidth().getValue(), table.getWidth().getValue());
 		logoImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
-		
-		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("logoTopPadding"), false));
-		Cell cell;
-		cell = new Cell();
-		//cell.setHorizontalAlignment(HorizontalAlignment.CENTER);
-		cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-		cell.setBorder(Border.NO_BORDER);
+		table.addCell(PdfCell.verticalSpaceCellWithPadding(logoTopPadding, false));
+		Cell cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);
 		cell.add(logoImage);
-		
-		addCell(cell);
-		addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("titleTopPadding"), false));
-		addCell(addTitle("Membership"));
-		addCell(addTitle("Directory"));
+		table.addCell(cell);
+		table.addCell(PdfCell.verticalSpaceCellWithPadding(titleTopPadding, false));
+		table.addCell(addTitle("Membership"));
+		table.addCell(addTitle("Directory"));
+		return table;
 	}
 
 	private Image getLogoImage(String imagePath) {
@@ -74,20 +76,10 @@ public class PDF_Cover extends Table {
 	       }
 		
 		private Cell addTitle(String heading) {
-			Cell cell = new Cell();
-			Paragraph p;
-			cell.setHorizontalAlignment(HorizontalAlignment.CENTER);
-			cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-			cell.setBorder(Border.NO_BORDER);
-			p = new Paragraph(heading);
-			p.setFontSize(pdfDirectory.setting("titleFontSize"));
-			// TODO add font ability + bold
-			p.setFont(pdfDirectory.getFont());
-			p.setFixedLeading(pdfDirectory.setting("titleFixedLeading"));  // sets spacing between lines of text
-			p.setTextAlignment(TextAlignment.CENTER);
-			cell.add(p);
+			Cell cell = PdfCell.cellOf(Border.NO_BORDER,HorizontalAlignment.CENTER,VerticalAlignment.MIDDLE);
+			Paragraph paragraph = PdfParagraph.paragraphOfA(heading,titleFontSize,pdfDirectory.getFont(),
+					titleFixedLeading,TextAlignment.CENTER);
+			cell.add(paragraph);
 			return cell;
 		}
-		
-
 }
