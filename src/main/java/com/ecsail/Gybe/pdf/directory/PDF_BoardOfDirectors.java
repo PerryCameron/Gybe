@@ -19,46 +19,59 @@ import java.util.*;
 import java.util.function.Predicate;
 
 
-public class PDF_BoardOfDirectors extends Table {
+public class PDF_BoardOfDirectors {
     private final ArrayList<BoardPositionDTO> positionData;
     private final PDF_Directory pdfDirectory;
     private final ArrayList<OfficerDTO> positions;
     private final Set<PersonDTO> people = new HashSet<>();
     private final float fixedLeading;
+    private final float bodTopPadding;
+    private final float tableWidth;
+    private final float bodTablePadding;
+    private final float bodFooterFontSize;
+    private final int selectedYear;
+    private final float PositionHeadingFontSize;
+    private final float normalFontSize;
 
-
-    public PDF_BoardOfDirectors(int numColumns, PDF_Directory pdfDirectory) {
-        super(numColumns);
+    public PDF_BoardOfDirectors(PDF_Directory pdfDirectory) {
         this.pdfDirectory = pdfDirectory;
         this.positions = extractPositions(Year.now().getValue());
         this.positionData = pdfDirectory.getPositionData();
-        fixedLeading = pdfDirectory.setting("positionFixedLeading");
+        this.tableWidth = pdfDirectory.getPageSize().getWidth() * 0.9f;
+        this.positionData.sort(Comparator.comparingInt(BoardPositionDTO::order));
+        this.fixedLeading = pdfDirectory.setting("positionFixedLeading");
+        this.bodTopPadding = pdfDirectory.setting("bodTopPadding");
+        this.bodTablePadding = pdfDirectory.setting("bodTablePadding");
+        this.bodFooterFontSize = pdfDirectory.setting("bodFooterFontSize");
+        this.selectedYear = pdfDirectory.setting("selectedYear");
+        this.PositionHeadingFontSize = pdfDirectory.setting("PositionHeadingFontSize");
+        this.normalFontSize = pdfDirectory.setting("normalFontSize");
+    }
 
-        // sort positions by order
-        positionData.sort(Comparator.comparingInt(BoardPositionDTO::order));
-        setWidth(pdfDirectory.getPageSize().getWidth() * 0.9f);  // makes table 90% of page width
-        setHorizontalAlignment(HorizontalAlignment.CENTER);
-        addCell(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("bodTopPadding"), false));
+    public Table createBodPage() {
+        Table table = new Table(1);
+        table.setWidth(tableWidth);  // makes table 90% of page width
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.addCell(PdfCell.verticalSpaceCellWithPadding(bodTopPadding, false));
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
         cell.add(createOfficersTable());
-        cell.add(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("bodTablePadding"), false));
+        cell.add(PdfCell.verticalSpaceCellWithPadding(bodTablePadding, false));
         cell.add(createChairmenTable());
-        cell.add(PdfCell.verticalSpaceCellWithPadding(pdfDirectory.setting("bodTablePadding"), false));
+        cell.add(PdfCell.verticalSpaceCellWithPadding(bodTablePadding, false));
         cell.add(createBODTable());
-        addCell(cell);
+        table.addCell(cell);
         cell = PdfCell.cellOf(Border.NO_BORDER);
-        int selectedYear = pdfDirectory.setting("selectedYear");
         String footerText = "©Eagle Creek Sailing club 1969-" + selectedYear + " - This directory may not be used for commercial purposes";
-        cell.add(PdfParagraph.paragraphOf(footerText, pdfDirectory.setting("bodFooterFontSize"), TextAlignment.CENTER));
-        addCell(cell);
+        cell.add(PdfParagraph.paragraphOf(footerText, bodFooterFontSize, TextAlignment.CENTER));
+        table.addCell(cell);
+        return table;
     }
 
     public Table createOfficersTable() {
-        Table table = PdfTable.TableOf(2,HorizontalAlignment.CENTER, this.getWidth().getValue() * 0.6f);
+        Table table = PdfTable.TableOf(2,HorizontalAlignment.CENTER, tableWidth * 0.6f);
         Cell cell = PdfCell.cellOf(1,2,Border.NO_BORDER);
-        int selectedYear = pdfDirectory.setting("selectedYear");
-        Paragraph paragraph = PdfParagraph.paragraphOf(selectedYear + " Officers", pdfDirectory.setting("PositionHeadingFontSize"),
-                pdfDirectory.getFont(),pdfDirectory.setting("mainColor"),TextAlignment.CENTER);
+        Paragraph paragraph = PdfParagraph.paragraphOf(selectedYear + " Officers", PositionHeadingFontSize,
+                pdfDirectory.getFont(),pdfDirectory.getMainColor(),TextAlignment.CENTER);
         table.addCell(cell.add(paragraph));
         Cell[] cells = processPositions(BoardPositionDTO::isOfficer); // what if I want to also have the ability to process condition or condition?
         for (Cell c : cells) table.addCell(c);
@@ -66,9 +79,9 @@ public class PDF_BoardOfDirectors extends Table {
     }
 
     public Table createChairmenTable() {
-        Table table = PdfTable.TableOf(2,HorizontalAlignment.CENTER, this.getWidth().getValue() * 0.7f);
+        Table table = PdfTable.TableOf(2,HorizontalAlignment.CENTER, tableWidth * 0.7f);
         Cell cell = PdfCell.cellOf(1,2,Border.NO_BORDER);
-        Paragraph paragraph = PdfParagraph.paragraphOf("Committee Chairs",pdfDirectory.setting("PositionHeadingFontSize"),
+        Paragraph paragraph = PdfParagraph.paragraphOf("Committee Chairs",PositionHeadingFontSize,
                 pdfDirectory.getFont(),pdfDirectory.getMainColor(),TextAlignment.CENTER);
         table.addCell(cell.add(paragraph));
         Cell[] cells = processPositions(position -> position.isChair() || position.isAssist());
@@ -120,23 +133,22 @@ public class PDF_BoardOfDirectors extends Table {
 
     private Cell addPersonCell(String content) {
         Cell cell = PdfCell.cellOf(Border.NO_BORDER, HorizontalAlignment.CENTER);
-        Paragraph paragraph = PdfParagraph.paragraphOf(content,pdfDirectory.setting("normalFontSize"),fixedLeading);
+        Paragraph paragraph = PdfParagraph.paragraphOf(content,normalFontSize,fixedLeading);
         cell.add(paragraph);
         return cell;
     }
 
     private Table createBODTable() {
-        Table table = PdfTable.TableOf(3,HorizontalAlignment.CENTER, this.getWidth().getValue());
+        Table table = PdfTable.TableOf(3,HorizontalAlignment.CENTER, tableWidth);
         Cell cell = PdfCell.cellOf(1,3,Border.NO_BORDER);
         Paragraph paragraph = PdfParagraph.paragraphOf("Current Board Members",
-                pdfDirectory.setting("PositionHeadingFontSize"),pdfDirectory.getFont(),pdfDirectory.setting("mainColor"),TextAlignment.CENTER);
+                PositionHeadingFontSize,pdfDirectory.getFont(),pdfDirectory.getMainColor(),TextAlignment.CENTER);
         table.addCell(cell.add(paragraph));
         createBoardMemberTables(table); // will create 3 more cells and put a table in each
         return table;
     }
 
     private void createBoardMemberTables(Table bodTable) {
-        int selectedYear = pdfDirectory.setting("selectedYear");
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
         cell.add(createBoardMemberColumn(selectedYear));
         bodTable.addCell(cell);
@@ -169,13 +181,13 @@ public class PDF_BoardOfDirectors extends Table {
         String[] boardMemberList = selectBoardMemberListFor(year);
         Table columnTable = new Table(1);
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-        Paragraph paragraph = PdfParagraph.paragraphOf(String.valueOf(year),pdfDirectory.setting("normalFontSize"), pdfDirectory.getFont(),fixedLeading);
+        Paragraph paragraph = PdfParagraph.paragraphOf(String.valueOf(year),normalFontSize, pdfDirectory.getFont(),fixedLeading);
         paragraph.setTextAlignment(TextAlignment.LEFT);
         cell.add(paragraph);
         columnTable.addCell(cell);
         for (String name : boardMemberList) {
             cell = PdfCell.cellOf(Border.NO_BORDER);
-            paragraph = PdfParagraph.paragraphOf(name, pdfDirectory.setting("normalFontSize"), fixedLeading);
+            paragraph = PdfParagraph.paragraphOf(name, normalFontSize, fixedLeading);
             cell.add(paragraph);
             columnTable.addCell(cell);
         }

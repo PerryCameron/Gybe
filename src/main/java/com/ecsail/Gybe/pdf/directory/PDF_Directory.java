@@ -67,7 +67,7 @@ public class PDF_Directory {
         doc.add(new PDF_CommodoreMessage(this).createMessage(1));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_BoardOfDirectors(1, this));
+        doc.add(new PDF_BoardOfDirectors(this).createBodPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
 		doc.add(new PDF_TableOfContents(1, this));

@@ -21,8 +21,10 @@ public class PDF_MembershipInfo {
     private final float fixedLeadingNarrow;
     private final DeviceCmyk mipHeaderColor;
     private final DeviceCmyk mipEmailColor;
-    private float tableWidth;
     private final float mipTopPadding;
+    private final float mipPadding;
+    private float tableWidth;
+
 
     public PDF_MembershipInfo(PDF_Directory pdfDirectory) {
         this.pdfDirectory = pdfDirectory;
@@ -31,6 +33,7 @@ public class PDF_MembershipInfo {
         this.mipHeaderColor = pdfDirectory.setting("mipHeaderColor");
         this.mipEmailColor = pdfDirectory.setting("mipEmailColor");
         this.mipTopPadding = pdfDirectory.setting("mipTopPadding");
+        this.mipPadding = pdfDirectory.setting("mipPadding");
     }
 
     public Table createPage(List<MembershipInfoDTO> batch, int numberOfColumns) {
@@ -65,6 +68,8 @@ public class PDF_MembershipInfo {
             String children = getPerson(membership, MemberType.DEPENDANT);
             if (!children.equals(""))
                 table.addCell(createDoubleTextCell(children));
+            table.addCell(PdfCell.verticalSpaceCellWithPadding(mipPadding, false));
+            table.addCell(PdfCell.verticalSpaceCellWithPadding(mipPadding, false));
         }
         return table;
     }
