@@ -57,6 +57,9 @@ public class DirectoryModel {
     private final DeviceCmyk mipEmailColor;
     private final float mipTopPadding;
     private final float mipPadding;
+    private final float mbnFontSize;
+    private final float mbnFixedLeading;
+    private final float mbnTopPadding;
 
     public DirectoryModel(DirectoryDataWrapper directoryDataWrapper) {
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
@@ -99,6 +102,9 @@ public class DirectoryModel {
         this.mipEmailColor = setting("mipEmailColor");
         this.mipTopPadding = setting("mipTopPadding");
         this.mipPadding = setting("mipPadding");
+        this.mbnFontSize = setting("mbnFontSize");
+        this.mbnFixedLeading = setting("mbnFixedLeading");
+        this.mbnTopPadding = setting("mbnTopPadding");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -372,5 +378,17 @@ public class DirectoryModel {
 
     public float getMipPadding() {
         return mipPadding;
+    }
+
+    public float getMbnFontSize() {
+        return mbnFontSize;
+    }
+
+    public float getMbnFixedLeading() {
+        return mbnFixedLeading;
+    }
+
+    public float getMbnTopPadding() {
+        return mbnTopPadding;
     }
 }

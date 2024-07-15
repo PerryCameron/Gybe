@@ -3,17 +3,17 @@ package com.ecsail.Gybe.pdf.directory;
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.pdf.tools.PdfCell;
+import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.ecsail.Gybe.pdf.tools.PdfTable;
 import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 
 public class PDF_MembersByNumber {
 
-    private DirectoryModel model = null;
-    private float cellWidth;
-    private int[] group;
+    private final DirectoryModel model;
+    private final float cellWidth;
+    private final int[] group;
 
     public PDF_MembersByNumber(DirectoryModel model) {
         this.model = model;
@@ -22,32 +22,26 @@ public class PDF_MembersByNumber {
     }
 
     public Table createPage(int page) {
-        Table table = PdfTable.TableOf(5,HorizontalAlignment.CENTER, model.getMainTableWidth()); // Assuming 5 columns
-        table.addCell(PdfCell.verticalSpaceCellWithPadding(20,5));
-        table.addCell(PdfCell.addPageCell(5,createHeading(page), 0, model.getTocTitleFontSize(), model.getMainColor()));
+        Table table = PdfTable.TableOf(5, HorizontalAlignment.CENTER, model.getMainTableWidth()); // Assuming 5 columns
+        table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getMbnTopPadding(), 5));
+        table.addCell(PdfCell.addPageCell(5, createHeading(page), 0, model.getTocTitleFontSize(), model.getMainColor()));
         StringBuilder sb = new StringBuilder();
         Cell cell;
-        Paragraph p;
         int count = 0;
-        if(page == 2) count = group[0];
-        System.out.println("Page: " + page);
-         // To keep track of "box 1", "box 2", etc.
+        if (page == 2) count = group[0];
         for (int j = 0; j < 5; j++) {
             cell = PdfCell.cellOf(cellWidth);
-            if(page == 2 && j == 4) // do this for last column on page 2
+            if (page == 2 && j == 4) // do this for last column on page 2
                 for (int i = 0; i < group[3]; i++) {
                     getMembershipName(count, sb);
                     count++;
                 }
             else
-            for (int i = 0; i < group[2]; i++) {
-                getMembershipName(count, sb);
-                count++;
-            }
-            p = new Paragraph(sb.toString());
-            p.setFontSize(8);
-            p.setFixedLeading(18);
-            cell.add(p);
+                for (int i = 0; i < group[2]; i++) {
+                    getMembershipName(count, sb);
+                    count++;
+                }
+            cell.add(PdfParagraph.paragraphOf(sb.toString(), model.getMbnFontSize(), model.getMbnFixedLeading()));
             sb.setLength(0);
             table.addCell(cell);
         }
@@ -55,25 +49,23 @@ public class PDF_MembersByNumber {
     }
 
     private String createHeading(int page) {
-        int firstNumber = 0;
-        int secondNumber = 0;
-        if(page == 1) {
+        int firstNumber;
+        int secondNumber;
+        if (page == 1) {
             firstNumber = model.getMembershipInfoDTOS().get(0).getMembershipId();
-            secondNumber = model.getMembershipInfoDTOS().get(group[0] -1).getMembershipId();
+            secondNumber = model.getMembershipInfoDTOS().get(group[0] - 1).getMembershipId();
         } else {
             firstNumber = model.getMembershipInfoDTOS().get(group[0]).getMembershipId();
-            secondNumber = model.getMembershipInfoDTOS().get(group[4] -1).getMembershipId();
+            secondNumber = model.getMembershipInfoDTOS().get(group[4] - 1).getMembershipId();
         }
-        return "Memberships "+firstNumber+" through "+secondNumber;
+        return "Memberships " + firstNumber + " through " + secondNumber;
     }
 
     private void getMembershipName(int element, StringBuilder sb) {
-        System.out.print("Getting element " + element);
         MembershipInfoDTO membership = model.getMembershipInfoDTOS().get(element);
-        System.out.println(" " + membership.getMembershipId());
-        sb.append(membership.getMembershipId() + " ");
-        for(PersonDTO person: membership.getPeople()) {
-            if(person.getMemberType() == 1)  sb.append(person.getLastName() + "\n");
+        sb.append(membership.getMembershipId()).append(" ");
+        for (PersonDTO person : membership.getPeople()) {
+            if (person.getMemberType() == 1) sb.append(person.getLastName()).append("\n");
         }
     }
 

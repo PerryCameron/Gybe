@@ -1,6 +1,5 @@
 package com.ecsail.Gybe.pdf.directory;
 
-import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.pdf.tools.PdfSort;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.io.font.FontProgram;
@@ -21,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Year;
-import java.util.List;
-
 
 public class PDF_Directory {
 
@@ -38,7 +35,6 @@ public class PDF_Directory {
         // Initialize PDF document
         assert writer != null;
         PdfDocument pdf = new PdfDocument(writer);
-        //PageSize A5v = new PageSize(PageSize.A5.getWidth(), PageSize.A5.getHeight());
         PDF_Directory.doc = new Document(pdf, new PageSize(calculatePageSize()));
         doc.setLeftMargin(0.5f);
         doc.setRightMargin(0.5f);
