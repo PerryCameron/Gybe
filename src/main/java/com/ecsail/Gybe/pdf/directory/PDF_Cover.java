@@ -4,7 +4,6 @@ import com.ecsail.Gybe.pdf.tools.PdfCell;
 import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.ecsail.Gybe.pdf.tools.PdfTable;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
@@ -32,7 +31,7 @@ public class PDF_Cover {
 		this.model = model;
 	}
 
-	public Table createCover() {
+	public Table createPage() {
 		Table table = PdfTable.TableOf(1,HorizontalAlignment.CENTER,model.getMainTableWidth());
 		Image logoImage = getLogoImage(System.getProperty("user.home") + model.getLogoPath());
 		logoImage.scaleToFit(table.getWidth().getValue(), table.getWidth().getValue());

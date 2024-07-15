@@ -1,7 +1,7 @@
 package com.ecsail.Gybe.pdf.directory;
 
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
-import com.ecsail.Gybe.dto.PersonDTO;
+import com.ecsail.Gybe.pdf.tools.PdfSort;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Year;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -46,30 +45,38 @@ public class PDF_Directory {
         doc.setTopMargin(1f);
         doc.setBottomMargin(0.5f);
 
-        doc.add(new PDF_Cover(model).createCover());
+        doc.add(new PDF_Cover(model).createPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_CommodoreMessage(model).createMessage());
+        doc.add(new PDF_CommodoreMessage(model).createPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_BoardOfDirectors( model).createBodPage());
+        doc.add(new PDF_BoardOfDirectors( model).createPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-		doc.add(new PDF_TableOfContents(model).createTocPage());
+		doc.add(new PDF_TableOfContents(model).createPage());
 		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        doc.add(new PDF_MembershipInfoTitlePage(model).createTitlePage());
+        doc.add(new PDF_MembershipInfoTitlePage(model).createPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        sortMemberships(); // put them in alphabetical order by last name
-        int batchSize = 6; // 6 per page
-        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
-        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
-            // Get the sublist for the current batch
-            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
-            doc.add(membershipInfo.createPage(batch));
-            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        }
+//        PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
+//        int batchSize = 6; // 6 per page
+//        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
+//        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
+//            // Get the sublist for the current batch
+//            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
+//            doc.add(membershipInfo.createPage(batch));
+//            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+//        }
+
+        PdfSort.sortMembershipsByMembershipId(model.getMembershipInfoDTOS());
+        PDF_MembersByNumber membersByNumber = new PDF_MembersByNumber(model);
+        doc.add(membersByNumber.createPage(1));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        doc.add(membersByNumber.createPage(2));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+//        doc.add(membersByNumber.createPage(2));
 
 //
 //				new PDF_MembersByNumber(set, doc, rosters);
@@ -104,25 +111,6 @@ public class PDF_Directory {
             e.printStackTrace();
         }
         return writer;
-    }
-
-    private void  sortMemberships() {
-        Comparator<MembershipInfoDTO> comparator = (m1, m2) -> {
-            String lastName1 = m1.getPeople().stream()
-                    .filter(person -> person.getMemberType() == 1)
-                    .map(PersonDTO::getLastName)
-                    .findFirst()
-                    .orElse("");
-
-            String lastName2 = m2.getPeople().stream()
-                    .filter(person -> person.getMemberType() == 1)
-                    .map(PersonDTO::getLastName)
-                    .findFirst()
-                    .orElse("");
-
-            return lastName1.compareTo(lastName2);
-        };
-        model.getMembershipInfoDTOS().sort(comparator);
     }
 
     protected PdfFont constructFontHeading(String font) {

@@ -4,7 +4,6 @@ import com.ecsail.Gybe.pdf.tools.PdfCell;
 import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.ecsail.Gybe.pdf.tools.PdfTable;
 import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -25,7 +24,7 @@ public class PDF_MembershipInfoTitlePage {
         this.model = model;
     }
 
-    public Table createTitlePage() {
+    public Table createPage() {
         Table table = PdfTable.TableOf(1,HorizontalAlignment.CENTER,model.getMainTableWidth());
         table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getPaddingTop(), false));
         Cell cell = PdfCell.cellOf(Border.NO_BORDER, VerticalAlignment.MIDDLE);

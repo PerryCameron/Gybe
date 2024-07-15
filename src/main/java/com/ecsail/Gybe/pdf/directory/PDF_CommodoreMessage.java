@@ -4,7 +4,6 @@ import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.pdf.tools.PdfCell;
 import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.ecsail.Gybe.pdf.tools.PdfTable;
-import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Table;
@@ -23,7 +22,7 @@ public class PDF_CommodoreMessage {
 		this.model = model;
 	}
 
-	public Table createMessage() {
+	public Table createPage() {
 		Table table = PdfTable.TableOf(1,HorizontalAlignment.CENTER, model.getMainTableWidth());
 		CommodoreMessageDTO commodoreMessage = model.getCommodoreMessage();
 		String[] paragraphs = extractTextBetweenPTags(commodoreMessage.getMessage());

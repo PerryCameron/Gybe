@@ -7,7 +7,6 @@ import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.pdf.tools.PdfCell;
 import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.ecsail.Gybe.pdf.tools.PdfTable;
-import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -29,7 +28,7 @@ public class PDF_BoardOfDirectors {
         model.getPositionData().sort(Comparator.comparingInt(BoardPositionDTO::order));
     }
 
-    public Table createBodPage() {
+    public Table createPage() {
         Table table = new Table(1);
         table.setWidth(model.getMainTableWidth());  // makes table 90% of page width
         table.setHorizontalAlignment(HorizontalAlignment.CENTER);
