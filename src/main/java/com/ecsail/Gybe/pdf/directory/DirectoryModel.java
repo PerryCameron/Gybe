@@ -16,6 +16,7 @@ public class DirectoryModel {
     private ArrayList<MembershipInfoDTO> membershipInfoDTOS;
     private ArrayList<BoardPositionDTO> positionData;
     private ArrayList<OfficerDTO> positions = null;
+    private ArrayList<SlipStructureDTO> slipStructureDTOS;
     private final Set<PersonDTO> people = new HashSet<>();
     private CommodoreMessageDTO commodoreMessage;
     private Rectangle pageSize = null;
@@ -68,6 +69,7 @@ public class DirectoryModel {
         this.positionData = directoryDataWrapper.getPositionData();
         this.commodoreMessage = directoryDataWrapper.getCommodoreMessage();
         this.fontPath = directoryDataWrapper.getFontPath();
+        this.slipStructureDTOS = directoryDataWrapper.getSlipStructureDTOS();
         this.width = setting("width");
         this.height = setting("height");
         this.mainColor = setting("mainColor");

@@ -163,7 +163,6 @@ public class MembershipRestController {
         List<JsonNode> memberships = membershipService.getMembershipAsJson();
         ObjectMapper objectMapper = new ObjectMapper();
         MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(Integer.parseInt(listNumber)), MembershipInfoDTO.class);
-        System.out.println(membershipInfo);
         Map<String, Object> response = new HashMap<>();
         response.put("membership", memberships.get(Integer.parseInt(listNumber)));
         return response;

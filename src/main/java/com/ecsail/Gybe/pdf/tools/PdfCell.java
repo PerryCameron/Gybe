@@ -1,9 +1,11 @@
 package com.ecsail.Gybe.pdf.tools;
 
+import com.ecsail.Gybe.pdf.enums.Sections;
 import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceCmyk;
 import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.HorizontalAlignment;
@@ -98,6 +100,78 @@ public class PdfCell {
         if (fixLeadOffset != 0) paragraph.setFixedLeading(fixLeadOffset);
         if (color != null) paragraph.setFontColor(color);
         cell.add(paragraph);
+        return cell;
+    }
+
+    public static Cell dockLeft(float width, float height, DeviceCmyk dockColor, Sections sections) {
+        Cell cell = new Cell();
+        cell.setWidth(width);
+        cell.setHeight(height);
+        cell.setBorder(Border.NO_BORDER);
+        switch (sections) {
+            case FULL_SECTION, LEFT_ONLY -> {
+                cell.setBorderLeft(new SolidBorder(1f));
+                cell.setBorderBottom(new SolidBorder(1f));
+                cell.setBorderTop(new SolidBorder(1f));
+                cell.setBackgroundColor(dockColor);
+            }
+            case RIGHT_ONLY, NON_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
+                return cell;
+            }
+        }
+        return cell;
+    }
+
+    public static Cell dockRight(float width, float height, DeviceCmyk dockColor, Sections sections) {
+        Cell cell = new Cell();
+        cell.setWidth(width);
+        cell.setBorder(Border.NO_BORDER);
+        switch (sections) {
+            case FULL_SECTION, RIGHT_ONLY -> {
+                cell.setBorderRight(new SolidBorder(1f));
+                cell.setBorderBottom(new SolidBorder(1f));
+                cell.setBorderTop(new SolidBorder(1f));
+                cell.setBackgroundColor(dockColor);
+            }
+            case LEFT_ONLY, NON_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
+                return cell;
+            }
+        }
+        cell.setHeight(height);
+        return cell;
+    }
+
+    public static Cell dockCenter(float width, float height, DeviceCmyk dockColor, Sections sections) {
+        Cell cell = new Cell();
+        cell.setBackgroundColor(dockColor);
+        cell.setBorder(Border.NO_BORDER);
+        cell.setHeight(height);
+        cell.setWidth(width);
+        switch (sections) {
+            case FULL_SECTION -> {
+                return cell;
+            }
+            case NON_SECTION -> {
+                cell.setBorderRight(new SolidBorder(1f));
+                cell.setBorderLeft(new SolidBorder(1f));
+            }
+            case LEFT_ONLY -> {
+                cell.setBorderRight(new SolidBorder(1f));
+            }
+            case RIGHT_ONLY -> {
+                cell.setBorderLeft(new SolidBorder(1f));
+            }
+            case TOP_SECTION -> {
+                cell.setBorderRight(new SolidBorder(1f));
+                cell.setBorderLeft(new SolidBorder(1f));
+                cell.setBorderTop(new SolidBorder(1f));
+            }
+            case BOTTOM_SECTION -> {
+                cell.setBorderRight(new SolidBorder(1f));
+                cell.setBorderLeft(new SolidBorder(1f));
+                cell.setBorderBottom(new SolidBorder(1f));
+            }
+        }
         return cell;
     }
 

@@ -1,16 +1,9 @@
 package com.ecsail.Gybe.pdf.directory;
 
 import com.ecsail.Gybe.pdf.tools.PdfCell;
-import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.ecsail.Gybe.pdf.tools.PdfTable;
-import com.itextpdf.kernel.colors.Color;
-import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
-import com.itextpdf.layout.properties.TextAlignment;
-import com.itextpdf.layout.properties.VerticalAlignment;
 
 public class PDF_TableOfContents {
     private final DirectoryModel model;

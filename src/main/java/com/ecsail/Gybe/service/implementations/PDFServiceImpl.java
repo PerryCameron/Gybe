@@ -1,9 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
-import com.ecsail.Gybe.dto.AppSettingsDTO;
-import com.ecsail.Gybe.dto.BoardPositionDTO;
-import com.ecsail.Gybe.dto.CommodoreMessageDTO;
-import com.ecsail.Gybe.dto.MembershipInfoDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.pdf.directory.PDF_Directory;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.FontService;
@@ -34,6 +31,7 @@ public class PDFServiceImpl implements PDFService {
     private final NotesRepository notesRepository;
     private final BoardPositionsRepository boardPositionsRepository;
     private final SettingsRepository settingsRepository;
+    private final SlipRepository slipRepository;
     private static final Logger logger = LoggerFactory.getLogger(PDFServiceImpl.class);
     private final FontService fontService;
 
@@ -50,6 +48,7 @@ public class PDFServiceImpl implements PDFService {
             NotesRepository notesRepository,
             BoardPositionsRepository boardPositionsRepository,
             SettingsRepository settingsRepository,
+            SlipRepository slipRepository,
             FontService fontService
     ) {
         this.membershipRepository = membershipRepository;
@@ -63,6 +62,7 @@ public class PDFServiceImpl implements PDFService {
         this.notesRepository = notesRepository;
         this.boardPositionsRepository = boardPositionsRepository;
         this.settingsRepository = settingsRepository;
+        this.slipRepository = slipRepository;
         this.fontService = fontService;
     }
 
@@ -74,6 +74,7 @@ public class PDFServiceImpl implements PDFService {
         directoryData.setPositionData((ArrayList<BoardPositionDTO>) boardPositionsRepository.getPositions());
         directoryData.setAppSettingsDTOS((ArrayList<AppSettingsDTO>) settingsRepository.getAppSettingsByGroupName("directory"));
         directoryData.setFontPath(fontService.getFontLocation());
+        directoryData.setSlipStructureDTOS((ArrayList<SlipStructureDTO>) slipRepository.getSlipStructure());
         new PDF_Directory(directoryData);
     }
 

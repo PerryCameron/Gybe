@@ -58,15 +58,15 @@ public class PDF_Directory {
         doc.add(new PDF_MembershipInfoTitlePage(model).createPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-        PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
-        int batchSize = 6; // 6 per page
-        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
-        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
-            // Get the sublist for the current batch
-            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
-            doc.add(membershipInfo.createPage(batch));
-            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        }
+//        PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
+//        int batchSize = 6; // 6 per page
+//        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
+//        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
+//            // Get the sublist for the current batch
+//            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
+//            doc.add(membershipInfo.createPage(batch));
+//            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+//        }
 
         PdfSort.sortMembershipsByMembershipId(model.getMembershipInfoDTOS());
         PDF_MembersByNumber membersByNumber = new PDF_MembersByNumber(model);
@@ -74,6 +74,9 @@ public class PDF_Directory {
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         doc.add(membersByNumber.createPage(2));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
+        PDF_SlipPage slipPage = new PDF_SlipPage(model);
+        doc.add(slipPage.createPage(1));
 //        doc.add(membersByNumber.createPage(2));
 
 //
