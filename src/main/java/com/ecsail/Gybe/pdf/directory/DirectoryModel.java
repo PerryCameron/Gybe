@@ -13,7 +13,6 @@ import java.util.Set;
 
 public class DirectoryModel {
     private final ArrayList<AppSettingsDTO> settings;
-
     private ArrayList<MembershipInfoDTO> membershipInfoDTOS;
     private ArrayList<BoardPositionDTO> positionData;
     private ArrayList<OfficerDTO> positions = null;
@@ -60,6 +59,8 @@ public class DirectoryModel {
     private final float mbnFontSize;
     private final float mbnFixedLeading;
     private final float mbnTopPadding;
+    private final float tocTitleFixedLeading;
+    private final float tocTextFixedLeading;
 
     public DirectoryModel(DirectoryDataWrapper directoryDataWrapper) {
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
@@ -105,6 +106,8 @@ public class DirectoryModel {
         this.mbnFontSize = setting("mbnFontSize");
         this.mbnFixedLeading = setting("mbnFixedLeading");
         this.mbnTopPadding = setting("mbnTopPadding");
+        this.tocTitleFixedLeading = setting("tocTitleFixedLeading");
+        this.tocTextFixedLeading = setting("tocTextFixedLeading");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -390,5 +393,13 @@ public class DirectoryModel {
 
     public float getMbnTopPadding() {
         return mbnTopPadding;
+    }
+
+    public float getTocTitleFixedLeading() {
+        return tocTitleFixedLeading;
+    }
+
+    public float getTocTextFixedLeading() {
+        return tocTextFixedLeading;
     }
 }

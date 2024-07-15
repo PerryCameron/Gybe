@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.pdf.directory;
 
+import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.pdf.tools.PdfSort;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.io.font.FontProgram;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Year;
+import java.util.List;
 
 public class PDF_Directory {
 
@@ -56,15 +58,15 @@ public class PDF_Directory {
         doc.add(new PDF_MembershipInfoTitlePage(model).createPage());
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-//        PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
-//        int batchSize = 6; // 6 per page
-//        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
-//        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
-//            // Get the sublist for the current batch
-//            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
-//            doc.add(membershipInfo.createPage(batch));
-//            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//        }
+        PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
+        int batchSize = 6; // 6 per page
+        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
+        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
+            // Get the sublist for the current batch
+            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
+            doc.add(membershipInfo.createPage(batch));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
 
         PdfSort.sortMembershipsByMembershipId(model.getMembershipInfoDTOS());
         PDF_MembersByNumber membersByNumber = new PDF_MembersByNumber(model);
@@ -96,7 +98,6 @@ public class PDF_Directory {
 
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
     }
-
 
     private static PdfWriter getPdfWriter() {
         PdfWriter writer = null;

@@ -41,10 +41,10 @@ public class PDF_TableOfContents {
         table.addCell(PdfCell.verticalSpaceCellWithPadding(cellPadding, false));
         table.addCell(PdfCell.addPageCell(1,"Past Commodores", 0, model.getTocChapterFontSize(), null));
         table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getTocAddressPadding(), false));
-        table.addCell(PdfCell.addPageCell(1,"Eagle Creek Sailing Club", 12, model.getTocAddressFontSize(), null));
-        table.addCell(PdfCell.addPageCell(1,"8901 W. 46th Street", 15, model.getTocAddressFontSize(), null));
-        table.addCell(PdfCell.addPageCell(1,"Indianapolis, IN 46234", 15, model.getTocAddressFontSize(), null));
-        table.addCell(PdfCell.addPageCell(1,"Website: ecsail.org", 15, model.getTocAddressFontSize(), null));
+        table.addCell(PdfCell.addPageCell(1,"Eagle Creek Sailing Club", model.getTocTitleFixedLeading(), model.getTocAddressFontSize(), null));
+        table.addCell(PdfCell.addPageCell(1,"8901 W. 46th Street", model.getTocTextFixedLeading(), model.getTocAddressFontSize(), null));
+        table.addCell(PdfCell.addPageCell(1,"Indianapolis, IN 46234", model.getTocTextFixedLeading(), model.getTocAddressFontSize(), null));
+        table.addCell(PdfCell.addPageCell(1,"Website: ecsail.org", model.getTocTextFixedLeading(), model.getTocAddressFontSize(), null));
         return table;
     }
 }

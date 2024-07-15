@@ -32,15 +32,11 @@ public class PDF_MembersByNumber {
         for (int j = 0; j < 5; j++) {
             cell = PdfCell.cellOf(cellWidth);
             if (page == 2 && j == 4) // do this for last column on page 2
-                for (int i = 0; i < group[3]; i++) {
-                    getMembershipName(count, sb);
-                    count++;
-                }
+                for (int i = 0; i < group[3]; i++)
+                    getMembershipName(count++, sb);
             else
-                for (int i = 0; i < group[2]; i++) {
-                    getMembershipName(count, sb);
-                    count++;
-                }
+                for (int i = 0; i < group[2]; i++)
+                    getMembershipName(count++, sb);
             cell.add(PdfParagraph.paragraphOf(sb.toString(), model.getMbnFontSize(), model.getMbnFixedLeading()));
             sb.setLength(0);
             table.addCell(cell);
