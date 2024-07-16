@@ -1,6 +1,5 @@
 package com.ecsail.Gybe.pdf.directory;
 
-import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.pdf.tools.PdfSort;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.io.font.FontProgram;
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Year;
-import java.util.List;
 
 public class PDF_Directory {
 

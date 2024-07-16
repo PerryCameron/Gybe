@@ -2,6 +2,7 @@ package com.ecsail.Gybe.pdf.tools;
 
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
+import com.ecsail.Gybe.dto.SlipPlacementDTO;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,4 +28,5 @@ public class PdfSort {
     public static void sortMembershipsByMembershipId(ArrayList<MembershipInfoDTO> memberships) {
         memberships.sort(Comparator.comparing(MembershipInfoDTO::getMembershipId));
     }
+
 }

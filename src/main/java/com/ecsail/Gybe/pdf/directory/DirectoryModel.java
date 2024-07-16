@@ -17,6 +17,7 @@ public class DirectoryModel {
     private ArrayList<BoardPositionDTO> positionData;
     private ArrayList<OfficerDTO> positions = null;
     private ArrayList<SlipStructureDTO> slipStructureDTOS;
+    private ArrayList<SlipPlacementDTO> slipPlacementDTOS;
     private final Set<PersonDTO> people = new HashSet<>();
     private CommodoreMessageDTO commodoreMessage;
     private Rectangle pageSize = null;
@@ -70,6 +71,7 @@ public class DirectoryModel {
         this.commodoreMessage = directoryDataWrapper.getCommodoreMessage();
         this.fontPath = directoryDataWrapper.getFontPath();
         this.slipStructureDTOS = directoryDataWrapper.getSlipStructureDTOS();
+        this.slipPlacementDTOS = extractSlipPlacementDTO();
         this.width = setting("width");
         this.height = setting("height");
         this.mainColor = setting("mainColor");
@@ -114,11 +116,26 @@ public class DirectoryModel {
         this.mainTableWidth = 72 * width * 0.9f;
     }
 
+    private ArrayList<SlipPlacementDTO> extractSlipPlacementDTO() {
+        ArrayList<SlipPlacementDTO> slipPlacements = new ArrayList<>();
+        for(AppSettingsDTO settingsDTO: settings) {
+            if(settingsDTO.getDataType().equals("SlipPlacementDTO")) {
+                String[] values = settingsDTO.getValue().split(":");
+                slipPlacements.add(new SlipPlacementDTO(settingsDTO.getKey(),
+                        Integer.parseInt(values[0]),
+                        Integer.parseInt(values[1]),
+                        Integer.parseInt(values[2])));
+            }
+        }
+        return slipPlacements;
+    }
+
     @SuppressWarnings("unchecked")
     protected  <T> T setting(String name) {
         for (AppSettingsDTO setting : settings) {
             if (name.equals(setting.getKey())) {  // this is PDF_Directory.java:108
                 String value = setting.getValue();
+                System.out.print("Setting up: ");
                 switch (setting.getDataType()) {
                     case "integer" -> {
                         return (T) Integer.valueOf(value);
@@ -403,5 +420,21 @@ public class DirectoryModel {
 
     public float getTocTextFixedLeading() {
         return tocTextFixedLeading;
+    }
+
+    public ArrayList<SlipStructureDTO> getSlipStructureDTOS() {
+        return slipStructureDTOS;
+    }
+
+    public void setSlipStructureDTOS(ArrayList<SlipStructureDTO> slipStructureDTOS) {
+        this.slipStructureDTOS = slipStructureDTOS;
+    }
+
+    public ArrayList<SlipPlacementDTO> getSlipPlacementDTOS() {
+        return slipPlacementDTOS;
+    }
+
+    public void setSlipPlacementDTOS(ArrayList<SlipPlacementDTO> slipPlacementDTOS) {
+        this.slipPlacementDTOS = slipPlacementDTOS;
     }
 }
