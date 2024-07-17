@@ -14,6 +14,7 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import static com.ecsail.Gybe.pdf.enums.Sections.*;
 
@@ -40,9 +41,9 @@ public class PDF_SlipPage {
         cellLeft.setPadding(0).setWidth(cellWidth);
         cellRight.setPadding(0).setWidth(cellWidth);
         table.addCell(cellLeft).addCell(cellRight);
-        for(SlipPlacementDTO place: model.getSlipPlacementDTOS()) {
-            if(place.getPagePlaced() == page) {
-                if(place.getTablePlacedTo() == 1) {
+        for (SlipPlacementDTO place : model.getSlipPlacementDTOS()) {
+            if (place.getPagePlaced() == page) {
+                if (place.getTablePlacedTo() == 1) {
                     cellLeft.add(new Paragraph("").setHeight(10)); // add space above table
                     cellLeft.add(createDock(place.getDock()).setHorizontalAlignment(HorizontalAlignment.CENTER));
                 } else {
@@ -57,83 +58,49 @@ public class PDF_SlipPage {
     private Cell[] createSection(Sections section, String[] dockText, float height) {
         float leftWidth = 70;
         float rightWidth = 70;
-        if(section == RIGHT_ONLY) leftWidth += 1f; // compensates for missing border
-        if(section == LEFT_ONLY) rightWidth += 1f;
+        if (section == RIGHT_ONLY) leftWidth += 1f; // compensates for missing border
+        if (section == LEFT_ONLY) rightWidth += 1f;
         Cell[] cell = new Cell[3];
-                cell[0] = PdfCell.dockLeft(leftWidth, height, DeviceCmyk.YELLOW, section, dockText[0]);
-                cell[1] = PdfCell.dockCenter(20, height, DeviceCmyk.YELLOW, section, dockText[2]);
-                cell[2] = PdfCell.dockRight(rightWidth, height, DeviceCmyk.YELLOW, section, dockText[1]);
+        cell[0] = PdfCell.dockLeft(leftWidth, height, model.getSlipColor(), section, dockText[0]);
+        cell[1] = PdfCell.dockCenter(20, height, model.getSlipColor(), section, dockText[2]);
+        cell[2] = PdfCell.dockRight(rightWidth, height, model.getSlipColor(), section, dockText[1]);
         return cell;
     }
 
     private Table createDock(String dock) {
         Table table = new Table(3);
         ArrayList<SlipStructureDTO> structure = new ArrayList<>();
-        for(Cell cell: createSection(TOP_SECTION,new String[3],5)) table.addCell(cell);
+        for (Cell cell : createSection(TOP_SECTION, new String[3], 5)) table.addCell(cell);
         structure.clear();
-        for(SlipStructureDTO dockSection: model.getSlipStructureDTOS()) {
-            if(dockSection.getDock().equals(dock)) {
-                structure.add(dockSection);
-            }
-        }
+        structure = (ArrayList<SlipStructureDTO>) model.getSlipStructureDTOS().stream()
+                .filter(dockSection -> dockSection.getDock().equals(dock))
+                .collect(Collectors.toList());
         structure.sort(Comparator.comparing(SlipStructureDTO::getDockSection));
-        String [] dockText = new String[3];
-        for(SlipStructureDTO dockSection: structure) {
-            if(dockSection.getSlip3().equals("none") && dockSection.getSlip4().equals("none")) {
+        String[] dockText = {"", "", dock};
+        for (SlipStructureDTO dockSection : structure) {
+            if (dockSection.getSlip3().equals("none") && dockSection.getSlip4().equals("none")) {
                 dockText[0] = "";
-                dockText[1] = getNameR(dockSection.getSlip2()) + "\n" + getNameR(dockSection.getSlip1());
-                for(Cell cell: createSection(RIGHT_ONLY, dockText,18)) table.addCell(cell);
+                dockText[1] = getName(dockSection.getSlip2(),true) + "\n" + getName(dockSection.getSlip1(),true);
+                for (Cell cell : createSection(RIGHT_ONLY, dockText, 18)) table.addCell(cell);
             } else {
-                dockText[0] = getNameL(dockSection.getSlip4()) + "\n" + getNameL(dockSection.getSlip3());
-                dockText[1] = getNameR(dockSection.getSlip2()) + "\n" + getNameR(dockSection.getSlip1());
-                for(Cell cell: createSection(FULL_SECTION, dockText,18)) table.addCell(cell);
+                dockText[0] = getName(dockSection.getSlip4(),false) + "\n" + getName(dockSection.getSlip3(),false);
+                dockText[1] = getName(dockSection.getSlip2(),true) + "\n" + getName(dockSection.getSlip1(),true);
+                for (Cell cell : createSection(FULL_SECTION, dockText, 18)) table.addCell(cell);
             }
             for (Cell cell : createSection(NON_SECTION, new String[3], 5)) table.addCell(cell);
         }
-        String[] dockName = {"", "", dock};
-        for(Cell cell: createSection(BOTTOM_SECTION,dockName,12)) table.addCell(cell);
+        for (Cell cell : createSection(BOTTOM_SECTION, dockText, 12)) table.addCell(cell);
         return table;
     }
 
-    private String getNameR(String slip) {
-        for(SlipInfoDTO info: model.getSlipInfoDTOS()) {
-            if(info.getSlipNumber().equals(slip)) return  info.getSlipNumber() + " " + info.getOwnerLastName();
+    private String getName(String slip, boolean rightSide) {
+        for (SlipInfoDTO info : model.getSlipInfoDTOS()) {
+            if (rightSide) {
+                if (info.getSlipNumber().equals(slip)) return info.getSlipNumber() + " " + info.getOwnerLastName();
+            } else {
+                if (info.getSlipNumber().equals(slip)) return info.getOwnerLastName() + " " + info.getSlipNumber();
+            }
         }
         return "";
     }
-
-    private String getNameL(String slip) {
-        for(SlipInfoDTO info: model.getSlipInfoDTOS()) {
-            if(info.getSlipNumber().equals(slip)) return info.getOwnerLastName() + " " + info.getSlipNumber();
-        }
-        return "";
-    }
-
-
-//    private String[] addInfo(SlipStructureDTO dockSection) {
-//        String [] dockText = new String[3];
-//        String [] dock = new String[4];
-//        for(SlipInfoDTO info: model.getSlipInfoDTOS()) {
-//            System.out.println(dockSection.getSlip1() + "  " + info.getSlipNumber());
-//            if(dockSection.getSlip1().equals(info)) dock[0] = info.getSlipNumber() + " " + info.getOwnerLastName();
-//            if(dockSection.getSlip2().equals(info)) dock[1] = info.getSlipNumber() + " " + info.getOwnerLastName();
-//            if(dockSection.getSlip3().equals(info)) dock[2] = info.getOwnerLastName() + info.getSlipNumber();
-//            if(dockSection.getSlip4().equals(info)) dock[3] = info.getOwnerLastName() + info.getSlipNumber();
-//            if(dockSection.getSlip1().equals("none")) dock[0] = "";
-//            if(dockSection.getSlip2().equals("none")) dock[1] = "";
-//            if(dockSection.getSlip3().equals("none")) dock[2] = "";
-//            if(dockSection.getSlip4().equals("none")) dock[3] = "";
-//        }
-//        dockText[0] = dock[0] + "\n" + dock[1];
-//        dockText[1] = dock[2] + "\n" + dock[3];
-//        dockText[2] = "";
-//        return dockText;
-//    }
-
-//    private String returnSlipOwners() {
-//        if(dockSection.getSlip1().equals(info.getSlipNumber())) getSlipNumber()).append(" ").append(info.getOwnerLastName());
-//        if(dockSection.getSlip2())
-//    }
 }
-//        this.dockText[0] = "Test Dock 4 \n Test Dock 3";
-//        this.dockText[1] = "Test Dock 2 \n Test Dock 1";

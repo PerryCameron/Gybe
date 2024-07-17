@@ -57,6 +57,7 @@ public class DirectoryModel {
     private final float fixedLeadingNarrow;
     private final DeviceCmyk mipHeaderColor;
     private final DeviceCmyk mipEmailColor;
+    private final DeviceCmyk slipColor;
     private final float mipTopPadding;
     private final float mipPadding;
     private final float mbnFontSize;
@@ -114,6 +115,7 @@ public class DirectoryModel {
         this.mbnTopPadding = setting("mbnTopPadding");
         this.tocTitleFixedLeading = setting("tocTitleFixedLeading");
         this.tocTextFixedLeading = setting("tocTextFixedLeading");
+        this.slipColor = setting("slipColor");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -446,5 +448,9 @@ public class DirectoryModel {
 
     public void setSlipInfoDTOS(ArrayList<SlipInfoDTO> slipInfoDTOS) {
         this.slipInfoDTOS = slipInfoDTOS;
+    }
+
+    public DeviceCmyk getSlipColor() {
+        return slipColor;
     }
 }
