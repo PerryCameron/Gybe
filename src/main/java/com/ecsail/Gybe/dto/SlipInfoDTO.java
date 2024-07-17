@@ -25,6 +25,22 @@ public class SlipInfoDTO {
         this.subleaserLastName = subleaserLastName;
     }
 
+    public String getRightSlipOwner() {
+        return slipNumber + " " + ownerLastName + ", " + ownerFirstName;
+    }
+
+    public String getLeftSlipOwner() {
+        return ownerLastName + ", " + ownerFirstName + " " + slipNumber;
+    }
+
+    public String getRightSlipLeaser() {
+        return slipNumber + " " + subleaserLastName + ", " + subleaserFirstName + "*";
+    }
+
+    public String getLeftSlipLeaser() {
+        return "*" + subleaserLastName + ", " + subleaserFirstName + " " + slipNumber;
+    }
+
     public int getOwnerId() {
         return ownerId;
     }

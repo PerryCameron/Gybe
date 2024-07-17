@@ -58,6 +58,7 @@ public class DirectoryModel {
     private final DeviceCmyk mipHeaderColor;
     private final DeviceCmyk mipEmailColor;
     private final DeviceCmyk slipColor;
+    private final DeviceCmyk slipSubleaseColor;
     private final float mipTopPadding;
     private final float mipPadding;
     private final float mbnFontSize;
@@ -116,7 +117,7 @@ public class DirectoryModel {
         this.tocTitleFixedLeading = setting("tocTitleFixedLeading");
         this.tocTextFixedLeading = setting("tocTextFixedLeading");
         this.slipColor = setting("slipColor");
-
+        this.slipSubleaseColor = setting("slipSubleaseColor");
         this.mainTableWidth = 72 * width * 0.9f;
     }
 
@@ -139,7 +140,6 @@ public class DirectoryModel {
         for (AppSettingsDTO setting : settings) {
             if (name.equals(setting.getKey())) {  // this is PDF_Directory.java:108
                 String value = setting.getValue();
-                System.out.print("Setting up: ");
                 switch (setting.getDataType()) {
                     case "integer" -> {
                         return (T) Integer.valueOf(value);
@@ -452,5 +452,9 @@ public class DirectoryModel {
 
     public DeviceCmyk getSlipColor() {
         return slipColor;
+    }
+
+    public DeviceCmyk getSlipSubleaseColor() {
+        return slipSubleaseColor;
     }
 }

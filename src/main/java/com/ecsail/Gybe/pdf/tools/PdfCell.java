@@ -103,7 +103,7 @@ public class PdfCell {
         return cell;
     }
 
-    public static Cell dockLeft(float width, float height, DeviceCmyk dockColor, Sections sections, String dockText) {
+    public static Cell dockLeft(float width, float height, DeviceCmyk dockColor, Sections sections, Paragraph[] paragraph) {
         Cell cell = new Cell();
         cell.setWidth(width);
         cell.setHeight(height);
@@ -115,11 +115,8 @@ public class PdfCell {
                 cell.setBorderBottom(new SolidBorder(1f));
                 cell.setBorderTop(new SolidBorder(1f));
                 cell.setBackgroundColor(dockColor);
-                Paragraph paragraph = new Paragraph();
-                paragraph.setFontSize(6);
-                paragraph.setTextAlignment(TextAlignment.RIGHT);
-                paragraph.add(dockText);
-                cell.add(paragraph);
+                cell.add(paragraph[0].setTextAlignment(TextAlignment.RIGHT));
+                cell.add(paragraph[1].setTextAlignment(TextAlignment.RIGHT));
             }
             case RIGHT_ONLY, NON_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
                 return cell;
@@ -128,7 +125,7 @@ public class PdfCell {
         return cell;
     }
 
-    public static Cell dockRight(float width, float height, DeviceCmyk dockColor, Sections sections, String dockText) {
+    public static Cell dockRight(float width, float height, DeviceCmyk dockColor, Sections sections, Paragraph[] paragraph) {
         Cell cell = new Cell();
         cell.setWidth(width);
         cell.setBorder(Border.NO_BORDER);
@@ -138,10 +135,7 @@ public class PdfCell {
                 cell.setBorderBottom(new SolidBorder(1f));
                 cell.setBorderTop(new SolidBorder(1f));
                 cell.setBackgroundColor(dockColor);
-                Paragraph paragraph = new Paragraph();
-                paragraph.setFontSize(6);
-                paragraph.add(dockText);
-                cell.add(paragraph);
+                cell.add(paragraph[3]).add(paragraph[4]);
             }
             case LEFT_ONLY, NON_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
                 return cell;
@@ -151,7 +145,7 @@ public class PdfCell {
         return cell;
     }
 
-    public static Cell dockCenter(float width, float height, DeviceCmyk dockColor, Sections sections, String dockText) {
+    public static Cell dockCenter(float width, float height, DeviceCmyk dockColor, Sections sections, Paragraph dockText) {
         Cell cell = new Cell();
         cell.setBackgroundColor(dockColor);
         cell.setBorder(Border.NO_BORDER);
@@ -180,11 +174,8 @@ public class PdfCell {
                 cell.setBorderRight(new SolidBorder(1f));
                 cell.setBorderLeft(new SolidBorder(1f));
                 cell.setBorderBottom(new SolidBorder(1f));
-                Paragraph paragraph = new Paragraph();
-                paragraph.setFontSize(7);
-                paragraph.setTextAlignment(TextAlignment.CENTER);
-                paragraph.add(dockText);
-                cell.add(paragraph);
+                dockText.setFontSize(7).setTextAlignment(TextAlignment.CENTER);
+                cell.add(dockText);
             }
         }
         return cell;
