@@ -26,15 +26,21 @@ public class SlipInfoDTO {
     }
 
     public String getRightSlipOwner() {
-        return slipNumber + " " + ownerLastName + ", " + ownerFirstName;
+        if (ownerFirstName.equals(""))
+            return slipNumber + " " + ownerLastName;
+        else
+            return slipNumber + " " + ownerLastName + ", " + ownerFirstName;
     }
 
     public String getLeftSlipOwner() {
-        return ownerLastName + ", " + ownerFirstName + " " + slipNumber;
+        if (ownerFirstName.equals(""))
+            return ownerLastName + " " + slipNumber;
+        else
+            return ownerLastName + ", " + ownerFirstName + " " + slipNumber;
     }
 
     public String getRightSlipLeaser() {
-        return slipNumber + " " + subleaserLastName + ", " + subleaserFirstName + "*";
+        return slipNumber + " " + subleaserLastName + ", " + subleaserFirstName;
     }
 
     public String getLeftSlipLeaser() {

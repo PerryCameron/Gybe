@@ -97,6 +97,12 @@ public class PDF_SlipPage {
         Paragraph paragraph = new Paragraph();
         paragraph.setFontSize(6);
         for (SlipInfoDTO info : model.getSlipInfoDTOS()) {
+            if (info.getOwnerMsid() == 0) {
+                if (info.getSlipNumber().equals("F02")) setSlipInfo("48", info);
+                if (info.getSlipNumber().equals("F04")) setSlipInfo("48", info);
+                if (info.getSlipNumber().equals("CR2")) setSlipInfo("Racing", info);
+                if (info.getSlipNumber().equals("CR1")) setSlipInfo("Racing", info);
+            }
             if (rightSide) {
                 if (info.getSlipNumber().equals(slip))
                     if (info.getSubleaserMsid() == 0) return paragraph.add(info.getRightSlipOwner());
@@ -108,5 +114,16 @@ public class PDF_SlipPage {
             }
         }
         return paragraph.add("");
+    }
+
+    private void setSlipInfo(String type, SlipInfoDTO info) {
+        if(type.equals("48")) {
+            info.setOwnerLastName("48-Hour");
+            info.setOwnerFirstName("");
+        }
+        if(type.equals("Racing")) {
+            info.setOwnerLastName("Racing");
+            info.setOwnerFirstName("");
+        }
     }
 }
