@@ -9,6 +9,7 @@ public class DirectoryDataWrapper {
     private CommodoreMessageDTO commodoreMessage;
     private ArrayList<BoardPositionDTO> positionData;
     private ArrayList<SlipStructureDTO> slipStructureDTOS;
+    private ArrayList<SlipInfoDTO> slipInfoDTOS;
     private ArrayList<AppSettingsDTO> appSettingsDTOS;
     private String fontPath;
 
@@ -58,5 +59,13 @@ public class DirectoryDataWrapper {
 
     public void setSlipStructureDTOS(ArrayList<SlipStructureDTO> slipStructureDTOS) {
         this.slipStructureDTOS = slipStructureDTOS;
+    }
+
+    public ArrayList<SlipInfoDTO> getSlipInfoDTOS() {
+        return slipInfoDTOS;
+    }
+
+    public void setSlipInfoDTOS(ArrayList<SlipInfoDTO> slipInfoDTOS) {
+        this.slipInfoDTOS = slipInfoDTOS;
     }
 }

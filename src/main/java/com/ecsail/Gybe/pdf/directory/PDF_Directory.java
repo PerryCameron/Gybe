@@ -75,6 +75,10 @@ public class PDF_Directory {
 
         PDF_SlipPage slipPage = new PDF_SlipPage(model);
         doc.add(slipPage.createPage(1));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        doc.add(slipPage.createPage(2));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
 //        doc.add(membersByNumber.createPage(2));
 
 //

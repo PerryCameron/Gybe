@@ -75,6 +75,7 @@ public class PDFServiceImpl implements PDFService {
         directoryData.setAppSettingsDTOS((ArrayList<AppSettingsDTO>) settingsRepository.getAppSettingsByGroupName("directory"));
         directoryData.setFontPath(fontService.getFontLocation());
         directoryData.setSlipStructureDTOS((ArrayList<SlipStructureDTO>) slipRepository.getSlipStructure());
+        directoryData.setSlipInfoDTOS((ArrayList<SlipInfoDTO>) slipRepository.getSlipInfo());
         new PDF_Directory(directoryData);
     }
 
