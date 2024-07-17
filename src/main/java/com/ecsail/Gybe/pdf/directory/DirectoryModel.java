@@ -19,6 +19,7 @@ public class DirectoryModel {
     private ArrayList<SlipStructureDTO> slipStructureDTOS;
     private ArrayList<SlipPlacementDTO> slipPlacementDTOS;
     private ArrayList<SlipInfoDTO> slipInfoDTOS;
+    private ArrayList<SlipAltDTO> slipAltDTOS;
     private final Set<PersonDTO> people = new HashSet<>();
     private CommodoreMessageDTO commodoreMessage;
     private Rectangle pageSize = null;
@@ -76,6 +77,7 @@ public class DirectoryModel {
         this.slipStructureDTOS = directoryDataWrapper.getSlipStructureDTOS();
         this.slipPlacementDTOS = extractSlipPlacementDTO();
         this.slipInfoDTOS = directoryDataWrapper.getSlipInfoDTOS();
+        this.slipAltDTOS = extractAlternativeSlips();
         this.width = setting("width");
         this.height = setting("height");
         this.mainColor = setting("mainColor");
@@ -119,6 +121,16 @@ public class DirectoryModel {
         this.slipColor = setting("slipColor");
         this.slipSubleaseColor = setting("slipSubleaseColor");
         this.mainTableWidth = 72 * width * 0.9f;
+    }
+
+    private ArrayList<SlipAltDTO> extractAlternativeSlips() {
+        ArrayList<SlipAltDTO> altDTOS = new ArrayList<>();
+        for(AppSettingsDTO settingsDTO: settings) {
+            if(settingsDTO.getDataType().equals("SlipAltDTO")) {
+                altDTOS.add(new SlipAltDTO(settingsDTO.getKey(), settingsDTO.getValue()));
+            }
+        }
+        return altDTOS;
     }
 
     private ArrayList<SlipPlacementDTO> extractSlipPlacementDTO() {
@@ -456,5 +468,9 @@ public class DirectoryModel {
 
     public DeviceCmyk getSlipSubleaseColor() {
         return slipSubleaseColor;
+    }
+
+    public ArrayList<SlipAltDTO> getSlipAltDTOS() {
+        return slipAltDTOS;
     }
 }

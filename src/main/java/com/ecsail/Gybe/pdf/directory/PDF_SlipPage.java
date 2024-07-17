@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.pdf.directory;
 
+import com.ecsail.Gybe.dto.SlipAltDTO;
 import com.ecsail.Gybe.dto.SlipInfoDTO;
 import com.ecsail.Gybe.dto.SlipPlacementDTO;
 import com.ecsail.Gybe.dto.SlipStructureDTO;
@@ -97,17 +98,17 @@ public class PDF_SlipPage {
         Paragraph paragraph = new Paragraph();
         paragraph.setFontSize(6);
         for (SlipInfoDTO info : model.getSlipInfoDTOS()) {
+            // if there is no slip owner for this slip, it must be an alternative dock
             if (info.getOwnerMsid() == 0) {
-                if (info.getSlipNumber().equals("F02")) setSlipInfo("48", info);
-                if (info.getSlipNumber().equals("F04")) setSlipInfo("48", info);
-                if (info.getSlipNumber().equals("CR2")) setSlipInfo("Racing", info);
-                if (info.getSlipNumber().equals("CR1")) setSlipInfo("Racing", info);
+                for(SlipAltDTO alt: model.getSlipAltDTOS()) {
+                    if(alt.getSlip().equals(info.getSlipNumber())) alt.setInfoDTO(info);
+                }
             }
             if (rightSide) {
                 if (info.getSlipNumber().equals(slip))
                     if (info.getSubleaserMsid() == 0) return paragraph.add(info.getRightSlipOwner());
                     else return paragraph.add(info.getRightSlipLeaser()).setFontColor(model.getSlipSubleaseColor());
-            } else {
+            } else { // left side
                 if (info.getSlipNumber().equals(slip))
                     if (info.getSubleaserMsid() == 0) return paragraph.add(info.getLeftSlipOwner());
                     else return paragraph.add(info.getLeftSlipLeaser()).setFontColor(model.getSlipSubleaseColor());
