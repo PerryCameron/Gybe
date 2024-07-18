@@ -21,6 +21,7 @@ public class DirectoryModel {
     private final ArrayList<SlipInfoDTO> slipInfoDTOS;
     private final ArrayList<SlipAltDTO> slipAltDTOS;
     private ArrayList<OfficerDTO> positions = null;
+    private ArrayList<String> peopleList = new ArrayList<>();
     private final Set<PersonDTO> people = new HashSet<>();
     private final CommodoreMessageDTO commodoreMessage;
     private Rectangle pageSize = null;
