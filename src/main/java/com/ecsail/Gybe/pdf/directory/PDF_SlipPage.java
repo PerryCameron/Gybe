@@ -62,24 +62,24 @@ public class PDF_SlipPage {
         table.setHorizontalAlignment(HorizontalAlignment.CENTER);
         table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getLegendTopPadding(), 1));
         Cell cell = PdfCell.cellOf(Border.NO_BORDER);
-        Paragraph yearParagraph = PdfParagraph.paragraphOf(model.getSelectedYear() + " Dock Assignments", 12, TextAlignment.CENTER)
-                .setFontColor(model.getMainColor());
+        Paragraph yearParagraph = PdfParagraph.paragraphOf(model.getSelectedYear() + " Dock Assignments",
+                        model.getLegendTitleFontSize(), TextAlignment.CENTER).setFontColor(model.getMainColor());
         cell.add(yearParagraph);
-        Paragraph subleaseParagraph = PdfParagraph.paragraphOf("Sublease in blue", 9, TextAlignment.CENTER)
-                .setFontColor(model.getSlipSubleaseColor());
+        Paragraph subleaseParagraph = PdfParagraph.paragraphOf("Sublease in blue",
+                        model.getLegendSubFontSize(), TextAlignment.CENTER).setFontColor(model.getSlipSubleaseColor());
         cell.add(subleaseParagraph);
         table.addCell(cell);
         return table;
     }
 
     private Cell[] createSection(Sections section, Paragraph[] dockText, float height) {
-        float leftWidth = 70;
-        float rightWidth = 70;
+        float leftWidth = model.getDockWidth();
+        float rightWidth = model.getDockWidth();
         if (section == RIGHT_ONLY) leftWidth += 1f; // compensates for missing border
         if (section == LEFT_ONLY) rightWidth += 1f;
         Cell[] cell = new Cell[3];
         cell[0] = PdfCell.dockLeft(leftWidth, height, model.getSlipColor(), section, dockText);
-        cell[1] = PdfCell.dockCenter(20, height, model.getSlipColor(), section, dockText[2]);
+        cell[1] = PdfCell.dockCenter(model.getCenterDockWidth(), height, model.getSlipColor(), section, dockText[2]);
         cell[2] = PdfCell.dockRight(rightWidth, height, model.getSlipColor(), section, dockText);
         return cell;
     }

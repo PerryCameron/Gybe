@@ -74,6 +74,10 @@ public class DirectoryModel {
     private final float dockSectionConnectorHeight;
     private final float dockSectionBottomHeight;
     private final float dockFontSize;
+    private final float dockWidth;
+    private final float centerDockWidth;
+    private final float legendSubFontSize;
+    private final float legendTitleFontSize;
     private float width;
     private float height;
     private PdfFont font = null;
@@ -139,6 +143,10 @@ public class DirectoryModel {
         this.dockSectionConnectorHeight = setting("dockSectionConnectorHeight");
         this.dockSectionBottomHeight = setting("dockSectionBottomHeight");
         this.dockFontSize = setting("dockFontSize");
+        this.dockWidth = setting("dockWidth");
+        this.centerDockWidth = setting("centerDockWidth");
+        this.legendSubFontSize = setting("legendSubFontSize");
+        this.legendTitleFontSize = setting("legendTitleFontSize");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -496,5 +504,21 @@ public class DirectoryModel {
 
     public float getDockFontSize() {
         return dockFontSize;
+    }
+
+    public float getDockWidth() {
+        return dockWidth;
+    }
+
+    public float getCenterDockWidth() {
+        return centerDockWidth;
+    }
+
+    public float getLegendSubFontSize() {
+        return legendSubFontSize;
+    }
+
+    public float getLegendTitleFontSize() {
+        return legendTitleFontSize;
     }
 }
