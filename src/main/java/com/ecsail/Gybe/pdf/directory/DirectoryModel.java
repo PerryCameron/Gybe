@@ -13,31 +13,33 @@ import java.util.Set;
 
 public class DirectoryModel {
     private final ArrayList<AppSettingsDTO> settings;
-    private ArrayList<MembershipInfoDTO> membershipInfoDTOS;
-    private ArrayList<BoardPositionDTO> positionData;
+    private final ArrayList<MembershipInfoDTO> membershipInfoDTOS;
+    private final ArrayList<BoardPositionDTO> positionData;
+    private final ArrayList<SlipStructureDTO> slipStructureDTOS;
+    private final ArrayList<SlipPlacementDTO> slipPlacementDTOS;
+    private final ArrayList<SlipInfoDTO> slipInfoDTOS;
+    private final ArrayList<SlipAltDTO> slipAltDTOS;
     private ArrayList<OfficerDTO> positions = null;
-    private ArrayList<SlipStructureDTO> slipStructureDTOS;
-    private ArrayList<SlipPlacementDTO> slipPlacementDTOS;
-    private ArrayList<SlipInfoDTO> slipInfoDTOS;
-    private ArrayList<SlipAltDTO> slipAltDTOS;
     private final Set<PersonDTO> people = new HashSet<>();
-    private CommodoreMessageDTO commodoreMessage;
+    private final CommodoreMessageDTO commodoreMessage;
     private Rectangle pageSize = null;
-    private String fontPath;
-    private PdfFont font = null;
-    private DeviceCmyk mainColor;
+    private final String fontPath;
+    private final String fontName;
+    private final String logoPath;
+    private final String membershipEmail;
+    private final DeviceCmyk mainColor;
+    private final DeviceCmyk mipHeaderColor;
+    private final DeviceCmyk mipEmailColor;
+    private final DeviceCmyk slipColor;
+    private final DeviceCmyk slipSubleaseColor;
     private final float fixedLeading;
     private final float bodTopPadding;
-    private float mainTableWidth;
+    private final float mainTableWidth;
     private final float bodTablePadding;
     private final float bodFooterFontSize;
     private final int selectedYear;
     private final float PositionHeadingFontSize;
     private final float normalFontSize;
-    private float width;
-    private float height;
-    private String fontName;
-    private final String logoPath;
 	private final float logoTopPadding;
 	private final float titleTopPadding;
 	private final float titleFontSize;
@@ -45,10 +47,9 @@ public class DirectoryModel {
     private final float salutationTopPadding;
     private final float messageTopPadding;
     private final float paragraphPadding;
-    private float paddingTop;
-    private float membershipInformationTitleFontSize;
-    private float titlePaddingBottom;
-    private String membershipEmail;
+    private final float paddingTop;
+    private final float membershipInformationTitleFontSize;
+    private final float titlePaddingBottom;
     private final float tocTopMarginPadding;
     private final float tocTitleFontSize;
     private final float tocChapterFontSize;
@@ -56,10 +57,6 @@ public class DirectoryModel {
     private final float tocAddressFontSize;
     private final float tocChapterPadding;
     private final float fixedLeadingNarrow;
-    private final DeviceCmyk mipHeaderColor;
-    private final DeviceCmyk mipEmailColor;
-    private final DeviceCmyk slipColor;
-    private final DeviceCmyk slipSubleaseColor;
     private final float mipTopPadding;
     private final float mipPadding;
     private final float mbnFontSize;
@@ -75,6 +72,10 @@ public class DirectoryModel {
     private final float dockSectionHeight;
     private final float dockSectionConnectorHeight;
     private final float dockSectionBottomHeight;
+    private final float dockFontSize;
+    private float width;
+    private float height;
+    private PdfFont font = null;
 
     public DirectoryModel(DirectoryDataWrapper directoryDataWrapper) {
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
@@ -136,6 +137,7 @@ public class DirectoryModel {
         this.dockSectionHeight = setting("dockSectionHeight");
         this.dockSectionConnectorHeight = setting("dockSectionConnectorHeight");
         this.dockSectionBottomHeight = setting("dockSectionBottomHeight");
+        this.dockFontSize = setting("dockFontSize");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -199,24 +201,12 @@ public class DirectoryModel {
         return membershipInfoDTOS;
     }
 
-    public void setMembershipInfoDTOS(ArrayList<MembershipInfoDTO> membershipInfoDTOS) {
-        this.membershipInfoDTOS = membershipInfoDTOS;
-    }
-
     public ArrayList<BoardPositionDTO> getPositionData() {
         return positionData;
     }
 
-    public void setPositionData(ArrayList<BoardPositionDTO> positionData) {
-        this.positionData = positionData;
-    }
-
     public CommodoreMessageDTO getCommodoreMessage() {
         return commodoreMessage;
-    }
-
-    public void setCommodoreMessage(CommodoreMessageDTO commodoreMessage) {
-        this.commodoreMessage = commodoreMessage;
     }
 
     public Rectangle getPageSize() {
@@ -231,10 +221,6 @@ public class DirectoryModel {
         return fontPath;
     }
 
-    public void setFontPath(String fontPath) {
-        this.fontPath = fontPath;
-    }
-
     public PdfFont getFont() {
         return font;
     }
@@ -245,10 +231,6 @@ public class DirectoryModel {
 
     public DeviceCmyk getMainColor() {
         return mainColor;
-    }
-
-    public void setMainColor(DeviceCmyk mainColor) {
-        this.mainColor = mainColor;
     }
 
     public float getFixedLeading() {
@@ -299,10 +281,6 @@ public class DirectoryModel {
         return fontName;
     }
 
-    public void setFontName(String fontName) {
-        this.fontName = fontName;
-    }
-
     public String getLogoPath() {
         return logoPath;
     }
@@ -339,10 +317,6 @@ public class DirectoryModel {
         return mainTableWidth;
     }
 
-    public void setMainTableWidth(float mainTableWidth) {
-        this.mainTableWidth = mainTableWidth;
-    }
-
     public ArrayList<OfficerDTO> getPositions() {
         return positions;
     }
@@ -359,32 +333,16 @@ public class DirectoryModel {
         return paddingTop;
     }
 
-    public void setPaddingTop(float paddingTop) {
-        this.paddingTop = paddingTop;
-    }
-
     public float getMembershipInformationTitleFontSize() {
         return membershipInformationTitleFontSize;
-    }
-
-    public void setMembershipInformationTitleFontSize(float membershipInformationTitleFontSize) {
-        this.membershipInformationTitleFontSize = membershipInformationTitleFontSize;
     }
 
     public float getTitlePaddingBottom() {
         return titlePaddingBottom;
     }
 
-    public void setTitlePaddingBottom(float titlePaddingBottom) {
-        this.titlePaddingBottom = titlePaddingBottom;
-    }
-
     public String getMembershipEmail() {
         return membershipEmail;
-    }
-
-    public void setMembershipEmail(String membershipEmail) {
-        this.membershipEmail = membershipEmail;
     }
 
     public float getTocTopMarginPadding() {
@@ -409,10 +367,6 @@ public class DirectoryModel {
 
     public float getTocChapterPadding() {
         return tocChapterPadding;
-    }
-
-    public ArrayList<AppSettingsDTO> getSettings() {
-        return settings;
     }
 
     public float getFixedLeadingNarrow() {
@@ -459,24 +413,12 @@ public class DirectoryModel {
         return slipStructureDTOS;
     }
 
-    public void setSlipStructureDTOS(ArrayList<SlipStructureDTO> slipStructureDTOS) {
-        this.slipStructureDTOS = slipStructureDTOS;
-    }
-
     public ArrayList<SlipPlacementDTO> getSlipPlacementDTOS() {
         return slipPlacementDTOS;
     }
 
-    public void setSlipPlacementDTOS(ArrayList<SlipPlacementDTO> slipPlacementDTOS) {
-        this.slipPlacementDTOS = slipPlacementDTOS;
-    }
-
     public ArrayList<SlipInfoDTO> getSlipInfoDTOS() {
         return slipInfoDTOS;
-    }
-
-    public void setSlipInfoDTOS(ArrayList<SlipInfoDTO> slipInfoDTOS) {
-        this.slipInfoDTOS = slipInfoDTOS;
     }
 
     public DeviceCmyk getSlipColor() {
@@ -521,5 +463,9 @@ public class DirectoryModel {
 
     public float getDockSectionBottomHeight() {
         return dockSectionBottomHeight;
+    }
+
+    public float getDockFontSize() {
+        return dockFontSize;
     }
 }

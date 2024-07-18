@@ -87,10 +87,9 @@ public class PDF_SlipPage {
     private IBlockElement createDock(String dock) {
         Table table = new Table(3);
         table.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        ArrayList<SlipStructureDTO> structure = new ArrayList<>();
+        ArrayList<SlipStructureDTO> structure;
         Paragraph[] dockText = new Paragraph[5];
         for (Cell cell : createSection(TOP_SECTION, dockText, model.getDockTopHeight())) table.addCell(cell);
-        structure.clear();
         structure = (ArrayList<SlipStructureDTO>) model.getSlipStructureDTOS().stream()
                 .filter(dockSection -> dockSection.getDock().equals(dock))
                 .collect(Collectors.toList());
@@ -119,7 +118,7 @@ public class PDF_SlipPage {
 
     private Paragraph getName(String slip, boolean rightSide) {
         Paragraph paragraph = new Paragraph();
-        paragraph.setFontSize(6);
+        paragraph.setFontSize(model.getDockFontSize());
         for (SlipInfoDTO info : model.getSlipInfoDTOS()) {
             // if there is no slip owner for this slip, it must be an alternative dock
             if (info.getOwnerMsid() == 0) {

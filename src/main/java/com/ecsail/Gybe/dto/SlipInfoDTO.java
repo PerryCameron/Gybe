@@ -44,7 +44,7 @@ public class SlipInfoDTO {
     }
 
     public String getLeftSlipLeaser() {
-        return "*" + subleaserLastName + ", " + subleaserFirstName + " " + slipNumber;
+        return subleaserLastName + ", " + subleaserFirstName + " " + slipNumber;
     }
 
     public int getOwnerId() {
