@@ -4,6 +4,7 @@ import com.ecsail.Gybe.pdf.enums.Sections;
 import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceCmyk;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
@@ -62,7 +63,7 @@ public class PdfCell {
     }
 
     public static Cell cellOf(Border border, HorizontalAlignment horizontalAlignment
-            , VerticalAlignment verticalAlignment, Border borderTop, DeviceCmyk backGroundColor, float width) {
+            , VerticalAlignment verticalAlignment, Border borderTop, DeviceRgb backGroundColor, float width) {
         Cell cell = new Cell();
         cell.setBorder(border);
         cell.setHorizontalAlignment(horizontalAlignment);
@@ -103,7 +104,7 @@ public class PdfCell {
         return cell;
     }
 
-    public static Cell dockLeft(float width, float height, DeviceCmyk dockColor, Sections sections, Paragraph[] paragraph) {
+    public static Cell dockLeft(float width, float height, DeviceRgb dockColor, Sections sections, Paragraph[] paragraph) {
         Cell cell = new Cell();
         cell.setWidth(width);
         cell.setHeight(height);
@@ -125,7 +126,7 @@ public class PdfCell {
         return cell;
     }
 
-    public static Cell dockRight(float width, float height, DeviceCmyk dockColor, Sections sections, Paragraph[] paragraph) {
+    public static Cell dockRight(float width, float height, DeviceRgb dockColor, Sections sections, Paragraph[] paragraph) {
         Cell cell = new Cell();
         cell.setWidth(width);
         cell.setBorder(Border.NO_BORDER);
@@ -145,7 +146,7 @@ public class PdfCell {
         return cell;
     }
 
-    public static Cell dockCenter(float width, float height, DeviceCmyk dockColor, Sections sections, Paragraph dockText) {
+    public static Cell dockCenter(float width, float height, DeviceRgb dockColor, Sections sections, Paragraph dockText) {
         Cell cell = new Cell();
         cell.setBackgroundColor(dockColor);
         cell.setBorder(Border.NO_BORDER);

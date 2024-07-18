@@ -3,6 +3,7 @@ package com.ecsail.Gybe.pdf.directory;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.kernel.colors.DeviceCmyk;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.Rectangle;
 
@@ -27,11 +28,11 @@ public class DirectoryModel {
     private final String fontName;
     private final String logoPath;
     private final String membershipEmail;
-    private final DeviceCmyk mainColor;
-    private final DeviceCmyk mipHeaderColor;
-    private final DeviceCmyk mipEmailColor;
-    private final DeviceCmyk slipColor;
-    private final DeviceCmyk slipSubleaseColor;
+    private final DeviceRgb mainColor;
+    private final DeviceRgb mipHeaderColor;
+    private final DeviceRgb mipEmailColor;
+    private final DeviceRgb slipColor;
+    private final DeviceRgb slipSubleaseColor;
     private final float fixedLeading;
     private final float bodTopPadding;
     private final float mainTableWidth;
@@ -167,7 +168,7 @@ public class DirectoryModel {
     }
 
     @SuppressWarnings("unchecked")
-    protected  <T> T setting(String name) {
+    protected <T> T setting(String name) {
         for (AppSettingsDTO setting : settings) {
             if (name.equals(setting.getKey())) {  // this is PDF_Directory.java:108
                 String value = setting.getValue();
@@ -178,22 +179,50 @@ public class DirectoryModel {
                     case "float" -> {
                         return (T) Float.valueOf(value);
                     }
-                    case "DeviceCmyk" -> {
-                        String[] colorStrings = setting.getValue().split(",");
-                        float[] col = new float[colorStrings.length];
-                        for (int i = 0; i < colorStrings.length; i++) {
-                            col[i] = Float.parseFloat(colorStrings[i]);
-                        }
-                        return (T) new DeviceCmyk(col[0], col[1], col[2], col[3]);
+                    case "webColor" -> { // Handle web color format #RRGGBB
+                        return (T) parseWebColor(value);
                     }
-                    default -> {  // is a string
+                    case "DeviceRgb" -> {
+                        return (T) parseDeviceRgb(value);
+                    }
+                    case "DeviceCmyk" -> {
+                        return (T) parseDeviceCmyk(value);
+                    }
+                    default -> {  // Default case assumes the value is a string
                         return (T) value;
                     }
                 }
             }
         }
-        PDF_Directory.logger.error("No setting found for: " + name);
-        return null; // or throw an exception if the setting is not found
+        return null; // Or throw an exception if the setting is not found
+    }
+
+    private DeviceRgb parseWebColor(String value) {
+        if (value.startsWith("#")) {
+            value = value.substring(1);
+        }
+        int r = Integer.parseInt(value.substring(0, 2), 16);
+        int g = Integer.parseInt(value.substring(2, 4), 16);
+        int b = Integer.parseInt(value.substring(4, 6), 16);
+        return new DeviceRgb(r, g, b);
+    }
+
+    private DeviceRgb parseDeviceRgb(String value) {
+        String[] colorStrings = value.split(",");
+        float[] col = new float[colorStrings.length];
+        for (int i = 0; i < colorStrings.length; i++) {
+            col[i] = Float.parseFloat(colorStrings[i]);
+        }
+        return new DeviceRgb(col[0], col[1], col[2]);
+    }
+
+    private DeviceCmyk parseDeviceCmyk(String value) {
+        String[] colorStrings = value.split(",");
+        float[] col = new float[colorStrings.length];
+        for (int i = 0; i < colorStrings.length; i++) {
+            col[i] = Float.parseFloat(colorStrings[i]);
+        }
+        return new DeviceCmyk(col[0], col[1], col[2], col[3]);
     }
 
 
@@ -229,7 +258,7 @@ public class DirectoryModel {
         this.font = font;
     }
 
-    public DeviceCmyk getMainColor() {
+    public DeviceRgb getMainColor() {
         return mainColor;
     }
 
@@ -373,11 +402,11 @@ public class DirectoryModel {
         return fixedLeadingNarrow;
     }
 
-    public DeviceCmyk getMipHeaderColor() {
+    public DeviceRgb getMipHeaderColor() {
         return mipHeaderColor;
     }
 
-    public DeviceCmyk getMipEmailColor() {
+    public DeviceRgb getMipEmailColor() {
         return mipEmailColor;
     }
 
@@ -421,11 +450,11 @@ public class DirectoryModel {
         return slipInfoDTOS;
     }
 
-    public DeviceCmyk getSlipColor() {
+    public DeviceRgb getSlipColor() {
         return slipColor;
     }
 
-    public DeviceCmyk getSlipSubleaseColor() {
+    public DeviceRgb getSlipSubleaseColor() {
         return slipSubleaseColor;
     }
 

@@ -131,8 +131,7 @@ public class PDF_Directory {
     private Rectangle calculatePageSize() {
         float widthPoints = 72 * model.getWidth();
         float heightPoints = 72 * model.getHeight();
-        Rectangle sheet = new Rectangle(widthPoints, heightPoints);
-        return sheet;
+        return new Rectangle(widthPoints, heightPoints);
     }
 
     public DirectoryModel getModel() {

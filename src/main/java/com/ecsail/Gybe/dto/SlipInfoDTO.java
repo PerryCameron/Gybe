@@ -47,24 +47,8 @@ public class SlipInfoDTO {
         return subleaserLastName + ", " + subleaserFirstName + " " + slipNumber;
     }
 
-    public int getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public String getOwnerFirstName() {
-        return ownerFirstName;
-    }
-
     public void setOwnerFirstName(String ownerFirstName) {
         this.ownerFirstName = ownerFirstName;
-    }
-
-    public String getOwnerLastName() {
-        return ownerLastName;
     }
 
     public void setOwnerLastName(String ownerLastName) {
@@ -75,10 +59,6 @@ public class SlipInfoDTO {
         return ownerMsid;
     }
 
-    public void setOwnerMsid(int ownerMsid) {
-        this.ownerMsid = ownerMsid;
-    }
-
     public String getSlipNumber() {
         return slipNumber;
     }
@@ -87,44 +67,8 @@ public class SlipInfoDTO {
         this.slipNumber = slipNumber;
     }
 
-    public String getAltText() {
-        return altText;
-    }
-
-    public void setAltText(String altText) {
-        this.altText = altText;
-    }
-
-    public int getSubleaserId() {
-        return subleaserId;
-    }
-
-    public void setSubleaserId(int subleaserId) {
-        this.subleaserId = subleaserId;
-    }
-
     public int getSubleaserMsid() {
         return subleaserMsid;
-    }
-
-    public void setSubleaserMsid(int subleaserMsid) {
-        this.subleaserMsid = subleaserMsid;
-    }
-
-    public String getSubleaserFirstName() {
-        return subleaserFirstName;
-    }
-
-    public void setSubleaserFirstName(String subleaserFirstName) {
-        this.subleaserFirstName = subleaserFirstName;
-    }
-
-    public String getSubleaserLastName() {
-        return subleaserLastName;
-    }
-
-    public void setSubleaserLastName(String subleaserLastName) {
-        this.subleaserLastName = subleaserLastName;
     }
 }
 
