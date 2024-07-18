@@ -76,6 +76,8 @@ public class PDFServiceImpl implements PDFService {
         directoryData.setFontPath(fontService.getFontLocation());
         directoryData.setSlipStructureDTOS((ArrayList<SlipStructureDTO>) slipRepository.getSlipStructure());
         directoryData.setSlipInfoDTOS((ArrayList<SlipInfoDTO>) slipRepository.getSlipInfo());
+        directoryData.setPersonListDTOS((ArrayList<PersonListDTO>) personRepository.getAllCommodores());
+        directoryData.getPersonListDTOS().addAll(personRepository.getAllSportsManOfTheYear()); // Can't I just do this?
         new PDF_Directory(directoryData);
     }
 

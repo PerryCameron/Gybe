@@ -11,6 +11,7 @@ public class DirectoryDataWrapper {
     private ArrayList<SlipStructureDTO> slipStructureDTOS;
     private ArrayList<SlipInfoDTO> slipInfoDTOS;
     private ArrayList<AppSettingsDTO> appSettingsDTOS;
+    private ArrayList<PersonListDTO> personListDTOS = new ArrayList<>();
     private String fontPath;
 
     public String getFontPath() {
@@ -67,5 +68,13 @@ public class DirectoryDataWrapper {
 
     public void setSlipInfoDTOS(ArrayList<SlipInfoDTO> slipInfoDTOS) {
         this.slipInfoDTOS = slipInfoDTOS;
+    }
+
+    public ArrayList<PersonListDTO> getPersonListDTOS() {
+        return personListDTOS;
+    }
+
+    public void setPersonListDTOS(ArrayList<PersonListDTO> personListDTOS) {
+        this.personListDTOS = personListDTOS;
     }
 }

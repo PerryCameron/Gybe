@@ -3,6 +3,7 @@ package com.ecsail.Gybe.repository.interfaces;
 
 import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
+import com.ecsail.Gybe.dto.PersonListDTO;
 
 import java.util.List;
 
@@ -22,4 +23,8 @@ public interface PersonRepository {
     PersonDTO getPersonByEmail(String email);
 
     CommodoreMessageDTO getCommodoreMessageByYear(int year);
+
+    List<PersonListDTO> getAllCommodores();
+
+    List<PersonListDTO> getAllSportsManOfTheYear();
 }

@@ -3,9 +3,12 @@ package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.CommodoreMessageDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
+import com.ecsail.Gybe.dto.PersonListDTO;
 import com.ecsail.Gybe.repository.interfaces.PersonRepository;
+import com.ecsail.Gybe.repository.rowmappers.CommodoreListRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.CommodoreMessageRowMapper;
 import com.ecsail.Gybe.repository.rowmappers.PersonRowMapper;
+import com.ecsail.Gybe.repository.rowmappers.SportsmanOfTheYearListRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -57,10 +60,10 @@ public class PersonRepositoryImpl implements PersonRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query =
                 """
-                    INSERT INTO person (MS_ID, member_type, F_NAME, L_NAME, OCCUPATION, BUSINESS,
-                    birthday, IS_ACTIVE, NICK_NAME, OLD_MSID) VALUES (:msId, :memberType, :firstName,
-                    :lastName, :occupation, :business, :birthday, :active, :nickName, :oldMsid)
-                """;
+                            INSERT INTO person (MS_ID, member_type, F_NAME, L_NAME, OCCUPATION, BUSINESS,
+                            birthday, IS_ACTIVE, NICK_NAME, OLD_MSID) VALUES (:msId, :memberType, :firstName,
+                            :lastName, :occupation, :business, :birthday, :active, :nickName, :oldMsid)
+                        """;
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(personDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         personDTO.setPId(keyHolder.getKey().intValue());
@@ -83,22 +86,43 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public PersonDTO getPersonByEmail(String email) {
         String query = """
-            select p.P_ID,p.MS_ID,p.MEMBER_TYPE,p.F_NAME,p.L_NAME,p.BIRTHDAY,
-                   p.OCCUPATION,p.BUSINESS,p.IS_ACTIVE,p.NICK_NAME,p.OLD_MSID from email e
-                     left join person p on e.P_ID = p.P_ID
-                     where EMAIL=?
-            """;
+                select p.P_ID,p.MS_ID,p.MEMBER_TYPE,p.F_NAME,p.L_NAME,p.BIRTHDAY,
+                       p.OCCUPATION,p.BUSINESS,p.IS_ACTIVE,p.NICK_NAME,p.OLD_MSID from email e
+                         left join person p on e.P_ID = p.P_ID
+                         where EMAIL=?
+                """;
         try {
             return template.queryForObject(query, new PersonRowMapper(), email);
         } catch (EmptyResultDataAccessException e) {
             return new PersonDTO("none");
         }
     }
+
     @Override
     public CommodoreMessageDTO getCommodoreMessageByYear(int year) {
         String sql = "SELECT * FROM commodore_message WHERE fiscal_year = ?";
         return template.queryForObject(sql, new Object[]{year}, new CommodoreMessageRowMapper());
     }
 
+    @Override
+    public List<PersonListDTO> getAllCommodores() {
+        String query = """    
+                SELECT f_name AS 'first_name', L_NAME AS 'last_name', off_year AS 'officer_year'
+                FROM officer o
+                LEFT JOIN person p ON o.p_id = p.p_id
+                WHERE off_type = 'CO'
+                    """;
+        return template.query(query, new CommodoreListRowMapper());
+    }
 
+    @Override
+    public List<PersonListDTO> getAllSportsManOfTheYear() {
+        String query = """    
+                SELECT f_name AS 'first_name', L_NAME AS 'last_name', AWARD_YEAR AS 'award_year'
+                FROM awards o
+                LEFT JOIN person p ON o.p_id = p.p_id
+                WHERE AWARD_TYPE = 'SA'
+                                """;
+        return template.query(query, new SportsmanOfTheYearListRowMapper());
+    }
 }
