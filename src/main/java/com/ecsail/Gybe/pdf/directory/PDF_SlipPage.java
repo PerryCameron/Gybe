@@ -6,11 +6,14 @@ import com.ecsail.Gybe.dto.SlipPlacementDTO;
 import com.ecsail.Gybe.dto.SlipStructureDTO;
 import com.ecsail.Gybe.pdf.enums.Sections;
 import com.ecsail.Gybe.pdf.tools.PdfCell;
+import com.ecsail.Gybe.pdf.tools.PdfParagraph;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,6 +32,9 @@ public class PDF_SlipPage {
 
     public Table createPage(int page) {
         Table table = new Table(2);
+        float topPadding = model.getSlipPage1TopPadding();
+        if(page == 2) topPadding = model.getSlipPage2TopPadding();
+        table.addCell(PdfCell.verticalSpaceCellWithPadding(topPadding, 2));
         table.setWidth(model.getPageSize().getWidth());
         float cellWidth = model.getMainTableWidth() / 2;
         Cell cellLeft = PdfCell.cellOf(Border.NO_BORDER);
@@ -39,14 +45,30 @@ public class PDF_SlipPage {
         for (SlipPlacementDTO place : model.getSlipPlacementDTOS()) {
             if (place.getPagePlaced() == page) {
                 if (place.getTablePlacedTo() == 1) {
-                    cellLeft.add(new Paragraph("").setHeight(10)); // add space above table
-                    cellLeft.add(createDock(place.getDock()).setHorizontalAlignment(HorizontalAlignment.CENTER));
+                    cellLeft.add(new Paragraph("").setHeight(model.getDockTopPadding())); // add space above table
+                    cellLeft.add(createDock(place.getDock()));
                 } else { // it is page 2
-                    cellRight.add(new Paragraph("").setHeight(10)); // add space above table
-                    cellRight.add(createDock(place.getDock()).setHorizontalAlignment(HorizontalAlignment.CENTER));
+                    cellRight.add(new Paragraph("").setHeight(model.getDockTopPadding())); // add space above table
+                    cellRight.add(createDock(place.getDock()));
                 }
             }
         }
+        if(page == 1) cellRight.add(setLegend());
+        return table;
+    }
+
+    private IBlockElement setLegend() {
+        Table table = new Table(1);
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.addCell(PdfCell.verticalSpaceCellWithPadding(model.getLegendTopPadding(), 1));
+        Cell cell = PdfCell.cellOf(Border.NO_BORDER);
+        Paragraph yearParagraph = PdfParagraph.paragraphOf(model.getSelectedYear() + " Dock Assignments", 12, TextAlignment.CENTER)
+                .setFontColor(model.getMainColor());
+        cell.add(yearParagraph);
+        Paragraph subleaseParagraph = PdfParagraph.paragraphOf("Sublease in blue", 9, TextAlignment.CENTER)
+                .setFontColor(model.getSlipSubleaseColor());
+        cell.add(subleaseParagraph);
+        table.addCell(cell);
         return table;
     }
 
@@ -62,11 +84,12 @@ public class PDF_SlipPage {
         return cell;
     }
 
-    private Table createDock(String dock) {
+    private IBlockElement createDock(String dock) {
         Table table = new Table(3);
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
         ArrayList<SlipStructureDTO> structure = new ArrayList<>();
         Paragraph[] dockText = new Paragraph[5];
-        for (Cell cell : createSection(TOP_SECTION, dockText, 5)) table.addCell(cell);
+        for (Cell cell : createSection(TOP_SECTION, dockText, model.getDockTopHeight())) table.addCell(cell);
         structure.clear();
         structure = (ArrayList<SlipStructureDTO>) model.getSlipStructureDTOS().stream()
                 .filter(dockSection -> dockSection.getDock().equals(dock))
@@ -79,18 +102,18 @@ public class PDF_SlipPage {
                 dockText[2] = new Paragraph(dockSection.getDock());
                 dockText[3] = getName(dockSection.getSlip2(), true);
                 dockText[4] = getName(dockSection.getSlip1(), true);
-                for (Cell cell : createSection(RIGHT_ONLY, dockText, 18)) table.addCell(cell);
+                for (Cell cell : createSection(RIGHT_ONLY, dockText, model.getDockSectionHeight())) table.addCell(cell);
             } else {
                 dockText[0] = getName(dockSection.getSlip4(), false);
                 dockText[1] = getName(dockSection.getSlip3(), false);
                 dockText[2] = new Paragraph(dockSection.getDock());
                 dockText[3] = getName(dockSection.getSlip2(), true);
                 dockText[4] = getName(dockSection.getSlip1(), true);
-                for (Cell cell : createSection(FULL_SECTION, dockText, 18)) table.addCell(cell);
+                for (Cell cell : createSection(FULL_SECTION, dockText, model.getDockSectionHeight())) table.addCell(cell);
             }
-            for (Cell cell : createSection(NON_SECTION, dockText, 5)) table.addCell(cell);
+            for (Cell cell : createSection(CONNECTOR_SECTION, dockText, model.getDockSectionConnectorHeight())) table.addCell(cell);
         }
-        for (Cell cell : createSection(BOTTOM_SECTION, dockText, 12)) table.addCell(cell);
+        for (Cell cell : createSection(BOTTOM_SECTION, dockText, model.getDockSectionBottomHeight())) table.addCell(cell);
         return table;
     }
 
@@ -100,9 +123,8 @@ public class PDF_SlipPage {
         for (SlipInfoDTO info : model.getSlipInfoDTOS()) {
             // if there is no slip owner for this slip, it must be an alternative dock
             if (info.getOwnerMsid() == 0) {
-                for(SlipAltDTO alt: model.getSlipAltDTOS()) {
+                for(SlipAltDTO alt: model.getSlipAltDTOS())
                     if(alt.getSlip().equals(info.getSlipNumber())) alt.setInfoDTO(info);
-                }
             }
             if (rightSide) {
                 if (info.getSlipNumber().equals(slip))
@@ -115,16 +137,5 @@ public class PDF_SlipPage {
             }
         }
         return paragraph.add("");
-    }
-
-    private void setSlipInfo(String type, SlipInfoDTO info) {
-        if(type.equals("48")) {
-            info.setOwnerLastName("48-Hour");
-            info.setOwnerFirstName("");
-        }
-        if(type.equals("Racing")) {
-            info.setOwnerLastName("Racing");
-            info.setOwnerFirstName("");
-        }
     }
 }

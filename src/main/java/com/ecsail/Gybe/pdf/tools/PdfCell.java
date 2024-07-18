@@ -118,7 +118,7 @@ public class PdfCell {
                 cell.add(paragraph[0].setTextAlignment(TextAlignment.RIGHT));
                 cell.add(paragraph[1].setTextAlignment(TextAlignment.RIGHT));
             }
-            case RIGHT_ONLY, NON_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
+            case RIGHT_ONLY, CONNECTOR_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
                 return cell;
             }
         }
@@ -137,7 +137,7 @@ public class PdfCell {
                 cell.setBackgroundColor(dockColor);
                 cell.add(paragraph[3]).add(paragraph[4]);
             }
-            case LEFT_ONLY, NON_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
+            case LEFT_ONLY, CONNECTOR_SECTION, TOP_SECTION, BOTTOM_SECTION -> {
                 return cell;
             }
         }
@@ -155,7 +155,7 @@ public class PdfCell {
             case FULL_SECTION -> {
                 return cell;
             }
-            case NON_SECTION -> {
+            case CONNECTOR_SECTION -> {
                 cell.setBorderRight(new SolidBorder(1f));
                 cell.setBorderLeft(new SolidBorder(1f));
             }

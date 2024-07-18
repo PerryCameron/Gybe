@@ -6,5 +6,5 @@ public enum Sections {
     FULL_SECTION,
     LEFT_ONLY,
     RIGHT_ONLY,
-    NON_SECTION
+    CONNECTOR_SECTION
 }

@@ -67,6 +67,14 @@ public class DirectoryModel {
     private final float mbnTopPadding;
     private final float tocTitleFixedLeading;
     private final float tocTextFixedLeading;
+    private final float slipPage1TopPadding;
+    private final float slipPage2TopPadding;
+    private final float dockTopPadding;
+    private final float legendTopPadding;
+    private final float dockTopHeight;
+    private final float dockSectionHeight;
+    private final float dockSectionConnectorHeight;
+    private final float dockSectionBottomHeight;
 
     public DirectoryModel(DirectoryDataWrapper directoryDataWrapper) {
         this.settings = directoryDataWrapper.getAppSettingsDTOS();
@@ -120,6 +128,15 @@ public class DirectoryModel {
         this.tocTextFixedLeading = setting("tocTextFixedLeading");
         this.slipColor = setting("slipColor");
         this.slipSubleaseColor = setting("slipSubleaseColor");
+        this.slipPage1TopPadding = setting("slipPage1TopPadding");
+        this.slipPage2TopPadding = setting("slipPage2TopPadding");
+        this.dockTopPadding = setting("dockTopPadding");
+        this.legendTopPadding = setting("legendTopPadding");
+        this.dockTopHeight = setting("dockTopHeight");
+        this.dockSectionHeight = setting("dockSectionHeight");
+        this.dockSectionConnectorHeight = setting("dockSectionConnectorHeight");
+        this.dockSectionBottomHeight = setting("dockSectionBottomHeight");
+
         this.mainTableWidth = 72 * width * 0.9f;
     }
 
@@ -472,5 +489,37 @@ public class DirectoryModel {
 
     public ArrayList<SlipAltDTO> getSlipAltDTOS() {
         return slipAltDTOS;
+    }
+
+    public float getSlipPage1TopPadding() {
+        return slipPage1TopPadding;
+    }
+
+    public float getSlipPage2TopPadding() {
+        return slipPage2TopPadding;
+    }
+
+    public float getDockTopPadding() {
+        return dockTopPadding;
+    }
+
+    public float getLegendTopPadding() {
+        return legendTopPadding;
+    }
+
+    public float getDockTopHeight() {
+        return dockTopHeight;
+    }
+
+    public float getDockSectionHeight() {
+        return dockSectionHeight;
+    }
+
+    public float getDockSectionConnectorHeight() {
+        return dockSectionConnectorHeight;
+    }
+
+    public float getDockSectionBottomHeight() {
+        return dockSectionBottomHeight;
     }
 }
