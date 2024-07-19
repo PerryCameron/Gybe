@@ -90,8 +90,6 @@ public class PDF_MembershipInfo {
                     for (EmailDTO email : person.getEmails()) {
                         if (email.getPrimaryUse() && email.getEmailListed()) {
                             return email.getEmail();
-                        } else {
-                            PDF_Directory.logger.info(person.getFullName() + "'s email is set to not listed or is not the primary");
                         }
                     }
                 }
@@ -108,8 +106,6 @@ public class PDF_MembershipInfo {
                         if (phone.getPhoneType().equals(phoneType)) {
                             if (phone.getPhoneType().equals("E")) return "Emergency: " + phone.getPhone();
                             else if (phone.isPhoneListed()) return phone.getPhone();
-                            else PDF_Directory.logger.info(person.getFullName() + "'s phone " + phone.getPhone()
-                                        + " is set to not listed");
                         }
                     }
                 }

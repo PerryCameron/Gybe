@@ -11,4 +11,5 @@ public class PdfTable {
         table.setWidth(width);
         return table;
     }
+
 }

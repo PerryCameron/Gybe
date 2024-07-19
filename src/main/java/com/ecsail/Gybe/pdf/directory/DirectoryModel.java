@@ -79,6 +79,8 @@ public class DirectoryModel {
     private final float centerDockWidth;
     private final float legendSubFontSize;
     private final float legendTitleFontSize;
+    private final float pcTopPadding;
+    private final float soyTopPadding;
     private float width;
     private float height;
     private PdfFont font = null;
@@ -149,6 +151,8 @@ public class DirectoryModel {
         this.centerDockWidth = setting("centerDockWidth");
         this.legendSubFontSize = setting("legendSubFontSize");
         this.legendTitleFontSize = setting("legendTitleFontSize");
+        this.pcTopPadding = setting("pcTopPadding");
+        this.soyTopPadding = setting("soyTopPadding");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -526,5 +530,13 @@ public class DirectoryModel {
 
     public ArrayList<PersonListDTO> getPersonListDTOS() {
         return personListDTOS;
+    }
+
+    public float getPcTopPadding() {
+        return pcTopPadding;
+    }
+
+    public float getSoyTopPadding() {
+        return soyTopPadding;
     }
 }

@@ -110,14 +110,10 @@ public class PersonRepositoryImpl implements PersonRepository {
                 SELECT
                     CONCAT(p.f_name, ' ', p.L_NAME) AS full_name,
                     o.off_year AS officer_year
-                FROM
-                    officer o
-                        LEFT JOIN
-                    person p
-                    ON
-                            o.p_id = p.p_id
-                WHERE
-                        o.off_type = 'CO';
+                FROM officer o
+                LEFT JOIN person p
+                ON o.p_id = p.p_id
+                WHERE o.off_type = 'CO';
                                     """;
         return template.query(query, new CommodoreListRowMapper());
     }
@@ -126,18 +122,13 @@ public class PersonRepositoryImpl implements PersonRepository {
     public List<PersonListDTO> getAllSportsManOfTheYear() {
         String query = """    
                 SELECT
-                      GROUP_CONCAT(CONCAT(f_name, ' ', L_NAME) ORDER BY f_name, L_NAME SEPARATOR '/') AS full_name,
-                      AWARD_YEAR AS award_year
-                  FROM
-                      awards o
-                          LEFT JOIN
-                      person p
-                      ON
-                              o.p_id = p.p_id
-                  WHERE
-                          AWARD_TYPE = 'SA'
-                  GROUP BY
-                      AWARD_YEAR;
+                    GROUP_CONCAT(CONCAT(f_name, ' ', L_NAME) ORDER BY f_name, L_NAME SEPARATOR '/') AS full_name,
+                    AWARD_YEAR AS award_year
+                FROM awards o
+                LEFT JOIN person p
+                ON o.p_id = p.p_id
+                WHERE AWARD_TYPE = 'SA'
+                GROUP BY AWARD_YEAR;
                                 """;
         return template.query(query, new SportsmanOfTheYearListRowMapper());
     }

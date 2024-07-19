@@ -84,27 +84,9 @@ public class PDF_Directory {
 
         PDF_ListPage listPage = new PDF_ListPage(model);
         doc.add(listPage.createPage(Pages.SPORTSMANSHIP_AWARD));
-
-//        doc.add(membersByNumber.createPage(2));
-
-//
-//				new PDF_MembersByNumber(set, doc, rosters);
-//
-//				doc.add(new PDF_SlipPageL(2, set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created D and A dock page\n");
-//
-//				doc.add(new PDF_SlipPageR(2, set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created B and C dock page\n");
-//
-//				doc.add(new PDF_SportsmanAward(2, set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created sportsman award page\n");
-//
-//				doc.add(new PDF_CommodoreList(2, set));
-//				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//				textArea.appendText("Created directory page\n");
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        doc.add(listPage.createPage(Pages.PAST_COMMODORES));
+        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         doc.close();
 
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
