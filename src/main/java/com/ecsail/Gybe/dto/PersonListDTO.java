@@ -5,15 +5,17 @@ import com.ecsail.Gybe.pdf.enums.Pages;
 public class PersonListDTO {
 
     int year;
-    String firstName;
-    String lastName;
-    Pages listType;
+    String name;
+    Pages pageType;
 
-    public PersonListDTO(int year, String firstName, String lastName, Pages listType) {
+    public PersonListDTO(int year, String name, Pages pageType) {
         this.year = year;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.listType = listType;
+        this.name = name;
+        this.pageType = pageType;
+    }
+
+    public String getFullLine() {
+        return  year + " " + name;
     }
 
     public int getYear() {
@@ -24,27 +26,19 @@ public class PersonListDTO {
         this.year = year;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public Pages getPageType() {
+        return pageType;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Pages getListType() {
-        return listType;
-    }
-
-    public void setListType(Pages listType) {
-        this.listType = listType;
+    public void setPageType(Pages pageType) {
+        this.pageType = pageType;
     }
 }

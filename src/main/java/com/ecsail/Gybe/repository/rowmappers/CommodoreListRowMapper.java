@@ -13,8 +13,7 @@ public class CommodoreListRowMapper implements RowMapper<PersonListDTO> {
     public PersonListDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new PersonListDTO(
                 rs.getInt("officer_year"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
+                rs.getString("full_name"),
                 Pages.PAST_COMMODORES
                 );
     }

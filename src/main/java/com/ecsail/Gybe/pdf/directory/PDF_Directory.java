@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.pdf.directory;
 
 import com.ecsail.Gybe.dto.MembershipInfoDTO;
+import com.ecsail.Gybe.pdf.enums.Pages;
 import com.ecsail.Gybe.pdf.tools.PdfSort;
 import com.ecsail.Gybe.wrappers.DirectoryDataWrapper;
 import com.itextpdf.io.font.FontProgram;
@@ -80,6 +81,9 @@ public class PDF_Directory {
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         doc.add(slipPage.createPage(2));
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
+        PDF_ListPage listPage = new PDF_ListPage(model);
+        doc.add(listPage.createPage(Pages.SPORTSMANSHIP_AWARD));
 
 //        doc.add(membersByNumber.createPage(2));
 

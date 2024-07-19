@@ -21,7 +21,7 @@ public class DirectoryModel {
     private final ArrayList<SlipInfoDTO> slipInfoDTOS;
     private final ArrayList<SlipAltDTO> slipAltDTOS;
     private ArrayList<OfficerDTO> positions = null;
-    private ArrayList<String> peopleList = new ArrayList<>();
+    private ArrayList<PersonListDTO> personListDTOS;
     private final Set<PersonDTO> people = new HashSet<>();
     private final CommodoreMessageDTO commodoreMessage;
     private Rectangle pageSize = null;
@@ -93,6 +93,7 @@ public class DirectoryModel {
         this.slipPlacementDTOS = extractSlipPlacementDTO();
         this.slipInfoDTOS = directoryDataWrapper.getSlipInfoDTOS();
         this.slipAltDTOS = extractAlternativeSlips();
+        this.personListDTOS = directoryDataWrapper.getPersonListDTOS();
         this.width = setting("width");
         this.height = setting("height");
         this.mainColor = setting("mainColor");
@@ -521,5 +522,9 @@ public class DirectoryModel {
 
     public float getLegendTitleFontSize() {
         return legendTitleFontSize;
+    }
+
+    public ArrayList<PersonListDTO> getPersonListDTOS() {
+        return personListDTOS;
     }
 }
