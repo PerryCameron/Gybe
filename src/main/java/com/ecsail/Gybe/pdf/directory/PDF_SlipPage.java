@@ -96,18 +96,18 @@ public class PDF_SlipPage {
         structure.sort(Comparator.comparing(SlipStructureDTO::getDockSection));
         for (SlipStructureDTO dockSection : structure) {
             if (dockSection.getSlip3().equals("none") && dockSection.getSlip4().equals("none")) {
-                dockText[0] = new Paragraph("");
-                dockText[1] = new Paragraph("");
+                dockText[0] = new Paragraph("").setFixedLeading(model.getDockTextFixedLeading());
+                dockText[1] = new Paragraph("").setFixedLeading(model.getDockTextFixedLeading());
                 dockText[2] = new Paragraph(dockSection.getDock());
-                dockText[3] = getName(dockSection.getSlip2(), true);
-                dockText[4] = getName(dockSection.getSlip1(), true);
+                dockText[3] = getName(dockSection.getSlip2(), true).setFixedLeading(model.getDockTextFixedLeading());;
+                dockText[4] = getName(dockSection.getSlip1(), true).setFixedLeading(model.getDockTextFixedLeading());
                 for (Cell cell : createSection(RIGHT_ONLY, dockText, model.getDockSectionHeight())) table.addCell(cell);
             } else {
-                dockText[0] = getName(dockSection.getSlip4(), false);
-                dockText[1] = getName(dockSection.getSlip3(), false);
+                dockText[0] = getName(dockSection.getSlip4(), false).setFixedLeading(model.getDockTextFixedLeading());
+                dockText[1] = getName(dockSection.getSlip3(), false).setFixedLeading(model.getDockTextFixedLeading());
                 dockText[2] = new Paragraph(dockSection.getDock());
-                dockText[3] = getName(dockSection.getSlip2(), true);
-                dockText[4] = getName(dockSection.getSlip1(), true);
+                dockText[3] = getName(dockSection.getSlip2(), true).setFixedLeading(model.getDockTextFixedLeading());
+                dockText[4] = getName(dockSection.getSlip1(), true).setFixedLeading(model.getDockTextFixedLeading());
                 for (Cell cell : createSection(FULL_SECTION, dockText, model.getDockSectionHeight())) table.addCell(cell);
             }
             for (Cell cell : createSection(CONNECTOR_SECTION, dockText, model.getDockSectionConnectorHeight())) table.addCell(cell);

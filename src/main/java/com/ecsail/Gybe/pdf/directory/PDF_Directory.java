@@ -60,14 +60,18 @@ public class PDF_Directory {
         doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
         PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
+
         int batchSize = 6; // 6 per page
         PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
+        int count = 0;
         for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
             // Get the sublist for the current batch
             List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
             doc.add(membershipInfo.createPage(batch));
             doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            count++;
         }
+        if(count % 2 != 0) doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
         PdfSort.sortMembershipsByMembershipId(model.getMembershipInfoDTOS());
         PDF_MembersByNumber membersByNumber = new PDF_MembersByNumber(model);

@@ -85,6 +85,7 @@ public class DirectoryModel {
     private final float soyLeftPadding;
     private final float pcFixedLeading;
     private final float soyFixedLeading;
+    private final float dockTextFixedLeading;
     private float width;
     private float height;
     private PdfFont font = null;
@@ -161,6 +162,7 @@ public class DirectoryModel {
         this.soyLeftPadding = setting("soyLeftPadding");
         this.pcFixedLeading = setting("pcFixedLeading");
         this.soyFixedLeading = setting("soyFixedLeading");
+        this.dockTextFixedLeading =  setting("dockTextFixedLeading");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -562,5 +564,9 @@ public class DirectoryModel {
 
     public float getSoyFixedLeading() {
         return soyFixedLeading;
+    }
+
+    public float getDockTextFixedLeading() {
+        return dockTextFixedLeading;
     }
 }

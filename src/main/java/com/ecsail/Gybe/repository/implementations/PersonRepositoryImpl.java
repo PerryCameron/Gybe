@@ -110,11 +110,14 @@ public class PersonRepositoryImpl implements PersonRepository {
                 SELECT
                     CONCAT(p.f_name, ' ', p.L_NAME) AS full_name,
                     o.off_year AS officer_year
-                FROM officer o
-                LEFT JOIN person p
-                ON o.p_id = p.p_id
-                WHERE o.off_type = 'CO';
-                                    """;
+                FROM 
+                    officer o
+                LEFT JOIN 
+                    person p ON o.p_id = p.p_id
+                WHERE 
+                    o.off_type = 'CO' 
+                    AND o.off_year <> YEAR(CURDATE());
+                                                    """;
         return template.query(query, new CommodoreListRowMapper());
     }
 
