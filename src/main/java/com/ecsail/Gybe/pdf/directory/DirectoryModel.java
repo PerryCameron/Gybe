@@ -81,6 +81,10 @@ public class DirectoryModel {
     private final float legendTitleFontSize;
     private final float pcTopPadding;
     private final float soyTopPadding;
+    private final float pcLeftPadding;
+    private final float soyLeftPadding;
+    private final float pcFixedLeading;
+    private final float soyFixedLeading;
     private float width;
     private float height;
     private PdfFont font = null;
@@ -153,6 +157,10 @@ public class DirectoryModel {
         this.legendTitleFontSize = setting("legendTitleFontSize");
         this.pcTopPadding = setting("pcTopPadding");
         this.soyTopPadding = setting("soyTopPadding");
+        this.pcLeftPadding = setting("pcLeftPadding");
+        this.soyLeftPadding = setting("soyLeftPadding");
+        this.pcFixedLeading = setting("pcFixedLeading");
+        this.soyFixedLeading = setting("soyFixedLeading");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -538,5 +546,21 @@ public class DirectoryModel {
 
     public float getSoyTopPadding() {
         return soyTopPadding;
+    }
+
+    public float getPcLeftPadding() {
+        return pcLeftPadding;
+    }
+
+    public float getSoyLeftPadding() {
+        return soyLeftPadding;
+    }
+
+    public float getPcFixedLeading() {
+        return pcFixedLeading;
+    }
+
+    public float getSoyFixedLeading() {
+        return soyFixedLeading;
     }
 }

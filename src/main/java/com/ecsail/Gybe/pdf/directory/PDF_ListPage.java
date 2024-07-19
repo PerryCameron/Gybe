@@ -28,21 +28,37 @@ public class PDF_ListPage {
         Table table = PdfTable.TableOf(2, HorizontalAlignment.CENTER, model.getMainTableWidth());
         table.addCell(setTopPadding(pageType));
         table.addCell(PdfCell.cellOf(1,2,Border.NO_BORDER).add(getTitle(pageType)));
-        Cell[] cell = new Cell[2];
-        cell[0] = PdfCell.cellOf(Border.NO_BORDER).setWidth(table.getWidth().getValue() / 2);
-        cell[1] = PdfCell.cellOf(Border.NO_BORDER).setWidth(table.getWidth().getValue() / 2);
+        Cell[] cell = createColumns(pageType, table.getWidth().getValue());
         int count = 0;
         for(PersonListDTO item: model.getPersonListDTOS()) {
             if(item.getPageType() == pageType) {
                 if(count < columnLength)
-                    cell[0].add(PdfParagraph.paragraphOf(item.getFullLine(),model.getNormalFontSize()).setFont(model.getFont()));
+                    cell[0].add(personInfo(item, pageType));
                 else
-                    cell[1].add(PdfParagraph.paragraphOf(item.getFullLine(),model.getNormalFontSize()).setFont(model.getFont()));
+                    cell[1].add(personInfo(item, pageType));
                 count++;
             }
         }
         table.addCell(cell[0]).addCell(cell[1]);
         return table;
+    }
+
+    private Cell[] createColumns(Pages pageType, float tableWidth) {
+        Cell[] cell = new Cell[2];
+        float paddingLeft;
+        if(pageType == Pages.PAST_COMMODORES) paddingLeft = model.getPcLeftPadding();
+        else paddingLeft = model.getSoyLeftPadding();
+        cell[0] = PdfCell.cellOf(Border.NO_BORDER).setWidth(tableWidth / 2).setPaddingLeft(paddingLeft);
+        cell[1] = PdfCell.cellOf(Border.NO_BORDER).setWidth(tableWidth / 2).setPaddingLeft(paddingLeft);
+        return cell;
+    }
+
+    private IBlockElement personInfo(PersonListDTO item, Pages pageType) {
+        float fixedLeading;
+        if(pageType == Pages.PAST_COMMODORES) fixedLeading = model.getPcFixedLeading();
+        else fixedLeading = model.getSoyFixedLeading();
+        return PdfParagraph.paragraphOf(item.getFullLine(),model.getNormalFontSize())
+                .setFont(model.getFont()).setFixedLeading(fixedLeading);
     }
 
     private Cell setTopPadding(Pages pageType) {
