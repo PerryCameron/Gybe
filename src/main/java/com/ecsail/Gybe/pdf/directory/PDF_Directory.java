@@ -44,55 +44,65 @@ public class PDF_Directory {
         doc.setTopMargin(1f);
         doc.setBottomMargin(0.5f);
 
-        doc.add(new PDF_Cover(model).createPage());
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
-        doc.add(new PDF_CommodoreMessage(model).createPage());
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
-        doc.add(new PDF_BoardOfDirectors( model).createPage());
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
-		doc.add(new PDF_TableOfContents(model).createPage());
-		doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
-        doc.add(new PDF_MembershipInfoTitlePage(model).createPage());
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
-        PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
-
-        int batchSize = 6; // 6 per page
-        PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
-        int count = 0;
-        for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
-            // Get the sublist for the current batch
-            List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
-            doc.add(membershipInfo.createPage(batch));
+        if (model.printCoverPage()) {
+            doc.add(new PDF_Cover(model).createPage());
             doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-            count++;
         }
-        if(count % 2 != 0) doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
-        PdfSort.sortMembershipsByMembershipId(model.getMembershipInfoDTOS());
-        PDF_MembersByNumber membersByNumber = new PDF_MembersByNumber(model);
-        doc.add(membersByNumber.createPage(1));
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        doc.add(membersByNumber.createPage(2));
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
-        PDF_SlipPage slipPage = new PDF_SlipPage(model);
-        doc.add(slipPage.createPage(1));
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        doc.add(slipPage.createPage(2));
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-
+        if (model.printCommodoreMessagePage()) {
+            doc.add(new PDF_CommodoreMessage(model).createPage());
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
+        if (model.printBoardOfDirectorsPage()) {
+            doc.add(new PDF_BoardOfDirectors(model).createPage());
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
+        if (model.isPrintTableOfContentPage()) {
+            doc.add(new PDF_TableOfContents(model).createPage());
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
+        if (model.printMembershipInformationCoverPage()) {
+            doc.add(new PDF_MembershipInfoTitlePage(model).createPage());
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
+        if (model.printMembershipInformationPages()) {
+            PdfSort.sortMembershipsByLastName(model.getMembershipInfoDTOS()); // put them in alphabetical order by last name
+            int batchSize = 6; // 6 per page
+            PDF_MembershipInfo membershipInfo = new PDF_MembershipInfo(model);
+            int count = 0;
+            for (int i = 0; i < model.getMembershipInfoDTOS().size(); i += batchSize) {
+                // Get the sublist for the current batch
+                List<MembershipInfoDTO> batch = model.getMembershipInfoDTOS().subList(i, Math.min(i + batchSize, model.getMembershipInfoDTOS().size()));
+                doc.add(membershipInfo.createPage(batch));
+                doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                count++;
+            }
+            if (count % 2 != 0) doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
+        if(model.printMembershipsByNumberPages()) {
+            PdfSort.sortMembershipsByMembershipId(model.getMembershipInfoDTOS());
+            PDF_MembersByNumber membersByNumber = new PDF_MembersByNumber(model);
+            doc.add(membersByNumber.createPage(1));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            doc.add(membersByNumber.createPage(2));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
+        if(model.printSlipChartPages()) {
+            PDF_SlipPage slipPage = new PDF_SlipPage(model);
+            doc.add(slipPage.createPage(1));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            doc.add(slipPage.createPage(2));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
         PDF_ListPage listPage = new PDF_ListPage(model);
-        doc.add(listPage.createPage(Pages.SPORTSMANSHIP_AWARD));
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        doc.add(listPage.createPage(Pages.PAST_COMMODORES));
-        doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        doc.close();
-
+        if(model.printSportsmanshipAwardPage()) {
+            doc.add(listPage.createPage(Pages.SPORTSMANSHIP_AWARD));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        }
+        if(model.printPastCommodoresPage()) {
+            doc.add(listPage.createPage(Pages.PAST_COMMODORES));
+            doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            doc.close();
+        }
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
     }
 

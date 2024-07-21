@@ -88,6 +88,16 @@ public class DirectoryModel {
     private final float dockTextFixedLeading;
     private float width;
     private float height;
+    private final boolean printCover;
+    private final boolean printCommodoreMessage;
+    private final boolean printBoardOfDirectors;
+    private final boolean printTableOfContentPage;
+    private final boolean printMembershipInformationCover;
+    private final boolean printMembershipInformationPages;
+    private final boolean printMembershipsByNumber;
+    private final boolean printSlipChart;
+    private final boolean printSportsmanshipAward;
+    private final boolean printPastCommodores;
     private PdfFont font = null;
 
     public DirectoryModel(DirectoryDataWrapper directoryDataWrapper) {
@@ -163,6 +173,16 @@ public class DirectoryModel {
         this.pcFixedLeading = setting("pcFixedLeading");
         this.soyFixedLeading = setting("soyFixedLeading");
         this.dockTextFixedLeading =  setting("dockTextFixedLeading");
+        this.printCover =  setting("printCover");
+        this.printCommodoreMessage =  setting("printCommodoreMessage");
+        this.printBoardOfDirectors =  setting("printBoardOfDirectors");
+        this.printTableOfContentPage =  setting("printChapterPage");
+        this.printMembershipInformationCover =  setting("printMembershipInformationCover");
+        this.printMembershipInformationPages =  setting("printMembershipInformationPages");
+        this.printMembershipsByNumber =  setting("printMembershipsByNumber");
+        this.printSlipChart =  setting("printSlipChart");
+        this.printSportsmanshipAward =  setting("printSportsmanshipAward");
+        this.printPastCommodores =  setting("printPastCommodores");
 
         this.mainTableWidth = 72 * width * 0.9f;
     }
@@ -202,6 +222,9 @@ public class DirectoryModel {
                     }
                     case "float" -> {
                         return (T) Float.valueOf(value);
+                    }
+                    case "boolean" -> {
+                        return (T) Boolean.valueOf(Boolean.parseBoolean(value));
                     }
                     case "webColor" -> { // Handle web color format #RRGGBB
                         return (T) parseWebColor(value);
@@ -568,5 +591,45 @@ public class DirectoryModel {
 
     public float getDockTextFixedLeading() {
         return dockTextFixedLeading;
+    }
+
+    public boolean printCoverPage() {
+        return printCover;
+    }
+
+    public boolean printCommodoreMessagePage() {
+        return printCommodoreMessage;
+    }
+
+    public boolean printBoardOfDirectorsPage() {
+        return printBoardOfDirectors;
+    }
+
+    public boolean isPrintTableOfContentPage() {
+        return printTableOfContentPage;
+    }
+
+    public boolean printMembershipInformationCoverPage() {
+        return printMembershipInformationCover;
+    }
+
+    public boolean printMembershipInformationPages() {
+        return printMembershipInformationPages;
+    }
+
+    public boolean printMembershipsByNumberPages() {
+        return printMembershipsByNumber;
+    }
+
+    public boolean printSlipChartPages() {
+        return printSlipChart;
+    }
+
+    public boolean printSportsmanshipAwardPage() {
+        return printSportsmanshipAward;
+    }
+
+    public boolean printPastCommodoresPage() {
+        return printPastCommodores;
     }
 }

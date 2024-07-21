@@ -1,6 +1,6 @@
 
 # added to production 7/19/2024
-INSERT INTO app_settings VALUES ('logoPath', '/Stickers/2024-tbg.png', 'Path to logo', 'string', CURRENT_TIMESTAMP, 'directory');
+INSERT INTO app_settings VALUES ('logoPath', '/Gybe/Stickers/2024-tbg.png', 'Path to logo', 'string', CURRENT_TIMESTAMP, 'directory');
 INSERT INTO app_settings VALUES ('selectedYear', '2024', 'The year', 'integer', CURRENT_TIMESTAMP, 'directory');
 INSERT INTO app_settings VALUES ('normalFontSize', '10', 'defaultFont', 'float', CURRENT_TIMESTAMP, 'directory');
 INSERT INTO app_settings VALUES ('fixedLeading', '25', 'defaultFixedLeading', 'float', CURRENT_TIMESTAMP, 'directory');
