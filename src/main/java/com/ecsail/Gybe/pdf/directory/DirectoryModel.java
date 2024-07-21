@@ -176,7 +176,7 @@ public class DirectoryModel {
         this.printCover =  setting("printCover");
         this.printCommodoreMessage =  setting("printCommodoreMessage");
         this.printBoardOfDirectors =  setting("printBoardOfDirectors");
-        this.printTableOfContentPage =  setting("printChapterPage");
+        this.printTableOfContentPage =  setting("printTableOfContentPage");
         this.printMembershipInformationCover =  setting("printMembershipInformationCover");
         this.printMembershipInformationPages =  setting("printMembershipInformationPages");
         this.printMembershipsByNumber =  setting("printMembershipsByNumber");
