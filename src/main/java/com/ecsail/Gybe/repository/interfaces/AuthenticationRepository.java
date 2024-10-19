@@ -16,6 +16,8 @@ public interface AuthenticationRepository {
 
     boolean existsByUsername(String username);
 
+    boolean apiKeyIsGood(String keyType, String apiKey);
+
     Set<RoleDTO> getAuthoritiesById(Integer userId);
 
     Optional<UserDTO> findUserWithAuthoritiesByUsername(String username);

@@ -52,6 +52,12 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
         return count > 0;
     }
 
+    @Override
+    public boolean apiKeyIsGood(String keyType, String apiKey) {
+        String query = "SELECT COUNT(*) FROM api_key WHERE NAME = ? AND APIKEY = ?";
+        Integer count = template.queryForObject(query, new Object[]{keyType, apiKey}, Integer.class);
+        return count != null && count > 0;
+    }
 
     @Override
     public Set<RoleDTO> getAuthoritiesById(Integer userId) {

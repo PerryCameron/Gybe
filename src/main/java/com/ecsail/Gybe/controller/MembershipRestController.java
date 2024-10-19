@@ -157,6 +157,13 @@ public class MembershipRestController {
         return response;
     }
 
+    @GetMapping("/api/email-verify")
+    public Map<String, Boolean> verifyEmail(@RequestParam String apiKey, String email) {
+        Boolean emailIsValid = emailService.verifyEmail(apiKey, email);
+        Map<String, Boolean> response = new HashMap<>();
+        return response;
+    }
+
     @GetMapping("/api/directory-test")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public Map<String, Object> getDirectoryTest(@RequestParam String listNumber) throws JsonProcessingException {
@@ -167,6 +174,8 @@ public class MembershipRestController {
         response.put("membership", memberships.get(Integer.parseInt(listNumber)));
         return response;
     }
+
+
 
     @GetMapping("/api/directory-rest")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")

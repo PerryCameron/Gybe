@@ -10,5 +10,5 @@ public interface EmailService {
     MailDTO processEmailSubmission(String email);
 
     HashDTO createHash(AuthDTO authDTO);
-
+    Boolean verifyEmail(String apiKey, String email);
 }

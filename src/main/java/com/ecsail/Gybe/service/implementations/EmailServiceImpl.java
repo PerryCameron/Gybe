@@ -2,6 +2,7 @@ package com.ecsail.Gybe.service.implementations;
 
 
 import com.ecsail.Gybe.dto.*;
+import com.ecsail.Gybe.repository.interfaces.AuthenticationRepository;
 import com.ecsail.Gybe.repository.interfaces.EmailRepository;
 import com.ecsail.Gybe.repository.interfaces.GeneralRepository;
 import com.ecsail.Gybe.repository.interfaces.HashRepository;
@@ -22,16 +23,19 @@ public class EmailServiceImpl implements EmailService {
     private final EmailRepository emailRepository;
     private final GeneralRepository generalRepository;
     private final SettingsService settingsService;
+    private final AuthenticationRepository authenticationRepository;
 
 
     public EmailServiceImpl(HashRepository hashRepository,
                             EmailRepository emailRepository,
                             GeneralRepository generalRepository,
-                            SettingsService settingsService) {
+                            SettingsService settingsService,
+                            AuthenticationRepository authenticationRepository) {
         this.hashRepository = hashRepository;
         this.emailRepository = emailRepository;
         this.generalRepository = generalRepository;
         this.settingsService = settingsService;
+        this.authenticationRepository = authenticationRepository;
     }
     @Override
     public MailDTO sendPasswordReset(String email) {
@@ -91,6 +95,14 @@ public class EmailServiceImpl implements EmailService {
             logger.info("Created hash=" + hashDTO.getHash() + " for ms_id=" + hashDTO.getMsId());
         }
         return hashDTO;
+    }
+
+    @Override
+    public Boolean verifyEmail(String apiKey, String email) {
+        boolean keyIsGood = authenticationRepository.apiKeyIsGood("Email Verify", apiKey);
+        Boolean emailIsGood = false;
+        if(keyIsGood) emailIsGood = emailRepository.emailFromActiveMembershipExists(email,Year.now().getValue());
+        return emailIsGood;
     }
 
 }
