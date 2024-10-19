@@ -101,8 +101,8 @@ public class PDF_Directory {
         if(model.printPastCommodoresPage()) {
             doc.add(listPage.createPage(Pages.PAST_COMMODORES));
             doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-            doc.close();
         }
+        doc.close();
         logger.info("destination=" + System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf");
     }
 
