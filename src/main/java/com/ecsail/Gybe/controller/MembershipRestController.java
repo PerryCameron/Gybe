@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,10 +156,11 @@ public class MembershipRestController {
         return response;
     }
 
-    @GetMapping("/api/email-verify")
+    @GetMapping("/open_api/email-verify")
     public Map<String, Boolean> verifyEmail(@RequestParam String apiKey, String email) {
         Boolean emailIsValid = emailService.verifyEmail(apiKey, email);
         Map<String, Boolean> response = new HashMap<>();
+        response.put("isValid", emailIsValid);
         return response;
     }
 

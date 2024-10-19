@@ -52,10 +52,8 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // Spring Security evaluates rules in the order they are defined. If a rule that permits broader access
-        // (permitAll() or authenticated()) is processed before a more restrictive rule (hasRole(), hasAuthority()),
-        // it can lead to unintended access.
         http.authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/open_api/**").permitAll();  // Ensure open API is accessible
                     auth.requestMatchers("/actuator/**", "/adduser").hasAuthority("ROLE_ADMIN"); // Only 'ROLE_ADMIN' can access '/admin/**'
                     auth.requestMatchers("/rb_roster/**", "/Rosters/**").hasAnyRole("ADMIN", "MEMBERSHIP");
 
@@ -135,6 +133,7 @@ public class SecurityConfiguration {
                         .failureUrl("/login?error=true")) // Redirect to log
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/logout")  // Disable CSRF protection specifically for the logout URL
+                        .ignoringRequestMatchers("/open_api/**")  // Disable CSRF for API requests
                 )
                 .logout(logout -> logout
                         // This sets the URL that triggers the logout process. When a request is made to this URL,
