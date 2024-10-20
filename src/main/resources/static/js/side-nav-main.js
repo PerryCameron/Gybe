@@ -1,10 +1,8 @@
 let lastLoadedScript = null;
-
-// <div className="sidenav">
-//     <div id="logo"></div>
-//     <div id="controls"></div>
-//     <div id="links"></div>
-// </div>
+// global for rosters
+let globalRosterData;  // Declare global variable
+let lastSortedColumn = 'membershipId';
+let sortDirection = "asc"; // 'asc' for ascending, 'desc' for descending
 
 document.addEventListener("DOMContentLoaded", function () {
     const logoDiv = document.getElementById("logo");
@@ -37,7 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const links = [
         {href: "javascript:charts()", text: "Charts", target: "", roles: ["ROLE_USER"]},
-        {href: "Rosters", text: "Rosters", id: "option1", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
+        // {href: "Rosters", text: "Rosters", id: "option1", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
+        {href: "javascript:roster()", text: "Rosters", target: "", roles: ["ROLE_MEMBERSHIP"]},
         {href: "javascript:bod()", text: "Board of Directors", id: "option2", target: "", roles: ["ROLE_USER"]},
         {href: "javascript:loadFormRequests()", text: "Form Requests", target: "", roles: ["ROLE_MEMBERSHIP"]},
         {href: "javascript:slipChart()", text: "Slips", target: "", roles: ["ROLE_USER"]},
@@ -64,8 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
     charts();
 });
 
-
-
 function loadFormRequests() {
     if (lastLoadedScript) { // changed
         console.log('Unloading script:', lastLoadedScript); // changed
@@ -90,7 +87,6 @@ function loadFormRequests() {
             console.error('Error fetching slip chart data:', error);
         });
 }
-
 
 function slipChart() {
     if (lastLoadedScript) { // changed
@@ -131,7 +127,7 @@ function charts() {
             script.onload = function () {
                 console.log(`Script with URL ${script.src} has been loaded.`);
                 lastLoadedScript = script.id; // changed
-                buildGybeChart(data);
+                buildGybeChart(data); //gybe-chart-rest.js
             };
             document.body.appendChild(script);
         })
@@ -186,7 +182,6 @@ function loadPublicityScript() {
 }
 
 function loadDirectory() {
-    console.log("loading publicity script");
     if (lastLoadedScript) {
         console.log('Unloading script:', lastLoadedScript);
         unloadScript(lastLoadedScript);
@@ -205,6 +200,30 @@ function loadDirectory() {
         }
     };
     document.body.appendChild(script);
+}
+
+function roster() {
+    console.log("Got to roster()")
+    if (lastLoadedScript) {
+        console.log('Unloading script:', lastLoadedScript);
+        unloadScript(lastLoadedScript);
+    }
+    fetch('/api/roster_data')
+        .then(response => response.json())
+        .then(data => {
+            const script = document.createElement('script');
+            script.src = '/js/rosters-rest.js';
+            script.id = 'dynamicScript'; // changed
+            script.onload = function () {
+                console.log(`Script with URL ${script.src} has been loaded.`);
+                lastLoadedScript = script.id; // changed
+                buildRosters(data); // rosters-rest.js
+            };
+            document.body.appendChild(script);
+        })
+        .catch(error => {
+            console.error('Error fetching gybe chart data:', error);
+        });
 }
 
 function unloadScript(id) { // changed

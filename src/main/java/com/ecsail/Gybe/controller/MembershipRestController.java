@@ -175,7 +175,14 @@ public class MembershipRestController {
         return response;
     }
 
-
+    @GetMapping("/api/roster_data")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, Object> getDefaultRoster() {
+        RosterResponse rosterResponse = rosterService.getDefaultRosterResponse();
+        Map<String, Object> response = new HashMap<>();
+        response.put("roster", rosterResponse);
+        return response;
+    }
 
     @GetMapping("/api/directory-rest")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
