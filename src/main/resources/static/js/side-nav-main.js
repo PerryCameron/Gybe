@@ -13,7 +13,25 @@ document.addEventListener("DOMContentLoaded", function () {
     logoImg.alt = "logo";
     logoDiv.appendChild(logoImg);
 
-    const buttonContainer = document.getElementById("links");
+    const mainTab = document.getElementById("mainTab");
+    const pageTab = document.getElementById("pageTab");
+    const mainNavigation = document.getElementById("mainNavigation");
+    const pageNavigation = document.getElementById("pageNavigation");
+
+    // Event listeners for switching between main navigation and page navigation
+    mainTab.addEventListener("click", function () {
+        mainTab.classList.add("active");
+        pageTab.classList.remove("active");
+        mainNavigation.style.display = "block";
+        pageNavigation.style.display = "none";
+    });
+
+    pageTab.addEventListener("click", function () {
+        pageTab.classList.add("active");
+        mainTab.classList.remove("active");
+        mainNavigation.style.display = "none";
+        pageNavigation.style.display = "block";
+    });
 
     const currentYear = new Date().getFullYear(); // Get the current year
 
@@ -40,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.querySelectorAll('.sidenav a').forEach(el => el.classList.remove('selected'));
                 a.classList.add('selected');
             });
-            buttonContainer.appendChild(a);
+            mainNavigation.appendChild(a);
         }
     });
     charts();

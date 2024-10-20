@@ -3,8 +3,10 @@ function buildGybeChart(data) {
   const ages = data.ages;
   const mainDiv = document.getElementById("main-content");
   mainDiv.innerHTML = '';
-  const controlDiv = document.getElementById('controls');
+
+  const controlDiv = document.getElementById('pageNavigation');
   controlDiv.innerHTML = "";
+
   // Create top chart container
   const topChartDiv = document.createElement('div');
   topChartDiv.className = 'charts top-chart';

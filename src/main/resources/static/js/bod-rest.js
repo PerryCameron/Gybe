@@ -41,7 +41,7 @@ function buildBOD(data) {
   function buildTables() {
     let count = data.boardOfDirectors.length;
 // Get the label element by its ID
-    let controlsDiv = document.getElementById("controls");
+    let controlsDiv = document.getElementById("pageNavigation");
     let recordsLabel = document.getElementById("numb-of-records");
 // Update the text content of the label with the count
     recordsLabel.textContent = "Board Count: " + count;
@@ -201,7 +201,7 @@ function buildBOD(data) {
     const startYear = 1970;
     const endYear = new Date().getFullYear(); // This will get the current year
     // Get the control div
-    const controlDiv = document.getElementById('controls');
+    const controlDiv = document.getElementById('pageNavigation');
     controlDiv.innerHTML = "";
     // Create the record content div
     const recordContentDiv = document.createElement('div');

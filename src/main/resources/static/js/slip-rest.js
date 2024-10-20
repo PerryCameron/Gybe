@@ -1,7 +1,7 @@
 function buildDock(data) {
     const mainDiv = document.getElementById("main-content");
     mainDiv.innerHTML = '<canvas id="slipChart" width="1200" height="1000"></canvas>';
-    const controlDiv = document.getElementById('controls');
+    const controlDiv = document.getElementById('pageNavigation');
     controlDiv.innerHTML = "";
     const canvas = document.getElementById("slipChart");
     const ctx = canvas.getContext("2d");

@@ -20,7 +20,7 @@
 .sidenav a {
     padding: 6px 8px 6px 25px;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 18px;
     width: 250px;
     display: flex;
     text-decoration: none;
@@ -72,5 +72,29 @@
     /* Adjust the width as needed */
     margin-left: 25px;
     margin-bottom: 30px;
+}
+
+/* Tab styling */
+.tabs {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.tab {
+    padding: 10px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+}
+
+.tab.active {
+    background-color: #ccc;
+}
+
+/* Main and Page Navigation Styling */
+#mainNavigation, #pageNavigation {
+    padding: 10px;
+    border-top: 1px solid #ccc;
 }
 

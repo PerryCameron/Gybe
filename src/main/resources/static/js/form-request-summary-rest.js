@@ -98,7 +98,7 @@ function createFormRequest(data) {
     }
 
     function createSidenavContent() {
-        const controlDiv = document.getElementById('controls');
+        const controlDiv = document.getElementById('pageNavigation');
         controlDiv.innerHTML = "";
 
         const labelDiv = document.createElement("div");
