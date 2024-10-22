@@ -22,7 +22,7 @@ html {
 
 .main-content {
   margin-left: 250px; /* should be the same as the width of the sidebar */
-  margin-top: 60px; /* should be the same as the height of the topnav */
+  /*margin-top: 60px; !* should be the same as the height of the topnav *!*/
   padding: 0px;
   overflow: auto; /* Added overflow auto to enable scrolling on the main content */
 }
@@ -62,7 +62,6 @@ input[type="password"]:focus {
 }
 
 #search-bar-div {
-  margin-top: 20px;
   margin-bottom: 20px;
   margin-left: 25px;
 }
@@ -137,6 +136,8 @@ label {
 }
 
 #record-content-div {
+  padding-top: 20px;
+  padding-bottom: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -59,7 +59,7 @@
 /* Div before the table  */
 .main-content {
   display: block;
-  max-height: calc(100vh - 60px);
+  max-height: calc(100vh);
   overflow-y: auto;
   overflow-x: hidden;
 }

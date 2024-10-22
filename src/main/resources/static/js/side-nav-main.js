@@ -3,6 +3,9 @@ let lastLoadedScript = null;
 let globalRosterData;  // Declare global variable
 let lastSortedColumn = 'membershipId';
 let sortDirection = "asc"; // 'asc' for ascending, 'desc' for descending
+let tabCounter = 1;
+// global for search
+let timeout = null;
 
 document.addEventListener("DOMContentLoaded", function () {
     const logoDiv = document.getElementById("logo");

@@ -15,6 +15,7 @@
     overflow-x: hidden;
     padding-top: 20px;
     z-index: 2;
+    border-right: 5px solid #007f6b; /* Add a red right border */
 }
 
 .sidenav a {
@@ -77,24 +78,28 @@
 /* Tab styling */
 .tabs {
     display: flex;
+    width: 100%;
     margin-bottom: 10px;
 }
 
 .tab {
+    flex: 1; /* Each button will take up equal space */
+    text-align: center; /* Center the text in each button */
     padding: 10px;
     background-color: #f1f1f1;
     cursor: pointer;
     border: none;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .tab.active {
-    background-color: #ccc;
+    background-color: #007f6b;
+    color: white;
 }
 
 /* Main and Page Navigation Styling */
 #mainNavigation, #pageNavigation {
-    padding: 10px;
-    border-top: 1px solid #ccc;
+    /*border-top: 5px solid #ccc;*/
+    /*border-color: #007f6b;*/
 }
 
