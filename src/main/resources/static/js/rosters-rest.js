@@ -78,7 +78,6 @@ function createTable() {
 function launchMembershipTab(membership) {
     // Normalize the id to ensure consistency
     const tabId = `Tab${membership.membershipId}`;  // Use dash instead of space for id
-
     // Check if a tab with the same msId already exists
     if (document.getElementById(tabId)) {
         console.log(`Tab${membership.membershipId} already exists.`);
@@ -86,58 +85,40 @@ function launchMembershipTab(membership) {
         document.getElementById(tabId).click();
         return;
     }
-
-    // Create a paragraph element for the new tab content
-    const content = document.createElement("p");
-    content.textContent = "This is a test: " + membership.firstName;
-
     // Add the new tab using the corrected id
-    addTab(membership.membershipId, content);  // Pass tabId to keep track of the unique identifier
+    addTab(membership, createMembershipContent(membership));  // Pass tabId to keep track of the unique identifier
 }
 
-function addTab(text, content) {
-    tabCounter++;
-    let tabText = "";
-
-    // Check if the input is a number and format accordingly
-    if (!isNaN(text)) {
-        tabText = "Mem-" + text;
-    } else {
-        tabText = text;
-    }
-
+function addTab(membership, content) {
     const mainDiv = document.getElementById("main-content");
     const tabsDiv = document.getElementById("roster-tab-div");
-
-    // Create a div for tab content
-    const rosterDiv = document.createElement("div");
-    let tabIdent = "";
-    if(text === "Roster") tabIdent = `content-roster`;
-    else tabIdent = `content-${tabCounter}`;  // Use a unique ID for the content div
-    rosterDiv.id = tabIdent;
-    rosterDiv.classList.add("tab-content");
-    rosterDiv.appendChild(content);
-
-    // Create the tab button
+    const contentDiv = document.createElement("div");
     const button = document.createElement("button");
-    button.textContent = tabText;
+    if(membership === "Roster") {
+        button.id = `tab-roster`;
+        contentDiv.id = `content-roster`;
+        button.textContent = `Roster`;
+        button.setAttribute('onclick', `showTab(event, 'content-roster')`);
+    } else {
+        contentDiv.id = `content-${membership.msId}`;
+        button.id = `tab-${membership.msId}`;
+        button.textContent = `Mem ${membership.membershipId}`
+        button.setAttribute('onclick', `showTab(event, 'content-${membership.msId}')`);
+        const closeButton = document.createElement("span");
+        closeButton.innerHTML = "&times;";  // HTML for '×' symbol
+        closeButton.classList.add("close-tab");
+        closeButton.onclick = function (event) {
+            // Prevent tab from switching when closing
+            event.stopPropagation();
+            closeTab(membership.msId);
+        };
+        button.appendChild(closeButton);
+    }
+    contentDiv.classList.add("tab-content");
     button.classList.add("tab");
-    button.id = `tab-${tabCounter}`;  // Unique ID for the tab button
-    button.setAttribute('onclick', `showTab(event, '${tabIdent}')`);
-
-    // Create the close button inside the tab buttonc
-    const closeButton = document.createElement("span");
-    closeButton.innerHTML = "&times;";  // HTML for '×' symbol
-    closeButton.classList.add("close-tab");
-
-    closeButton.onclick = function(event) {
-        // Prevent tab from switching when closing
-        event.stopPropagation();
-        closeTab(`tab-${tabCounter}`);
-    };
-    button.appendChild(closeButton);
+    contentDiv.appendChild(content);
     tabsDiv.appendChild(button);
-    mainDiv.appendChild(rosterDiv);
+    mainDiv.appendChild(contentDiv);
     button.click();
 }
 
@@ -147,31 +128,10 @@ function replaceTable() {
     tabsDiv.appendChild(createTable());
 }
 
-// Function to handle closing tabs
 function closeTab(tabId) {
+    console.log("Closing tab: " + tabId);
     // Remove the tab button
-    const tabButton = document.getElementById(tabId);
-    if (tabButton) {
-        tabButton.remove();
-    }
-
-    // Remove the tab content
-    const tabContent = document.getElementById(`content-${tabId.split('-')[1]}`);
-    if (tabContent) {
-        tabContent.remove();
-    }
-
-    // Optionally, switch to another tab if one is available
-    const remainingTabs = document.querySelectorAll('.tab');
-    if (remainingTabs.length > 0) {
-        remainingTabs[0].click();  // Activate the first remaining tab
-    }
-}
-
-
-function closeTab(tabId) {
-    // Remove the tab button
-    const tabButton = document.getElementById(tabId);
+    const tabButton = document.getElementById(`tab-${tabId}`);
     if (tabButton) {
         tabButton.remove();
     }
@@ -210,7 +170,6 @@ function sortTable(column) {
     document.querySelectorAll(".header span").forEach((span) => {
         span.textContent = "";
     });
-
     if (column === lastSortedColumn) {
         // Toggle the sort direction
         sortDirection = sortDirection === "asc" ? "desc" : "asc";
@@ -218,7 +177,6 @@ function sortTable(column) {
         // If a new column is clicked, start with ascending sort
         sortDirection = "asc";
     }
-
     globalRosterData.membershipListDTOS.sort((a, b) => {
         let comparison = 0;
         if (a[column] < b[column]) {
@@ -226,14 +184,10 @@ function sortTable(column) {
         } else if (a[column] > b[column]) {
             comparison = 1;
         }
-
         return sortDirection === "asc" ? comparison : -comparison;
     });
-
     replaceTable();
-
     lastSortedColumn = column; // Update the last sorted column
-
     // Set the arrow for the sorted column
     const arrow = document.getElementById(`arrow-${column}`);
     if (arrow) {

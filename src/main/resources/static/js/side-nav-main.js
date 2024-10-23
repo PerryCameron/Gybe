@@ -3,7 +3,6 @@ let lastLoadedScript = null;
 let globalRosterData;  // Declare global variable
 let lastSortedColumn = 'membershipId';
 let sortDirection = "asc"; // 'asc' for ascending, 'desc' for descending
-let tabCounter = 1;
 // global for search
 let timeout = null;
 
@@ -34,11 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
         pageNavigation.style.display = "block";
     });
 
-    const currentYear = new Date().getFullYear(); // Get the current year
+    // const currentYear = new Date().getFullYear(); // Get the current year
 
     const links = [
         {href: "javascript:charts()", text: "Charts", target: "", roles: ["ROLE_USER"]},
-        // {href: "Rosters", text: "Rosters", id: "option1", target: "_blank", roles: ["ROLE_MEMBERSHIP"]},
         {href: "javascript:roster()", text: "Rosters", target: "", roles: ["ROLE_MEMBERSHIP"]},
         {href: "javascript:bod()", text: "Board of Directors", id: "option2", target: "", roles: ["ROLE_USER"]},
         {href: "javascript:loadFormRequests()", text: "Form Requests", target: "", roles: ["ROLE_MEMBERSHIP"]},
@@ -233,7 +231,6 @@ function unloadScript(id) { // changed
         console.warn('No ID provided for unloading script.');
         return;
     }
-
     const script = document.getElementById(id); // changed
     if (script) { // changed
         script.parentNode.removeChild(script); // changed
