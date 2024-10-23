@@ -111,7 +111,10 @@ function addTab(text, content) {
 
     // Create a div for tab content
     const rosterDiv = document.createElement("div");
-    rosterDiv.id = `content-${tabCounter}`;  // Use a unique ID for the content div
+    let tabIdent = "";
+    if(text === "Roster") tabIdent = `content-roster`;
+    else tabIdent = `content-${tabCounter}`;  // Use a unique ID for the content div
+    rosterDiv.id = tabIdent;
     rosterDiv.classList.add("tab-content");
     rosterDiv.appendChild(content);
 
@@ -120,9 +123,9 @@ function addTab(text, content) {
     button.textContent = tabText;
     button.classList.add("tab");
     button.id = `tab-${tabCounter}`;  // Unique ID for the tab button
-    button.setAttribute('onclick', `showTab(event, 'content-${tabCounter}')`);
+    button.setAttribute('onclick', `showTab(event, '${tabIdent}')`);
 
-    // Create the close button inside the tab button
+    // Create the close button inside the tab buttonc
     const closeButton = document.createElement("span");
     closeButton.innerHTML = "&times;";  // HTML for '×' symbol
     closeButton.classList.add("close-tab");
@@ -132,18 +135,16 @@ function addTab(text, content) {
         event.stopPropagation();
         closeTab(`tab-${tabCounter}`);
     };
-
-    // Append the close button to the tab button
     button.appendChild(closeButton);
-
-    // Add the new tab button to the tabs div
     tabsDiv.appendChild(button);
-
-    // Add the new tab content to the main div
     mainDiv.appendChild(rosterDiv);
-
-    // Automatically select the newly added tab
     button.click();
+}
+
+function replaceTable() {
+    const tabsDiv = document.getElementById("content-roster");
+    tabsDiv.innerHTML = "";
+    tabsDiv.appendChild(createTable());
 }
 
 // Function to handle closing tabs
@@ -202,12 +203,6 @@ function showTab(event, tabId) {
 
     // Set the clicked tab as active
     event.currentTarget.classList.add('active');
-}
-
-function replaceTable() {
-    const mainDiv = document.getElementById("main-content");
-    mainDiv.innerHTML = "";
-    mainDiv.appendChild(createTable());
 }
 
 function sortTable(column) {
