@@ -18,13 +18,13 @@ html {
   font-family: "Poppins", sans-serif;
 }
 
-
-
 .main-content {
   margin-left: 250px; /* should be the same as the width of the sidebar */
   /*margin-top: 60px; !* should be the same as the height of the topnav *!*/
   padding: 0px;
   overflow: auto; /* Added overflow auto to enable scrolling on the main content */
+  border-left: 5px solid #007f6b; /* Add a red right border */
+
 }
 
 .topnav-child-div {

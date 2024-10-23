@@ -43,7 +43,7 @@ function createTable() {
     thead.className = "header-link";
     thead.innerHTML = `
   <tr>
-    <th class="header" scope="col" onclick="sortTable('membershipId')">ID<span id="arrow-membershipId"></span></th>
+    <th id="first-header" class="header" scope="col" onclick="sortTable('membershipId')">ID<span id="arrow-membershipId"></span></th>
     <th class="header" style="width: 12%" scope="col" onclick="sortTable('joinDate')">Join Date<span id="arrow-joinDate"></th>
     <th class="header" scope="col" onclick="sortTable('memType')">Type<span id="arrow-memType"></th>
     <th class="header" scope="col" onclick="sortTable('slip')">Slip<span id="arrow-slip"></th>
@@ -76,9 +76,116 @@ function createTable() {
 }
 
 function launchMembershipTab(membership) {
-    const paragraph = document.createElement("p");
-    paragraph.textContent = "This is a test: " + membership.firstName;
-    addTab("Membership " + membership.membershipId, paragraph);
+    // Normalize the id to ensure consistency
+    const tabId = `Tab${membership.membershipId}`;  // Use dash instead of space for id
+
+    // Check if a tab with the same msId already exists
+    if (document.getElementById(tabId)) {
+        console.log(`Tab${membership.membershipId} already exists.`);
+        // Switch to the existing tab if exists
+        document.getElementById(tabId).click();
+        return;
+    }
+
+    // Create a paragraph element for the new tab content
+    const content = document.createElement("p");
+    content.textContent = "This is a test: " + membership.firstName;
+
+    // Add the new tab using the corrected id
+    addTab(membership.membershipId, content);  // Pass tabId to keep track of the unique identifier
+}
+
+function addTab(text, content) {
+    tabCounter++;
+    let tabText = "";
+
+    // Check if the input is a number and format accordingly
+    if (!isNaN(text)) {
+        tabText = "Mem-" + text;
+    } else {
+        tabText = text;
+    }
+
+    const mainDiv = document.getElementById("main-content");
+    const tabsDiv = document.getElementById("roster-tab-div");
+
+    // Create a div for tab content
+    const rosterDiv = document.createElement("div");
+    rosterDiv.id = `content-${tabCounter}`;  // Use a unique ID for the content div
+    rosterDiv.classList.add("tab-content");
+    rosterDiv.appendChild(content);
+
+    // Create the tab button
+    const button = document.createElement("button");
+    button.textContent = tabText;
+    button.classList.add("tab");
+    button.id = `tab-${tabCounter}`;  // Unique ID for the tab button
+    button.setAttribute('onclick', `showTab(event, 'content-${tabCounter}')`);
+
+    // Create the close button inside the tab button
+    const closeButton = document.createElement("span");
+    closeButton.innerHTML = "&times;";  // HTML for '×' symbol
+    closeButton.classList.add("close-tab");
+
+    closeButton.onclick = function(event) {
+        // Prevent tab from switching when closing
+        event.stopPropagation();
+        closeTab(`tab-${tabCounter}`);
+    };
+
+    // Append the close button to the tab button
+    button.appendChild(closeButton);
+
+    // Add the new tab button to the tabs div
+    tabsDiv.appendChild(button);
+
+    // Add the new tab content to the main div
+    mainDiv.appendChild(rosterDiv);
+
+    // Automatically select the newly added tab
+    button.click();
+}
+
+// Function to handle closing tabs
+function closeTab(tabId) {
+    // Remove the tab button
+    const tabButton = document.getElementById(tabId);
+    if (tabButton) {
+        tabButton.remove();
+    }
+
+    // Remove the tab content
+    const tabContent = document.getElementById(`content-${tabId.split('-')[1]}`);
+    if (tabContent) {
+        tabContent.remove();
+    }
+
+    // Optionally, switch to another tab if one is available
+    const remainingTabs = document.querySelectorAll('.tab');
+    if (remainingTabs.length > 0) {
+        remainingTabs[0].click();  // Activate the first remaining tab
+    }
+}
+
+
+function closeTab(tabId) {
+    // Remove the tab button
+    const tabButton = document.getElementById(tabId);
+    if (tabButton) {
+        tabButton.remove();
+    }
+
+    // Remove the tab content
+    const tabContent = document.getElementById(`content-${tabId}`);
+    if (tabContent) {
+        tabContent.remove();
+    }
+
+    // Optional: Activate another tab when one is closed
+    const remainingTabs = document.querySelectorAll('.tab');
+    if (remainingTabs.length > 0) {
+        remainingTabs[0].click();  // Automatically switch to the first remaining tab
+    }
 }
 
 function showTab(event, tabId) {
@@ -95,36 +202,6 @@ function showTab(event, tabId) {
 
     // Set the clicked tab as active
     event.currentTarget.classList.add('active');
-}
-
-function addTab(tabText, content) {
-    const mainDiv = document.getElementById("main-content");
-    const tabsDiv = document.getElementById("roster-tab-div");
-    const rosterDiv = document.createElement("div"); // Create a div for tab content
-    const button = document.createElement("button"); // Create a button for the tab
-
-    tabCounter++;
-    const newTabId = 'Tab' + tabCounter;  // Unique id for the tab content
-
-    // Set the ID and class for the tab content div
-    rosterDiv.id = newTabId;
-    rosterDiv.classList.add("tab-content");
-
-    // Append the content to the new tab content div
-    rosterDiv.appendChild(content);
-
-    // Set up the tab button
-    button.textContent = tabText;
-    button.classList.add("tab");
-    button.setAttribute('onclick', `showTab(event, '${newTabId}')`);
-
-    // Add the new tab button to the tabs div
-    tabsDiv.appendChild(button);
-
-    // Add the new tab content to the main div
-    mainDiv.appendChild(rosterDiv);
-    // Simulate a click on the new tab
-    button.click();
 }
 
 function replaceTable() {
@@ -159,7 +236,6 @@ function sortTable(column) {
     });
 
     replaceTable();
-
 
     lastSortedColumn = column; // Update the last sorted column
 

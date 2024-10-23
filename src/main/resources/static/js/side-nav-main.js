@@ -163,7 +163,6 @@ function bod() {
 }
 
 function loadPublicityScript() {
-    console.log("loading publicity script");
     if (lastLoadedScript) {
         console.log('Unloading script:', lastLoadedScript);
         unloadScript(lastLoadedScript);
