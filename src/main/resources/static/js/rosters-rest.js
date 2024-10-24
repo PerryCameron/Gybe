@@ -75,17 +75,22 @@ function createTable() {
 }
 
 function launchMembershipTab(membership) {
-    // Normalize the id to ensure consistency
-    const tabId = `Tab${membership.membershipId}`;  // Use dash instead of space for id
-    // Check if a tab with the same msId already exists
-    if (document.getElementById(tabId)) {
-        console.log(`Tab${membership.membershipId} already exists.`);
-        // Switch to the existing tab if exists
-        document.getElementById(tabId).click();
-        return;
-    }
-    // Add the new tab using the corrected id
-    addTab(membership, createMembershipContent(membership, globalRosterData.year));  // Pass tabId to keep track of the unique identifier
+    // Reference to the div containing buttons
+    const buttonDiv = document.getElementById('roster-tab-div');
+    // Iterate through the buttons inside the div
+    const buttons = buttonDiv.querySelectorAll('button');
+    const tabId = `tab-${membership.msId}`;
+    buttons.forEach((button, index) => {
+        // Check if a tab with this id already exists
+        if (!document.getElementById(tabId)) {
+            console.log(`Tab with ID ${tabId} does not exist. Adding new tab.`);
+            addTab(membership, createMembershipContent(membership, globalRosterData.year));  // Pass tabId to keep track of the unique identifier
+        } else {
+            console.log(`Tab with ID ${tabId} already exists.`);
+            const existingTab = document.getElementById(tabId);
+            existingTab.click(); // open existing tab
+        }
+    });
 }
 
 function addTab(membership, content) {
