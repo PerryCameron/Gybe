@@ -1,23 +1,3 @@
-/**
- * @typedef {Object} Membership
- * @property {number} msId
- * @property {number} pId
- * @property {string} fullName
- * @property {string} address
- * @property {string} city
- * @property {string} state
- * @property {string} zip
- * @property {string} [slip]
- * @property {string} memType
- * @property {string} joinDate
- * @property {number} membershipId
- */
-
-/**
- * @param {Object} data
- * @param {Membership[]} data.roster.membershipListDTOS
- */
-
 function buildRosters(data) {
     globalRosterData = data.roster;
     const mainDiv = document.getElementById("main-content");
@@ -84,7 +64,7 @@ function launchMembershipTab(membership) {
         // Check if a tab with this id already exists
         if (!document.getElementById(tabId)) {
             console.log(`Tab with ID ${tabId} does not exist. Adding new tab.`);
-            addTab(membership, createMembershipContent(membership, globalRosterData.year));  // Pass tabId to keep track of the unique identifier
+            addTab(membership, createMembershipContent(membership));  // Pass tabId to keep track of the unique identifier
         } else {
             console.log(`Tab with ID ${tabId} already exists.`);
             const existingTab = document.getElementById(tabId);

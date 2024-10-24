@@ -2,12 +2,10 @@ package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.interfaces.*;
-import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.BoatResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,7 +156,7 @@ public class MembershipController {
 
     @GetMapping("/directory")
     public String getDirectory(Model model) {
-        List<JsonNode> memberships = membershipService.getMembershipAsJson();
+        List<JsonNode> memberships = membershipService.getMembershipListAsJson();
         System.out.println("Number of nodes=" + memberships.size());
         return "directory";
     }

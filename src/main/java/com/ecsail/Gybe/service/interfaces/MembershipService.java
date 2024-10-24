@@ -17,5 +17,7 @@ public interface MembershipService {
 
     List<LeadershipDTO> getLeadershipByYear(int year);
 
-    List<JsonNode> getMembershipAsJson();
+    List<JsonNode> getMembershipListAsJson();
+
+    JsonNode getMembershipAsJson(int msId, int year);
 }

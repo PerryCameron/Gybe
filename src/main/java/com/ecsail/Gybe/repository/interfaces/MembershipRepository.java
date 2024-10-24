@@ -35,6 +35,7 @@ public interface MembershipRepository {
     List<MembershipListDTO> getSearchRoster(List<String> searchParams);
 
     List<MembershipListDTO> getOwnersOfBoat(Integer boatId);
+    JsonNode getMembershipAsJSON(int msId, int year);
 
     List<JsonNode> getMembershipsAsJson();
 }

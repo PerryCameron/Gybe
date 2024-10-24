@@ -167,7 +167,7 @@ public class MembershipRestController {
     @GetMapping("/api/directory-test")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public Map<String, Object> getDirectoryTest(@RequestParam String listNumber) throws JsonProcessingException {
-        List<JsonNode> memberships = membershipService.getMembershipAsJson();
+        List<JsonNode> memberships = membershipService.getMembershipListAsJson();
         ObjectMapper objectMapper = new ObjectMapper();
         MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(Integer.parseInt(listNumber)), MembershipInfoDTO.class);
         Map<String, Object> response = new HashMap<>();
@@ -184,10 +184,16 @@ public class MembershipRestController {
         return response;
     }
 
+    @GetMapping("/api/membership-rest")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public JsonNode getMembership(@RequestParam int msId, int year) {
+        return membershipService.getMembershipAsJson(msId, year);
+    }
+
     @GetMapping("/api/directory-rest")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<InputStreamResource> getDirectory() {
-        List<JsonNode> memberships = membershipService.getMembershipAsJson();
+        List<JsonNode> memberships = membershipService.getMembershipListAsJson();
         pdfService.createDirectory(memberships);
         String filePath = System.getProperty("user.home") + "/" + Year.now() + "_ECSC_directory.pdf";
         File file = new File(filePath);

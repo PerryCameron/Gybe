@@ -1,6 +1,5 @@
 package com.ecsail.Gybe.service.implementations;
 
-import com.ecsail.Gybe.controller.MembershipController;
 import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.MembershipService;
@@ -108,8 +107,13 @@ public class MembershipServiceImpl implements MembershipService {
     }
 
     @Override
-    public List<JsonNode> getMembershipAsJson() {
+    public List<JsonNode> getMembershipListAsJson() {
         return membershipRepository.getMembershipsAsJson();
+    }
+
+    @Override
+    public JsonNode getMembershipAsJson(int msId, int selectedYear) {
+        return membershipRepository.getMembershipAsJSON(msId, selectedYear);
     }
 
 

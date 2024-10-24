@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,7 +23,7 @@ import java.util.List;
 @Repository
 public class MembershipRepositoryImpl implements MembershipRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private JdbcTemplate template;
+    private final JdbcTemplate template;
     private static final Logger logger = LoggerFactory.getLogger(MembershipRepository.class);
 
 
@@ -35,11 +36,11 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     @Override
     public List<MembershipListDTO> getActiveRoster(Integer selectedYear) {
         String query = """
-                SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type, 
-                s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip 
-                FROM (select * from membership_id where FISCAL_YEAR=? and RENEW=1) id 
-                INNER JOIN membership m on m.MS_ID = id.MS_ID 
-                LEFT JOIN (select * from person where MEMBER_TYPE=1) p on m.MS_ID= p.MS_ID 
+                SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,
+                s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
+                FROM (select * from membership_id where FISCAL_YEAR=? and RENEW=1) id
+                INNER JOIN membership m on m.MS_ID = id.MS_ID
+                LEFT JOIN (select * from person where MEMBER_TYPE=1) p on m.MS_ID= p.MS_ID
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
@@ -387,6 +388,141 @@ public class MembershipRepositoryImpl implements MembershipRepository {
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), boatId);
         return membershipListDTOS;
+    }
+
+    @Override
+    public JsonNode getMembershipAsJSON(int msId, int year) {
+        String query = """
+        SELECT
+            JSON_OBJECT(
+                'mid', mi.MID,
+                'fiscalYear', mi.FISCAL_YEAR,
+                'msId', mi.MS_ID,
+                'membershipId', mi.MEMBERSHIP_ID,
+                'renew', mi.RENEW,
+                'memType', mi.MEM_TYPE,
+                'selected', mi.SELECTED,
+                'lateRenew', mi.LATE_RENEW,
+                'pId', m.P_ID,
+                'joinDate', m.JOIN_DATE,
+                'address', m.ADDRESS,
+                'city', m.CITY,
+                'state', m.STATE,
+                'zip', m.ZIP,
+                'slip', JSON_OBJECT(
+                    'slipId', s.SLIP_ID,
+                    'slipNum', s.SLIP_NUM,
+                    'subleasedTo', s.SUBLEASED_TO,
+                    'altText', s.ALT_TEXT
+                ),
+                'people', JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'pId', p.P_ID,
+                        'memberType', p.MEMBER_TYPE,
+                        'firstName', p.F_NAME,
+                        'lastName', p.L_NAME,
+                        'birthday', p.BIRTHDAY,
+                        'occupation', p.OCCUPATION,
+                        'business', p.BUSINESS,
+                        'active', p.IS_ACTIVE,
+                        'nickName', p.NICK_NAME,
+                        'oldMsid', p.OLD_MSID,
+                        'emails', (
+                            SELECT JSON_ARRAYAGG(
+                                JSON_OBJECT(
+                                    'emailId', e.EMAIL_ID,
+                                    'primaryUse', e.PRIMARY_USE,
+                                    'email', e.EMAIL,
+                                    'emailListed', e.EMAIL_LISTED
+                                )
+                            )
+                            FROM email e
+                            WHERE e.P_ID = p.P_ID
+                        ),
+                        'phones', (
+                            SELECT JSON_ARRAYAGG(
+                                JSON_OBJECT(
+                                    'phoneId', ph.PHONE_ID,
+                                    'phone', ph.PHONE,
+                                    'phoneType', ph.PHONE_TYPE,
+                                    'phoneListed', ph.PHONE_LISTED
+                                )
+                            )
+                            FROM phone ph
+                            WHERE ph.P_ID = p.P_ID
+                        ),
+                        'awards', (
+                            SELECT JSON_ARRAYAGG(
+                                JSON_OBJECT(
+                                    'awardId', a.AWARD_ID,
+                                    'awardYear', a.AWARD_YEAR,
+                                    'awardType', a.AWARD_TYPE
+                                )
+                            )
+                            FROM awards a
+                            WHERE a.P_ID = p.P_ID
+                        ),
+                        'officers', (
+                            SELECT JSON_ARRAYAGG(
+                                JSON_OBJECT(
+                                    'officerId', o.O_ID,
+                                    'boardYear', o.BOARD_YEAR,
+                                    'officerType', o.OFF_TYPE,
+                                    'fiscalYear', o.OFF_YEAR
+                                )
+                            )
+                            FROM officer o
+                            WHERE o.P_ID = p.P_ID
+                        )
+                    )
+                ),
+                'boats', (
+                    SELECT JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                            'boatId', b.BOAT_ID,
+                            'manufacturer', b.MANUFACTURER,
+                            'manufactureYear', b.MANUFACTURE_YEAR,
+                            'registrationNum', b.REGISTRATION_NUM,
+                            'model', b.MODEL,
+                            'boatName', b.BOAT_NAME,
+                            'sailNumber', b.SAIL_NUMBER,
+                            'hasTrailer', b.HAS_TRAILER,
+                            'length', b.LENGTH,
+                            'weight', b.WEIGHT,
+                            'keel', b.KEEL,
+                            'phrf', b.PHRF,
+                            'draft', b.DRAFT,
+                            'beam', b.BEAM,
+                            'lwl', b.LWL,
+                            'aux', b.AUX
+                        )
+                    )
+                    FROM boat_owner bo
+                    JOIN boat b ON bo.BOAT_ID = b.BOAT_ID
+                    WHERE bo.MS_ID = mi.MS_ID
+                )
+            ) AS membership_info
+        FROM
+            membership_id mi
+            JOIN membership m ON mi.MS_ID = m.MS_ID
+            LEFT JOIN person p ON m.MS_ID = p.MS_ID
+            LEFT JOIN slip s ON mi.MS_ID = s.MS_ID
+        WHERE
+            mi.MS_ID = ?
+        AND mi.FISCAL_YEAR = ?
+        GROUP BY
+            mi.MID, mi.FISCAL_YEAR, mi.MS_ID, mi.MEMBERSHIP_ID, mi.RENEW, mi.MEM_TYPE, mi.SELECTED, mi.LATE_RENEW,
+            m.P_ID, m.JOIN_DATE, m.MEM_TYPE, m.ADDRESS, m.CITY, m.STATE, m.ZIP, s.SLIP_ID, s.SLIP_NUM, s.SUBLEASED_TO, s.ALT_TEXT
+        LIMIT 1;
+        """;
+
+        try {
+            // Query for a single membership
+            return template.queryForObject(query, new Object[]{msId, year}, new JsonRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            // Handle case where no result is found
+            return null;  // or throw an exception, depending on your use case
+        }
     }
 
     @Override
