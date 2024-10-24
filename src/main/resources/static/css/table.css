@@ -73,3 +73,39 @@
 #first-header {
   padding-left: 10px;
 }
+
+/*new stuff*/
+.vbox {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  width: 100%; /* Adjust width as necessary */
+  height: 100vh; /* Make the parent take the full viewport height (optional) */
+}
+
+/*This is the top div in membership view*/
+.top-div {
+  display: flex;                /* Enable Flexbox */
+  flex-direction: row;           /* Arrange children in a row (horizontal) */
+  justify-content: space-around; /* Distribute space evenly between children */
+  background-color: #333;
+  align-items: center;  /* Vertically centers the text */
+  color: white;
+  height: 40px;
+  text-align: center;
+  /* I have added 4 paragraphs to this div, they are currently stacked vertically. I want this to act like an HBox in JavaFX instead */
+}
+
+.labeled-text-div {
+  display: flex;                /* Enable Flexbox */
+  flex-direction: row;           /* Arrange children in a row (horizontal) */
+  justify-content: space-around; /* Distribute space evenly between children */
+  text-align: center;
+}
+
+.labelText {
+  margin-right: 12px;
+}
+
+.infoText {
+  color: #00b28f;
+}

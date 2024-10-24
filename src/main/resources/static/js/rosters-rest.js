@@ -21,7 +21,6 @@
 function buildRosters(data) {
     globalRosterData = data.roster;
     const mainDiv = document.getElementById("main-content");
-    // console.log('Roster Data:', data);
     const controlDiv = document.getElementById('pageNavigation');
     controlDiv.innerHTML = "";
     controlDiv.appendChild(createRecordDiv());
@@ -86,7 +85,7 @@ function launchMembershipTab(membership) {
         return;
     }
     // Add the new tab using the corrected id
-    addTab(membership, createMembershipContent(membership));  // Pass tabId to keep track of the unique identifier
+    addTab(membership, createMembershipContent(membership, globalRosterData.year));  // Pass tabId to keep track of the unique identifier
 }
 
 function addTab(membership, content) {
