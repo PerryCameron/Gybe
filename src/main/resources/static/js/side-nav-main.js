@@ -32,9 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
         mainNavigation.style.display = "none";
         pageNavigation.style.display = "block";
     });
-
-    // const currentYear = new Date().getFullYear(); // Get the current year
-
+    
     const links = [
         {href: "javascript:charts()", text: "Charts", target: "", roles: ["ROLE_USER"]},
         {href: "javascript:roster()", text: "Rosters", target: "", roles: ["ROLE_MEMBERSHIP"]},
@@ -66,10 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function loadFormRequests() {
     if (lastLoadedScript) { // changed
-        console.log('Unloading script:', lastLoadedScript); // changed
         unloadScript(lastLoadedScript); // changed
     }
-
     fetch('/api/form-request-summary')
         .then(response => response.json())
         .then(data => {
@@ -91,10 +87,8 @@ function loadFormRequests() {
 
 function slipChart() {
     if (lastLoadedScript) { // changed
-        console.log('Unloading script:', lastLoadedScript); // changed
         unloadScript(lastLoadedScript); // changed
     }
-
     fetch('/api/slip_chart')
         .then(response => response.json())
         .then(data => {
@@ -116,7 +110,6 @@ function slipChart() {
 
 function charts() {
     if (lastLoadedScript) { // changed
-        console.log('Unloading script:', lastLoadedScript); // changed
         unloadScript(lastLoadedScript); // changed
     }
     fetch('/api/gybe_chart_data')
@@ -139,7 +132,6 @@ function charts() {
 
 function bod() {
     if (lastLoadedScript) { // changed
-        console.log('Unloading script:', lastLoadedScript); // changed
         unloadScript(lastLoadedScript); // changed
     }
     fetch('/api/bod')
@@ -162,10 +154,8 @@ function bod() {
 
 function loadPublicityScript() {
     if (lastLoadedScript) {
-        console.log('Unloading script:', lastLoadedScript);
         unloadScript(lastLoadedScript);
     }
-
     // Dynamically load publicity.js and then call a function if needed
     const script = document.createElement('script');
     script.src = '/js/publicity.js';
@@ -183,10 +173,8 @@ function loadPublicityScript() {
 
 function loadDirectory() {
     if (lastLoadedScript) {
-        console.log('Unloading script:', lastLoadedScript);
         unloadScript(lastLoadedScript);
     }
-
     // Dynamically load publicity.js and then call a function if needed
     const script = document.createElement('script');
     script.src = '/js/directory.js';
@@ -203,9 +191,7 @@ function loadDirectory() {
 }
 
 function roster() {
-    console.log("Got to roster()")
     if (lastLoadedScript) {
-        console.log('Unloading script:', lastLoadedScript);
         unloadScript(lastLoadedScript);
     }
     fetch('/api/roster_data')

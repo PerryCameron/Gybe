@@ -1,3 +1,4 @@
+
 function createMembershipContent(membership) {
     const contentDiv = document.createElement("div");
     console.log(membership);
@@ -8,6 +9,7 @@ function createMembershipContent(membership) {
         if (membershipJson) {
             // Append the person box after the data has been fetched
             contentDiv.appendChild(createPersonBox(membershipJson));
+            populatePersonBox(membershipJson);
         } else {
             console.error('No membership data returned');
         }
@@ -20,11 +22,7 @@ function createMembershipContent(membership) {
 function createPersonBox(membershipJson) {
     const personDiv = document.createElement("div");
     personDiv.classList.add("membership-section");
-    let testString = "";
-    membershipJson.people.forEach(person => {
-        testString += "<p>" + person.firstName + "</p><br>";
-    })
-    personDiv.innerHTML = testString;
+    personDiv.id = `person-tab-pane-${membershipJson.msId}`;
     return personDiv;
 }
 

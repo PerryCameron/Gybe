@@ -98,7 +98,7 @@ function addTab(membership, content) {
         };
         button.appendChild(closeButton);
     }
-    contentDiv.classList.add("tab-content");
+    contentDiv.classList.add("tab-old-content");
     button.classList.add("tab");
     contentDiv.appendChild(content);
     tabsDiv.appendChild(button);
@@ -135,7 +135,7 @@ function closeTab(tabId) {
 
 function showTab(event, tabId) {
     // Hide all tab content
-    const tabContent = document.querySelectorAll('.tab-content');
+    const tabContent = document.querySelectorAll('.tab-old-content');
     tabContent.forEach(content => content.style.display = 'none');
 
     // Remove active class from all tabs
