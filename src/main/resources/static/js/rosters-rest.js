@@ -7,17 +7,15 @@ function buildRosters(data) {
     controlDiv.appendChild(createSearchBarDiv());
     controlDiv.appendChild(createYearSelectDiv());
     controlDiv.appendChild(createButtons());
-    const tabsDiv = document.createElement("div");
-    tabsDiv.classList.add("tabs")
-    tabsDiv.id = "roster-tab-div";
+    const membershipTabPane = document.createElement("div");
+    membershipTabPane.id = "roster-tab-div";
     mainDiv.innerHTML = "";
-    mainDiv.appendChild(tabsDiv);
+    mainDiv.appendChild(membershipTabPane);
     const tabPane = new TabPane("roster-tab-div", "horizontal");
-    // tabPane.addTab(person.pId, "Roster", createTable(), false);
-    addTab("Roster", createTable());
+    tabPane.addTab("roster", "Roster", createTable(tabPane), false);
 }
 
-function createTable() {
+function createTable(tabPane) {
     const table = document.createElement("table");
     table.className = "styled-table";
     const thead = document.createElement("thead");
@@ -35,20 +33,19 @@ function createTable() {
 `;
     table.appendChild(thead);
     const tbody = document.createElement("tbody");
-    globalRosterData.membershipListDTOS.forEach((member) => {
+    globalRosterData.membershipListDTOS.forEach((membership) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-        <td>${member.membershipId}</td>
-        <td>${member.joinDate}</td>
-        <td>${member.memType}</td>
-        <td>${member.slip || ""}</td>
-        <td>${member.firstName}</td>
-        <td>${member.lastName}</td>
-        <td>${member.city}</td>
+        <td>${membership.membershipId}</td>
+        <td>${membership.joinDate}</td>
+        <td>${membership.memType}</td>
+        <td>${membership.slip || ""}</td>
+        <td>${membership.firstName}</td>
+        <td>${membership.lastName}</td>
+        <td>${membership.city}</td>
       `;
         tr.addEventListener('click', () => {
-            // window.open(`/membership?msId=${member.msId}&selectedYear=${globalRosterData.year}`, '_blank');
-            launchMembershipTab(member);
+            tabPane.addTab(membership.msId, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
         });
         tbody.appendChild(tr);
     });
@@ -56,99 +53,11 @@ function createTable() {
     return table;
 }
 
-function launchMembershipTab(membership) {
-    // Reference to the div containing buttons
-    const buttonDiv = document.getElementById('roster-tab-div');
-    // Iterate through the buttons inside the div
-    const buttons = buttonDiv.querySelectorAll('button');
-    const tabId = `tab-${membership.msId}`;
-    buttons.forEach((button, index) => {
-        // Check if a tab with this id already exists
-        if (!document.getElementById(tabId)) {
-            console.log(`Tab with ID ${tabId} does not exist. Adding new tab.`);
-            addTab(membership, createMembershipContent(membership));  // Pass tabId to keep track of the unique identifier
-        } else {
-            console.log(`Tab with ID ${tabId} already exists.`);
-            const existingTab = document.getElementById(tabId);
-            existingTab.click(); // open existing tab
-        }
-    });
-}
-
-function addTab(membership, content) {
-    const mainDiv = document.getElementById("main-content");
-    const tabsDiv = document.getElementById("roster-tab-div");
-    const contentDiv = document.createElement("div");
-    const button = document.createElement("button");
-    if(membership === "Roster") {
-        button.id = `tab-roster`;
-        contentDiv.id = `content-roster`;
-        button.textContent = `Roster`;
-        button.setAttribute('onclick', `showTab(event, 'content-roster')`);
-    } else {
-        contentDiv.id = `content-${membership.msId}`;
-        button.id = `tab-${membership.msId}`;
-        button.textContent = `Mem ${membership.membershipId}`
-        button.setAttribute('onclick', `showTab(event, 'content-${membership.msId}')`);
-        const closeButton = document.createElement("span");
-        closeButton.innerHTML = "&times;";  // HTML for '×' symbol
-        closeButton.classList.add("close-tab");
-        closeButton.onclick = function (event) {
-            // Prevent tab from switching when closing
-            event.stopPropagation();
-            closeTab(membership.msId);
-        };
-        button.appendChild(closeButton);
-    }
-    contentDiv.classList.add("tab-old-content");
-    button.classList.add("tab");
-    contentDiv.appendChild(content);
-    tabsDiv.appendChild(button);
-    mainDiv.appendChild(contentDiv);
-    button.click();
-}
-
 function replaceTable() {
-    const tabsDiv = document.getElementById("content-roster");
-    tabsDiv.innerHTML = "";
-    tabsDiv.appendChild(createTable());
-}
-
-function closeTab(tabId) {
-    console.log("Closing tab: " + tabId);
-    // Remove the tab button
-    const tabButton = document.getElementById(`tab-${tabId}`);
-    if (tabButton) {
-        tabButton.remove();
-    }
-
-    // Remove the tab content
-    const tabContent = document.getElementById(`content-${tabId}`);
-    if (tabContent) {
-        tabContent.remove();
-    }
-
-    // Optional: Activate another tab when one is closed
-    const remainingTabs = document.querySelectorAll('.tab');
-    if (remainingTabs.length > 0) {
-        remainingTabs[0].click();  // Automatically switch to the first remaining tab
-    }
-}
-
-function showTab(event, tabId) {
-    // Hide all tab content
-    const tabContent = document.querySelectorAll('.tab-old-content');
-    tabContent.forEach(content => content.style.display = 'none');
-
-    // Remove active class from all tabs
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-
-    // Show the clicked tab content
-    document.getElementById(tabId).style.display = 'block';
-
-    // Set the clicked tab as active
-    event.currentTarget.classList.add('active');
+    const rosterDiv = document.querySelector('div[data-tab-content="roster"]');
+    // const tabsDiv = document.getElementById("content-roster");
+    rosterDiv.innerHTML = "";
+    rosterDiv.appendChild(createTable());
 }
 
 function sortTable(column) {

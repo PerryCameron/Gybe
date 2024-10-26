@@ -19,7 +19,6 @@ class TabPane {
             this.tabsContainer.style.flexDirection = "column";
             //   this.tabsContainer.classList.add("vertical"); // Apply vertical styles to tabs
             //   this.contentContainer.classList.add("vertical"); // Apply vertical styles to content
-        } else {
         }
         this.container.appendChild(this.tabsContainer);
         this.container.appendChild(this.contentContainer);
@@ -60,9 +59,7 @@ class TabPane {
         }
 
         // Activate the first tab by default if this is the first tab added
-        if (this.tabs.length === 1) {
             this.switchToTab(tabId);
-        }
     }
 
     closeTab(tabButton, tabContent) {
