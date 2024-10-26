@@ -29,7 +29,7 @@ class TabPane {
     }
 
     // Method to add a new tab and corresponding content
-    addTab(tabId, tabLabel, contentHtml, closable) {
+    addTab(tabId, tabLabel, content, closable) {
         // Create and append the new tab button
         const tabButton = document.createElement("button");
         tabButton.setAttribute("data-tab", tabId);
@@ -40,7 +40,7 @@ class TabPane {
         // Create and append the content for the new tab
         const tabContent = document.createElement("div");
         tabContent.setAttribute("data-tab-content", tabId);
-        tabContent.innerHTML = contentHtml;
+        tabContent.appendChild(content);
         tabContent.style.display = "none"; // Hide content initially
         this.contentContainer.appendChild(tabContent);
 

@@ -85,20 +85,21 @@
     width: 100%;
 }
 
-.tab {
-    flex: 1; /* Each button will take up equal space */
-    text-align: center; /* Center the text in each button */
-    padding: 10px;
-    background-color: #f1f1f1;
-    cursor: pointer;
-    border: none;
-    font-size: 12px;
-}
+/*.tab {*/
+    /* Each button will take up equal space */
+    /*flex: 1;*/
+    /*text-align: center; */
+    /*padding: 10px;*/
+    /*background-color: #f1f1f1;*/
+    /*cursor: pointer;*/
+    /*border: none;*/
+    /*font-size: 12px;*/
+/*}*/
 
-.tab.active {
-    background-color: #007f6b;
-    color: white;
-}
+/*.tab.active {*/
+/*    background-color: #007f6b;*/
+/*    color: white;*/
+/*}*/
 
 /* Main and Page Navigation Styling */
 #mainNavigation, #pageNavigation {
@@ -106,10 +107,10 @@
     /*border-color: #007f6b;*/
 }
 
-.tab {
-    position: relative;  /* Allow positioning the close button inside the tab */
-    padding-right: 30px; /* Ensure there's space for the close button */
-}
+/*.tab {*/
+/*    position: relative;  !* Allow positioning the close button inside the tab *!*/
+/*    padding-right: 30px; !* Ensure there's space for the close button *!*/
+/*}*/
 
 /* Custom tab styling for a specific tab pane */
 #roster-tab-div .tab {
@@ -124,17 +125,17 @@
     color: white;
 }
 
-.close-tab {
-    position: absolute;  /* Position the close button inside the tab */
-    top: 2px;            /* Adjust to your needs, controls vertical position */
-    right: 5px;          /* Align it to the right */
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 24px; /* Adjust the size to make it larger */
-    line-height: 1;  /* Adjust the line height for proper alignment */
-}
+/*.close-tab {*/
+/*    position: absolute;  */
+/*    top: 2px;            */
+/*    right: 5px;          */
+/*    color: white;*/
+/*    cursor: pointer;*/
+/*    font-weight: bold;*/
+/*    font-size: 24px; */
+/*    line-height: 1;  */
+/*}*/
 
-.close-tab:hover {
-    color: darkred;
-}
+/*.close-tab:hover {*/
+/*    color: darkred;*/
+/*}*/

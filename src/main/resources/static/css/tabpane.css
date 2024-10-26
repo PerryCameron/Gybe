@@ -13,7 +13,7 @@
 
 /* Hover effect */
 .tab-buttons button:hover {
-    background-color: darkgreen;
+    background-color: #00b28f;
 }
 
 /* Active button style */
@@ -35,5 +35,5 @@
 }
 
 .close-tab:hover {
-    color: darkred;
+    color: #00b28f;
 }

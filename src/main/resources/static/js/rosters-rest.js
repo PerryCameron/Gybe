@@ -12,6 +12,8 @@ function buildRosters(data) {
     tabsDiv.id = "roster-tab-div";
     mainDiv.innerHTML = "";
     mainDiv.appendChild(tabsDiv);
+    const tabPane = new TabPane("roster-tab-div", "horizontal");
+    // tabPane.addTab(person.pId, "Roster", createTable(), false);
     addTab("Roster", createTable());
 }
 
