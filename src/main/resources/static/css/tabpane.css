@@ -11,6 +11,16 @@
     text-align: center;
 }
 
+.vertical {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.horizontal {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
 /* Hover effect */
 .tab-buttons button:hover {
     background-color: #00b28f;

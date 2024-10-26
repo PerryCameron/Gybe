@@ -1,0 +1,32 @@
+/* titled-pane.css */
+.titled-pane {
+    border-radius: 8px; /* Ensures all corners are rounded */
+    overflow: hidden; /* Ensures child elements do not affect the rounded corners */
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+.titled-pane .title {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 8px; /* Matches parent radius */
+    border-top-right-radius: 8px;
+}
+
+.titled-pane .content {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-bottom-left-radius: 8px; /* Matches parent radius */
+    border-bottom-right-radius: 8px;
+    transition: max-height 0.3s ease;
+}
+
+.titled-pane.open .content {
+    display: block;
+}

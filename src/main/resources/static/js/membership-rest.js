@@ -20,10 +20,14 @@ function createMembershipContent(membership) {
 }
 
 function createPersonBox(membershipJson) {
-    const personDiv = document.createElement("div");
-    personDiv.classList.add("membership-section");
-    personDiv.id = `person-tab-pane-${membershipJson.msId}`;
+    const personDiv = new TitledPane("People");
+    personDiv.addClass("membership-section");
+    personDiv.setContentId(`person-tab-pane-${membershipJson.msId}`);
     return personDiv;
+    // const personDiv = document.createElement("div");
+    // personDiv.classList.add("membership-section");
+    // personDiv.id = `person-tab-pane-${membershipJson.msId}`;
+    // return personDiv;
 }
 
 function createHeaderDiv(membership) {

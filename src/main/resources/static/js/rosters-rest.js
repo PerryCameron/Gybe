@@ -55,7 +55,7 @@ function createTable(tabPane) {
 
 function replaceTable() {
     const rosterDiv = document.querySelector('div[data-tab-content="roster"]');
-    // const tabsDiv = document.getElementById("content-roster");
+    const tabsDiv = document.getElementById("content-roster");
     rosterDiv.innerHTML = "";
     rosterDiv.appendChild(createTable());
 }

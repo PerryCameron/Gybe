@@ -7,6 +7,8 @@ class TabPane {
         // Initialize the tab container and content container elements
         this.tabsContainer = document.createElement("div");
         this.tabsContainer.classList.add("tab-buttons");
+        // Save the layout as an instance property
+        this.layout = layout;
 
         this.contentContainer = document.createElement("div");
         this.contentContainer.classList.add("tab-content");
@@ -17,8 +19,6 @@ class TabPane {
             this.tabsContainer.style.display = "flex";
             this.container.style.flexDirection = "row";
             this.tabsContainer.style.flexDirection = "column";
-            //   this.tabsContainer.classList.add("vertical"); // Apply vertical styles to tabs
-            //   this.contentContainer.classList.add("vertical"); // Apply vertical styles to content
         }
         this.container.appendChild(this.tabsContainer);
         this.container.appendChild(this.contentContainer);
@@ -47,19 +47,25 @@ class TabPane {
         this.tabs.push(tabButton);
         this.contents[tabId] = tabContent;
 
-        if (closable) {
-            const closeButton = document.createElement("span");
-            closeButton.innerHTML = "&times;";
-            closeButton.classList.add("close-tab");
-            closeButton.onclick = (event) => {
-                event.stopPropagation(); // Prevent switching tabs on close
-                this.closeTab(tabButton, tabContent); // Correct reference to closeTab
-            };
-            tabButton.appendChild(closeButton);
+        if (this.layout === "vertical") {
+            tabButton.classList.add("vertical");
+        } else {
+            tabButton.classList.add("horizontal");
         }
 
+            if (closable) {
+                const closeButton = document.createElement("span");
+                closeButton.innerHTML = "&times;";
+                closeButton.classList.add("close-tab");
+                closeButton.onclick = (event) => {
+                    event.stopPropagation(); // Prevent switching tabs on close
+                    this.closeTab(tabButton, tabContent); // Correct reference to closeTab
+                };
+                tabButton.appendChild(closeButton);
+            }
+
         // Activate the first tab by default if this is the first tab added
-            this.switchToTab(tabId);
+        this.switchToTab(tabId);
     }
 
     closeTab(tabButton, tabContent) {
