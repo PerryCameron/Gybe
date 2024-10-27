@@ -7,10 +7,10 @@ function createMembershipContent(membership) {
     // Fetch the membership data and append the person box once the data is available
     fetchMembershipData(membership).then(membershipJson => {
         if (membershipJson) {
-            // Append the person box after the data has been fetched
+            // create titledPane
             const titledPane = new TitledPane("People", "membership-section");
             titledPane.setContentId(`person-tab-pane-${membershipJson.msId}`);
-            const tabPane = new TabPane(titledPane, "vertical");
+            const tabPane = new TabPane(titledPane.getContentDiv(), "vertical");
             tabPane.setContentClass("tab-content-style");
             contentDiv.appendChild(titledPane);
             populatePersonBox(membershipJson, tabPane); // located in membership-person-box
@@ -22,13 +22,6 @@ function createMembershipContent(membership) {
     });
     return contentDiv;
 }
-
-// function createPersonBox(membershipJson) {
-//     const personDiv = new TitledPane("People", "membership-section");
-//     // personDiv.addClass("membership-section");
-//     personDiv.setContentId(`person-tab-pane-${membershipJson.msId}`);
-//     return personDiv;
-// }
 
 function createHeaderDiv(membership) {
     // Add content dynamically here

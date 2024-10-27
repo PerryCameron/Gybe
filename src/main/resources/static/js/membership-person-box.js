@@ -2,9 +2,6 @@
 
 function populatePersonBox(membershipJson, tabPane) {
 
-    // const tabPane = new TabPane(`person-tab-pane-${membershipJson.msId}`, "vertical");
-    // tabPane.setContentClass("tab-content-style");
-
     membershipJson.people.forEach(person => {
         // console.log("person: ", person);
         // const contentNode = new EditableFieldsPane(personFields, person);
@@ -23,18 +20,18 @@ function populatePersonBox(membershipJson, tabPane) {
         } else {
             tabPane.addTab(person.pId, "Dependent", contentNode, false);
         }
-        // const extraTabPane = new TabPane("person-extra-tabpane-div","horizontal");
-        // extraTabPane.addTab(`email-${person.pId}`,fakeContent(),false);
-        // extraTabPane.addTab(`phone-${person.pId}`,fakeContent(),false);
-        // extraTabPane.addTab(`awards-${person.pId}`,fakeContent(),false);
-        // extraTabPane.addTab(`position-${person.pId}`,fakeContent(),false);
-        // extraTabPane.switchToTab(`phone-${person.pId}`);
+        const extraTabPane = new TabPane(personExtraTabPaneDiv,"horizontal");
+        extraTabPane.addTab(`email-${person.pId}`,"Email", fakeContent("email"),false);
+        extraTabPane.addTab(`phone-${person.pId}`,"Phone", fakeContent("phone"),false);
+        extraTabPane.addTab(`awards-${person.pId}`,"Awards", fakeContent("awards"),false);
+        extraTabPane.addTab(`position-${person.pId}`,"Position", fakeContent("position"),false);
+        extraTabPane.switchToTab(`phone-${person.pId}`);
     });
     return tabPane;
 }
 
-function fakeContent() {
+function fakeContent(type) {
     const fakeP = document.createElement("p");
-    p.innerText="yes";
+    fakeP.innerText=`This is a filler for ${type}`;
     return fakeP;
 }

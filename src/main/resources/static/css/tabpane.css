@@ -59,4 +59,16 @@
 .tab-content-style {
     background-color: #333;
     padding-right: 5px;
+    border-radius: 5px;
+}
+
+/*custom stuff*/
+
+.content-node-person {
+    display: flex;
+    flex-direction: row;
+}
+
+.person-extra-tabpane-div {
+    padding-top: 5px;
 }

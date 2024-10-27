@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 
-.titled-pane .title {
+.titled-pane .title-pane-title {
     background-color: #333;
     color: white;
     padding: 10px;
@@ -19,11 +19,11 @@
     border-top-right-radius: 8px;
 }
 
-.titled-pane .content {
+.titled-pane .title-pane-content {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.titled-pane.open .content {
+.titled-pane.open .title-pane-content {
     display: block;
 }

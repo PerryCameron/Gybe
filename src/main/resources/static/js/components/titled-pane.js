@@ -8,12 +8,12 @@ class TitledPane extends HTMLElement {
 
         // Title element
         this.titleElement = document.createElement("div");
-        this.titleElement.classList.add("title");
+        this.titleElement.classList.add("title-pane-title");
         this.titleElement.textContent = title;
 
         // Content element (initially empty)
         this.contentElement = document.createElement("div");
-        this.contentElement.classList.add("content");
+        this.contentElement.classList.add("title-pane-content");
 
         // Append title and content to the main element (this)
         this.appendChild(this.titleElement);
@@ -26,6 +26,10 @@ class TitledPane extends HTMLElement {
         this.contentElement.innerHTML = "";
         // Append the new content node
         this.contentElement.appendChild(contentNode);
+    }
+
+    getContentDiv() {
+        return this.contentElement;
     }
 
     setContentId(contentId) {
