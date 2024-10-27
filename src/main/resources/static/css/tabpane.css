@@ -1,7 +1,13 @@
+.tab-buttons {
+    padding-top: 5px;
+    padding-left: 5px;
+    background-color: #9d9d9d;
+}
+
 .tab-buttons button {
     width: 150px;
-    background-color: #f1f1f1;
-    color: black;
+    /*background-color: #f1f1f1;*/
+    /*color: black;*/
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -12,13 +18,15 @@
 }
 
 .vertical {
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    margin-bottom: 1px;
 }
 
 .horizontal {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    margin-right: 1px;
 }
 
 /* Hover effect */
@@ -46,4 +54,9 @@
 
 .close-tab:hover {
     color: #00b28f;
+}
+
+.tab-content-style {
+    background-color: #333;
+    padding-right: 5px;
 }

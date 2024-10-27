@@ -1,9 +1,11 @@
 function populatePersonBox(membershipJson) {
-    console.log("Getting to populatePersonBox()");
+
     const tabPane = new TabPane(`person-tab-pane-${membershipJson.msId}`, "vertical");
+    tabPane.setContentClass("tab-content-style");
 
     membershipJson.people.forEach(person => {
-        const contentNode = tempContent(person)
+        console.log("person: ", person);
+        const contentNode = new EditableFieldsPane(personFields, person);
         if(person.memberType === 1) {
             tabPane.addTab(person.pId, "Primary", contentNode, false);
         } else if(person.memberType === 2) {
@@ -15,8 +17,3 @@ function populatePersonBox(membershipJson) {
     return tabPane;
 }
 
-function tempContent(person) {
-    const div = document.createElement("div");
-    div.innerHTML = `<p>Content for ${person.firstName}</p><br><br><br><br><br><br><br><br><br><br>`
-    return div;
-}

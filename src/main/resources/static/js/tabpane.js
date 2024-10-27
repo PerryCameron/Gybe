@@ -27,6 +27,10 @@ class TabPane {
         this.contents = {};
     }
 
+    setContentClass(className) {
+        this.contentContainer.classList.add(className);
+    }
+
     // Method to add a new tab and corresponding content
     addTab(tabId, tabLabel, content, closable) {
         // Create and append the new tab button

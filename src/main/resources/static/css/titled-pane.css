@@ -2,7 +2,7 @@
 .titled-pane {
     border-radius: 8px; /* Ensures all corners are rounded */
     overflow: hidden; /* Ensures child elements do not affect the rounded corners */
-    margin: 10px 0;
+    /*margin: 10px 0;*/
     box-sizing: border-box;
 }
 
@@ -20,11 +20,8 @@
 }
 
 .titled-pane .content {
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-bottom-left-radius: 8px; /* Matches parent radius */
-    border-bottom-right-radius: 8px;
-    transition: max-height 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .titled-pane.open .content {

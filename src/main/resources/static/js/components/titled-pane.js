@@ -1,9 +1,10 @@
 class TitledPane extends HTMLElement {
-    constructor(title) {
+    constructor(title, optionClass = "membership-section") {
         super(); // Call the HTMLElement constructor
 
         // Add the titled-pane class to the custom element
         this.classList.add("titled-pane");
+        this.classList.add(optionClass);
 
         // Title element
         this.titleElement = document.createElement("div");
