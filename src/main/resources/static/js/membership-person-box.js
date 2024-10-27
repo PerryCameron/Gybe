@@ -21,6 +21,7 @@ function populatePersonBox(membershipJson, tabPane) {
             tabPane.addTab(person.pId, "Dependent", contentNode, false);
         }
         const extraTabPane = new TabPane(personExtraTabPaneDiv,"horizontal");
+        extraTabPane.setContentContainerClass("person-accessories-button-div");
         extraTabPane.addTab(`email-${person.pId}`,"Email", fakeContent("email"),false);
         extraTabPane.addTab(`phone-${person.pId}`,"Phone", fakeContent("phone"),false);
         extraTabPane.addTab(`awards-${person.pId}`,"Awards", fakeContent("awards"),false);
