@@ -1,8 +1,7 @@
 class TabPane {
-    constructor(containerId, layout = "horizontal") {
+    constructor(container, layout = "horizontal") {
         // Store the container where the tab pane will be created
-        this.container = document.getElementById(containerId);
-        console.log("container: " + this.container);
+        this.container = container;
 
         // Initialize the tab container and content container elements
         this.tabsContainer = document.createElement("div");

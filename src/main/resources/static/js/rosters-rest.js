@@ -9,9 +9,10 @@ function buildRosters(data) {
     controlDiv.appendChild(createButtons());
     const membershipTabPane = document.createElement("div");
     membershipTabPane.id = "roster-tab-div";
-    mainDiv.innerHTML = "";
+    mainDiv.innerHTML = ""; // may make sense to create an array of divs, to maintain state even when not on tab, hmm?
     mainDiv.appendChild(membershipTabPane);
-    const tabPane = new TabPane("roster-tab-div", "horizontal");
+    // const tabPane = new TabPane("roster-tab-div", "horizontal");
+    const tabPane = new TabPane(membershipTabPane, "horizontal");
     tabPane.addTab("roster", "Roster", createTable(tabPane), false);
 }
 

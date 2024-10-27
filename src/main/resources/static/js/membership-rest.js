@@ -10,8 +10,10 @@ function createMembershipContent(membership) {
             // Append the person box after the data has been fetched
             const titledPane = new TitledPane("People", "membership-section");
             titledPane.setContentId(`person-tab-pane-${membershipJson.msId}`);
+            const tabPane = new TabPane(titledPane, "vertical");
+            tabPane.setContentClass("tab-content-style");
             contentDiv.appendChild(titledPane);
-            populatePersonBox(membershipJson); // located in membership-person-box
+            populatePersonBox(membershipJson, tabPane); // located in membership-person-box
         } else {
             console.error('No membership data returned');
         }
