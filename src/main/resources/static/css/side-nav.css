@@ -11,9 +11,9 @@
     left: 0;
     height: 100%;
     width: 250px; /* width of the sidebar */
-    background-color: #333;
+    background-color: #f1f1f1;
     overflow-x: hidden;
-    padding-top: 20px;
+    /*padding-top: 20px;*/
     z-index: 2;
     /*border-right: 5px solid #007f6b; !* Add a red right border *!*/
 }
@@ -25,7 +25,7 @@
     width: 250px;
     display: flex;
     text-decoration: none;
-    color: #cacaca;
+    color: black;
     cursor: pointer;
 }
 
@@ -36,7 +36,7 @@
 .sidenav a:hover {
     background-image: linear-gradient(
             to right,
-            #2a88e6 7px,
+            #9d9d9d 7px,
             rgba(255, 255, 255, 0.1) 7px
     );
     color: #ffffff;
@@ -45,17 +45,20 @@
 .sidenav a.selected {
     background-image: linear-gradient(
             to right,
-            #2a88e6 7px,
+            #00b28f 7px,
             rgba(255, 255, 255, 0.1) 7px
     );
-    color: #ffffff;
+    color: black;
 }
 
 #logo {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
+    background-color: #333;
+    padding-top: 10px;
+    padding-bottom: 30px;
 }
 
 #links {

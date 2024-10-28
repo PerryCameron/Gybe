@@ -30,10 +30,6 @@ class TabPane {
         this.contentContainer.classList.add(className);
     }
 
-    setContentContainerClass(className) {
-        this.tabsContainer.classList.add(className);
-    }
-
     // Method to add a new tab and corresponding content
     addTab(tabId, tabLabel, content, closable) {
         // Create and append the new tab button
@@ -49,6 +45,7 @@ class TabPane {
         tabContent.appendChild(content);
         tabContent.style.display = "none"; // Hide content initially
         tabContent.classList.add("attributes-tab-content");
+        tabContent.id = `tab-content-${tabId}`;
         this.contentContainer.appendChild(tabContent);
 
         // Store the tab and content elements
@@ -111,4 +108,4 @@ class TabPane {
             activeContent.style.display = "flex";
         }
     }
-}
+}   // show me css which would make tabs take 100% of space

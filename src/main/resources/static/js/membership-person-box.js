@@ -3,8 +3,6 @@
 function populatePersonBox(membershipJson, tabPane) {
 
     membershipJson.people.forEach(person => {
-        // console.log("person: ", person);
-        // const contentNode = new EditableFieldsPane(personFields, person);
 
         const contentNode = document.createElement("div");
         contentNode.classList.add("content-node-person");
@@ -21,7 +19,9 @@ function populatePersonBox(membershipJson, tabPane) {
             tabPane.addTab(person.pId, "Dependent", contentNode, false);
         }
         const extraTabPane = new TabPane(personExtraTabPaneDiv,"horizontal");
-        extraTabPane.setContentContainerClass("person-accessories-button-div");
+        extraTabPane.tabsContainer.classList.add("person-accessories-button-div");
+        extraTabPane.container.id = "person-accessories-tab-pane";
+        extraTabPane.tabsContainer.id = "person-accessories-tab-container";
         extraTabPane.addTab(`email-${person.pId}`,"Email", fakeContent("email"),false);
         extraTabPane.addTab(`phone-${person.pId}`,"Phone", fakeContent("phone"),false);
         extraTabPane.addTab(`awards-${person.pId}`,"Awards", fakeContent("awards"),false);

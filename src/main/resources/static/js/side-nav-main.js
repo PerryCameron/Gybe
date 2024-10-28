@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
     pageNavigationDiv.id = "pageNavigation";
     sideTabPane.addTab("main-navigation","Main Menu", mainNavigationDiv,false);
     sideTabPane.addTab("page-navigation","Page Options", pageNavigationDiv,false);
+    sideTabPane.container.id = "main-menu-tab-pane";
+    sideTabPane.tabsContainer.id = "main-menu_tab-container";
+    sideTabPane.contentContainer.id = "main-menu-tab-content-container";
+    sideTabPane.switchToTab("main-navigation");
 
     const links = [
         {handler: charts, text: "Charts", target: "", roles: ["ROLE_USER"]},
@@ -31,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
         {handler: loadPublicityScript, text: "Publicity", target: "", roles: ["ROLE_PUBLICITY"]},
         {handler: loadDirectory, text: "Directory", target: "", roles: ["ROLE_MEMBERSHIP"]}
     ];
+
+    let chartLink;
 
     links.forEach(function (link) {
         const hasRole = link.roles.some(role => userRoles.includes(role));
@@ -54,10 +60,16 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             // mainNavigation.appendChild(a);
             mainNavigationDiv.appendChild(a);
+
+            // Save reference to "Charts" link
+            if (link.text === "Charts") {
+                chartLink = a;
+            }
         }
     });
-    charts();
-});
+    if (chartLink) {
+        chartLink.click();
+    }});
 
 function loadFormRequests() {
     if (lastLoadedScript) { // changed
