@@ -26,8 +26,11 @@ class TabPane {
         this.contents = {};
     }
 
-    setContentClass(className) {
-        this.contentContainer.classList.add(className);
+    tabExists(id) {
+        // Use querySelector to find a button with the matching data-tab attribute
+        const tabButton = this.tabsContainer.querySelector(`button[data-tab="${id}"]`);
+        // Return true if found, false otherwise
+        return tabButton !== null;
     }
 
     // Method to add a new tab and corresponding content

@@ -52,7 +52,11 @@ function createTable() {
         <td>${membership.city}</td>
       `;
         tr.addEventListener('click', () => {
-            rosterTabPane.addTab(membership.msId, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
+            if(rosterTabPane.tabExists(membership.msId)) {
+                rosterTabPane.switchToTab(membership.msId)
+            } else {
+                rosterTabPane.addTab(membership.msId, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
+            }
         });
         tbody.appendChild(tr);
     });

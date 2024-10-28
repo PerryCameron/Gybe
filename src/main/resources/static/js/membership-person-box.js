@@ -1,7 +1,7 @@
 
 
 function populatePersonBox(membershipJson, tabPane) {
-
+    let primaryTab;
     membershipJson.people.forEach(person => {
 
         const contentNode = document.createElement("div");
@@ -11,8 +11,10 @@ function populatePersonBox(membershipJson, tabPane) {
         personExtraTabPaneDiv.classList.add("person-extra-tabpane-div");
         contentNode.appendChild(personFieldPane);
         contentNode.appendChild(personExtraTabPaneDiv);
+
         if(person.memberType === 1) {
             tabPane.addTab(person.pId, "Primary", contentNode, false);
+            primaryTab = person.pId;
         } else if(person.memberType === 2) {
             tabPane.addTab(person.pId, "Secondary", contentNode, false);
         } else {
@@ -26,8 +28,9 @@ function populatePersonBox(membershipJson, tabPane) {
         extraTabPane.addTab(`phone-${person.pId}`,"Phone", fakeContent("phone"),false);
         extraTabPane.addTab(`awards-${person.pId}`,"Awards", fakeContent("awards"),false);
         extraTabPane.addTab(`position-${person.pId}`,"Position", fakeContent("position"),false);
-        extraTabPane.switchToTab(`phone-${person.pId}`);
+        extraTabPane.switchToTab(`email-${person.pId}`);
     });
+    tabPane.switchToTab(primaryTab);
     return tabPane;
 }
 

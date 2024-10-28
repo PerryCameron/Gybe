@@ -11,7 +11,7 @@ function createMembershipContent(membership) {
             const titledPane = new TitledPane("People", "membership-section");
             titledPane.setContentId(`person-tab-pane-${membershipJson.msId}`);
             const tabPane = new TabPane(titledPane.getContentDiv(), "vertical");
-            tabPane.setContentClass("tab-content-style");
+            tabPane.contentContainer.classList.add("tab-content-style");
             contentDiv.appendChild(titledPane);
             populatePersonBox(membershipJson, tabPane); // located in membership-person-box
         } else {
