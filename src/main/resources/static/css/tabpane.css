@@ -1,19 +1,20 @@
 .tab-buttons {
-    padding-top: 15px;
-    padding-left: 5px;
-    background-color: #9d9d9d;
+    padding-top: 8px;
+    /*padding-left: 5px;*/
+    /*background-color: #1658e7;*/
+    /*background-color: #9d9d9d;*/
 }
 
 .tab-buttons button {
     width: 150px;
-    /*background-color: #f1f1f1;*/
-    /*color: black;*/
+    background-color: #333;
+    color: white;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
     position: relative; /* Allow positioning the close button inside the tab */
     /* Ensure there's space for the close button */
-    padding: 10px 30px 10px 10px;
+    padding: 5px 30px 5px 10px;
     text-align: center;
 }
 
@@ -30,15 +31,15 @@
 }
 
 /* Hover effect */
-.tab-buttons button:hover {
-    background-color: #00b28f;
-}
+/*.tab-buttons button:hover {*/
+/*    background-color: #00b28f;*/
+/*}*/
 
 /* Active button style */
 .tab-buttons button.active {
-    background-color: #333;
+    background-color: #f1f1f1;
     font-weight: bold;
-    color: white;
+    color: black;
 }
 
 .close-tab {
@@ -56,24 +57,38 @@
     color: #00b28f;
 }
 
-.tab-content-style {
-    background-color: #333;
-    padding-right: 5px;
-    border-radius: 5px;
-    margin-right: 5px;
-}
+/*.tab-content-style {*/
+/*    background-color: #333;*/
+/*    padding-right: 3px;*/
+/*    border-radius: 5px;*/
+/*    margin-right: 5px;*/
+/*}*/
 
 /*custom stuff*/
 
 .content-node-person {
     display: flex;
     flex-direction: row;
+    background-color: #f1f1f1;
+    border-radius: 5px;
 }
 
 .person-extra-tabpane-div {
-    padding-top: 5px;
+    padding-top: 3px;
+    height: 100%;
+    padding-right: 5px;
 }
 
 .person-accessories-button-div {
     padding-right: 5px;
+}
+
+.tab-content {
+    height: 100%;
+}
+
+.attributes-tab-content {
+    height: 80%;
+    overflow: hidden;
+    border-radius: 5px;
 }

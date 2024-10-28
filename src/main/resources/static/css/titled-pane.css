@@ -7,8 +7,8 @@
 }
 
 .titled-pane .title-pane-title {
-    background-color: #333;
-    color: white;
+    background-color: #e3e1e1;
+    color: black;
     padding: 10px;
     cursor: pointer;
     font-weight: bold;
@@ -20,8 +20,10 @@
 }
 
 .titled-pane .title-pane-content {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    /*margin-top: 5px;*/
+    /*margin-bottom: 5px;*/
+    /*margin-left: 5px;*/
+    margin: 5px;
 }
 
 .titled-pane.open .title-pane-content {

@@ -4,12 +4,12 @@
   font-size: 0.9em;
   font-family: sans-serif;
   /*min-width: 400px;*/
-  /*box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);*/
+  width: 1000px;
 }
 
 .styled-table thead tr {
-  background-color: #333;
-  color: #ffffff;
+  background-color: #f1f1f1;
+  color: #009879;
   text-align: left;
   padding-left: 10px;
   /*display: block;*/
@@ -66,7 +66,7 @@
   position: sticky;
   top: 0;
   /*background-color: #007f6b; !* Set this to the background color of your header *!*/
-  background-color: #333;
+  /*background-color: #333;*/
   z-index: 10;
 }
 
@@ -87,9 +87,9 @@
   display: flex;                /* Enable Flexbox */
   flex-direction: row;           /* Arrange children in a row (horizontal) */
   justify-content: space-around; /* Distribute space evenly between children */
-  background-color: #333;
+  background-color: #f1f1f1;
   align-items: center;  /* Vertically centers the text */
-  color: white;
+  color: black;
   height: 40px;
   text-align: center;
   /* I have added 4 paragraphs to this div, they are currently stacked vertically. I want this to act like an HBox in JavaFX instead */

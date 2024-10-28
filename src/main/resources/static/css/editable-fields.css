@@ -60,12 +60,10 @@
 }
 
 .fields-container {
-    background-color: white;
-    margin-left: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-right: 5px;
+    /*background-color: white;*/
+    /*margin: 3px;*/
     padding-right: 30px;
+    border-radius: 5px;
 }
 
 .field {

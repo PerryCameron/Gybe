@@ -6,3 +6,5 @@ const personFields = {
     business: "Business",
     birthday: "Birthday",
 };
+
+let rosterTabPane;

@@ -48,6 +48,7 @@ class TabPane {
         tabContent.setAttribute("data-tab-content", tabId);
         tabContent.appendChild(content);
         tabContent.style.display = "none"; // Hide content initially
+        tabContent.classList.add("attributes-tab-content");
         this.contentContainer.appendChild(tabContent);
 
         // Store the tab and content elements
@@ -107,7 +108,7 @@ class TabPane {
         const activeContent = this.contents[tabId];
         if (activeTab && activeContent) {
             activeTab.classList.add("active");
-            activeContent.style.display = "block";
+            activeContent.style.display = "flex";
         }
     }
 }

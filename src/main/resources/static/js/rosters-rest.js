@@ -12,26 +12,32 @@ function buildRosters(data) {
     mainDiv.innerHTML = ""; // may make sense to create an array of divs, to maintain state even when not on tab, hmm?
     mainDiv.appendChild(membershipTabPane);
     // const tabPane = new TabPane("roster-tab-div", "horizontal");
-    const tabPane = new TabPane(membershipTabPane, "horizontal");
-    tabPane.addTab("roster", "Roster", createTable(tabPane), false);
+    rosterTabPane = new TabPane(membershipTabPane, "horizontal");
+    rosterTabPane.addTab("roster", "Roster", createTable(), false);
 }
 
-function createTable(tabPane) {
+function createTable() {
     const table = document.createElement("table");
     table.className = "styled-table";
     const thead = document.createElement("thead");
     thead.className = "header-link";
     thead.innerHTML = `
-  <tr>
-    <th id="first-header" class="header" scope="col" onclick="sortTable('membershipId')">ID<span id="arrow-membershipId"></span></th>
-    <th class="header" style="width: 12%" scope="col" onclick="sortTable('joinDate')">Join Date<span id="arrow-joinDate"></th>
-    <th class="header" scope="col" onclick="sortTable('memType')">Type<span id="arrow-memType"></th>
-    <th class="header" scope="col" onclick="sortTable('slip')">Slip<span id="arrow-slip"></th>
-    <th class="header" scope="col" onclick="sortTable('firstName')">First Name<span id="arrow-firstName"></th>
-    <th class="header" scope="col" onclick="sortTable('lastName')">Last Name<span id="arrow-lastName"></th>
-    <th class="header" scope="col" onclick="sortTable('city')">City<span id="arrow-city"></th>
-  </tr>
-`;
+      <tr>
+        <th id="first-header" class="header" scope="col">ID<span id="arrow-membershipId"></span></th>
+        <th class="header" style="width: 12%" scope="col">Join Date<span id="arrow-joinDate"></span></th>
+        <th class="header" scope="col">Type<span id="arrow-memType"></span></th>
+        <th class="header" scope="col">Slip<span id="arrow-slip"></span></th>
+        <th class="header" scope="col">First Name<span id="arrow-firstName"></span></th>
+        <th class="header" scope="col">Last Name<span id="arrow-lastName"></span></th>
+        <th class="header" scope="col">City<span id="arrow-city"></span></th>
+      </tr>
+    `;
+
+    // Attach event listeners instead of inline onclick
+    thead.querySelectorAll("th").forEach((th, index) => {
+        const sortColumns = ["membershipId", "joinDate", "memType", "slip", "firstName", "lastName", "city"];
+        th.addEventListener("click", () => sortTable(sortColumns[index]));
+    });
     table.appendChild(thead);
     const tbody = document.createElement("tbody");
     globalRosterData.membershipListDTOS.forEach((membership) => {
@@ -46,7 +52,7 @@ function createTable(tabPane) {
         <td>${membership.city}</td>
       `;
         tr.addEventListener('click', () => {
-            tabPane.addTab(membership.msId, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
+            rosterTabPane.addTab(membership.msId, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
         });
         tbody.appendChild(tr);
     });

@@ -32,7 +32,10 @@ function populatePersonBox(membershipJson, tabPane) {
 }
 
 function fakeContent(type) {
+    const fakeDiv = document.createElement("div");
+    fakeDiv.classList.add("fake-div-testing");
     const fakeP = document.createElement("p");
+    fakeDiv.appendChild(fakeP);
     fakeP.innerText=`This is a filler for ${type}`;
-    return fakeP;
+    return fakeDiv;
 }
