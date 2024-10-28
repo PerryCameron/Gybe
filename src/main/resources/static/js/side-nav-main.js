@@ -1,10 +1,10 @@
-let lastLoadedScript = null;
+let lastLoadedScript;
 // global for rosters
 let globalRosterData;  // Declare global variable
 let lastSortedColumn = 'membershipId';
 let sortDirection = "asc"; // 'asc' for ascending, 'desc' for descending
 // global for search
-let timeout = null;
+let timeout;
 
 document.addEventListener("DOMContentLoaded", function () {
     const logoDiv = document.getElementById("logo");
@@ -13,50 +13,47 @@ document.addEventListener("DOMContentLoaded", function () {
     logoImg.alt = "logo";
     logoDiv.appendChild(logoImg);
 
-    const mainTab = document.getElementById("mainTab");
-    const pageTab = document.getElementById("pageTab");
-    const mainNavigation = document.getElementById("mainNavigation");
-    const pageNavigation = document.getElementById("pageNavigation");
+    const sideTabPaneDiv = document.getElementById("links");
+    const sideTabPane = new TabPane(sideTabPaneDiv, "horizontal");
+    const mainNavigationDiv = document.createElement("div");
+    const pageNavigationDiv = document.createElement("div");
+    pageNavigationDiv.id = "pageNavigation";
+    sideTabPane.addTab("main-navigation","Main Menu", mainNavigationDiv,false);
+    sideTabPane.addTab("page-navigation","Page Options", pageNavigationDiv,false);
 
-    // Event listeners for switching between main navigation and page navigation
-    mainTab.addEventListener("click", function () {
-        mainTab.classList.add("active");
-        pageTab.classList.remove("active");
-        mainNavigation.style.display = "block";
-        pageNavigation.style.display = "none";
-    });
-
-    pageTab.addEventListener("click", function () {
-        pageTab.classList.add("active");
-        mainTab.classList.remove("active");
-        mainNavigation.style.display = "none";
-        pageNavigation.style.display = "block";
-    });
-    
     const links = [
-        {href: "javascript:charts()", text: "Charts", target: "", roles: ["ROLE_USER"]},
-        {href: "javascript:roster()", text: "Rosters", target: "", roles: ["ROLE_MEMBERSHIP"]},
-        {href: "javascript:bod()", text: "Board of Directors", id: "option2", target: "", roles: ["ROLE_USER"]},
-        {href: "javascript:loadFormRequests()", text: "Form Requests", target: "", roles: ["ROLE_MEMBERSHIP"]},
-        {href: "javascript:slipChart()", text: "Slips", target: "", roles: ["ROLE_USER"]},
+        {handler: charts, text: "Charts", target: "", roles: ["ROLE_USER"]},
+        {handler: roster, text: "Rosters", target: "", roles: ["ROLE_MEMBERSHIP"]},
+        {handler: bod, text: "Board of Directors", id: "option2", target: "", roles: ["ROLE_USER"]},
+        {handler: loadFormRequests, text: "Form Requests", target: "", roles: ["ROLE_MEMBERSHIP"]},
+        {handler: slipChart, text: "Slips", target: "", roles: ["ROLE_USER"]},
         {href: "boat_list", text: "Boats", target: "_blank", roles: ["ROLE_MEMBERSHIP", "ROLE_HARBORMASTER"]},
-        {href: "javascript:loadPublicityScript()", text: "Publicity", target: "", roles: ["ROLE_PUBLICITY"]},
-        {href: "javascript:loadDirectory()", text: "Directory", target: "", roles: ["ROLE_MEMBERSHIP"]},
+        {handler: loadPublicityScript, text: "Publicity", target: "", roles: ["ROLE_PUBLICITY"]},
+        {handler: loadDirectory, text: "Directory", target: "", roles: ["ROLE_MEMBERSHIP"]}
     ];
 
     links.forEach(function (link) {
         const hasRole = link.roles.some(role => userRoles.includes(role));
         if (hasRole) {
             const a = document.createElement("a");
-            a.href = link.href;
             a.textContent = link.text;
+            if (link.href) {
+                a.href = link.href;
+            } else {
+                a.href = "#"; // Prevents page reload if no href is present
+                a.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    link.handler();
+                });
+            }
             if (link.id) a.id = link.id;
             if (link.target) a.target = link.target;
             a.addEventListener("click", function () {
                 document.querySelectorAll('.sidenav a').forEach(el => el.classList.remove('selected'));
                 a.classList.add('selected');
             });
-            mainNavigation.appendChild(a);
+            // mainNavigation.appendChild(a);
+            mainNavigationDiv.appendChild(a);
         }
     });
     charts();

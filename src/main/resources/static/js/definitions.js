@@ -7,4 +7,12 @@ const personFields = {
     birthday: "Birthday",
 };
 
+// global for rosters
 let rosterTabPane;
+// let lastLoadedScript = null;
+// let globalRosterData;
+// let lastSortedColumn = 'membershipId';
+// let sortDirection = "asc";
+// global for search
+// let timeout = null;
+

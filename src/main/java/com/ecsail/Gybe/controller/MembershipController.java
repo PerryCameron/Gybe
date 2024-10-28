@@ -68,17 +68,6 @@ public class MembershipController {
         this.finalContrller = fileController;
     }
 
-    @GetMapping("/membership")
-    public String getMembership(Model model,
-                                @RequestParam() Integer msId,
-                                @RequestParam() Integer selectedYear) {
-        MembershipListDTO membershipListDTO = membershipService.getMembership(msId, selectedYear);
-        List<BoardPositionDTO> boardPositionDTOS = membershipService.getBoardPositions();
-        model.addAttribute("membership", membershipListDTO);
-        model.addAttribute("boardPositions", boardPositionDTOS);
-        return "membership";
-    }
-
     // sets initial page AJAX updates
     @GetMapping("/Rosters")
     public String getRosters(Model model) {
