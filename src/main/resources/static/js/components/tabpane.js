@@ -35,8 +35,10 @@ class TabPane {
         // Create and append the new tab button
         const tabButton = document.createElement("button");
         tabButton.setAttribute("data-tab", tabId);
-        tabButton.textContent = tabLabel;
+        this.tabLabel = tabLabel;
+        tabButton.textContent = this.tabLabel;
         tabButton.addEventListener("click", () => this.switchToTab(tabId));
+        tabButton.id = `tab-button-${tabId}`;
         this.tabsContainer.appendChild(tabButton);
 
         // Create and append the content for the new tab

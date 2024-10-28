@@ -23,17 +23,18 @@ document.addEventListener("DOMContentLoaded", function () {
     sideTabPane.container.id = "main-menu-tab-pane";
     sideTabPane.tabsContainer.id = "main-menu_tab-container";
     sideTabPane.contentContainer.id = "main-menu-tab-content-container";
+    let optionsButton = document.getElementById("tab-button-page-navigation");
     sideTabPane.switchToTab("main-navigation");
 
     const links = [
-        {handler: charts, text: "Charts", target: "", roles: ["ROLE_USER"]},
-        {handler: roster, text: "Rosters", target: "", roles: ["ROLE_MEMBERSHIP"]},
-        {handler: bod, text: "Board of Directors", id: "option2", target: "", roles: ["ROLE_USER"]},
-        {handler: loadFormRequests, text: "Form Requests", target: "", roles: ["ROLE_MEMBERSHIP"]},
-        {handler: slipChart, text: "Slips", target: "", roles: ["ROLE_USER"]},
-        {href: "boat_list", text: "Boats", target: "_blank", roles: ["ROLE_MEMBERSHIP", "ROLE_HARBORMASTER"]},
-        {handler: loadPublicityScript, text: "Publicity", target: "", roles: ["ROLE_PUBLICITY"]},
-        {handler: loadDirectory, text: "Directory", target: "", roles: ["ROLE_MEMBERSHIP"]}
+        {handler: charts, text: "Charts", target: "", tabLabel: "Chart Options", roles: ["ROLE_USER"]},
+        {handler: roster, text: "Rosters", target: "", tabLabel: "Roster Options",roles: ["ROLE_MEMBERSHIP"]},
+        {handler: bod, text: "Board of Directors", id: "option2", target: "", tabLabel: "BOD Options",roles: ["ROLE_USER"]},
+        {handler: loadFormRequests, text: "Form Requests", target: "", tabLabel: "Options",roles: ["ROLE_MEMBERSHIP"]},
+        {handler: slipChart, text: "Slips", target: "", tabLabel: "Slip Options",roles: ["ROLE_USER"]},
+        {href: "boat_list", text: "Boats", target: "_blank", tabLabel: "Boat Options",roles: ["ROLE_MEMBERSHIP", "ROLE_HARBORMASTER"]},
+        {handler: loadPublicityScript, text: "Publicity", target: "", tabLabel: "",roles: ["ROLE_PUBLICITY"]},
+        {handler: loadDirectory, text: "Directory", target: "", tabLabel: "",roles: ["ROLE_MEMBERSHIP"]}
     ];
 
     let chartLink;
@@ -57,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
             a.addEventListener("click", function () {
                 document.querySelectorAll('.sidenav a').forEach(el => el.classList.remove('selected'));
                 a.classList.add('selected');
+                optionsButton.innerText = link.tabLabel;
             });
             // mainNavigation.appendChild(a);
             mainNavigationDiv.appendChild(a);
