@@ -41,18 +41,18 @@ input[type="email"] {
   border-radius: 5px;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #007f6b;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+/*button {*/
+/*  padding: 10px 20px;*/
+/*  background-color: #007f6b;*/
+/*  color: white;*/
+/*  border: none;*/
+/*  border-radius: 5px;*/
+/*  cursor: pointer;*/
+/*}*/
 
-button:hover {
-  background-color: var(--color-main-green);
-}
+/*button:hover {*/
+/*  background-color: var(--color-main-green);*/
+/*}*/
 
 .error {
   color: red;

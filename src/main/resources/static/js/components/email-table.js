@@ -6,12 +6,12 @@ class EmailTable {
             1: { primaryUse: "Primary", widget: "radio" },
             2: { emailListed: "Listed", widget: "check" },
         };
-        this.data = data; // Table data for each email
+        this.data = data || [];// Table data for each email
 
         // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
         this.tableContainer.style.display = "flex"; // changed
         this.tableContainer.style.alignItems = "flex-start"; // Align items to the top // changed
-        this.tableContainer.style.gap = "20px"; // Space between table and buttons // changed
+        this.tableContainer.style.gap = "5px"; // Space between table and buttons // changed
 
         this.table = document.createElement("table"); // The email table itself
         this.selectedRow = null; // To track the highlighted row
@@ -147,7 +147,7 @@ class EmailTable {
         this.buttonContainer = document.createElement("div"); // changed
         this.buttonContainer.style.display = "flex";
         this.buttonContainer.style.flexDirection = "column";
-        this.buttonContainer.style.gap = "10px";
+        this.buttonContainer.style.gap = "5px";
 
         // Add and Delete buttons
         const addButton = document.createElement("button");
