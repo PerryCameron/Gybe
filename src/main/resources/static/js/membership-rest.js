@@ -1,7 +1,6 @@
 
 function createMembershipContent(membership) {
     const contentDiv = document.createElement("div");
-    console.log(membership);
     contentDiv.classList.add("vbox");
     contentDiv.appendChild(createHeaderDiv(membership));
     // Fetch the membership data and append the person box once the data is available

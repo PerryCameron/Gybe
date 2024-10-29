@@ -8,7 +8,7 @@
 
 .titled-pane .title-pane-title {
     background-color: #e3e1e1;
-    color: black;
+    color: var(--color-main-black-full);
     padding: 10px;
     cursor: pointer;
     font-weight: bold;

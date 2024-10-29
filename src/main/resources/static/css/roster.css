@@ -5,7 +5,7 @@
 .left-menubox {
   width: 25rem;
   height: 60rem;
-  background: #00b28f;
+  background: var(--color-main-green);
   border-right: 2px solid gray;
 }
 
@@ -126,7 +126,7 @@ label {
   top: 0;
   width: 100%;
   overflow: hidden;
-  background-color: #333;
+  background-color: var(--color-main-black);
 }
 
 #numb-of-records {

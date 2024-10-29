@@ -52,7 +52,7 @@
   padding: 20px 0; /* Adjust the padding to control the spacing around the title */
 }
 
-.table-container {
+.bod-table-container {
   display: flex;
   align-items: center;
   justify-content: center; /* Center the contents horizontally */

@@ -1,5 +1,5 @@
 body {
-  background-color: black;
+  background-color: var(--color-main-black-full);
   color: white;
   font-family: Arial, sans-serif;
   margin: 0;
@@ -51,7 +51,7 @@ button {
 }
 
 button:hover {
-  background-color: #00b28f;
+  background-color: var(--color-main-green);
 }
 
 .error {
@@ -76,7 +76,7 @@ button:hover {
 }
 
 .highlight {
-  color: #00b28f; /* Change this to your desired color */
+  color: var(--color-main-green); /* Change this to your desired color */
 }
 
 .text-body {

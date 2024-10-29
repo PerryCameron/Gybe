@@ -1,0 +1,83 @@
+/* Main container for table */
+.table-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Table styling */
+#email-table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+/* Header row styling */
+#email-table-container th {
+    background-color: #f5f5f5;
+    color: var(--color-main-black);
+    font-weight: bold;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Data row styling */
+#email-table-container td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Hover effect for rows */
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Highlight selected row */
+tr.highlight {
+    background-color: #e0eaff;
+}
+
+/* Buttons container */
+.table-container .button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    /*gap: 10px;*/
+}
+
+/* Button styling */
+#email-table-container button {
+    padding: 8px 12px;
+    background-color: var(--color-main-green);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+#email-table-container button:hover {
+    background-color: #0056b3;
+}
+
+#email-table-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#email-table-container {
+    width: 100%;
+    padding: 5px;
+    gap: 5px;
+}
+
+/* Hide the default checkbox */
+
+

@@ -7,7 +7,7 @@
 
 .tab-buttons button {
     width: 150px;
-    background-color: #333;
+    background-color: var(--color-main-black);
     color: white;
     border: none;
     cursor: pointer;
@@ -32,14 +32,14 @@
 
  Hover effect
 .tab-buttons button:hover {
-    background-color: #00b28f;
+    background-color: var(--color-main-green);
 }
 
 /* Active button style */
 .tab-buttons button.active {
-    background-color: #f1f1f1;
+    background-color: var(--color-main-offcolor);
     font-weight: bold;
-    color: black;
+    color: var(--color-main-black-full);
 }
 
 .close-tab {
@@ -54,13 +54,13 @@
 }
 
 .close-tab:hover {
-    color: #00b28f;
+    color: var(--color-main-green);
 }
 
 .content-node-person {
     display: flex;
     flex-direction: row;
-    background-color: #f1f1f1;
+    background-color: var(--color-main-offcolor);
     border-radius: 5px;
 }
 
@@ -92,14 +92,14 @@
     flex: 1;
     width: auto;
     border-radius: 0;
-    background-color: #9d9d9d;
+    background-color: var(--color-main-gray);
     color: white;
 }
 
 #main-menu-tab-pane .tab-buttons button.active {
     font-weight: bold;
-    background-color: #f1f1f1;
-    color: black;
+    background-color: var(--color-main-offcolor);
+    color: var(--color-main-black-full);
 }
 
 #main-menu_tab-container {
@@ -116,4 +116,8 @@
 
 #tab-content-main-navigation {
     border-radius: 0;
+}
+
+.attributes-tab-content {
+    background-color: white;
 }

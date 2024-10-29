@@ -11,11 +11,9 @@
     left: 0;
     height: 100%;
     width: 250px; /* width of the sidebar */
-    background-color: #f1f1f1;
+    background-color: var(--color-main-offcolor);
     overflow-x: hidden;
-    /*padding-top: 20px;*/
     z-index: 2;
-    /*border-right: 5px solid #007f6b; !* Add a red right border *!*/
 }
 
 .sidenav a {
@@ -25,18 +23,18 @@
     width: 250px;
     display: flex;
     text-decoration: none;
-    color: black;
+    color: var(--color-main-black-full);
     cursor: pointer;
 }
 
 .sidenav a.active {
-    color: #f1f1f1;
+    color: var(--color-main-offcolor);
 }
 
 .sidenav a:hover {
     background-image: linear-gradient(
             to right,
-            #9d9d9d 7px,
+            var(--color-main-gray) 7px,
             rgba(255, 255, 255, 0.1) 7px
     );
     color: #ffffff;
@@ -45,10 +43,10 @@
 .sidenav a.selected {
     background-image: linear-gradient(
             to right,
-            #00b28f 7px,
+            var(--color-main-green) 7px,
             rgba(255, 255, 255, 0.1) 7px
     );
-    color: black;
+    color: var(--color-main-black-full);
 }
 
 #logo {
@@ -56,7 +54,7 @@
     justify-content: center;
     align-items: center;
     /*margin-bottom: 50px;*/
-    background-color: #333;
+    background-color: var(--color-main-black);
     padding-top: 10px;
     padding-bottom: 30px;
 }
@@ -103,7 +101,7 @@
 
 /* Optional: custom active tab style for this tab pane */
 #roster-tab-div .tab.active {
-    background-color: #333;
+    background-color: var(--color-main-black);
     color: white;
 }
 

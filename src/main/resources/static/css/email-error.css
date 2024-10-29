@@ -1,6 +1,6 @@
 body {
     text-align: center; /* Centers text in the body */
-    background-color: black;
+    background-color: var(--color-main-black-full);
     color: white;
     font-family: "Poppins", sans-serif;
 }
@@ -26,7 +26,7 @@ img {
     border-radius: 6px;
     box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
     box-sizing: border-box;
-    color: black;
+    color: var(--color-main-black-full);
     cursor: pointer;
     display: inline-block;
     font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial,

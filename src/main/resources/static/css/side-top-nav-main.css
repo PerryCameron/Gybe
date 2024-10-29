@@ -13,7 +13,7 @@ html {
   left: 0;
   height: 100%;
   width: 250px; /* width of the sidebar */
-  background-color: #333;
+  background-color: var(--color-main-black);
   overflow-x: hidden;
   padding-top: 20px;
   z-index: 2;
@@ -30,7 +30,7 @@ html {
 }
 
 .sidenav a.active {
-  color: #f1f1f1;
+  color: var(--color-main-offcolor);
 }
 
 .sidenav a:hover {
@@ -137,5 +137,5 @@ html {
   top: 0;
   width: 100%;
   overflow: hidden;
-  background-color: #333;
+  background-color: var(--color-main-black);
 }

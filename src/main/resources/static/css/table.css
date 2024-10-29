@@ -8,8 +8,8 @@
 }
 
 .styled-table thead tr {
-  background-color: #f1f1f1;
-  color: #009879;
+  background-color: var(--color-main-offcolor);
+  color: var(--color-main-green-second);
   text-align: left;
   padding-left: 10px;
   /*display: block;*/
@@ -21,36 +21,36 @@
 }
 
 .styled-table tbody tr {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid var(--color-main-border);
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
+  background-color: var(--color-main-offcolor);
 }
 
 .styled-table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
+  border-bottom: 2px solid var(--color-main-green-second);
 }
 
 .styled-table tbody tr:hover {
-  background-color: deepskyblue; /* Or any color you prefer */
+  background-color: var(--color-main-highlight); /* Or any color you prefer */
 }
 
 /* This applies to links inside your header cells by default */
 .header-link th a,
 .header-link th a:visited,
 .header-link th a:active {
-  color: white; /* Links are white */
+  color: var(--color-main-white); /* Links are white */
   text-decoration: none; /* No underline */
 }
 
 /* This changes the background color of the header cell and the color of the links when hovered */
 .header-link th:hover {
-  background-color: #00b28f; /* Background color of the cell */
+  background-color: var(--color-main-green); /* Background color of the cell */
 }
 
 .header-link th:hover a {
-  color: black; /* Text color of the links */
+  color: var(--color-main-black-full); /* Text color of the links */
 }
 
 /* New stuff below here */
@@ -66,7 +66,7 @@
   position: sticky;
   top: 0;
   /*background-color: #007f6b; !* Set this to the background color of your header *!*/
-  /*background-color: #333;*/
+  /*background-color: var(--color-main-black);*/
   z-index: 10;
 }
 
@@ -87,9 +87,9 @@
   display: flex;                /* Enable Flexbox */
   flex-direction: row;           /* Arrange children in a row (horizontal) */
   justify-content: space-around; /* Distribute space evenly between children */
-  background-color: #f1f1f1;
+  background-color: var(--color-main-offcolor);
   align-items: center;  /* Vertically centers the text */
-  color: black;
+  color: var(--color-main-black-full);
   height: 40px;
   text-align: center;
   /* I have added 4 paragraphs to this div, they are currently stacked vertically. I want this to act like an HBox in JavaFX instead */
@@ -107,11 +107,11 @@
 }
 
 .infoText {
-  color: #00b28f;
+  color: var(--color-main-green);
 }
 
 .membership-section {
-  background-color: #9d9d9d;
+  background-color: var(--color-main-gray);
   border-radius: 10px;
   margin: 10px;
 }

@@ -49,9 +49,9 @@ function buildBOD(data) {
     const chairDiv = document.createElement("div");
     const boardDiv = document.createElement("div");
     chairDiv.classList.add("table-row"); // Add the class name to chairDiv
-    chairDiv.classList.add("table-container");
-    boardDiv.classList.add("table-container");
-    officerDiv.classList.add("table-container");
+    chairDiv.classList.add("bod-table-container");
+    boardDiv.classList.add("bod-table-container");
+    officerDiv.classList.add("bod-table-container");
     officerDiv.classList.add("officer-container");
     officerDiv.append(createOfficerTable());
     const officerImage = document.createElement("img");

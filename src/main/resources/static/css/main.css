@@ -1,9 +1,73 @@
+:root {
+    --color-main-green-second: #009879;
+    --color-main-green: #00b28f;
+    --color-main-highlight: #e0eaff;
+    --color-main-black-full: #000000;
+    --color-main-black: #333;
+    --color-main-gray: #9d9d9d;
+    --color-main-border: #dddddd;
+    --color-main-offcolor: #f1f1f1;
+    --color-main-white: #FFFFFF;
+
+
+
+    input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        position: relative;
+        width: 16px;
+        height: 16px;
+        background-color: var(--color-main-white); /* Background color when unchecked */
+        border: 2px solid var(--color-main-border);
+        cursor: pointer;
+    }
+
+    /* Create custom checkmark */
+    input[type="checkbox"]:checked::before {
+        content: "✓";
+        position: absolute;
+        color: var(--color-main-green); /* White checkmark */
+        font-size: 14px;
+        left: 2px;
+        top: -2px;
+    }
+
+    /* Hide the default radio button */
+    input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        position: relative;
+        width: 16px;
+        height: 16px;
+        background-color: var(--color-main-white); /* Background color when unchecked */
+        border: 2px solid var(--color-main-border);
+        border-radius: 50%; /* Rounded shape for radio button */
+        cursor: pointer;
+    }
+
+    /* Create custom dot when selected */
+    input[type="radio"]:checked::before {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: var(--color-main-green); /* White dot */
+        border-radius: 50%; /* Rounded shape for the dot */
+        top: 2px;
+        left: 2px;
+    }
+
+}
+
+
 #main-content {
     /*display: inline-block;*/
 }
 
 .fake-div-testing {
-    background-color: white;
+    background-color: var(--color-main-white);
     /*margin-top: 5px;*/
     width: 100%;
     /*height: 100%;*/
