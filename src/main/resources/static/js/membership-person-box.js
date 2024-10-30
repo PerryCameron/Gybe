@@ -35,7 +35,7 @@ function populatePersonBox(membershipJson, tabPane) {
 function setEmailTable(person) {
     const emailDiv = document.createElement("div");
     emailDiv.id = 'email-div';
-    const emailTable = new EmailTable(emailDiv, person.emails);
+    const emailTable = new EmailTable(emailDiv, person);
     emailTable.tableContainer.id = "email-table-container";// this is getting data and processing it
     emailTable.table.id = "email-table";
     return emailDiv; // but no table rendered in this div??

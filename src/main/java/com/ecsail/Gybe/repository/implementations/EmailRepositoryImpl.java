@@ -86,9 +86,9 @@ public class EmailRepositoryImpl implements EmailRepository {
         String query = "INSERT INTO email (P_ID, PRIMARY_USE, EMAIL, EMAIL_LISTED) " +
                 "VALUES (:pId, :isPrimaryUse, :email, :isListed)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
-        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         emailDTO.setEmailId(keyHolder.getKey().intValue());
-        return affectedRows;
+        return emailDTO.getEmailId();
     }
 
     @Override

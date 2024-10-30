@@ -1,12 +1,13 @@
 class EmailTable {
-    constructor(container, data) {
+    constructor(container, person) {
         this.tableContainer = container;
         this.headers = {
             0: { email: "Email", widget: "text" },
             1: { primaryUse: "Primary", widget: "radio" },
             2: { emailListed: "Listed", widget: "check" },
         };
-        this.data = data || [];// Table data for each email
+        this.person = person || [];// Table data for each email
+        console.log("email-table", person);
 
         // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
         this.tableContainer.style.display = "flex"; // changed
@@ -34,7 +35,7 @@ class EmailTable {
         this.table.appendChild(headerRow);
 
         // Create data rows
-        this.data.forEach((rowData, index) => {
+        this.person.emails.forEach((rowData, index) => {
             console.log("parsing data", rowData)
             const row = this.createDataRow(rowData, index);
             this.table.appendChild(row);
@@ -127,7 +128,7 @@ class EmailTable {
     }
 
     updatePrimaryUse(selectedIndex) {
-        this.data.forEach((item, index) => {
+        this.person.forEach((item, index) => {
             item.primaryUse = index === selectedIndex ? 1 : 0;
         });
         this.renderTable(); // Re-render to update radio selection
@@ -166,22 +167,28 @@ class EmailTable {
         this.tableContainer.appendChild(this.buttonContainer); // changed
     }
 
-    // addRow() {
-    //     const newRow = { emailId: 0, primaryUse: 0, email: "", emailListed: 0 };
-    //     this.data.push(newRow);
-    //     this.renderTable();
-    // }
     addRow() {
+
+        console.log("pid: " + this.person.pId);
         const newEmail = {
-            email: "",        // Initial values for the new email row
-            primaryUse: 0,
-            emailListed: 0
+            "emailId": 0,
+            "pId": this.person.pId,             // replace with actual person ID if needed
+            "primaryUse": false,
+            "email": "",
+            "emailListed": true
         };
+
+        // Retrieve the CSRF token from the meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+        const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
         // Send POST request to server to create a new email
         fetch('/api/insert-email', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeaderName]: csrfToken // Include CSRF token in the request headers
+            },
             body: JSON.stringify(newEmail)
         })
             .then(response => {
@@ -193,18 +200,25 @@ class EmailTable {
             .then(data => {
                 // Assuming the response contains the new ID
                 newEmail.emailId = data.id; // Set the returned ID
-                console.log("data id is " + data.id)
-                this.data.push(newEmail); // Add new email row to data array
+                console.log("data id is " + data.id);
+                this.person.emails.push(newEmail); // Add new email row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
             .catch(error => console.error('Error adding new email:', error));
     }
 
+
     deleteRow() {
         if (this.selectedRowIndex != null) {
-            this.data.splice(this.selectedRowIndex, 1); // Remove from data
+            this.person.emails.splice(this.selectedRowIndex, 1); // Remove from data
             this.selectedRow.remove(); // Remove from DOM
             this.selectedRow = null; // Reset selected row
         }
     }
+}
+
+function getCsrfToken() {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+    return { token: csrfToken, headerName: csrfHeaderName };
 }

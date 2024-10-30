@@ -106,8 +106,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public int insertNewEmailRow() {
-        return 555;
+    public int insertNewEmailRow(EmailDTO emailDTO) {
+//        return emailRepository.insert(new EmailDTO());
+        return emailDTO.getpId();
     }
 
 }
