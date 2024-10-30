@@ -11,4 +11,6 @@ public interface EmailService {
 
     HashDTO createHash(AuthDTO authDTO);
     Boolean verifyEmail(String apiKey, String email);
+
+    int insertNewEmailRow();
 }

@@ -166,10 +166,38 @@ class EmailTable {
         this.tableContainer.appendChild(this.buttonContainer); // changed
     }
 
+    // addRow() {
+    //     const newRow = { emailId: 0, primaryUse: 0, email: "", emailListed: 0 };
+    //     this.data.push(newRow);
+    //     this.renderTable();
+    // }
     addRow() {
-        const newRow = { emailId: 0, primaryUse: 0, email: "", emailListed: 0 };
-        this.data.push(newRow);
-        this.renderTable();
+        const newEmail = {
+            email: "",        // Initial values for the new email row
+            primaryUse: 0,
+            emailListed: 0
+        };
+
+        // Send POST request to server to create a new email
+        fetch('/api/insert-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newEmail)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse JSON response
+            })
+            .then(data => {
+                // Assuming the response contains the new ID
+                newEmail.emailId = data.id; // Set the returned ID
+                console.log("data id is " + data.id)
+                this.data.push(newEmail); // Add new email row to data array
+                this.renderTable(); // Re-render the table to display the new row
+            })
+            .catch(error => console.error('Error adding new email:', error));
     }
 
     deleteRow() {

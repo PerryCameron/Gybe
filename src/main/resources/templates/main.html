@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>ECSC Main</title>
+    <!-- CSRF Meta Tags for JavaScript -->
+    <meta name="_csrf" th:content="${_csrf}" />
+    <meta name="_csrf_header" th:content="${_csrf_header}" />
     <script th:inline="javascript">
         let userRoles = /*[[${roles}]]*/ [];
     </script>
@@ -20,7 +23,7 @@
     <link rel="stylesheet" th:href="@{/css/small-table.css}" type="text/css" />
     <script th:src="@{/js/definitions.js}"></script>
     <script th:src="@{/js/side-nav-main.js}"></script>
-    <script th:src="@{/js/chart.js}"></script>
+    <script th:src="@{/js/components/chart.js}"></script>
     <script th:src="@{/js/membership-rest.js}"></script>
     <script th:src="@{/js/membership-person-box.js}"></script>
     <script th:src="@{/js/components/tabpane.js}"></script>

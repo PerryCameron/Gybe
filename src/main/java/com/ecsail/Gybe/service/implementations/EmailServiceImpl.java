@@ -105,4 +105,9 @@ public class EmailServiceImpl implements EmailService {
         return emailIsGood;
     }
 
+    @Override
+    public int insertNewEmailRow() {
+        return 555;
+    }
+
 }

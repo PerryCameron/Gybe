@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,6 +95,22 @@ public class MembershipController {
         return "slip-wait-list";
     }
 
+//    @GetMapping("/")
+//    public String getStats(Model model, HttpServletRequest request, Principal principal) {
+//        if (principal != null) {
+//            Authentication authentication = (Authentication) principal;
+//            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//            model.addAttribute("roles", authorities.stream()
+//                    .map(GrantedAuthority::getAuthority)
+//                    .collect(Collectors.toList()));
+//        }
+//        List<StatsDTO> statsDTOS = generalService.getStats();
+//        AgesDTO agesDTO = generalService.getAges();
+//        model.addAttribute("stats", statsDTOS);
+//        model.addAttribute("ages", agesDTO);
+//        return "main";
+//    }
+
     @GetMapping("/")
     public String getStats(Model model, HttpServletRequest request, Principal principal) {
         if (principal != null) {
@@ -103,11 +120,20 @@ public class MembershipController {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList()));
         }
+
+        // Retrieve CSRF token and add it to the model
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        if (csrfToken != null) {
+            model.addAttribute("_csrf", csrfToken.getToken());
+            model.addAttribute("_csrf_header", csrfToken.getHeaderName());
+        }
+
         List<StatsDTO> statsDTOS = generalService.getStats();
         AgesDTO agesDTO = generalService.getAges();
         model.addAttribute("stats", statsDTOS);
         model.addAttribute("ages", agesDTO);
-        return "main";
+
+        return "main"; // Loads main.html
     }
 
     @GetMapping("/ecsc-pricing")

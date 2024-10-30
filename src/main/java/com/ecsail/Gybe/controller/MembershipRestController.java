@@ -8,12 +8,14 @@ import com.ecsail.Gybe.wrappers.RosterResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -188,6 +190,24 @@ public class MembershipRestController {
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public JsonNode getMembership(@RequestParam int msId, int year) {
         return membershipService.getMembershipAsJson(msId, year);
+    }
+
+    @GetMapping("/api/insert-email")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, Object> insertEmail() {
+        int id = emailService.insertNewEmailRow();
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", id);
+        return response;
+    }
+
+    @GetMapping("/api/csrf-token")
+    public Map<String, String> getCsrfToken(HttpServletRequest request) {
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        Map<String, String> tokenInfo = new HashMap<>();
+        tokenInfo.put("token", csrfToken.getToken());
+        tokenInfo.put("headerName", csrfToken.getHeaderName());
+        return tokenInfo;
     }
 
     @GetMapping("/api/directory-rest")
