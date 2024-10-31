@@ -84,10 +84,12 @@ public class EmailRepositoryImpl implements EmailRepository {
     public int insert(EmailDTO emailDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO email (P_ID, PRIMARY_USE, EMAIL, EMAIL_LISTED) " +
-                "VALUES (:pId, :isPrimaryUse, :email, :isListed)";
+                "VALUES (:pId, :primaryUse, :email, :emailListed)";
+
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
         namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
-        emailDTO.setEmailId(keyHolder.getKey().intValue());
+
+        emailDTO.setEmailId(keyHolder.getKey().intValue()); // Get generated key
         return emailDTO.getEmailId();
     }
 
@@ -96,10 +98,11 @@ public class EmailRepositoryImpl implements EmailRepository {
         String deleteSql = "DELETE FROM email WHERE EMAIL_ID = ?";
         return template.update(deleteSql, emailDTO.getEmailId());
     }
+
     @Override
     public boolean emailFromActiveMembershipExists(String email, int year) {
         if (email == null || email.isEmpty()) {
-            logger.error("Email " + email + "doesn't exist");
+            logger.error("Email {}doesn't exist", email);
             return false;
         }
         String existsQuery = "SELECT EXISTS(SELECT * FROM email e " +

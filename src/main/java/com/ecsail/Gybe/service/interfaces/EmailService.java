@@ -5,10 +5,14 @@ import com.ecsail.Gybe.dto.EmailDTO;
 import com.ecsail.Gybe.dto.HashDTO;
 import com.ecsail.Gybe.dto.MailDTO;
 
+import java.util.List;
+
 public interface EmailService {
     MailDTO sendPasswordReset(String email);
     MailDTO processEmailSubmission(String email);
     HashDTO createHash(AuthDTO authDTO);
     Boolean verifyEmail(String apiKey, String email);
     int insertNewEmailRow(EmailDTO emailDTO);
+    boolean deleteEmailRow(EmailDTO emailDTO);
+    boolean batchUpdateEmail(List<EmailDTO> emailDTOList);
 }

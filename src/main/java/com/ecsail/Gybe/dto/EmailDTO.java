@@ -45,6 +45,9 @@ public class EmailDTO {
 	public Boolean getPrimaryUse() {
 		return primaryUse;
 	}
+	public Boolean isPrimaryUse() {
+		return primaryUse;
+	}
 
 	public void setPrimaryUse(Boolean primaryUse) {
 		this.primaryUse = primaryUse;

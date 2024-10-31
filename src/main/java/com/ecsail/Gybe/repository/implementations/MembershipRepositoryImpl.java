@@ -431,6 +431,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                             SELECT JSON_ARRAYAGG(
                                 JSON_OBJECT(
                                     'emailId', e.EMAIL_ID,
+                                    'pId', p.P_ID,
                                     'primaryUse', e.PRIMARY_USE,
                                     'email', e.EMAIL,
                                     'emailListed', e.EMAIL_LISTED

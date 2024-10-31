@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Year;
+import java.util.List;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -107,8 +108,21 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public int insertNewEmailRow(EmailDTO emailDTO) {
-//        return emailRepository.insert(new EmailDTO());
-        return emailDTO.getpId();
+        return emailRepository.insert(emailDTO);
+    }
+
+    @Override
+    public boolean deleteEmailRow(EmailDTO emailDTO) {
+        int result = emailRepository.delete(emailDTO);
+        return result > 0; // Returns true if the row was successfully deleted, false otherwise
+    }
+
+    @Override
+    public boolean batchUpdateEmail(List<EmailDTO> emailDTOList) {
+        for(EmailDTO emailDTO : emailDTOList) {
+            System.out.println("Changed: " + emailDTO.getEmail());
+        }
+        return true;
     }
 
 }

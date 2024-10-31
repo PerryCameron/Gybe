@@ -2,11 +2,12 @@ class EmailTable {
     constructor(container, person) {
         this.tableContainer = container;
         this.headers = {
-            0: { email: "Email", widget: "text" },
-            1: { primaryUse: "Primary", widget: "radio" },
-            2: { emailListed: "Listed", widget: "check" },
+            0: {email: "Email", widget: "text"},
+            1: {primaryUse: "Primary", widget: "radio"},
+            2: {emailListed: "Listed", widget: "check"},
         };
         this.person = person || [];// Table data for each email
+        this.modifiedRows = new Set();
         console.log("email-table", person);
 
         // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
@@ -32,6 +33,7 @@ class EmailTable {
             th.textContent = header.email || header.primaryUse || header.emailListed;
             headerRow.appendChild(th);
         });
+        this.table.addEventListener('mouseleave', () => this.batchUpdate());
         this.table.appendChild(headerRow);
 
         // Create data rows
@@ -55,8 +57,10 @@ class EmailTable {
     }
 
     createDataRow(rowData, index) {
-        console.log("Creating data row");
         const row = document.createElement("tr");
+        // Set data attributes for the row using rowData properties
+        row.dataset.emailId = rowData.emailId;
+        row.dataset.pId = rowData.pId;
 
         // Email column
         const emailCell = document.createElement("td");
@@ -65,8 +69,12 @@ class EmailTable {
         // Display placeholder if email is empty
         emailText.textContent = rowData.email || "Click to add email";
         emailText.classList.add(rowData.email ? "filled-email" : "placeholder");
-        // emailText.textContent = rowData.email;
-        emailText.addEventListener("click", () => this.convertToTextInput(emailText, rowData, "email"));
+        emailText.classList.add("email-text-field");
+        emailText.addEventListener("click", () => {
+            this.convertToTextInput(emailText, rowData, "email");
+            this.modifiedRows.add(rowData.emailId);
+            console.log("radio: ", this.modifiedRows);
+        });
         emailCell.appendChild(emailText);
         row.appendChild(emailCell);
 
@@ -75,9 +83,13 @@ class EmailTable {
         const radio = document.createElement("input");
         radio.type = "radio";
         radio.name = "primaryUse";
-        radio.classList.add("small-table-radio");
+        radio.classList.add("primary-use-radio");
         radio.checked = rowData.primaryUse === 1;
-        radio.addEventListener("click", () => this.updatePrimaryUse(index));
+        radio.addEventListener("click", () => {
+            this.updatePrimaryUse(index);
+            this.modifiedRows.add(rowData.emailId);
+            console.log("radio: ", this.modifiedRows);
+        });
         primaryUseCell.appendChild(radio);
         row.appendChild(primaryUseCell);
 
@@ -85,9 +97,13 @@ class EmailTable {
         const listedCell = document.createElement("td");
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.classList.add("small-table-check-box");
+        checkbox.classList.add("listed-check-box");
         checkbox.checked = rowData.emailListed === 1;
-        checkbox.addEventListener("change", () => (rowData.emailListed = checkbox.checked ? 1 : 0));
+        checkbox.addEventListener("change", () => {
+            rowData.emailListed = checkbox.checked ? 1 : 0;
+            this.modifiedRows.add(rowData.emailId);
+            console.log("checkbox: ", this.modifiedRows);
+        });
         listedCell.appendChild(checkbox);
         row.appendChild(listedCell);
 
@@ -128,10 +144,12 @@ class EmailTable {
     }
 
     updatePrimaryUse(selectedIndex) {
-        this.person.forEach((item, index) => {
+        this.person.emails.forEach((item, index) => {
             item.primaryUse = index === selectedIndex ? 1 : 0;
+
+            // Track modified emailId instead of setting dataset directly
+            this.modifiedRows.add(item.emailId);
         });
-        this.renderTable(); // Re-render to update radio selection
     }
 
     highlightRow(row, index) {
@@ -144,7 +162,6 @@ class EmailTable {
     renderButtons() {
         // Create the button container only once
         if (this.buttonContainer) return; // Avoid creating it multiple times // changed
-
         this.buttonContainer = document.createElement("div"); // changed
         this.buttonContainer.style.display = "flex";
         this.buttonContainer.style.flexDirection = "column";
@@ -168,8 +185,6 @@ class EmailTable {
     }
 
     addRow() {
-
-        console.log("pid: " + this.person.pId);
         const newEmail = {
             "emailId": 0,
             "pId": this.person.pId,             // replace with actual person ID if needed
@@ -177,11 +192,6 @@ class EmailTable {
             "email": "",
             "emailListed": true
         };
-
-        // Retrieve the CSRF token from the meta tags
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-        const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-
         // Send POST request to server to create a new email
         fetch('/api/insert-email', {
             method: 'POST',
@@ -207,18 +217,82 @@ class EmailTable {
             .catch(error => console.error('Error adding new email:', error));
     }
 
-
     deleteRow() {
         if (this.selectedRowIndex != null) {
-            this.person.emails.splice(this.selectedRowIndex, 1); // Remove from data
-            this.selectedRow.remove(); // Remove from DOM
-            this.selectedRow = null; // Reset selected row
+            const email = this.person.emails[this.selectedRowIndex]; // Ensure `person` is accessible here
+            // Retrieve CSRF token and header name (if these are defined globally or passed in, skip this step)
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+            const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+            fetch('/api/delete-email', {
+                method: 'DELETE', // Use DELETE method for deletion
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeaderName]: csrfToken // Include CSRF token
+                },
+                body: JSON.stringify(email)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Remove email from array and DOM
+                    this.person.emails.splice(this.selectedRowIndex, 1); // Remove from data
+                    this.selectedRow.remove(); // Remove from DOM
+                    this.selectedRow = null; // Reset selected row
+                    this.selectedRowIndex = null; // Reset selected row index
+                })
+                .catch(error => console.error('Error deleting email:', error)); // Adjust error message
         }
     }
-}
 
-function getCsrfToken() {
-    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-    const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-    return { token: csrfToken, headerName: csrfHeaderName };
+    batchUpdate() {
+            const modifiedRows = [];
+
+            // Loop through each email in the data model
+            this.person.emails.forEach(email => {
+                // Check if this emailId is in the modified set
+                if (this.modifiedRows.has(email.emailId)) {
+                    // Add the modified email data directly from the model
+                    modifiedRows.push({
+                        emailId: email.emailId,
+                        pId: email.pId,
+                        primaryUse: email.primaryUse,
+                        email: email.email,
+                        emailListed: email.emailListed
+                    });
+                }
+            });
+
+            console.log("Modified rows:", modifiedRows);
+
+            // Clear modifiedRows after processing to reset for next update cycle
+            this.modifiedRows.clear();
+
+        // Only send the fetch request if there are modified rows
+        if (modifiedRows.length > 0) {
+
+            fetch('/api/update-emails', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeaderName]: csrfToken
+                },
+                body: JSON.stringify(modifiedRows) // Send modified rows in a single request
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Updated rows successfully:", data);
+                    this.modifiedRows.clear();
+                })
+                .catch(error => console.error('Error updating emails:', error));
+        }
+    }
 }
