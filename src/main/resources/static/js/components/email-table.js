@@ -7,6 +7,8 @@ class EmailTable {
             2: {emailListed: "Listed", widget: "check"},
         };
         this.person = person || [];// Table data for each email
+        this.person.emails = Array.isArray(this.person.emails) ? this.person.emails : [];
+        // I need to also make sure person.emails is not null but an empty set
         this.modifiedRows = new Set();
         console.log("email-table", person);
         // this.tableContainer = document.createElement("div"); // Main container for the table and buttons

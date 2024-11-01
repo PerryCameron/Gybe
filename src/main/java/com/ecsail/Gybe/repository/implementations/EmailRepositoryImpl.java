@@ -28,7 +28,7 @@ import java.util.List;
 public class EmailRepositoryImpl implements EmailRepository {
 
     private final JdbcTemplate template;
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private static final Logger logger = LoggerFactory.getLogger(EmailRepositoryImpl.class);
 
     @Autowired
@@ -71,11 +71,10 @@ public class EmailRepositoryImpl implements EmailRepository {
     @Override
     public int update(EmailDTO emailDTO) {
         String query = "UPDATE email SET " +
-                "P_ID = :pId, " +
-                "PRIMARY_USE = :isPrimaryUse, " +
+                "PRIMARY_USE = :primaryUse, " +
                 "EMAIL = :email, " +
-                "EMAIL_LISTED = :isListed " +
-                "WHERE EMAIL_ID = :email_id";
+                "EMAIL_LISTED = :emailListed " +
+                "WHERE EMAIL_ID = :emailId";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
@@ -93,16 +92,13 @@ public class EmailRepositoryImpl implements EmailRepository {
         return 1;
     }
 
-
     @Override
     public int insert(EmailDTO emailDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO email (P_ID, PRIMARY_USE, EMAIL, EMAIL_LISTED) " +
                 "VALUES (:pId, :primaryUse, :email, :emailListed)";
-
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
         namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
-
         emailDTO.setEmailId(keyHolder.getKey().intValue()); // Get generated key
         return emailDTO.getEmailId();
     }
@@ -150,9 +146,6 @@ public class EmailRepositoryImpl implements EmailRepository {
                     year,
                     email
             );
-        } catch (EmptyResultDataAccessException e) {
-            logger.error(e.getMessage());
-            return null;
         } catch (Exception e) {
             logger.error(e.getMessage());
             return null;
@@ -182,18 +175,15 @@ public class EmailRepositoryImpl implements EmailRepository {
             if (result != null) {
                 authDTO.copyFrom(result); // Assuming there is a method to copy properties from another AuthDTO
             }
-        } catch (EmptyResultDataAccessException e) {
-            logger.error(e.getMessage());
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
+
     @Override
     public boolean emailExists(String email) {
         String sql = "SELECT COUNT(*) FROM email WHERE EMAIL = ?";
         Integer count = template.queryForObject(sql, Integer.class, email);
         return count != null && count > 0;
     }
-
-
 }
