@@ -59,6 +59,20 @@
         left: 2px;
     }
 
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        border-color: var(--color-main-green-second);
+        outline: 0;
+        box-shadow: 0 0 0 4px var(--color-main-green);
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        border: 1px solid var(--color-main-border);
+        border-radius: 5px;
+        padding: 0.5rem 0.7rem;
+    }
+
     /* Button styling */
     button {
         padding: 8px 12px;

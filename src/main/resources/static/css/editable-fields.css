@@ -35,7 +35,7 @@
 
 /* Hover effect for field text to indicate it's editable */
 .editable-fields-pane .field .field-text:hover {
-    border-color: #007bff; /* Light border to show editability */
+    border-color: var(--color-main-green); /* Light border to show editability */
 }
 
 /* Editable input styling */
@@ -43,15 +43,9 @@
     flex: 1;
     padding: 4px;
     font-size: 1em;
-    border: 1px solid #007bff;
+    /*border: 1px solid #007bff;*/
     border-radius: 4px;
     outline: none;
-}
-
-/* Input focus styling */
-.editable-fields-pane .field .field-input:focus {
-    border-color: #0056b3;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
 }
 
 /* Adjustments for the last field to remove extra margin */
