@@ -9,22 +9,18 @@ class EmailTable {
         this.person = person || [];// Table data for each email
         this.modifiedRows = new Set();
         console.log("email-table", person);
-
         // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
         this.tableContainer.style.display = "flex"; // changed
         this.tableContainer.style.alignItems = "flex-start"; // Align items to the top // changed
         this.tableContainer.style.gap = "5px"; // Space between table and buttons // changed
-
         this.table = document.createElement("table"); // The email table itself
         this.selectedRow = null; // To track the highlighted row
-
         this.renderTable();
         this.renderButtons();
     }
 
     renderTable() {
         this.table.innerHTML = ""; // Clear previous content
-
         // Create the header row
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
@@ -35,20 +31,17 @@ class EmailTable {
         });
         this.table.addEventListener('mouseleave', () => this.batchUpdate());
         this.table.appendChild(headerRow);
-
         // Create data rows
         this.person.emails.forEach((rowData, index) => {
             console.log("parsing data", rowData)
             const row = this.createDataRow(rowData, index);
             this.table.appendChild(row);
         });
-
         // Append the table to the main container if it's not already there
         if (!this.tableContainer.contains(this.table)) {
             // changed
             this.tableContainer.appendChild(this.table); // changed
         }
-
         // Only append the tableContainer once to the body
         if (!document.body.contains(this.tableContainer)) {
             // changed
@@ -61,23 +54,19 @@ class EmailTable {
         // Set data attributes for the row using rowData properties
         row.dataset.emailId = rowData.emailId;
         row.dataset.pId = rowData.pId;
-
         // Email column
         const emailCell = document.createElement("td");
         const emailText = document.createElement("span");
-
         // Display placeholder if email is empty
         emailText.textContent = rowData.email || "Click to add email";
         emailText.classList.add(rowData.email ? "filled-email" : "placeholder");
-        emailText.classList.add("email-text-field");
+        // emailText.classList.add("email-text-field");
         emailText.addEventListener("click", () => {
             this.convertToTextInput(emailText, rowData, "email");
             this.modifiedRows.add(rowData.emailId);
-            console.log("radio: ", this.modifiedRows);
         });
         emailCell.appendChild(emailText);
         row.appendChild(emailCell);
-
         // Primary Use column as a radio button
         const primaryUseCell = document.createElement("td");
         const radio = document.createElement("input");
@@ -87,12 +76,10 @@ class EmailTable {
         radio.checked = rowData.primaryUse === 1;
         radio.addEventListener("click", () => {
             this.updatePrimaryUse(index);
-            this.modifiedRows.add(rowData.emailId);
-            console.log("radio: ", this.modifiedRows);
+            // this.modifiedRows.add(rowData.emailId);
         });
         primaryUseCell.appendChild(radio);
         row.appendChild(primaryUseCell);
-
         // Email Listed column as a checkbox
         const listedCell = document.createElement("td");
         const checkbox = document.createElement("input");
@@ -102,11 +89,9 @@ class EmailTable {
         checkbox.addEventListener("change", () => {
             rowData.emailListed = checkbox.checked ? 1 : 0;
             this.modifiedRows.add(rowData.emailId);
-            console.log("checkbox: ", this.modifiedRows);
         });
         listedCell.appendChild(checkbox);
         row.appendChild(listedCell);
-
         // Highlight row on click for deletion
         row.addEventListener("click", () => this.highlightRow(row, index));
         return row;
@@ -115,8 +100,8 @@ class EmailTable {
     convertToTextInput(emailText, rowData, field) {
         const input = document.createElement("input");
         input.type = "text";
+        input.classList.add("email-text-open");
         input.value = rowData[field] || ""; // Start with empty if no email
-
         // Function to handle saving and switching back to text view
         const saveAndSwitchBack = () => {
             rowData[field] = input.value; // Update the data object
@@ -125,11 +110,9 @@ class EmailTable {
             emailText.style.display = "inline";
             input.remove();
         };
-
         // Attach the blur event
         const handleBlur = () => saveAndSwitchBack();
         input.addEventListener("blur", handleBlur);
-
         // Trigger save on Enter key and remove blur event
         input.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
@@ -137,7 +120,6 @@ class EmailTable {
                 saveAndSwitchBack();
             }
         });
-
         emailText.style.display = "none";
         emailText.parentNode.appendChild(input);
         input.focus();
@@ -146,8 +128,6 @@ class EmailTable {
     updatePrimaryUse(selectedIndex) {
         this.person.emails.forEach((item, index) => {
             item.primaryUse = index === selectedIndex ? 1 : 0;
-
-            // Track modified emailId instead of setting dataset directly
             this.modifiedRows.add(item.emailId);
         });
     }
@@ -166,20 +146,16 @@ class EmailTable {
         this.buttonContainer.style.display = "flex";
         this.buttonContainer.style.flexDirection = "column";
         this.buttonContainer.style.gap = "5px";
-
         // Add and Delete buttons
         const addButton = document.createElement("button");
         addButton.textContent = "Add";
         addButton.addEventListener("click", () => this.addRow());
-
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.addEventListener("click", () => this.deleteRow());
-
         // Append buttons to the button container
         this.buttonContainer.appendChild(addButton);
         this.buttonContainer.appendChild(deleteButton);
-
         // Append the button container to the right side of the table in the main container
         this.tableContainer.appendChild(this.buttonContainer); // changed
     }
@@ -248,9 +224,19 @@ class EmailTable {
         }
     }
 
-    batchUpdate() {
-            const modifiedRows = [];
+    // Function to check for any open editable fields and close them
+    closeOpenInputs() {
+        // Select all elements with the 'email-text-open' class
+        const openInputs = document.querySelectorAll('.email-text-open');
+        // Loop through each open input and simulate a blur to trigger saving
+        openInputs.forEach(input => {
+            input.blur(); // This will trigger the blur event, which saves the data
+        });
+    }
 
+    batchUpdate() {
+            this.closeOpenInputs();
+            const modifiedRows = [];
             // Loop through each email in the data model
             this.person.emails.forEach(email => {
                 // Check if this emailId is in the modified set
@@ -265,15 +251,14 @@ class EmailTable {
                     });
                 }
             });
-
+            if(modifiedRows.length === 0)
+                console.log("There is nothing in the array");
+            else
             console.log("Modified rows:", modifiedRows);
-
             // Clear modifiedRows after processing to reset for next update cycle
             this.modifiedRows.clear();
-
         // Only send the fetch request if there are modified rows
         if (modifiedRows.length > 0) {
-
             fetch('/api/update-emails', {
                 method: 'PATCH',
                 headers: {

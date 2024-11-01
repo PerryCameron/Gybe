@@ -16,12 +16,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.time.Year;
 import java.util.List;
 
 @Repository
@@ -79,6 +79,20 @@ public class EmailRepositoryImpl implements EmailRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
+
+    @Override
+    public int batchUpdate(List<EmailDTO> emailDTOList) {
+        String sql = "UPDATE email SET PRIMARY_USE = :primaryUse, EMAIL = :email, EMAIL_LISTED = :emailListed WHERE EMAIL_ID = :emailId";
+        SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(emailDTOList.toArray());
+        int[] result = namedParameterJdbcTemplate.batchUpdate(sql, batchParams);
+        for (int num : result) {
+            if (num != 1) {
+                return 0; // Return 0 if any element is not 1
+            }
+        }
+        return 1;
+    }
+
 
     @Override
     public int insert(EmailDTO emailDTO) {
@@ -180,4 +194,6 @@ public class EmailRepositoryImpl implements EmailRepository {
         Integer count = template.queryForObject(sql, Integer.class, email);
         return count != null && count > 0;
     }
+
+
 }

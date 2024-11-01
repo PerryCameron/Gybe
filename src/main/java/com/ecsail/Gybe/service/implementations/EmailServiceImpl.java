@@ -119,9 +119,11 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public boolean batchUpdateEmail(List<EmailDTO> emailDTOList) {
-        for(EmailDTO emailDTO : emailDTOList) {
-            System.out.println("Changed: " + emailDTO.getEmail());
-        }
+        emailDTOList.forEach(emailDTO -> System.out.println(emailDTO));
+//        int result = 0;
+//        if(emailDTOList.size() == 1) result = emailRepository.update(emailDTOList.get(0));
+//        else if(emailDTOList.size() > 1) result = emailRepository.batchUpdate(emailDTOList);
+//        return result > 0;
         return true;
     }
 

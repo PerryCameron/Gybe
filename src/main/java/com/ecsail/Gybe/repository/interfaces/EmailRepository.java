@@ -14,12 +14,9 @@ public interface EmailRepository {
     int update(EmailDTO o);
     int insert(EmailDTO emailDTO);
     int delete(EmailDTO o);
-
     boolean emailFromActiveMembershipExists(String email, int year);
-
     AuthDTO getAuthDTOFromEmail(int year, String email);
-
     void updateAuthDTOFromEmail(int year, AuthDTO authDTO);
-
     boolean emailExists(String email);
+    int batchUpdate(List<EmailDTO> emailDTOList);
 }
