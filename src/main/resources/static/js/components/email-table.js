@@ -10,7 +10,6 @@ class EmailTable {
         this.person.emails = Array.isArray(this.person.emails) ? this.person.emails : [];
         // I need to also make sure person.emails is not null but an empty set
         this.modifiedRows = new Set();
-        console.log("email-table", person);
         // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
         this.tableContainer.style.display = "flex"; // changed
         this.tableContainer.style.alignItems = "flex-start"; // Align items to the top // changed
@@ -26,7 +25,6 @@ class EmailTable {
         // Create the header row
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
-            console.log("parsing email headers", header);
             const th = document.createElement("th");
             th.textContent = header.email || header.primaryUse || header.emailListed;
             headerRow.appendChild(th);
@@ -35,7 +33,6 @@ class EmailTable {
         this.table.appendChild(headerRow);
         // Create data rows
         this.person.emails.forEach((rowData, index) => {
-            console.log("parsing data", rowData)
             const row = this.createDataRow(rowData, index);
             this.table.appendChild(row);
         });
@@ -187,7 +184,6 @@ class EmailTable {
             .then(data => {
                 // Assuming the response contains the new ID
                 newEmail.emailId = data.id; // Set the returned ID
-                console.log("data id is " + data.id);
                 this.person.emails.push(newEmail); // Add new email row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
@@ -254,11 +250,7 @@ class EmailTable {
                     });
                 }
             });
-            if(modifiedRows.length === 0)
-                console.log("There is nothing in the array");
-            else
-            console.log("Modified rows:", modifiedRows);
-            // Clear modifiedRows after processing to reset for next update cycle
+            if(modifiedRows.length != 0)
             this.modifiedRows.clear();
         // Only send the fetch request if there are modified rows
         if (modifiedRows.length > 0) {
@@ -277,7 +269,6 @@ class EmailTable {
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Updated rows successfully:", data);
                     this.modifiedRows.clear();
                 })
                 .catch(error => console.error('Error updating emails:', error));

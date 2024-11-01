@@ -19,8 +19,8 @@
 }
 
 .vertical {
-    border-bottom-left-radius: 5px;
-    border-top-left-radius: 5px;
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
     margin-bottom: 1px;
 }
 
