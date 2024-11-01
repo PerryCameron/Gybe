@@ -9,8 +9,6 @@
     --color-main-offcolor: #f1f1f1;
     --color-main-white: #FFFFFF;
 
-
-
     input[type="checkbox"] {
         appearance: none;
         -webkit-appearance: none;
@@ -63,7 +61,7 @@
     input[type="password"]:focus {
         border-color: var(--color-main-green-second);
         outline: 0;
-        box-shadow: 0 0 0 4px var(--color-main-green);
+        box-shadow: 0 0 0 2px var(--color-main-green);
     }
 
     input[type="text"],

@@ -1,50 +1,68 @@
 class EditableFieldsPane extends HTMLElement {
-    constructor(fieldLabels, personData) {
+    constructor(personData) {
         super();
         this.personData = personData;
-        // this.fieldLabels = fieldLabels;
-
         // Add the editable-fields-pane class for styling
         this.classList.add("editable-fields-pane");
-
         // Create a div to hold all fields, add a mouseleave listener to handle updates
         this.fieldsContainer = document.createElement("div");
         this.fieldsContainer.classList.add("fields-container");
         // this.fieldsContainer.addEventListener("mouseleave", () => this.updateData());
         this.fieldsContainer.addEventListener("mouseleave", () => console.log("mouse left"));
-
         // Create fields for each property and add them to the container
         this.fields = {};
-        Object.keys(fieldLabels).forEach((field) => {
+        Object.keys(personFields).forEach((field) => {
             const fieldDiv = this.createFieldDiv(field);
             this.fieldsContainer.appendChild(fieldDiv);
         });
-
+        this.fieldsContainer.appendChild(this.createAgeDiv());
         // Append the container to the main element
         this.appendChild(this.fieldsContainer);
+    }
+
+    calculateAge(birthDateString) {
+        if(birthDateString === null) return "";
+        const birthDate = new Date(birthDateString);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        const dayDifference = today.getDate() - birthDate.getDate();
+        // Adjust age if the birthdate hasn't occurred yet this year
+        if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+            age--;
+        }
+        return age;
+    }
+
+    createAgeDiv() {
+        const fieldDiv = document.createElement("div");
+        fieldDiv.classList.add("field");
+        fieldDiv.id = "age-div";
+        const label = document.createElement("label");
+        label.textContent = "Age:";
+        const valueSpan = document.createElement("span");
+        valueSpan.textContent = this.calculateAge(this.personData.birthday) || "";
+        valueSpan.classList.add("field-text");
+        fieldDiv.appendChild(label);
+        fieldDiv.appendChild(valueSpan);
+        return fieldDiv;
     }
 
     // Create a div for each field, initially displaying the text
     createFieldDiv(field) {
         const fieldDiv = document.createElement("div");
         fieldDiv.classList.add("field");
-
         const label = document.createElement("label");
         label.textContent = field.charAt(0).toUpperCase() + field.slice(1) + ": ";
-
         const valueSpan = document.createElement("span");
         valueSpan.classList.add("field-text");
         valueSpan.textContent = this.personData[field] || "";
-
         // Convert text to editable input on click
         valueSpan.addEventListener("click", () => this.toggleEditable(valueSpan, field));
-
         fieldDiv.appendChild(label);
         fieldDiv.appendChild(valueSpan);
-
         // Store a reference to the field for easy access later
         this.fields[field] = valueSpan;
-
         return fieldDiv;
     }
 

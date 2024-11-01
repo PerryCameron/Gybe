@@ -4,7 +4,7 @@ function populatePersonBox(membershipJson, tabPane) {
 
         const contentNode = document.createElement("div");
         contentNode.classList.add("content-node-person");
-        const personFieldPane = new EditableFieldsPane(personFields, person);
+        const personFieldPane = new EditableFieldsPane(person);
         const personExtraTabPaneDiv = document.createElement("div");
         personExtraTabPaneDiv.classList.add("person-extra-tabpane-div");
         contentNode.appendChild(personFieldPane);

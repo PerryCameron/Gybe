@@ -6,7 +6,7 @@
   width: 25rem;
   height: 60rem;
   background: var(--color-main-green);
-  border-right: 2px solid gray;
+  border-right: 2px solid var(--color-main-gray);
 }
 
 body,
@@ -23,8 +23,7 @@ html {
   /*margin-top: 60px; !* should be the same as the height of the topnav *!*/
   padding: 0px;
   overflow: auto; /* Added overflow auto to enable scrolling on the main content */
-  border-left: 5px solid #007f6b; /* Add a red right border */
-
+  border-left: 5px solid var(--color-main-green-second);
 }
 
 .topnav-child-div {
@@ -45,20 +44,6 @@ html {
   }
 }
 
-/*input[type="text"],*/
-/*input[type="password"] {*/
-/*  border: 1px solid #ccc;*/
-/*  border-radius: 5px;*/
-/*  padding: 0.5rem 0.7rem;*/
-/*}*/
-
-/*input[type="text"]:focus,*/
-/*input[type="password"]:focus {*/
-/*  border-color: #7db0fb;*/
-/*  outline: 0;*/
-/*  box-shadow: 0 0 0 4px rgba(24, 117, 255, 0.25);*/
-/*}*/
-
 #search-bar-div {
   margin-bottom: 20px;
   margin-left: 25px;
@@ -66,7 +51,7 @@ html {
 
 label {
   display: block;
-  color: #f2f2f2;
+  color: var(--color-main-offcolor);
   /*margin-bottom: 5px;*/
 }
 
@@ -88,7 +73,7 @@ label {
   width: 195px;
   height: 50px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-main-border);
   border-radius: 5px;
   padding: 0.5rem 0.7rem;
 }
@@ -104,7 +89,7 @@ label {
 .topnav-control {
   padding: 0.5rem 0.7rem; /* or any other padding you prefer */
   height: 40px; /* or any other height you prefer */
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-main-border);
   border-radius: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
