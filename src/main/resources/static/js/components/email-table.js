@@ -78,7 +78,6 @@ class EmailTable {
         radio.checked = rowData.primaryUse === 1;
         radio.addEventListener("click", () => {
             this.updatePrimaryUse(index);
-            // this.modifiedRows.add(rowData.emailId);
         });
         primaryUseCell.appendChild(radio);
         row.appendChild(primaryUseCell);
@@ -198,9 +197,8 @@ class EmailTable {
     deleteRow() {
         if (this.selectedRowIndex != null) {
             const email = this.person.emails[this.selectedRowIndex]; // Ensure `person` is accessible here
-            // Retrieve CSRF token and header name (if these are defined globally or passed in, skip this step)
-            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-            const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+            // Confirm deletion (optional)
+            if (!confirm("Are you sure you want to delete this email?")) return;
             fetch('/api/delete-email', {
                 method: 'DELETE', // Use DELETE method for deletion
                 headers: {
@@ -215,10 +213,13 @@ class EmailTable {
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then(() => { // data is not used here
                     // Remove email from array and DOM
                     this.person.emails.splice(this.selectedRowIndex, 1); // Remove from data
-                    this.selectedRow.remove(); // Remove from DOM
+                    if (this.selectedRow) { // Ensure row exists
+                        this.selectedRow.remove(); // Remove from DOM
+                    }
+                    // Reset selected row variables
                     this.selectedRow = null; // Reset selected row
                     this.selectedRowIndex = null; // Reset selected row index
                 })
