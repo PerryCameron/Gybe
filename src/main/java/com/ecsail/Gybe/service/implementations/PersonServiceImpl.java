@@ -20,8 +20,23 @@ public class PersonServiceImpl implements PersonService {
         this.generalRepository = generalRepository;
     }
 
-    @Override
     public boolean updatePerson(PersonDTO personDTO) {
-        return false;
+        System.out.println(personDTO);
+//        // Check which fields are non-null and update only those fields
+//        Optional<Person> personOptional = personRepository.findById(personDTO.getpId());
+//        if (personOptional.isPresent()) {
+//            Person person = personOptional.get();
+//
+//            if (personDTO.getFirstName() != null) person.setFirstName(personDTO.getFirstName());
+//            if (personDTO.getLastName() != null) person.setLastName(personDTO.getLastName());
+//            if (personDTO.getNickName() != null) person.setNickName(personDTO.getNickName());
+//            if (personDTO.getOccupation() != null) person.setOccupation(personDTO.getOccupation());
+//            if (personDTO.getBusiness() != null) person.setBusiness(personDTO.getBusiness());
+//            if (personDTO.getBirthday() != null) person.setBirthday(personDTO.getBirthday());
+//
+//            personRepository.save(person);
+//            return true;
+//        }
+        return true;
     }
 }

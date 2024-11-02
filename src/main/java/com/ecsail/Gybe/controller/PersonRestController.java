@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class PersonRestController {
 
@@ -43,17 +46,18 @@ public class PersonRestController {
         this.personService = personService;
     }
 
-    @PostMapping("/update-person")
-    @PreAuthorize("hasRole('ROLE_USER')") // Adjust the role as needed
-    public ResponseEntity<String> updatePerson(@RequestBody PersonDTO personDTO) {
-        // Call the service to update only the provided fields
+    @PostMapping("api/update-person")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')") // Adjust the role as needed
+    public ResponseEntity<Map<String, String>> updatePerson(@RequestBody PersonDTO personDTO) {
         boolean updateSuccess = personService.updatePerson(personDTO);
 
+        Map<String, String> response = new HashMap<>();
         if (updateSuccess) {
-            return ResponseEntity.ok("Person updated successfully.");
+            response.put("message", "Person updated successfully.");
+            return ResponseEntity.ok(response); // Return JSON response
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to update person.");
+            response.put("message", "Failed to update person.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }

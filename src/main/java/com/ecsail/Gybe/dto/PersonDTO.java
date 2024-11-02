@@ -300,7 +300,6 @@ public class PersonDTO {
                 phonesStr + "\n" +
                 emailStr +
                 awardsStr +
-                officerStr + "\n" +
-                "\t\t}";
+                officerStr + "}";
     }
 }
