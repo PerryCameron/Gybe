@@ -2,13 +2,12 @@ class EditableFieldsPane extends HTMLElement {
     constructor(personData) {
         super();
         this.personData = personData;
+        console.log("personData", personData);
         // Add the editable-fields-pane class for styling
         this.classList.add("editable-fields-pane");
         // Create a div to hold all fields, add a mouseleave listener to handle updates
         this.fieldsContainer = document.createElement("div");
         this.fieldsContainer.classList.add("fields-container");
-        // this.fieldsContainer.addEventListener("mouseleave", () => this.updateData());
-        this.fieldsContainer.addEventListener("mouseleave", () => console.log("mouse left"));
         // Create fields for each property and add them to the container
         this.fields = {};
         Object.keys(personFields).forEach((field) => {
@@ -17,6 +16,7 @@ class EditableFieldsPane extends HTMLElement {
         });
         this.fieldsContainer.appendChild(this.createAgeDiv());
         // Append the container to the main element
+        this.addEventListener('mouseleave', () => this.update());
         this.appendChild(this.fieldsContainer);
     }
 
@@ -99,31 +99,37 @@ class EditableFieldsPane extends HTMLElement {
         this.fields[field] = span;
     }
 
-    // Send AJAX update to the server
-    // async updateData() {
-    //     try {
-    //         const response = await fetch("/api/update-person", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ personData: this.personData })
-    //         });
+    update() {
+        // Gather modified values from UI fields
+        const personData = {
+            firstName: this.personData.firstName,
+            lastName: this.personData.lastName,
+            nickName: this.personData.nickName,
+            occupation: this.personData.occupation,
+            business: this.personData.business,
+            birthday: this.personData.birthday
+        };
 
-    //         if (response.ok) {
-    //             // On success, switch all fields back to plain text
-    //             Object.keys(this.fields).forEach(field => {
-    //                 const span = this.fields[field];
-    //                 if (span.tagName === "INPUT") {
-    //                     this.saveInput(span, field);
-    //                 }
-    //             });
-    //             console.log("Data successfully updated!");
-    //         } else {
-    //             console.error("Failed to update data.");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error sending update:", error);
-    //     }
-    // }
+        // Send POST request to update the person fields
+        fetch('/api/update-person', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeaderName]: csrfToken // CSRF token from global variable
+            },
+            body: JSON.stringify(personData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Optional: Parse JSON response
+            })
+            .then(data => {
+                console.log("Update successful:", data); // Handle success
+            })
+            .catch(error => console.error('Error updating person:', error)); // Handle error
+    }
 }
 
 // Register the custom element
