@@ -296,10 +296,6 @@ public class PersonDTO {
                 ", birthday=" + birthday +
                 ", active=" + active +
                 ", nickName='" + nickName + '\'' +
-                ", oldMsid=" + oldMsid + "\n" +
-                phonesStr + "\n" +
-                emailStr +
-                awardsStr +
-                officerStr + "}";
+                ", oldMsid=" + oldMsid + "}";
     }
 }

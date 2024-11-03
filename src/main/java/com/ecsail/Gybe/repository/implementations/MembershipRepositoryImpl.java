@@ -418,6 +418,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 'people', JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'pId', p.P_ID,
+                        'msId', p.MS_ID,
                         'memberType', p.MEMBER_TYPE,
                         'firstName', p.F_NAME,
                         'lastName', p.L_NAME,

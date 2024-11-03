@@ -3,7 +3,6 @@ class EditableFieldsPane extends HTMLElement {
         super();
         this.personData = personData;
         console.log("personData", personData);
-        // Add the editable-fields-pane class for styling
         this.classList.add("editable-fields-pane");
         // Create a div to hold all fields, add a mouseleave listener to handle updates
         this.fieldsContainer = document.createElement("div");
@@ -15,7 +14,6 @@ class EditableFieldsPane extends HTMLElement {
             this.fieldsContainer.appendChild(fieldDiv);
         });
         this.fieldsContainer.appendChild(this.createAgeDiv());
-        // Append the container to the main element
         this.addEventListener('mouseleave', () => this.update());
         this.appendChild(this.fieldsContainer);
     }
@@ -70,44 +68,66 @@ class EditableFieldsPane extends HTMLElement {
     toggleEditable(spanElement, field) {
         // If span is already an input, exit
         if (spanElement.tagName === "INPUT") return;
-
         // Replace span with an input element
         const input = document.createElement("input");
         input.type = "text";
         input.value = spanElement.textContent;
         input.classList.add("field-input");
-
-        input.addEventListener("blur", () => this.saveInput(input, field));
+        input.classList.add("person-text-open");
+        // Function to handle saving and replacing input with span
+        const saveAndReplace = () => this.saveInput(input, field);
+        // Attach blur and keydown events
+        input.addEventListener("blur", saveAndReplace);
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault(); // Prevent default Enter behavior if needed
+                input.removeEventListener("blur", saveAndReplace); // Avoid duplicate call
+                saveAndReplace();
+            }
+        });
         spanElement.replaceWith(input);
         input.focus();
     }
+
 
     // Save the input back to span on blur
     saveInput(input, field) {
         const span = document.createElement("span");
         span.classList.add("field-text");
         span.textContent = input.value;
-
         // Update personData and replace input with span
         this.personData[field] = input.value;
         input.replaceWith(span);
-
         // Add click event to make the span editable again
         span.addEventListener("click", () => this.toggleEditable(span, field));
-
         // Update the stored reference
         this.fields[field] = span;
     }
 
+    closeOpenInputs() {
+        // Select all elements with the 'email-text-open' class
+        const openInputs = document.querySelectorAll('.person-text-open');
+        // Loop through each open input and simulate a blur to trigger saving
+        openInputs.forEach(input => {
+            input.blur(); // This will trigger the blur event, which saves the data
+        });
+    }
+
     update() {
+        this.closeOpenInputs();
         // Gather modified values from UI fields
         const personData = {
+            pId: this.personData.pId,
+            msId: this.personData.msId,
+            memType: this.personData.memberType,
             firstName: this.personData.firstName,
             lastName: this.personData.lastName,
             nickName: this.personData.nickName,
             occupation: this.personData.occupation,
             business: this.personData.business,
-            birthday: this.personData.birthday
+            birthday: this.personData.birthday,
+            active: this.personData.active,
+            oldMsid: this.personData.oldMsid
         };
 
         // Send POST request to update the person fields
