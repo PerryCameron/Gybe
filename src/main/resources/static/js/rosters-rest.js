@@ -188,9 +188,9 @@ function createYearSelectDiv() {
     yearSelect.className = "sidenav-control";
     yearSelect.name = "year";
 
-    // Populate the select element with years from 1970 to the present year
+    // Populate the select element with years from the current year down to 1970
     const currentYear = new Date().getFullYear();
-    for (let year = 1970; year <= currentYear; year++) {
+    for (let year = currentYear; year >= 1970; year--) {
         const option = document.createElement("option");
         option.value = year;
         option.textContent = year;
