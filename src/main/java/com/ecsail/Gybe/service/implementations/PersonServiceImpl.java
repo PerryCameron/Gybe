@@ -22,7 +22,6 @@ public class PersonServiceImpl implements PersonService {
 
     public boolean updatePerson(PersonDTO personDTO) {
         int success = personRepository.update(personDTO);
-        System.out.println("success: " + success);
         return success > 0;
     }
 }

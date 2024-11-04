@@ -7,6 +7,10 @@ const personFields = {
     birthday: "Birthday",
 };
 
+// editable-fields
+// Initialize the edit flag
+
+
 // global for rosters
 let rosterTabPane;
 // let lastLoadedScript = null;

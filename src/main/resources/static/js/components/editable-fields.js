@@ -2,6 +2,7 @@ class EditableFieldsPane extends HTMLElement {
     constructor(personData) {
         super();
         this.personData = personData;
+        this.personIsEdited = false;
         console.log("personData", personData);
         this.classList.add("editable-fields-pane");
         // Create a div to hold all fields, add a mouseleave listener to handle updates
@@ -14,7 +15,12 @@ class EditableFieldsPane extends HTMLElement {
             this.fieldsContainer.appendChild(fieldDiv);
         });
         this.fieldsContainer.appendChild(this.createAgeDiv());
-        this.addEventListener('mouseleave', () => this.update());
+        this.addEventListener('mouseleave', () => {
+            if(this.personIsEdited) {
+                this.update();
+                this.personIsEdited = false;
+            }
+        });
         this.appendChild(this.fieldsContainer);
     }
 
@@ -69,6 +75,8 @@ class EditableFieldsPane extends HTMLElement {
         // If span is already an input, exit
         if (spanElement.tagName === "INPUT") return;
         // Replace span with an input element
+        this.personIsEdited = true;
+
         const input = document.createElement("input");
         input.type = "text";
         input.value = spanElement.textContent;
@@ -88,8 +96,7 @@ class EditableFieldsPane extends HTMLElement {
         spanElement.replaceWith(input);
         input.focus();
     }
-
-
+    
     // Save the input back to span on blur
     saveInput(input, field) {
         const span = document.createElement("span");
@@ -119,7 +126,7 @@ class EditableFieldsPane extends HTMLElement {
         const personData = {
             pId: this.personData.pId,
             msId: this.personData.msId,
-            memType: this.personData.memberType,
+            memberType: this.personData.memberType,
             firstName: this.personData.firstName,
             lastName: this.personData.lastName,
             nickName: this.personData.nickName,
@@ -129,7 +136,7 @@ class EditableFieldsPane extends HTMLElement {
             active: this.personData.active,
             oldMsid: this.personData.oldMsid
         };
-
+        console.log("Sent person data", personData);
         // Send POST request to update the person fields
         fetch('/api/update-person', {
             method: 'POST',

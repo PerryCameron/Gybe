@@ -78,6 +78,7 @@ public class EmailServiceImpl implements EmailService {
         }
         return mailDTO;
     }
+
     @Override
     public HashDTO createHash(AuthDTO authDTO) {
         HashDTO hashDTO;
