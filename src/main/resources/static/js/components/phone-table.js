@@ -1,20 +1,20 @@
-class EmailTable {
+class PhoneTable {
     constructor(container, person) {
         this.tableContainer = container;
         this.headers = {
-            0: {email: "Email", widget: "text"},
+            0: {phone: "Phone", widget: "text"},
             1: {phoneType: "Type", widget: "radio"},
             2: {phoneListed: "Listed", widget: "check"},
         };
-        this.person = person || [];// Table data for each email
+        this.person = person || [];// Table data for each phone
         this.person.phones = Array.isArray(this.person.phones) ? this.person.phones : [];
-        // I need to also make sure person.emails is not null but an empty set
+        // I need to also make sure person.phones is not null but an empty set
         this.modifiedRows = new Set();
         // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
         this.tableContainer.style.display = "flex"; // changed
         this.tableContainer.style.alignItems = "flex-start"; // Align items to the top // changed
         this.tableContainer.style.gap = "5px"; // Space between table and buttons // changed
-        this.table = document.createElement("table"); // The email table itself
+        this.table = document.createElement("table"); // The phone table itself
         this.selectedRow = null; // To track the highlighted row
         this.renderTable();
         this.renderButtons();
@@ -26,7 +26,7 @@ class EmailTable {
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
             const th = document.createElement("th");
-            th.textContent = header.email || header.primaryUse || header.emailListed;
+            th.textContent = header.phone || header.primaryUse || header.phoneListed;
             headerRow.appendChild(th);
         });
         this.table.addEventListener('mouseleave', () => this.batchUpdate());
@@ -51,42 +51,31 @@ class EmailTable {
     createDataRow(rowData, index) {
         const row = document.createElement("tr");
         // Set data attributes for the row using rowData properties
-        row.dataset.emailId = rowData.emailId;
+        row.dataset.phoneId = rowData.phoneId;
         row.dataset.pId = rowData.pId;
-        // Email column
-        const emailCell = document.createElement("td");
-        const emailText = document.createElement("span");
-        // Display placeholder if email is empty
-        emailText.textContent = rowData.email || "Click to add email";
-        emailText.classList.add(rowData.email ? "filled-email" : "placeholder");
-        // emailText.classList.add("email-text-field");
-        emailText.addEventListener("click", () => {
-            this.convertToTextInput(emailText, rowData, "email");
-            this.modifiedRows.add(rowData.emailId);
+        // phone column
+        const phoneCell = document.createElement("td");
+        const phoneText = document.createElement("span");
+        // Display placeholder if phone is empty
+        phoneText.textContent = rowData.phone || "Click to add phone";
+        phoneText.classList.add(rowData.phone ? "filled-phone" : "placeholder");
+        // phoneText.classList.add("phone-text-field");
+        phoneText.addEventListener("click", () => {
+            this.convertToTextInput(phoneText, rowData, "phone");
+            this.modifiedRows.add(rowData.phoneId);
         });
-        emailCell.appendChild(emailText);
-        row.appendChild(emailCell);
-        // Primary Use column as a radio button
-        const phoneTypeCell = document.createElement("td");
-        // const radio = document.createElement("input");
-        // radio.type = "radio";
-        // radio.name = "primaryUse";
-        // radio.classList.add("primary-use-radio");
-        // radio.checked = rowData.primaryUse === 1;
-        // radio.addEventListener("click", () => {
-        //     this.updatePrimaryUse(index);
-        // });
-        // primaryUseCell.appendChild(radio);
-        row.appendChild(phoneTypeCell);
-        // Email Listed column as a checkbox
+        phoneCell.appendChild(phoneText);
+        row.appendChild(phoneCell);
+        row.appendChild(this.createPhoneTypeSelect(rowData));
+        // phone Listed column as a checkbox
         const listedCell = document.createElement("td");
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("listed-check-box");
-        checkbox.checked = rowData.emailListed === 1;
+        checkbox.checked = rowData.phoneListed === 1;
         checkbox.addEventListener("change", () => {
-            rowData.emailListed = checkbox.checked ? 1 : 0;
-            this.modifiedRows.add(rowData.emailId);
+            rowData.phoneListed = checkbox.checked ? 1 : 0;
+            this.modifiedRows.add(rowData.phoneId);
         });
         listedCell.appendChild(checkbox);
         row.appendChild(listedCell);
@@ -95,17 +84,58 @@ class EmailTable {
         return row;
     }
 
-    convertToTextInput(emailText, rowData, field) {
+    createPhoneTypeSelect(data) {
+        console.log("data: ", data);
+        const phoneTypeContainer = document.createElement("td");
+        phoneTypeContainer.classList.add("select-container");
+        phoneTypeContainer.id = "phone-type-container-" + data.phoneId;
+
+        const phoneTypeSelect = document.createElement("select");
+        phoneTypeSelect.id = "phone-type-select-" +data.phoneId;
+        phoneTypeSelect.className = "phone-select";
+        phoneTypeSelect.name = "phoneType";
+
+        // Define the options mapping
+        const options = {
+            "C": "Cell",
+            "H": "Home",
+            "E": "Emergency"
+        };
+
+        // Populate the select element with the defined options
+        for (const [value, label] of Object.entries(options)) {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = label;
+            phoneTypeSelect.appendChild(option);
+        }
+
+        // Set the selected option based on data.phoneType
+        if (data.phoneType) {
+            phoneTypeSelect.value = data.phoneType;
+        }
+
+        phoneTypeSelect.addEventListener("change", function () {
+            data.phoneType = this.value;
+            // You can call a function here if you want to handle data updates
+            // e.g., updateData(data);
+        });
+
+        phoneTypeContainer.appendChild(phoneTypeSelect);
+        return phoneTypeContainer;
+    }
+
+    convertToTextInput(phoneText, rowData, field) {
         const input = document.createElement("input");
         input.type = "text";
-        input.classList.add("email-text-open");
-        input.value = rowData[field] || ""; // Start with empty if no email
+        input.classList.add("phone-text-open");
+        input.value = rowData[field] || ""; // Start with empty if no phone
         // Function to handle saving and switching back to text view
         const saveAndSwitchBack = () => {
             rowData[field] = input.value; // Update the data object
-            emailText.textContent = input.value || "Click to add email"; // Set text or placeholder
-            emailText.classList.toggle("placeholder", !input.value); // Add placeholder styling if empty
-            emailText.style.display = "inline";
+            phoneText.textContent = input.value || "Click to add phone"; // Set text or placeholder
+            phoneText.classList.toggle("placeholder", !input.value); // Add placeholder styling if empty
+            phoneText.style.display = "inline";
             input.remove();
         };
         // Attach the blur event
@@ -118,15 +148,15 @@ class EmailTable {
                 saveAndSwitchBack();
             }
         });
-        emailText.style.display = "none";
-        emailText.parentNode.appendChild(input);
+        phoneText.style.display = "none";
+        phoneText.parentNode.appendChild(input);
         input.focus();
     }
 
     updatePrimaryUse(selectedIndex) {
         this.person.phones.forEach((item, index) => {
             item.primaryUse = index === selectedIndex ? 1 : 0;
-            this.modifiedRows.add(item.emailId);
+            this.modifiedRows.add(item.phoneId);
         });
     }
 
@@ -159,21 +189,21 @@ class EmailTable {
     }
 
     addRow() {
-        const newEmail = {
-            "emailId": 0,
+        const newPhone = {
+            "phoneId": 0,
             "pId": this.person.pId,             // replace with actual person ID if needed
             "primaryUse": false,
-            "email": "",
-            "emailListed": true
+            "phone": "",
+            "phoneListed": true
         };
-        // Send POST request to server to create a new email
-        fetch('/api/insert-email', {
+        // Send POST request to server to create a new phone
+        fetch('/api/insert-phone', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 [csrfHeaderName]: csrfToken // Include CSRF token in the request headers
             },
-            body: JSON.stringify(newEmail)
+            body: JSON.stringify(newPhone)
         })
             .then(response => {
                 if (!response.ok) {
@@ -183,25 +213,25 @@ class EmailTable {
             })
             .then(data => {
                 // Assuming the response contains the new ID
-                newEmail.emailId = data.id; // Set the returned ID
-                this.person.phones.push(newEmail); // Add new email row to data array
+                newphone.phoneId = data.id; // Set the returned ID
+                this.person.phones.push(newPhone); // Add new phone row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
-            .catch(error => console.error('Error adding new email:', error));
+            .catch(error => console.error('Error adding new phone:', error));
     }
 
     deleteRow() {
         if (this.selectedRowIndex != null) {
-            const email = this.person.phones[this.selectedRowIndex]; // Ensure `person` is accessible here
+            const phone = this.person.phones[this.selectedRowIndex]; // Ensure `person` is accessible here
             // Confirm deletion (optional)
-            if (!confirm("Are you sure you want to delete this email?")) return;
-            fetch('/api/delete-email', {
+            if (!confirm("Are you sure you want to delete this phone?")) return;
+            fetch('/api/delete-phone', {
                 method: 'DELETE', // Use DELETE method for deletion
                 headers: {
                     'Content-Type': 'application/json',
                     [csrfHeaderName]: csrfToken // Include CSRF token
                 },
-                body: JSON.stringify(email)
+                body: JSON.stringify(phone)
             })
                 .then(response => {
                     if (!response.ok) {
@@ -210,7 +240,7 @@ class EmailTable {
                     return response.json();
                 })
                 .then(() => { // data is not used here
-                    // Remove email from array and DOM
+                    // Remove phone from array and DOM
                     this.person.phones.splice(this.selectedRowIndex, 1); // Remove from data
                     if (this.selectedRow) { // Ensure row exists
                         this.selectedRow.remove(); // Remove from DOM
@@ -219,14 +249,14 @@ class EmailTable {
                     this.selectedRow = null; // Reset selected row
                     this.selectedRowIndex = null; // Reset selected row index
                 })
-                .catch(error => console.error('Error deleting email:', error)); // Adjust error message
+                .catch(error => console.error('Error deleting phone:', error)); // Adjust error message
         }
     }
 
     // Function to check for any open editable fields and close them
     closeOpenInputs() {
-        // Select all elements with the 'email-text-open' class
-        const openInputs = document.querySelectorAll('.email-text-open');
+        // Select all elements with the 'phone-text-open' class
+        const openInputs = document.querySelectorAll('.phone-text-open');
         // Loop through each open input and simulate a blur to trigger saving
         openInputs.forEach(input => {
             input.blur(); // This will trigger the blur event, which saves the data
@@ -236,17 +266,17 @@ class EmailTable {
     batchUpdate() {
             this.closeOpenInputs();
             const modifiedRows = [];
-            // Loop through each email in the data model
-            this.person.phones.forEach(email => {
-                // Check if this emailId is in the modified set
-                if (this.modifiedRows.has(email.emailId)) {
-                    // Add the modified email data directly from the model
+            // Loop through each phone in the data model
+            this.person.phones.forEach(phone => {
+                // Check if this phoneId is in the modified set
+                if (this.modifiedRows.has(phone.phoneId)) {
+                    // Add the modified phone data directly from the model
                     modifiedRows.push({
-                        emailId: email.emailId,
-                        pId: email.pId,
-                        primaryUse: email.primaryUse,
-                        email: email.email,
-                        emailListed: email.emailListed
+                        phoneId: phone.phoneId,
+                        pId: phone.pId,
+                        primaryUse: phone.primaryUse,
+                        phone: phone.phone,
+                        phoneListed: phone.phoneListed
                     });
                 }
             });

@@ -23,7 +23,7 @@ function populatePersonBox(membershipJson, tabPane) {
         extraTabPane.container.id = "person-accessories-tab-pane";
         extraTabPane.tabsContainer.id = "person-accessories-tab-container";
         extraTabPane.addTab(`email-${person.pId}`, "Email", setEmailTable(person), false);
-        extraTabPane.addTab(`phone-${person.pId}`, "Phone", fakeContent(person, "phone"), false);
+        extraTabPane.addTab(`phone-${person.pId}`, "Phone", setPhoneTable(person), false);
         extraTabPane.addTab(`awards-${person.pId}`, "Awards", fakeContent(person, "awards"), false);
         extraTabPane.addTab(`position-${person.pId}`, "Position", fakeContent(person, "position"), false);
         extraTabPane.switchToTab(`email-${person.pId}`);
@@ -34,12 +34,19 @@ function populatePersonBox(membershipJson, tabPane) {
 
 function setEmailTable(person) {
     const emailDiv = document.createElement("div");
-    emailDiv.id = 'email-div';
     const emailTable = new EmailTable(emailDiv, person);
-    emailTable.tableContainer.id = "email-table-container";// this is getting data and processing it
-    emailTable.table.id = "email-table";
+    emailTable.tableContainer.classList.add("small-table-container");// this is getting data and processing it
     return emailDiv; // but no table rendered in this div??
 }
+
+function setPhoneTable(person) {
+    const phoneDiv = document.createElement("div");
+    const phoneTable = new PhoneTable(phoneDiv, person);
+    phoneTable.tableContainer.classList.add("small-table-container");// this is getting data and processing it
+    return phoneDiv; // but no table rendered in this div??
+}
+
+
 
 function fakeContent(person, type) {
     const fakeDiv = document.createElement("div");
