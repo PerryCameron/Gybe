@@ -445,6 +445,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                             SELECT JSON_ARRAYAGG(
                                 JSON_OBJECT(
                                     'phoneId', ph.PHONE_ID,
+                                    'pId', p.P_ID,
                                     'phone', ph.PHONE,
                                     'phoneType', ph.PHONE_TYPE,
                                     'phoneListed', ph.PHONE_LISTED

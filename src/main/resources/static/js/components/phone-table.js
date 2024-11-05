@@ -266,6 +266,7 @@ class PhoneTable {
     batchUpdate() {
             this.closeOpenInputs();
             const modifiedRows = [];
+            console.log("phones: ", this.person.phones);
             // Loop through each phone in the data model
             this.person.phones.forEach(phone => {
                 // Check if this phoneId is in the modified set
@@ -274,9 +275,9 @@ class PhoneTable {
                     modifiedRows.push({
                         phoneId: phone.phoneId,
                         pId: phone.pId,
-                        primaryUse: phone.primaryUse,
+                        phoneListed: phone.phoneListed,
                         phone: phone.phone,
-                        phoneListed: phone.phoneListed
+                        phoneType: phone.phoneType,
                     });
                 }
             });
