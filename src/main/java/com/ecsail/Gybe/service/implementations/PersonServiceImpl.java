@@ -48,5 +48,12 @@ public class PersonServiceImpl implements PersonService {
         return phoneRepository.insert(phoneDTO);
     }
 
+    @Override
+    public boolean deletePhoneRow(PhoneDTO phoneDTO) {
+        int success = phoneRepository.delete(phoneDTO);
+        if (success > 0) return true;
+        return false;
+    }
+
 
 }

@@ -64,6 +64,7 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     @Override
     public int update(PhoneDTO phoneDTO) {
+        System.out.println("Update: " + phoneDTO);
         String query = "UPDATE phone SET " +
                 "P_ID = :pId," +
                 "PHONE = :phone, " +
@@ -76,6 +77,10 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     @Override
     public int batchUpdate(List<PhoneDTO> phoneDTOList) {
+        System.out.println("Batch Update");
+        for(PhoneDTO phoneDTO : phoneDTOList) {
+            System.out.println(phoneDTO);
+        }
         String sql = "UPDATE phone SET P_ID = :pId, PHONE = :phone, PHONE_TYPE = :phoneType, PHONE_LISTED = :phoneListed WHERE PHONE_ID = :phoneId";
         SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(phoneDTOList.toArray());
         int[] result = namedParameterJdbcTemplate.batchUpdate(sql, batchParams);
@@ -89,6 +94,7 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     @Override
     public int delete(PhoneDTO phoneDTO) {
+        System.out.println("Delete: " + phoneDTO);
         String deleteSql = "DELETE FROM phone WHERE PHONE_ID = ?";
         return template.update(deleteSql, phoneDTO.getPhoneId());
     }

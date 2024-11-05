@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +22,7 @@ public class PersonRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonRestController.class);
     private final PersonService personService;
+    private final EmailService emailService;
 
     SendMailService service;
     RosterService rosterService;
@@ -42,12 +40,14 @@ public class PersonRestController {
             RosterService rosterService,
             AdminService adminService,
             MembershipService membershipService,
-            PersonService personService) {
+            PersonService personService,
+            EmailService emailService) {
         this.service = service;
         this.rosterService = rosterService;
         this.adminService = adminService;
         this.membershipService = membershipService;
         this.personService = personService;
+        this.emailService = emailService;
     }
 
     @PostMapping("api/update-person")
@@ -80,6 +80,24 @@ public class PersonRestController {
         int id = personService.insertNewPhoneRow(phoneDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("id", id);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/api/delete-email")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> deleteEmail(@RequestBody EmailDTO emailDTO) {
+        boolean isDeleted = emailService.deleteEmailRow(emailDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("deleted", isDeleted);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/api/delete-phone")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> deletePhone(@RequestBody PhoneDTO phoneDTO) {
+        boolean isDeleted = personService.deletePhoneRow(phoneDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("deleted", isDeleted);
         return ResponseEntity.ok(response);
     }
 }

@@ -9,4 +9,5 @@ public interface PersonService {
     boolean updatePerson(PersonDTO personDTO);
     boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
     int insertNewPhoneRow(PhoneDTO phoneDTO);
+    boolean deletePhoneRow(PhoneDTO phoneDTO);
 }
