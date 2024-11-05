@@ -190,33 +190,6 @@ public class MembershipRestController {
         return membershipService.getMembershipAsJson(msId, year);
     }
 
-    @PostMapping("/api/insert-email")
-    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
-    public ResponseEntity<Map<String, Object>> insertEmail(@RequestBody EmailDTO emailDTO) {
-        int id = emailService.insertNewEmailRow(emailDTO);
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", id);
-        return ResponseEntity.ok(response);
-    }
-
-//    @DeleteMapping("/api/delete-email")
-//    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
-//    public ResponseEntity<Map<String, Object>> deleteEmail(@RequestBody EmailDTO emailDTO) {
-//        boolean isDeleted = emailService.deleteEmailRow(emailDTO);
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("deleted", isDeleted);
-//        return ResponseEntity.ok(response);
-//    }
-
-    @PatchMapping("/api/update-emails")
-    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
-    public ResponseEntity<Map<String, Object>> updateEmails(@RequestBody List<EmailDTO> emailDTOList) {
-        boolean isUpdated = emailService.batchUpdateEmail(emailDTOList); // Update each email in a batch operation
-        Map<String, Object> response = new HashMap<>();
-        response.put("updated", isUpdated);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/api/csrf-token")
     public Map<String, String> getCsrfToken(HttpServletRequest request) {
         CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());

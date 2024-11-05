@@ -38,8 +38,18 @@ public class PersonServiceImpl implements PersonService {
             System.out.println(phoneDTO);
         }
         int result = 0;
-        if(phoneDTOList.size() == 1) result = phoneRepository.update(phoneDTOList.get(0));
-        else if(phoneDTOList.size() > 1) result = phoneRepository.batchUpdate(phoneDTOList);
+        if(phoneDTOList.size() == 1) {
+            result = phoneRepository.update(phoneDTOList.get(0));
+            if(result == 1) {
+                System.out.println("Successfully updated phone");
+            }
+        }
+        else if(phoneDTOList.size() > 1) {
+            result = phoneRepository.batchUpdate(phoneDTOList);
+            if(result == 1) {
+                System.out.println("Successfully updated phone batch");
+            }
+        }
         return result > 0;
     }
 

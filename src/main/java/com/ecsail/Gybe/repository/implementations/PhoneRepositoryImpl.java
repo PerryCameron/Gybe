@@ -64,23 +64,26 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     @Override
     public int update(PhoneDTO phoneDTO) {
-        System.out.println("Update: " + phoneDTO);
         String query = "UPDATE phone SET " +
                 "P_ID = :pId," +
                 "PHONE = :phone, " +
                 "PHONE_TYPE = :phoneType, " +
                 "PHONE_LISTED = :phoneListed " +
                 "WHERE PHONE_ID = :phoneId";
+
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
-        return namedParameterJdbcTemplate.update(query, namedParameters);
+
+        int success = namedParameterJdbcTemplate.update(query, namedParameters); // Use NamedParameterJdbcTemplate here
+
+        if (success > 0) {
+            System.out.println("success in updating: " + phoneDTO);
+        }
+
+        return success;
     }
 
     @Override
     public int batchUpdate(List<PhoneDTO> phoneDTOList) {
-        System.out.println("Batch Update");
-        for(PhoneDTO phoneDTO : phoneDTOList) {
-            System.out.println(phoneDTO);
-        }
         String sql = "UPDATE phone SET P_ID = :pId, PHONE = :phone, PHONE_TYPE = :phoneType, PHONE_LISTED = :phoneListed WHERE PHONE_ID = :phoneId";
         SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(phoneDTOList.toArray());
         int[] result = namedParameterJdbcTemplate.batchUpdate(sql, batchParams);
@@ -89,6 +92,9 @@ public class PhoneRepositoryImpl implements PhoneRepository {
                 return 0; // Return 0 if any element is not 1
             }
         }
+        for(PhoneDTO phoneDTO : phoneDTOList) {
+            System.out.println("Update success: " + phoneDTO);
+        }
         return 1;
     }
 
@@ -96,7 +102,11 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     public int delete(PhoneDTO phoneDTO) {
         System.out.println("Delete: " + phoneDTO);
         String deleteSql = "DELETE FROM phone WHERE PHONE_ID = ?";
-        return template.update(deleteSql, phoneDTO.getPhoneId());
+        int affectedRows = template.update(deleteSql, phoneDTO.getPhoneId());
+        if (affectedRows == 1) {
+            System.out.println("Successfully Deleted " + phoneDTO);
+        }
+        return affectedRows;
     }
 
     @Override
@@ -107,6 +117,7 @@ public class PhoneRepositoryImpl implements PhoneRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         phoneDTO.setPhoneId(keyHolder.getKey().intValue());
+        System.out.println("phoneDTO added: " + affectedRows);
         return affectedRows;
     }
 
