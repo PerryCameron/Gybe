@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.controller;
 
+import com.ecsail.Gybe.dto.EmailDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.PhoneDTO;
 import com.ecsail.Gybe.service.interfaces.*;
@@ -70,6 +71,15 @@ public class PersonRestController {
         boolean isUpdated = personService.batchUpdatePhones(phoneDTOList); // Update each email in a batch operation
         Map<String, Object> response = new HashMap<>();
         response.put("updated", isUpdated);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/api/insert-phone")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> insertEmail(@RequestBody PhoneDTO phoneDTO) {
+        int id = personService.insertNewPhoneRow(phoneDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", id);
         return ResponseEntity.ok(response);
     }
 }

@@ -8,4 +8,5 @@ import java.util.List;
 public interface PersonService {
     boolean updatePerson(PersonDTO personDTO);
     boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
+    int insertNewPhoneRow(PhoneDTO phoneDTO);
 }

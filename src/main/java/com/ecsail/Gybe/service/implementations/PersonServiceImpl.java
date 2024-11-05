@@ -13,14 +13,17 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final EmailRepository emailRepository;
     private final GeneralRepository generalRepository;
+    private final PhoneRepository phoneRepository;
 
     public PersonServiceImpl(HashRepository hashRepository,
                              EmailRepository emailRepository,
                              PersonRepository personRepository,
-                             GeneralRepository generalRepository) {
+                             GeneralRepository generalRepository,
+                             PhoneRepository phoneRepository) {
         this.personRepository = personRepository;
         this.emailRepository = emailRepository;
         this.generalRepository = generalRepository;
+        this.phoneRepository = phoneRepository;
     }
 
     @Override
@@ -34,6 +37,16 @@ public class PersonServiceImpl implements PersonService {
         for(PhoneDTO phoneDTO : phoneDTOList) {
             System.out.println(phoneDTO);
         }
-        return true;
+        int result = 0;
+        if(phoneDTOList.size() == 1) result = phoneRepository.update(phoneDTOList.get(0));
+        else if(phoneDTOList.size() > 1) result = phoneRepository.batchUpdate(phoneDTOList);
+        return result > 0;
     }
+
+    @Override
+    public int insertNewPhoneRow(PhoneDTO phoneDTO) {
+        return phoneRepository.insert(phoneDTO);
+    }
+
+
 }

@@ -13,4 +13,5 @@ public interface PhoneRepository {
     int update(PhoneDTO o);
     int delete(PhoneDTO o);
     int insert(PhoneDTO o);
+    int batchUpdate(List<PhoneDTO> phoneDTOList);
 }

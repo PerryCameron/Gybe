@@ -153,13 +153,6 @@ class PhoneTable {
         input.focus();
     }
 
-    updatePrimaryUse(selectedIndex) {
-        this.person.phones.forEach((item, index) => {
-            item.primaryUse = index === selectedIndex ? 1 : 0;
-            this.modifiedRows.add(item.phoneId);
-        });
-    }
-
     highlightRow(row, index) {
         if (this.selectedRow) this.selectedRow.classList.remove("highlight");
         this.selectedRow = row;
@@ -191,10 +184,10 @@ class PhoneTable {
     addRow() {
         const newPhone = {
             "phoneId": 0,
-            "pId": this.person.pId,             // replace with actual person ID if needed
-            "primaryUse": false,
+            "pId": this.person.pId,
+            "phoneListed": true,
             "phone": "",
-            "phoneListed": true
+            "phoneType": "cell",
         };
         // Send POST request to server to create a new phone
         fetch('/api/insert-phone', {
@@ -213,7 +206,7 @@ class PhoneTable {
             })
             .then(data => {
                 // Assuming the response contains the new ID
-                newphone.phoneId = data.id; // Set the returned ID
+                newPhone.phoneId = data.id; // Set the returned ID
                 this.person.phones.push(newPhone); // Add new phone row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })

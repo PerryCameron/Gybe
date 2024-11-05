@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -69,9 +70,21 @@ public class PhoneRepositoryImpl implements PhoneRepository {
                 "PHONE_TYPE = :phoneType, " +
                 "PHONE_LISTED = :phoneListed " +
                 "WHERE PHONE_ID = :phoneId";
-        System.out.println("Phone ID is " + phoneDTO.getPhoneId());
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int batchUpdate(List<PhoneDTO> phoneDTOList) {
+        String sql = "UPDATE phone SET P_ID = :pId, PHONE = :phone, PHONE_TYPE = :phoneType, PHONE_LISTED = :phoneListed WHERE PHONE_ID = :phoneId";
+        SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(phoneDTOList.toArray());
+        int[] result = namedParameterJdbcTemplate.batchUpdate(sql, batchParams);
+        for (int num : result) {
+            if (num != 1) {
+                return 0; // Return 0 if any element is not 1
+            }
+        }
+        return 1;
     }
 
     @Override
@@ -90,4 +103,6 @@ public class PhoneRepositoryImpl implements PhoneRepository {
         phoneDTO.setPhoneId(keyHolder.getKey().intValue());
         return affectedRows;
     }
+
+
 }
