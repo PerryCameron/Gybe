@@ -37,7 +37,7 @@
             var(--color-main-gray) 7px,
             rgba(255, 255, 255, 0.1) 7px
     );
-    color: #ffffff;
+    color: var(--color-main-green);
 }
 
 .sidenav a.selected {

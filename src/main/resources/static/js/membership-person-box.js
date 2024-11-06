@@ -25,6 +25,7 @@ function populatePersonBox(membershipJson, tabPane) {
         extraTabPane.addTab(`email-${person.pId}`, "Email", setEmailTable(person), false);
         extraTabPane.addTab(`phone-${person.pId}`, "Phone", setPhoneTable(person), false);
         extraTabPane.addTab(`awards-${person.pId}`, "Awards", fakeContent(person, "awards"), false);
+        extraTabPane.addTab(`properties-${person.pId}`, "Properties", fakeContent(person, "properties"), false);
         extraTabPane.addTab(`position-${person.pId}`, "Position", fakeContent(person, "position"), false);
         extraTabPane.switchToTab(`email-${person.pId}`);
     });

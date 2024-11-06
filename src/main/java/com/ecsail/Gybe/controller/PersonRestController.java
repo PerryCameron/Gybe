@@ -29,10 +29,8 @@ public class PersonRestController {
     MembershipService membershipService;
     AdminService adminService;
 
-
     @Value("${spring.mail.username}")
     private String fromEmail;
-
 
     @Autowired
     public PersonRestController(
