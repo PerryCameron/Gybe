@@ -22,7 +22,6 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-
     public PhoneRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -50,7 +49,6 @@ public class PhoneRepositoryImpl implements PhoneRepository {
         }
     }
 
-
     @Override
     public PhoneDTO getPhoneByPersonAndType(int pId, String type) {
         String query = "SELECT * FROM phone WHERE p_id = ? AND phone_type = ? LIMIT 1";
@@ -60,7 +58,6 @@ public class PhoneRepositoryImpl implements PhoneRepository {
             return null; // Return null if no phone is found
         }
     }
-
 
     @Override
     public int update(PhoneDTO phoneDTO) {
@@ -117,7 +114,7 @@ public class PhoneRepositoryImpl implements PhoneRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         phoneDTO.setPhoneId(keyHolder.getKey().intValue());
-        System.out.println("phoneDTO added: " + affectedRows);
+        System.out.println("phone with id: " + phoneDTO.getPhoneId() + " added");
         return affectedRows;
     }
 

@@ -84,14 +84,14 @@ class PhoneTable {
         return row;
     }
 
-    createPhoneTypeSelect(data) {
-        console.log("data: ", data);
+    createPhoneTypeSelect(rowData) {
+        console.log("data: ", rowData);
         const phoneTypeContainer = document.createElement("td");
         phoneTypeContainer.classList.add("select-container");
-        phoneTypeContainer.id = "phone-type-container-" + data.phoneId;
+        phoneTypeContainer.id = "phone-type-container-" + rowData.phoneId;
 
         const phoneTypeSelect = document.createElement("select");
-        phoneTypeSelect.id = "phone-type-select-" +data.phoneId;
+        phoneTypeSelect.id = "phone-type-select-" +rowData.phoneId;
         phoneTypeSelect.className = "phone-select";
         phoneTypeSelect.name = "phoneType";
 
@@ -111,14 +111,15 @@ class PhoneTable {
         }
 
         // Set the selected option based on data.phoneType
-        if (data.phoneType) {
-            phoneTypeSelect.value = data.phoneType;
+        if (rowData.phoneType) {
+            phoneTypeSelect.value = rowData.phoneType;
         }
 
-        phoneTypeSelect.addEventListener("change", function () {
-            data.phoneType = this.value;
-            // You can call a function here if you want to handle data updates
-            // e.g., updateData(data);
+        phoneTypeSelect.addEventListener("change", () => {
+            rowData.phoneType = phoneTypeSelect.value;
+            console.log("Phone Id is: " + rowData.phoneId);
+            this.modifiedRows.add(rowData.phoneId);  // Now this refers to the correct context
+            console.log("modified: ", this.modifiedRows);
         });
 
         phoneTypeContainer.appendChild(phoneTypeSelect);
@@ -258,14 +259,14 @@ class PhoneTable {
 
     batchUpdate() {
             this.closeOpenInputs();
-            const modifiedRows = [];
+            const editedRows = [];
             console.log("phones: ", this.person.phones);
             // Loop through each phone in the data model
             this.person.phones.forEach(phone => {
                 // Check if this phoneId is in the modified set
                 if (this.modifiedRows.has(phone.phoneId)) {
                     // Add the modified phone data directly from the model
-                    modifiedRows.push({
+                    editedRows.push({
                         phoneId: phone.phoneId,
                         pId: phone.pId,
                         phoneListed: phone.phoneListed,
@@ -274,17 +275,17 @@ class PhoneTable {
                     });
                 }
             });
-            if(modifiedRows.length != 0)
+            if(editedRows.length != 0)
             this.modifiedRows.clear();
         // Only send the fetch request if there are modified rows
-        if (modifiedRows.length > 0) {
+        if (editedRows.length > 0) {
             fetch('/api/update-phones', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     [csrfHeaderName]: csrfToken
                 },
-                body: JSON.stringify(modifiedRows) // Send modified rows in a single request
+                body: JSON.stringify(editedRows) // Send modified rows in a single request
             })
                 .then(response => {
                     if (!response.ok) {

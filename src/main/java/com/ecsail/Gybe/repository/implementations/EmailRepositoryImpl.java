@@ -76,7 +76,9 @@ public class EmailRepositoryImpl implements EmailRepository {
                 "EMAIL_LISTED = :emailListed " +
                 "WHERE EMAIL_ID = :emailId";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
-        return namedParameterJdbcTemplate.update(query, namedParameters);
+        int success = namedParameterJdbcTemplate.update(query, namedParameters);
+        if(success == 1) System.out.println(emailDTO.getEmail() + " successfully updated");
+        return success;
     }
 
     @Override
@@ -89,6 +91,7 @@ public class EmailRepositoryImpl implements EmailRepository {
                 return 0; // Return 0 if any element is not 1
             }
         }
+        System.out.println("Batch of emails successfully updated");
         return 1;
     }
 
@@ -98,15 +101,20 @@ public class EmailRepositoryImpl implements EmailRepository {
         String query = "INSERT INTO email (P_ID, PRIMARY_USE, EMAIL, EMAIL_LISTED) " +
                 "VALUES (:pId, :primaryUse, :email, :emailListed)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
-        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        int success = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         emailDTO.setEmailId(keyHolder.getKey().intValue()); // Get generated key
+        if(success == 1) System.out.println(emailDTO.getEmailId() + " successfully inserted");
         return emailDTO.getEmailId();
     }
 
     @Override
     public int delete(EmailDTO emailDTO) {
         String deleteSql = "DELETE FROM email WHERE EMAIL_ID = ?";
-        return template.update(deleteSql, emailDTO.getEmailId());
+        int success = template.update(deleteSql, emailDTO.getEmailId());
+        if (success == 1) {
+            System.out.println(emailDTO.getEmail() + " deleted successfully");
+        }
+        return success;
     }
 
     @Override
