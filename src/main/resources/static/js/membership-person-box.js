@@ -35,14 +35,14 @@ function populatePersonBox(membershipJson, tabPane) {
 function setEmailTable(person) {
     const emailDiv = document.createElement("div");
     const emailTable = new EmailTable(emailDiv, person);
-    emailTable.tableContainer.classList.add("small-table-container");// this is getting data and processing it
+    emailTable.mainContainer.classList.add("small-table-container");// this is getting data and processing it
     return emailDiv; // but no table rendered in this div??
 }
 
 function setPhoneTable(person) {
     const phoneDiv = document.createElement("div");
     const phoneTable = new PhoneTable(phoneDiv, person);
-    phoneTable.tableContainer.classList.add("small-table-container");// this is getting data and processing it
+    phoneTable.mainContainer.classList.add("small-table-container");// this is getting data and processing it
     return phoneDiv; // but no table rendered in this div??
 }
 

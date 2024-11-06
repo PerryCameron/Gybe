@@ -1,6 +1,8 @@
 class EmailTable {
     constructor(container, person) {
-        this.tableContainer = container;
+        this.mainContainer = container;
+        this.tableContainer = document.createElement("div");
+        this.tableContainer.classList.add("table-container");
         this.headers = {
             0: {email: "Email", widget: "text"},
             1: {primaryUse: "Primary", widget: "radio"},
@@ -10,12 +12,9 @@ class EmailTable {
         this.person.emails = Array.isArray(this.person.emails) ? this.person.emails : [];
         // I need to also make sure person.emails is not null but an empty set
         this.modifiedRows = new Set();
-        // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
-        this.tableContainer.style.display = "flex"; // changed
-        this.tableContainer.style.alignItems = "flex-start"; // Align items to the top // changed
-        this.tableContainer.style.gap = "5px"; // Space between table and buttons // changed
         this.table = document.createElement("table"); // The email table itself
         this.selectedRow = null; // To track the highlighted row
+        this.mainContainer.appendChild(this.tableContainer);
         this.renderTable();
         this.renderButtons();
     }
@@ -42,9 +41,9 @@ class EmailTable {
             this.tableContainer.appendChild(this.table); // changed
         }
         // Only append the tableContainer once to the body
-        if (!document.body.contains(this.tableContainer)) {
+        if (!document.body.contains(this.mainContainer)) {
             // changed
-            document.body.appendChild(this.tableContainer); // changed
+            document.body.appendChild(this.mainContainer); // changed
         }
     }
 
@@ -141,10 +140,7 @@ class EmailTable {
         // Create the button container only once
         if (this.buttonContainer) return; // Avoid creating it multiple times // changed
         this.buttonContainer = document.createElement("div"); // changed
-        this.buttonContainer.style.display = "flex";
-        this.buttonContainer.style.flexDirection = "column";
-        this.buttonContainer.style.gap = "5px";
-        // Add and Delete buttons
+        this.buttonContainer.classList.add("tableButton-container");
         const addButton = document.createElement("button");
         addButton.textContent = "Add";
         addButton.addEventListener("click", () => this.addRow());
@@ -155,7 +151,7 @@ class EmailTable {
         this.buttonContainer.appendChild(addButton);
         this.buttonContainer.appendChild(deleteButton);
         // Append the button container to the right side of the table in the main container
-        this.tableContainer.appendChild(this.buttonContainer); // changed
+        this.mainContainer.appendChild(this.buttonContainer); // changed
     }
 
     addRow() {

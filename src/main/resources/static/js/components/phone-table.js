@@ -1,6 +1,8 @@
 class PhoneTable {
     constructor(container, person) {
-        this.tableContainer = container;
+        this.mainContainer = container;
+        this.tableContainer = document.createElement("div");
+        this.tableContainer.classList.add("table-container");
         this.headers = {
             0: {phone: "Phone", widget: "text"},
             1: {phoneType: "Type", widget: "radio"},
@@ -8,14 +10,10 @@ class PhoneTable {
         };
         this.person = person || [];// Table data for each phone
         this.person.phones = Array.isArray(this.person.phones) ? this.person.phones : [];
-        // I need to also make sure person.phones is not null but an empty set
         this.modifiedRows = new Set();
-        // this.tableContainer = document.createElement("div"); // Main container for the table and buttons
-        this.tableContainer.style.display = "flex"; // changed
-        this.tableContainer.style.alignItems = "flex-start"; // Align items to the top // changed
-        this.tableContainer.style.gap = "5px"; // Space between table and buttons // changed
         this.table = document.createElement("table"); // The phone table itself
         this.selectedRow = null; // To track the highlighted row
+        this.mainContainer.appendChild(this.tableContainer);
         this.renderTable();
         this.renderButtons();
     }
@@ -26,7 +24,7 @@ class PhoneTable {
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
             const th = document.createElement("th");
-            th.textContent = header.phone || header.primaryUse || header.phoneListed;
+            th.textContent = header.phone || header.phoneType || header.phoneListed;
             headerRow.appendChild(th);
         });
         this.table.addEventListener('mouseleave', () => this.batchUpdate());
@@ -42,9 +40,9 @@ class PhoneTable {
             this.tableContainer.appendChild(this.table); // changed
         }
         // Only append the tableContainer once to the body
-        if (!document.body.contains(this.tableContainer)) {
+        if (!document.body.contains(this.mainContainer)) {
             // changed
-            document.body.appendChild(this.tableContainer); // changed
+            document.body.appendChild(this.mainContainer); // changed
         }
     }
 
@@ -165,10 +163,7 @@ class PhoneTable {
         // Create the button container only once
         if (this.buttonContainer) return; // Avoid creating it multiple times // changed
         this.buttonContainer = document.createElement("div"); // changed
-        this.buttonContainer.style.display = "flex";
-        this.buttonContainer.style.flexDirection = "column";
-        this.buttonContainer.style.gap = "5px";
-        // Add and Delete buttons
+        this.buttonContainer.classList.add("tableButton-container"); // TODO
         const addButton = document.createElement("button");
         addButton.textContent = "Add";
         addButton.addEventListener("click", () => this.addRow());
@@ -179,7 +174,7 @@ class PhoneTable {
         this.buttonContainer.appendChild(addButton);
         this.buttonContainer.appendChild(deleteButton);
         // Append the button container to the right side of the table in the main container
-        this.tableContainer.appendChild(this.buttonContainer); // changed
+        this.mainContainer.appendChild(this.buttonContainer); // changed
     }
 
     addRow() {
