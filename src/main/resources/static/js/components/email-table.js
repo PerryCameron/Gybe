@@ -246,8 +246,6 @@ class EmailTable {
                     });
                 }
             });
-            if(modifiedRows.length != 0)
-            this.modifiedRows.clear();
         // Only send the fetch request if there are modified rows
         if (modifiedRows.length > 0) {
             fetch('/api/update-emails', {
@@ -264,7 +262,17 @@ class EmailTable {
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then(() => {
+                    this.modifiedRows.forEach(emailId => {
+                        const emailRow = document.querySelector(`tr[data-email-id="${emailId}"]`);
+                        if (emailRow) {
+                            emailRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                            // Revert to the original background color after .5 seconds
+                            setTimeout(() => {
+                                emailRow.style.backgroundColor = '';
+                            }, 500);
+                        }
+                    });
                     this.modifiedRows.clear();
                 })
                 .catch(error => console.error('Error updating emails:', error));
