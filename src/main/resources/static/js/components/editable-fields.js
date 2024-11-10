@@ -3,8 +3,8 @@ class EditableFieldsPane extends HTMLElement {
         super();
         this.personData = personData;
         this.personIsEdited = false;
-        console.log("personData", personData);
         this.classList.add("editable-fields-pane");
+        this.id = `person-info-${this.personData.pId}`;
         // Create a div to hold all fields, add a mouseleave listener to handle updates
         this.fieldsContainer = document.createElement("div");
         this.fieldsContainer.classList.add("fields-container");
@@ -152,8 +152,15 @@ class EditableFieldsPane extends HTMLElement {
                 }
                 return response.json(); // Optional: Parse JSON response
             })
-            .then(data => {
-                console.log("Update successful:", data); // Handle success
+            .then(() => {
+                const personRow = document.getElementById(`person-info-${this.personData.pId}`);
+                if (personRow) {
+                    personRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                    // Revert to the original background color after .5 seconds
+                    setTimeout(() => {
+                        personRow.style.backgroundColor = '';
+                    }, 500);
+                }
             })
             .catch(error => console.error('Error updating person:', error)); // Handle error
     }
