@@ -1,17 +1,17 @@
-class PhoneTable {
+class PositionTable {
     constructor(container, person) {
         this.mainContainer = container;
         this.tableContainer = document.createElement("div");
         this.tableContainer.classList.add("table-container");
         this.headers = {
-            0: {phone: "Phone", widget: "text"},
-            1: {phoneType: "Type", widget: "radio"},
-            2: {phoneListed: "Listed", widget: "check"},
+            0: {fiscalYear: "Year", widget: "text"},
+            1: {officerType: "Position", widget: "radio"},
+            2: {boardYear: "Board End", widget: "check"},
         };
-        this.person = person || [];// Table data for each phone
-        this.person.phones = Array.isArray(this.person.phones) ? this.person.phones : [];
+        this.person = person || []; // if array doesn't exist make an empty set
+        this.person.officers = Array.isArray(this.person.officers) ? this.person.officers : [];
         this.modifiedRows = new Set();
-        this.table = document.createElement("table"); // The phone table itself
+        this.table = document.createElement("table"); // The position table itself
         this.selectedRow = null; // To track the highlighted row
         this.mainContainer.appendChild(this.tableContainer);
         this.renderTable();
@@ -24,13 +24,13 @@ class PhoneTable {
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
             const th = document.createElement("th");
-            th.textContent = header.phone || header.phoneType || header.phoneListed;
+            th.textContent = header.fiscalYear || header.officerType || header.boardYear;
             headerRow.appendChild(th);
         });
         this.table.addEventListener('mouseleave', () => this.batchUpdate());
         this.table.appendChild(headerRow);
         // Create data rows
-        this.person.phones.forEach((rowData, index) => {
+        this.person.officers.forEach((rowData, index) => {
             const row = this.createDataRow(rowData, index);
             this.table.appendChild(row);
         });
@@ -49,55 +49,80 @@ class PhoneTable {
     createDataRow(rowData, index) {
         const row = document.createElement("tr");
         // Set data attributes for the row using rowData properties
-        row.dataset.phoneId = rowData.phoneId;
-        row.dataset.pId = rowData.pId;
-        // phone column
-        const phoneCell = document.createElement("td");
-        const phoneText = document.createElement("span");
-        // Display placeholder if phone is empty
-        phoneText.textContent = rowData.phone || "Click to add phone";
-        phoneText.classList.add(rowData.phone ? "filled-phone" : "placeholder");
-        // phoneText.classList.add("phone-text-field");
-        phoneText.addEventListener("click", () => {
-            this.convertToTextInput(phoneText, rowData, "phone");
-            this.modifiedRows.add(rowData.phoneId);
+        row.dataset.officerId = rowData.officerId;
+        // position column
+        const positionCell = document.createElement("td");
+        const fiscalYearText = document.createElement("span");
+        // Display placeholder if position is empty
+        fiscalYearText.textContent = rowData.fiscalYear || "Click to add year";
+        fiscalYearText.classList.add(rowData.fiscalYear ? "filled-fiscalYear" : "placeholder");
+        fiscalYearText.addEventListener("click", () => {
+            this.convertToTextInput(fiscalYearText, rowData, "fiscalYear");
+            this.modifiedRows.add(rowData.officerId);
         });
-        phoneCell.appendChild(phoneText);
-        row.appendChild(phoneCell);
-        row.appendChild(this.createPhoneTypeSelect(rowData));
-        // phone Listed column as a checkbox
-        const listedCell = document.createElement("td");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.classList.add("listed-check-box");
-        checkbox.checked = rowData.phoneListed === 1;
-        checkbox.addEventListener("change", () => {
-            rowData.phoneListed = checkbox.checked ? 1 : 0;
-            this.modifiedRows.add(rowData.phoneId);
+        positionCell.appendChild(fiscalYearText);
+        row.appendChild(positionCell);
+        row.appendChild(this.createOfficerTypeSelect(rowData));
+
+        const boardEndCell = document.createElement("td");
+        const BoardEndYearText = document.createElement("span");
+        // Display placeholder if position is empty
+        BoardEndYearText.textContent = rowData.boardYear || "Click to add year";
+        BoardEndYearText.classList.add(rowData.boardYear ? "filled-BoardYear" : "placeholder");
+        BoardEndYearText.addEventListener("click", () => {
+            this.convertToTextInput(BoardEndYearText, rowData, "boardYear");
+            this.modifiedRows.add(rowData.officerId);
         });
-        listedCell.appendChild(checkbox);
-        row.appendChild(listedCell);
-        // Highlight row on click for deletion
+        boardEndCell.appendChild(BoardEndYearText);
+        row.appendChild(boardEndCell);
+
         row.addEventListener("click", () => this.highlightRow(row, index));
         return row;
     }
 
-    createPhoneTypeSelect(rowData) {
+    createOfficerTypeSelect(rowData) {
         console.log("data: ", rowData);
-        const phoneTypeContainer = document.createElement("td");
-        phoneTypeContainer.classList.add("select-container");
-        phoneTypeContainer.id = "phone-type-container-" + rowData.phoneId;
+        const officerTypeContainer = document.createElement("td");
+        officerTypeContainer.classList.add("select-container");
+        officerTypeContainer.id = "phone-type-container-" + rowData.officerId;
 
-        const phoneTypeSelect = document.createElement("select");
-        phoneTypeSelect.id = "phone-type-select-" +rowData.phoneId;
-        phoneTypeSelect.className = "phone-select";
-        phoneTypeSelect.name = "phoneType";
+        const officerTypeSelect = document.createElement("select");
+        officerTypeSelect.id = "phone-type-select-" +rowData.officerId;
+        officerTypeSelect.className = "phone-select";
+        officerTypeSelect.name = "officerType";
 
         // Define the options mapping
         const options = {
-            "C": "Cell",
-            "H": "Home",
-            "E": "Emergency"
+            "CO": "Commodore",
+            "VC": "Vice Commodore",
+            "PC": "Past Commodore",
+            "CB": "Chairman of the Board",
+            "FM": "Facility Manager",
+            "TR": "Treasurer",
+            "SE": "Secretary",
+            "HM": "Harbormaster",
+            "AH": "Assistant Harbormaster",
+            "MS": "Membership",
+            "AM": "Assistant Membership",
+            "PU": "Publicity",
+            "AP": "Assistant Publicity",
+            "RA": "Racing",
+            "AR": "Assistant Racing",
+            "SM": "Safety and Education",
+            "AS": "Assistant S and E",
+            "JP": "Junior Program",
+            "AJ": "Assistant Junior Program",
+            "SO": "Social",
+            "SA": "Assistant Social",
+            "SS": "Ships Store",
+            "WA": "Winter Activities",
+            "BM": "Board Member",
+            "GC": "Grounds Keeper",
+            "TE": "Technology",
+            "AF": "Assistant Facilities",
+            "SK": "Score Keeper",
+            "AG": "Assistant Ground Keeper",
+            "AT": "Assistant Treasurer",
         };
 
         // Populate the select element with the defined options
@@ -105,26 +130,26 @@ class PhoneTable {
             const option = document.createElement("option");
             option.value = value;
             option.textContent = label;
-            phoneTypeSelect.appendChild(option);
+            officerTypeSelect.appendChild(option);
         }
 
-        // Set the selected option based on data.phoneType
-        if (rowData.phoneType) {
-            phoneTypeSelect.value = rowData.phoneType;
+        // Set the selected option based on data.positionType
+        if (rowData.officerType) {
+            officerTypeSelect.value = rowData.officerType;
         }
 
-        phoneTypeSelect.addEventListener("change", () => {
-            rowData.phoneType = phoneTypeSelect.value;
-            console.log("Phone Id is: " + rowData.phoneId);
-            this.modifiedRows.add(rowData.phoneId);  // Now this refers to the correct context
+        officerTypeSelect.addEventListener("change", () => {
+            rowData.officerType = officerTypeSelect.value;
+            console.log("Phone Id is: " + rowData.officerId);
+            this.modifiedRows.add(rowData.officerId);  // Now this refers to the correct context
             console.log("modified: ", this.modifiedRows);
         });
 
-        phoneTypeContainer.appendChild(phoneTypeSelect);
-        return phoneTypeContainer;
+        officerTypeContainer.appendChild(officerTypeSelect);
+        return officerTypeContainer;
     }
 
-    convertToTextInput(phoneText, rowData, field) {
+    convertToTextInput(officerText, rowData, field) {
         const input = document.createElement("input");
         input.type = "text";
         input.classList.add("phone-text-open");
@@ -132,9 +157,9 @@ class PhoneTable {
         // Function to handle saving and switching back to text view
         const saveAndSwitchBack = () => {
             rowData[field] = input.value; // Update the data object
-            phoneText.textContent = input.value || "Click to add phone"; // Set text or placeholder
-            phoneText.classList.toggle("placeholder", !input.value); // Add placeholder styling if empty
-            phoneText.style.display = "inline";
+            officerText.textContent = input.value || "Click to add phone"; // Set text or placeholder
+            officerText.classList.toggle("placeholder", !input.value); // Add placeholder styling if empty
+            officerText.style.display = "inline";
             input.remove();
         };
         // Attach the blur event
@@ -147,8 +172,8 @@ class PhoneTable {
                 saveAndSwitchBack();
             }
         });
-        phoneText.style.display = "none";
-        phoneText.parentNode.appendChild(input);
+        officerText.style.display = "none";
+        officerText.parentNode.appendChild(input);
         input.focus();
     }
 
@@ -179,11 +204,11 @@ class PhoneTable {
 
     addRow() {
         const newPhone = {
-            "phoneId": 0,
+            "officerId": 0,
             "pId": this.person.pId,
             "phoneListed": true,
             "phone": "",
-            "phoneType": "cell",
+            "officerType": "cell",
         };
         // Send POST request to server to create a new phone
         fetch('/api/insert-phone', {
@@ -202,8 +227,8 @@ class PhoneTable {
             })
             .then(data => {
                 // Assuming the response contains the new ID
-                newPhone.phoneId = data.id; // Set the returned ID
-                this.person.phones.push(newPhone); // Add new phone row to data array
+                newPhone.officerId = data.id; // Set the returned ID
+                this.person.officers.push(newPhone); // Add new phone row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
             .catch(error => console.error('Error adding new phone:', error));
@@ -211,9 +236,9 @@ class PhoneTable {
 
     deleteRow() {
         if (this.selectedRowIndex != null) {
-            const phone = this.person.phones[this.selectedRowIndex]; // Ensure `person` is accessible here
+            const phone = this.person.officers[this.selectedRowIndex]; // Ensure `person` is accessible here
             // Confirm deletion (optional)
-            if (!confirm("Are you sure you want to delete this phone?")) return;
+            if (!confirm("Are you sure you want to delete this position?")) return;
             fetch('/api/delete-phone', {
                 method: 'DELETE', // Use DELETE method for deletion
                 headers: {
@@ -230,7 +255,7 @@ class PhoneTable {
                 })
                 .then(() => { // data is not used here
                     // Remove phone from array and DOM
-                    this.person.phones.splice(this.selectedRowIndex, 1); // Remove from data
+                    this.person.officers.splice(this.selectedRowIndex, 1); // Remove from data
                     if (this.selectedRow) { // Ensure row exists
                         this.selectedRow.remove(); // Remove from DOM
                     }
@@ -255,18 +280,17 @@ class PhoneTable {
     batchUpdate() {
             this.closeOpenInputs();
             const editedRows = [];
-            console.log("phones: ", this.person.phones);
+            console.log("officers: ", this.person.officers);
             // Loop through each phone in the data model
-            this.person.phones.forEach(phone => {
-                // Check if this phoneId is in the modified set
-                if (this.modifiedRows.has(phone.phoneId)) {
-                    // Add the modified phone data directly from the model
+            this.person.officers.forEach(position => {
+                // Check if this officerId is in the modified set
+                if (this.modifiedRows.has(position.officerId)) {
+                    // Add the modified position data directly from the model
                     editedRows.push({
-                        phoneId: phone.phoneId,
-                        pId: phone.pId,
-                        phoneListed: phone.phoneListed,
-                        phone: phone.phone,
-                        phoneType: phone.phoneType,
+                        officerId: position.officerId,
+                        boardYear: position.boardYear,
+                        officerType: position.officerType,
+                        fiscalYear: position.fiscalYear,
                     });
                 }
             });
@@ -274,7 +298,7 @@ class PhoneTable {
             this.modifiedRows.clear();
         // Only send the fetch request if there are modified rows
         if (editedRows.length > 0) {
-            fetch('/api/update-phones', {
+            fetch('/api/update-officers', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -291,7 +315,7 @@ class PhoneTable {
                 .then(data => {
                     this.modifiedRows.clear();
                 })
-                .catch(error => console.error('Error updating phones:', error));
+                .catch(error => console.error('Error updating officers:', error));
         }
     }
 }
