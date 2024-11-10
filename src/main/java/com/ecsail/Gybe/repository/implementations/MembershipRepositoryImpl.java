@@ -469,6 +469,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                             SELECT JSON_ARRAYAGG(
                                 JSON_OBJECT(
                                     'officerId', o.O_ID,
+                                    'pId', o.P_ID,
                                     'boardYear', o.BOARD_YEAR,
                                     'officerType', o.OFF_TYPE,
                                     'fiscalYear', o.OFF_YEAR

@@ -23,7 +23,6 @@ public class PersonRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonRestController.class);
     private final PersonService personService;
-    private final EmailService emailService;
 
     SendMailService service;
     RosterService rosterService;
@@ -39,14 +38,12 @@ public class PersonRestController {
             RosterService rosterService,
             AdminService adminService,
             MembershipService membershipService,
-            PersonService personService,
-            EmailService emailService) {
+            PersonService personService) {
         this.service = service;
         this.rosterService = rosterService;
         this.adminService = adminService;
         this.membershipService = membershipService;
         this.personService = personService;
-        this.emailService = emailService;
     }
 
     @PostMapping("api/update-person")
@@ -77,6 +74,15 @@ public class PersonRestController {
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> updateEmails(@RequestBody List<EmailDTO> emailDTOList) {
         boolean isUpdated = personService.batchUpdateEmail(emailDTOList); // Update each email in a batch operation
+        Map<String, Object> response = new HashMap<>();
+        response.put("updated", isUpdated);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/api/update-positions")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> updatePositions(@RequestBody List<OfficerDTO> officerDTOList) {
+        boolean isUpdated = personService.batchUpdatePosition(officerDTOList); // Update each email in a batch operation
         Map<String, Object> response = new HashMap<>();
         response.put("updated", isUpdated);
         return ResponseEntity.ok(response);

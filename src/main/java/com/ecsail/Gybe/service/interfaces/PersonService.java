@@ -12,13 +12,10 @@ public interface PersonService {
     boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
     int insertNewPhoneRow(PhoneDTO phoneDTO);
     int insertNewPositionRow(OfficerDTO officerDTO);
-
     int insertNewEmailRow(EmailDTO emailDTO);
-
     boolean deletePhoneRow(PhoneDTO phoneDTO);
     boolean deletePositionRow(OfficerDTO officerDTO);
-
     boolean deleteEmailRow(EmailDTO emailDTO);
-
     boolean batchUpdateEmail(List<EmailDTO> emailDTOList);
+    boolean batchUpdatePosition(List<OfficerDTO> officerDTOList);
 }

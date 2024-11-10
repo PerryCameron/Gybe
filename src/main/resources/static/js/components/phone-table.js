@@ -115,9 +115,7 @@ class PhoneTable {
 
         phoneTypeSelect.addEventListener("change", () => {
             rowData.phoneType = phoneTypeSelect.value;
-            console.log("Phone Id is: " + rowData.phoneId);
             this.modifiedRows.add(rowData.phoneId);  // Now this refers to the correct context
-            console.log("modified: ", this.modifiedRows);
         });
 
         phoneTypeContainer.appendChild(phoneTypeSelect);
@@ -255,7 +253,6 @@ class PhoneTable {
     batchUpdate() {
             this.closeOpenInputs();
             const editedRows = [];
-            console.log("phones: ", this.person.phones);
             // Loop through each phone in the data model
             this.person.phones.forEach(phone => {
                 // Check if this phoneId is in the modified set
@@ -270,8 +267,6 @@ class PhoneTable {
                     });
                 }
             });
-            if(editedRows.length != 0)
-            this.modifiedRows.clear();
         // Only send the fetch request if there are modified rows
         if (editedRows.length > 0) {
             fetch('/api/update-phones', {
@@ -288,7 +283,17 @@ class PhoneTable {
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then(() => {
+                    this.modifiedRows.forEach(phoneId => {
+                        const phoneRow = document.querySelector(`tr[data-phone-id="${phoneId}"]`);
+                        if (phoneRow) {
+                            phoneRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                            // Revert to the original background color after .5 seconds
+                            setTimeout(() => {
+                                phoneRow.style.backgroundColor = '';
+                            }, 500);
+                        }
+                    });
                     this.modifiedRows.clear();
                 })
                 .catch(error => console.error('Error updating phones:', error));

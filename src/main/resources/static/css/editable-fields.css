@@ -36,6 +36,7 @@
 /* Hover effect for field text to indicate it's editable */
 .editable-fields-pane .field .field-text:hover {
     border-color: var(--color-main-green); /* Light border to show editability */
+    transition: none;
 }
 
 /* Editable input styling */

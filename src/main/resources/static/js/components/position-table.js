@@ -81,14 +81,13 @@ class PositionTable {
     }
 
     createOfficerTypeSelect(rowData) {
-        console.log("data: ", rowData);
         const officerTypeContainer = document.createElement("td");
         officerTypeContainer.classList.add("select-container");
-        officerTypeContainer.id = "phone-type-container-" + rowData.officerId;
+        officerTypeContainer.id = "position-type-container-" + rowData.officerId;
 
         const officerTypeSelect = document.createElement("select");
-        officerTypeSelect.id = "phone-type-select-" +rowData.officerId;
-        officerTypeSelect.className = "phone-select";
+        officerTypeSelect.id = "position-type-select-" +rowData.officerId;
+        officerTypeSelect.className = "position-select";
         officerTypeSelect.name = "officerType";
 
         // Define the options mapping
@@ -140,9 +139,7 @@ class PositionTable {
 
         officerTypeSelect.addEventListener("change", () => {
             rowData.officerType = officerTypeSelect.value;
-            console.log("Phone Id is: " + rowData.officerId);
             this.modifiedRows.add(rowData.officerId);  // Now this refers to the correct context
-            console.log("modified: ", this.modifiedRows);
         });
 
         officerTypeContainer.appendChild(officerTypeSelect);
@@ -152,12 +149,12 @@ class PositionTable {
     convertToTextInput(officerText, rowData, field) {
         const input = document.createElement("input");
         input.type = "text";
-        input.classList.add("phone-text-open");
-        input.value = rowData[field] || ""; // Start with empty if no phone
+        input.classList.add("position-text-open");
+        input.value = rowData[field] || ""; // Start with empty if no position
         // Function to handle saving and switching back to text view
         const saveAndSwitchBack = () => {
             rowData[field] = input.value; // Update the data object
-            officerText.textContent = input.value || "Click to add phone"; // Set text or placeholder
+            officerText.textContent = input.value || "Click to add position"; // Set text or placeholder
             officerText.classList.toggle("placeholder", !input.value); // Add placeholder styling if empty
             officerText.style.display = "inline";
             input.remove();
@@ -203,21 +200,21 @@ class PositionTable {
     }
 
     addRow() {
-        const newPhone = {
+        const newPosition = {
             "officerId": 0,
             "pId": this.person.pId,
-            "phoneListed": true,
-            "phone": "",
+            "positionListed": true,
+            "position": "",
             "officerType": "cell",
         };
-        // Send POST request to server to create a new phone
+        // Send POST request to server to create a new position
         fetch('/api/insert-position', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 [csrfHeaderName]: csrfToken // Include CSRF token in the request headers
             },
-            body: JSON.stringify(newPhone)
+            body: JSON.stringify(newPosition)
         })
             .then(response => {
                 if (!response.ok) {
@@ -227,16 +224,16 @@ class PositionTable {
             })
             .then(data => {
                 // Assuming the response contains the new ID
-                newPhone.officerId = data.id; // Set the returned ID
-                this.person.officers.push(newPhone); // Add new phone row to data array
+                newPosition.officerId = data.id; // Set the returned ID
+                this.person.officers.push(newPosition); // Add new position row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
-            .catch(error => console.error('Error adding new phone:', error));
+            .catch(error => console.error('Error adding new position:', error));
     }
 
     deleteRow() {
         if (this.selectedRowIndex != null) {
-            const phone = this.person.officers[this.selectedRowIndex]; // Ensure `person` is accessible here
+            const position = this.person.officers[this.selectedRowIndex]; // Ensure `person` is accessible here
             // Confirm deletion (optional)
             if (!confirm("Are you sure you want to delete this position?")) return;
             fetch('/api/delete-position', {
@@ -245,7 +242,7 @@ class PositionTable {
                     'Content-Type': 'application/json',
                     [csrfHeaderName]: csrfToken // Include CSRF token
                 },
-                body: JSON.stringify(phone)
+                body: JSON.stringify(position)
             })
                 .then(response => {
                     if (!response.ok) {
@@ -254,7 +251,7 @@ class PositionTable {
                     return response.json();
                 })
                 .then(() => { // data is not used here
-                    // Remove phone from array and DOM
+                    // Remove position from array and DOM
                     this.person.officers.splice(this.selectedRowIndex, 1); // Remove from data
                     if (this.selectedRow) { // Ensure row exists
                         this.selectedRow.remove(); // Remove from DOM
@@ -263,14 +260,14 @@ class PositionTable {
                     this.selectedRow = null; // Reset selected row
                     this.selectedRowIndex = null; // Reset selected row index
                 })
-                .catch(error => console.error('Error deleting phone:', error)); // Adjust error message
+                .catch(error => console.error('Error deleting position:', error)); // Adjust error message
         }
     }
 
     // Function to check for any open editable fields and close them
     closeOpenInputs() {
-        // Select all elements with the 'phone-text-open' class
-        const openInputs = document.querySelectorAll('.phone-text-open');
+        // Select all elements with the 'position-text-open' class
+        const openInputs = document.querySelectorAll('.position-text-open');
         // Loop through each open input and simulate a blur to trigger saving
         openInputs.forEach(input => {
             input.blur(); // This will trigger the blur event, which saves the data
@@ -280,7 +277,6 @@ class PositionTable {
     batchUpdate() {
             this.closeOpenInputs();
             const editedRows = [];
-            console.log("officers: ", this.person.officers);
             // Loop through each position in the data model
             this.person.officers.forEach(position => {
                 // Check if this officerId is in the modified set
@@ -288,17 +284,18 @@ class PositionTable {
                     // Add the modified position data directly from the model
                     editedRows.push({
                         officerId: position.officerId,
+                        pId: position.pId,
                         boardYear: position.boardYear,
                         officerType: position.officerType,
                         fiscalYear: position.fiscalYear,
                     });
                 }
             });
-            if(editedRows.length != 0)
-            this.modifiedRows.clear();
+            // if(editedRows.length != 0)
+            //     this.modifiedRows.clear();
         // Only send the fetch request if there are modified rows
         if (editedRows.length > 0) {
-            fetch('/api/update-officers', {
+            fetch('/api/update-positions', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -312,7 +309,18 @@ class PositionTable {
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then(() => { // this is not triggering even when the response comes back ok
+                    this.modifiedRows.forEach(officerId => {
+                        const officerRow = document.querySelector(`tr[data-officer-id="${officerId}"]`);
+                        console.log(`tr[data-officer-id="${officerId}"]`);
+                        if (officerRow) {
+                            officerRow.style.backgroundColor = 'lightgreen';
+                            // Revert to the original background color after 1.5 seconds
+                            setTimeout(() => {
+                                officerRow.style.backgroundColor = '';
+                            }, 500);
+                        }
+                    });
                     this.modifiedRows.clear();
                 })
                 .catch(error => console.error('Error updating officers:', error));

@@ -51,7 +51,7 @@ html {
 
 label {
   display: block;
-  color: var(--color-main-offcolor);
+  color: var(--color-main-green);
   /*margin-bottom: 5px;*/
 }
 
