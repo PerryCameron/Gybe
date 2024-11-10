@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.dto.OfficerDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.PhoneDTO;
 import com.ecsail.Gybe.repository.interfaces.*;
@@ -14,16 +15,19 @@ public class PersonServiceImpl implements PersonService {
     private final EmailRepository emailRepository;
     private final GeneralRepository generalRepository;
     private final PhoneRepository phoneRepository;
+    private final OfficerRepository officerRepository;
 
     public PersonServiceImpl(HashRepository hashRepository,
                              EmailRepository emailRepository,
                              PersonRepository personRepository,
                              GeneralRepository generalRepository,
-                             PhoneRepository phoneRepository) {
+                             PhoneRepository phoneRepository,
+                             OfficerRepository officerRepository) {
         this.personRepository = personRepository;
         this.emailRepository = emailRepository;
         this.generalRepository = generalRepository;
         this.phoneRepository = phoneRepository;
+        this.officerRepository = officerRepository;
     }
 
     @Override
@@ -59,8 +63,20 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public int insertNewPositionRow(OfficerDTO officerDTO) {
+        return officerRepository.insert(officerDTO);
+    }
+
+    @Override
     public boolean deletePhoneRow(PhoneDTO phoneDTO) {
         int success = phoneRepository.delete(phoneDTO);
+        if (success > 0) return true;
+        return false;
+    }
+
+    @Override
+    public boolean deletePositionRow(OfficerDTO officerDTO) {
+        int success = officerRepository.delete(officerDTO);
         if (success > 0) return true;
         return false;
     }

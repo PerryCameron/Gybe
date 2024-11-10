@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.controller;
 
 import com.ecsail.Gybe.dto.EmailDTO;
+import com.ecsail.Gybe.dto.OfficerDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.PhoneDTO;
 import com.ecsail.Gybe.service.interfaces.*;
@@ -72,21 +73,21 @@ public class PersonRestController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/api/update-emails")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> updateEmails(@RequestBody List<EmailDTO> emailDTOList) {
+        boolean isUpdated = emailService.batchUpdateEmail(emailDTOList); // Update each email in a batch operation
+        Map<String, Object> response = new HashMap<>();
+        response.put("updated", isUpdated);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/api/insert-phone")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> insertEmail(@RequestBody PhoneDTO phoneDTO) {
         int id = personService.insertNewPhoneRow(phoneDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("id", id);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/api/delete-email")
-    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
-    public ResponseEntity<Map<String, Object>> deleteEmail(@RequestBody EmailDTO emailDTO) {
-        boolean isDeleted = emailService.deleteEmailRow(emailDTO);
-        Map<String, Object> response = new HashMap<>();
-        response.put("deleted", isDeleted);
         return ResponseEntity.ok(response);
     }
 
@@ -99,6 +100,33 @@ public class PersonRestController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/api/insert-position")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> insertPosition(@RequestBody OfficerDTO officerDTO) {
+        int id = personService.insertNewPositionRow(officerDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", id);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/api/delete-position")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> deletePosition(@RequestBody OfficerDTO officerDTO) {
+        boolean isDeleted = personService.deletePositionRow(officerDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("deleted", isDeleted);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/api/delete-email")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> deleteEmail(@RequestBody EmailDTO emailDTO) {
+        boolean isDeleted = emailService.deleteEmailRow(emailDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("deleted", isDeleted);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/api/delete-phone")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> deletePhone(@RequestBody PhoneDTO phoneDTO) {
@@ -108,12 +136,4 @@ public class PersonRestController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/api/update-emails")
-    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
-    public ResponseEntity<Map<String, Object>> updateEmails(@RequestBody List<EmailDTO> emailDTOList) {
-        boolean isUpdated = emailService.batchUpdateEmail(emailDTOList); // Update each email in a batch operation
-        Map<String, Object> response = new HashMap<>();
-        response.put("updated", isUpdated);
-        return ResponseEntity.ok(response);
-    }
 }

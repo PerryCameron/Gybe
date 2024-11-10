@@ -211,7 +211,7 @@ class PositionTable {
             "officerType": "cell",
         };
         // Send POST request to server to create a new phone
-        fetch('/api/insert-phone', {
+        fetch('/api/insert-position', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ class PositionTable {
             const phone = this.person.officers[this.selectedRowIndex]; // Ensure `person` is accessible here
             // Confirm deletion (optional)
             if (!confirm("Are you sure you want to delete this position?")) return;
-            fetch('/api/delete-phone', {
+            fetch('/api/delete-position', {
                 method: 'DELETE', // Use DELETE method for deletion
                 headers: {
                     'Content-Type': 'application/json',
@@ -281,7 +281,7 @@ class PositionTable {
             this.closeOpenInputs();
             const editedRows = [];
             console.log("officers: ", this.person.officers);
-            // Loop through each phone in the data model
+            // Loop through each position in the data model
             this.person.officers.forEach(position => {
                 // Check if this officerId is in the modified set
                 if (this.modifiedRows.has(position.officerId)) {

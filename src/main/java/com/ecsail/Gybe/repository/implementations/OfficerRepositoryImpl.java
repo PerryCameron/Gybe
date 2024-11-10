@@ -88,7 +88,7 @@ public class OfficerRepositoryImpl implements OfficerRepository {
         namedParameters.addValue("fiscalYear", officerDTO.getFiscalYear());
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         officerDTO.setOfficerId(keyHolder.getKey().intValue());
-        return affectedRows;
+        return officerDTO.getOfficerId();
     }
 
     @Override
