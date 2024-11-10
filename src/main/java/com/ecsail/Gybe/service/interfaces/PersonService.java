@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.service.interfaces;
 
+import com.ecsail.Gybe.dto.EmailDTO;
 import com.ecsail.Gybe.dto.OfficerDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.PhoneDTO;
@@ -11,6 +12,13 @@ public interface PersonService {
     boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
     int insertNewPhoneRow(PhoneDTO phoneDTO);
     int insertNewPositionRow(OfficerDTO officerDTO);
+
+    int insertNewEmailRow(EmailDTO emailDTO);
+
     boolean deletePhoneRow(PhoneDTO phoneDTO);
     boolean deletePositionRow(OfficerDTO officerDTO);
+
+    boolean deleteEmailRow(EmailDTO emailDTO);
+
+    boolean batchUpdateEmail(List<EmailDTO> emailDTOList);
 }

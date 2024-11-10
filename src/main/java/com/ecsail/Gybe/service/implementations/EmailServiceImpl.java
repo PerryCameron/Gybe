@@ -106,23 +106,4 @@ public class EmailServiceImpl implements EmailService {
         if(keyIsGood) emailIsGood = emailRepository.emailFromActiveMembershipExists(email,Year.now().getValue());
         return emailIsGood;
     }
-
-    @Override
-    public int insertNewEmailRow(EmailDTO emailDTO) {
-        return emailRepository.insert(emailDTO);
-    }
-
-    @Override
-    public boolean deleteEmailRow(EmailDTO emailDTO) {
-        int result = emailRepository.delete(emailDTO);
-        return result > 0; // Returns true if the row was successfully deleted, false otherwise
-    }
-
-    @Override
-    public boolean batchUpdateEmail(List<EmailDTO> emailDTOList) {
-        int result = 0;
-        if(emailDTOList.size() == 1) result = emailRepository.update(emailDTOList.get(0));
-        else if(emailDTOList.size() > 1) result = emailRepository.batchUpdate(emailDTOList);
-        return result > 0;
-    }
 }

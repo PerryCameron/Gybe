@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
+import com.ecsail.Gybe.dto.EmailDTO;
 import com.ecsail.Gybe.dto.OfficerDTO;
 import com.ecsail.Gybe.dto.PersonDTO;
 import com.ecsail.Gybe.dto.PhoneDTO;
@@ -68,6 +69,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public int insertNewEmailRow(EmailDTO emailDTO) {
+        return emailRepository.insert(emailDTO);
+    }
+
+    @Override
     public boolean deletePhoneRow(PhoneDTO phoneDTO) {
         int success = phoneRepository.delete(phoneDTO);
         if (success > 0) return true;
@@ -81,5 +87,17 @@ public class PersonServiceImpl implements PersonService {
         return false;
     }
 
+    @Override
+    public boolean deleteEmailRow(EmailDTO emailDTO) {
+        int result = emailRepository.delete(emailDTO);
+        return result > 0; // Returns true if the row was successfully deleted, false otherwise
+    }
 
+    @Override
+    public boolean batchUpdateEmail(List<EmailDTO> emailDTOList) {
+        int result = 0;
+        if(emailDTOList.size() == 1) result = emailRepository.update(emailDTOList.get(0));
+        else if(emailDTOList.size() > 1) result = emailRepository.batchUpdate(emailDTOList);
+        return result > 0;
+    }
 }
