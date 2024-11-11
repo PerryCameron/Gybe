@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface PersonService {
     boolean updatePerson(PersonDTO personDTO);
-    boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
     int insertNewPhoneRow(PhoneDTO phoneDTO);
     int insertNewPositionRow(OfficerDTO officerDTO);
     int insertNewEmailRow(EmailDTO emailDTO);
@@ -17,4 +16,6 @@ public interface PersonService {
     boolean deleteAwardRow(AwardDTO awardDTO);
     boolean batchUpdateEmail(List<EmailDTO> emailDTOList);
     boolean batchUpdatePosition(List<OfficerDTO> officerDTOList);
+    boolean batchUpdateAwards(List<AwardDTO> awardDTOS);
+    boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
 }

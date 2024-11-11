@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -41,6 +42,7 @@ public class AwardRepositoryImpl implements AwardRepository {
 
     @Override
     public int update(AwardDTO awardDTO) {
+        System.out.println(awardDTO);
         String query = "UPDATE awards SET " +
                 "P_ID = :pId, " +
                 "AWARD_YEAR = :awardYear, " +
@@ -48,6 +50,20 @@ public class AwardRepositoryImpl implements AwardRepository {
                 "WHERE AWARD_ID = :awardId ";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(awardDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int batchUpdate(List<AwardDTO> awardDTOS) {
+        String sql = "UPDATE awards SET awards.P_ID = :pId, AWARD_YEAR = :awardYear, AWARD_TYPE = :awardType WHERE AWARD_ID = :awardId";
+        SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(awardDTOS.toArray());
+        int[] result = namedParameterJdbcTemplate.batchUpdate(sql, batchParams);
+        for (int num : result) {
+            if (num != 1) {
+                return 0; // Return 0 if any element is not 1
+            }
+        }
+        System.out.println("Batch of awards successfully updated");
+        return 1;
     }
 
     @Override

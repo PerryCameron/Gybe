@@ -118,4 +118,12 @@ public class PersonServiceImpl implements PersonService {
         else if(officerDTOList.size() > 1) result = officerRepository.batchUpdate(officerDTOList);
         return result > 0;
     }
+
+    @Override
+    public boolean batchUpdateAwards(List<AwardDTO> awardDTOS) {
+        int result = 0;
+        if(awardDTOS.size() == 1) result = awardRepository.update(awardDTOS.get(0));
+        else if(awardDTOS.size() > 1) result = awardRepository.batchUpdate(awardDTOS);
+        return result > 0;
+    }
 }

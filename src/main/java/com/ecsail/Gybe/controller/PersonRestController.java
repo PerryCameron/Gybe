@@ -85,6 +85,18 @@ public class PersonRestController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/api/update-awards")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> updateAwards(@RequestBody List<AwardDTO> awardDTOS) {
+        for(AwardDTO awardDTO : awardDTOS) {
+            System.out.println("testing: " + awardDTO);
+        }
+        boolean isUpdated = personService.batchUpdateAwards(awardDTOS); // Update each email in a batch operation
+        Map<String, Object> response = new HashMap<>();
+        response.put("updated", isUpdated);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/api/insert-phone")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> insertEmail(@RequestBody PhoneDTO phoneDTO) {

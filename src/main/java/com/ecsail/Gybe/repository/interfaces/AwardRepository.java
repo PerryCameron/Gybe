@@ -8,7 +8,7 @@ public interface AwardRepository {
     List<AwardDTO> getAwards(PersonDTO p);
     List<AwardDTO> getAwards();
     int update(AwardDTO o);
+    int batchUpdate(List<AwardDTO> awardDTOS);
     int insert(AwardDTO o);
-
     int delete(AwardDTO awardDTO);
 }

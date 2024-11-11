@@ -52,16 +52,17 @@ class AwardsTable {
         row.dataset.pId = rowData.pId;
         // award column
         const awardCell = document.createElement("td");
-        const awardText = document.createElement("span");
+        const awardYearText = document.createElement("span");
         // Display placeholder if award is empty
-        awardText.textContent = rowData.award || "Click to add award";
-        awardText.classList.add(rowData.award ? "filled-award" : "placeholder");
+        awardYearText.textContent = rowData.awardYear || "Click to add year";
+        awardYearText.classList.add(rowData.awardYear ? "filled-award" : "placeholder");
         // awardText.classList.add("award-text-field");
-        awardText.addEventListener("click", () => {
-            this.convertToTextInput(awardText, rowData, "award");
+        awardYearText.addEventListener("click", () => {
+            this.convertToTextInput(awardYearText, rowData, "awardYear");
             this.modifiedRows.add(rowData.awardId);
+            console.log("Testing: ", rowData);  // this is not updating awardYear
         });
-        awardCell.appendChild(awardText);
+        awardCell.appendChild(awardYearText);
         row.appendChild(awardCell);
         row.appendChild(this.createAwardTypeSelect(rowData));
         // Highlight row on click for deletion
