@@ -116,3 +116,19 @@
  * @param {Object} data
  * @param {Membership[]} data.roster.membershipListDTOS
  */
+
+/**
+ * @typedef {Object} invoice
+ * @property {number} invoiceId - The unique identifier for the invoice.
+ * @property {number} msId - The membership ID associated with the invoice.
+ * @property {number|null} fiscalYear - The fiscal year of the invoice.
+ * @property {number|null} paid - The amount paid on the invoice.
+ * @property {number|null} total - The total amount of the invoice.
+ * @property {number|null} credit - The credit applied to the invoice.
+ * @property {number|null} balance - The remaining balance on the invoice.
+ * @property {number|null} batch - The batch number for the invoice.
+ * @property {boolean|null} committed - Whether the invoice is committed (1 for true, 0 for false).
+ * @property {boolean|null} closed - Whether the invoice is closed (1 for true, 0 for false).
+ * @property {boolean|null} supplemental - Whether the invoice is supplemental (1 for true, 0 for false).
+ * @property {number} maxCredit - The maximum credit available on the invoice.
+ */

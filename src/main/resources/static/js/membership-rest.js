@@ -2,24 +2,43 @@
 function createMembershipContent(membership) {
     const contentDiv = document.createElement("div");
     contentDiv.classList.add("vbox");
+    // Append header immediately
     contentDiv.appendChild(createHeaderDiv(membership));
-    // Fetch the membership data and append the person box once the data is available
-    fetchMembershipData(membership).then(membershipJson => {
-        if (membershipJson) {
-            // create titledPane
-            const titledPane = new TitledPane("People", "membership-section");
-            titledPane.setContentId(`person-tab-pane-${membershipJson.msId}`);
-            const tabPane = new TabPane(titledPane.getContentDiv(), "vertical");
-            tabPane.contentContainer.classList.add("tab-content-style");
-            contentDiv.appendChild(titledPane);
-            populatePersonBox(membershipJson, tabPane); // located in membership-person-box
+    // Fetch the membership data once and pass it to both createPersonDiv and createMembershipDiv
+    fetchMembershipData(membership).then(membershipData => {
+        if (membershipData) {
+            // Pass the fetched data to both functions
+            contentDiv.appendChild(createPersonDiv(membershipData));
+            contentDiv.appendChild(createMembershipDiv(membershipData));
         } else {
-            console.error('No membership data returned');
+            console.error('Unable to fetch membership data');
         }
     }).catch(error => {
-        console.error('Error fetching or appending membership data:', error);
+        console.error('Error fetching membership data:', error);
     });
     return contentDiv;
+}
+
+function createMembershipDiv(membershipData) {
+    const titledPane = new TitledPane("Membership", "membership-section");
+    // Use membershipData if needed, for example:
+    titledPane.setContentId(`membership-pane-${membershipData.msId}`);
+    titledPane.appendChild(leftBox());
+    // Additional content population logic
+    return titledPane;
+}
+
+function leftBox() {
+    return undefined;
+}
+
+function createPersonDiv(membershipData) {
+    const titledPane = new TitledPane("People", "membership-section");
+    titledPane.setContentId(`person-tab-pane-${membershipData.msId}`);
+    const tabPane = new TabPane(titledPane.getContentDiv(), "vertical");
+    tabPane.contentContainer.classList.add("tab-content-style");
+    populatePersonBox(membershipData, tabPane); // Populate with the fetched data
+    return titledPane;
 }
 
 function createHeaderDiv(membership) {
@@ -58,5 +77,6 @@ async function fetchMembershipData(membership) {
         return data; // Return the data so it can be used
     } catch (error) {
         console.error('Error fetching membership data:', error);
+        return null;
     }
 }
