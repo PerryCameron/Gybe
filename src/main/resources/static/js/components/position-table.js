@@ -87,7 +87,7 @@ class PositionTable {
 
         const officerTypeSelect = document.createElement("select");
         officerTypeSelect.id = "position-type-select-" +rowData.officerId;
-        officerTypeSelect.className = "position-select";
+        officerTypeSelect.className = "small-table-select";
         officerTypeSelect.name = "officerType";
 
         // Define the options mapping

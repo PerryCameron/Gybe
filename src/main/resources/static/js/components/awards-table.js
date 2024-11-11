@@ -77,7 +77,7 @@ class AwardsTable {
 
         const awardTypeSelect = document.createElement("select");
         awardTypeSelect.id = "award-type-select-" +rowData.awardId;
-        awardTypeSelect.className = "award-select";
+        awardTypeSelect.className = "small-table-select";
         awardTypeSelect.name = "awardType";
 
         // Define the options mapping

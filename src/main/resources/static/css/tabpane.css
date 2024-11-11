@@ -46,7 +46,7 @@
     position: absolute;
     top: 2px; /* Adjust to your needs, controls vertical position */
     right: 5px; /* Align it to the right */
-    color: var(--color-main-white);
+    color: var(--color-main-black);
     cursor: pointer;
     font-weight: bold;
     font-size: 16px; /* Adjust the size to make it larger */

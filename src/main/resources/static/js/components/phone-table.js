@@ -90,7 +90,7 @@ class PhoneTable {
 
         const phoneTypeSelect = document.createElement("select");
         phoneTypeSelect.id = "phone-type-select-" +rowData.phoneId;
-        phoneTypeSelect.className = "phone-select";
+        phoneTypeSelect.className = "small-table-select";
         phoneTypeSelect.name = "phoneType";
 
         // Define the options mapping
