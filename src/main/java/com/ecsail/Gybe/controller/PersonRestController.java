@@ -1,9 +1,6 @@
 package com.ecsail.Gybe.controller;
 
-import com.ecsail.Gybe.dto.EmailDTO;
-import com.ecsail.Gybe.dto.OfficerDTO;
-import com.ecsail.Gybe.dto.PersonDTO;
-import com.ecsail.Gybe.dto.PhoneDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.service.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +109,24 @@ public class PersonRestController {
         int id = personService.insertNewPositionRow(officerDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("id", id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/api/insert-award")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> insertAward(@RequestBody AwardDTO awardDTO) {
+        int id = personService.insertNewAwardRow(awardDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", id);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/api/delete-award")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> deleteAward(@RequestBody AwardDTO awardDTO) {
+        boolean isDeleted = personService.deleteAwardRow(awardDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("deleted", isDeleted);
         return ResponseEntity.ok(response);
     }
 

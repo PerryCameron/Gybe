@@ -63,20 +63,20 @@ class AwardsTable {
         });
         awardCell.appendChild(awardText);
         row.appendChild(awardCell);
-        row.appendChild(this.createawardTypeSelect(rowData));
+        row.appendChild(this.createAwardTypeSelect(rowData));
         // Highlight row on click for deletion
         row.addEventListener("click", () => this.highlightRow(row, index));
         return row;
     }
 
-    createawardTypeSelect(rowData) {
+    createAwardTypeSelect(rowData) {
         console.log("data: ", rowData);
         const awardTypeContainer = document.createElement("td");
         awardTypeContainer.classList.add("select-container");
         awardTypeContainer.id = "award-type-container-" + rowData.awardId;
 
         const awardTypeSelect = document.createElement("select");
-        awardTypeSelect.id = "award-type-select-" +rowData.awardId;
+        awardTypeSelect.id = "award-type-select-" + rowData.awardId;
         awardTypeSelect.className = "small-table-select";
         awardTypeSelect.name = "awardType";
 
@@ -162,7 +162,7 @@ class AwardsTable {
     }
 
     addRow() {
-        const newaward = {
+        const newAward = {
             "awardId": 0,
             "pId": this.person.pId,
             "awardYear": 0,
@@ -175,7 +175,7 @@ class AwardsTable {
                 'Content-Type': 'application/json',
                 [csrfHeaderName]: csrfToken // Include CSRF token in the request headers
             },
-            body: JSON.stringify(newaward)
+            body: JSON.stringify(newAward)
         })
             .then(response => {
                 if (!response.ok) {
@@ -185,8 +185,8 @@ class AwardsTable {
             })
             .then(data => {
                 // Assuming the response contains the new ID
-                newaward.awardId = data.id; // Set the returned ID
-                this.person.awards.push(newaward); // Add new award row to data array
+                newAward.awardId = data.id; // Set the returned ID
+                this.person.awards.push(newAward); // Add new award row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
             .catch(error => console.error('Error adding new award:', error));
@@ -236,21 +236,21 @@ class AwardsTable {
     }
 
     batchUpdate() {
-            this.closeOpenInputs();
-            const editedRows = [];
-            // Loop through each award in the data model
-            this.person.awards.forEach(award => {
-                // Check if this awardId is in the modified set
-                if (this.modifiedRows.has(award.awardId)) {
-                    // Add the modified award data directly from the model
-                    editedRows.push({
-                        awardId: award.awardId,
-                        pId: award.pId,
-                        awardYear: award.awardYear,
-                        awardType: award.awardType,
-                    });
-                }
-            });
+        this.closeOpenInputs();
+        const editedRows = [];
+        // Loop through each award in the data model
+        this.person.awards.forEach(award => {
+            // Check if this awardId is in the modified set
+            if (this.modifiedRows.has(award.awardId)) {
+                // Add the modified award data directly from the model
+                editedRows.push({
+                    awardId: award.awardId,
+                    pId: award.pId,
+                    awardYear: award.awardYear,
+                    awardType: award.awardType,
+                });
+            }
+        });
         // Only send the fetch request if there are modified rows
         if (editedRows.length > 0) {
             fetch('/api/update-awards', {

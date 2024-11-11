@@ -1,9 +1,6 @@
 package com.ecsail.Gybe.service.implementations;
 
-import com.ecsail.Gybe.dto.EmailDTO;
-import com.ecsail.Gybe.dto.OfficerDTO;
-import com.ecsail.Gybe.dto.PersonDTO;
-import com.ecsail.Gybe.dto.PhoneDTO;
+import com.ecsail.Gybe.dto.*;
 import com.ecsail.Gybe.repository.interfaces.*;
 import com.ecsail.Gybe.service.interfaces.PersonService;
 import org.springframework.stereotype.Service;
@@ -17,13 +14,15 @@ public class PersonServiceImpl implements PersonService {
     private final GeneralRepository generalRepository;
     private final PhoneRepository phoneRepository;
     private final OfficerRepository officerRepository;
+    private final AwardRepository awardRepository;
 
-    public PersonServiceImpl(HashRepository hashRepository,
+    public PersonServiceImpl(AwardRepository awardRepository,
                              EmailRepository emailRepository,
                              PersonRepository personRepository,
                              GeneralRepository generalRepository,
                              PhoneRepository phoneRepository,
                              OfficerRepository officerRepository) {
+        this.awardRepository = awardRepository;
         this.personRepository = personRepository;
         this.emailRepository = emailRepository;
         this.generalRepository = generalRepository;
@@ -74,6 +73,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public int insertNewAwardRow(AwardDTO awardDTO) {
+        return awardRepository.insert(awardDTO);
+    }
+
+    @Override
     public boolean deletePhoneRow(PhoneDTO phoneDTO) {
         int success = phoneRepository.delete(phoneDTO);
         if (success > 0) return true;
@@ -91,6 +95,12 @@ public class PersonServiceImpl implements PersonService {
     public boolean deleteEmailRow(EmailDTO emailDTO) {
         int result = emailRepository.delete(emailDTO);
         return result > 0; // Returns true if the row was successfully deleted, false otherwise
+    }
+
+    @Override
+    public boolean deleteAwardRow(AwardDTO awardDTO) {
+        int result = awardRepository.delete(awardDTO);
+        return result > 0;
     }
 
     @Override

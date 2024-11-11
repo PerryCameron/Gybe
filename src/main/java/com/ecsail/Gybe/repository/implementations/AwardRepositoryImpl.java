@@ -57,7 +57,7 @@ public class AwardRepositoryImpl implements AwardRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(awardDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         awardDTO.setAwardId(keyHolder.getKey().intValue());
-        return affectedRows;
+        return awardDTO.getAwardId();
     }
 
     @Override
