@@ -79,7 +79,7 @@
   display: flex;
   flex-direction: column; /* Stack children vertically */
   width: 100%; /* Adjust width as necessary */
-  height: 100vh; /* Make the parent take the full viewport height (optional) */
+  height: 100%; /* Make the parent take the full viewport height (optional) */
 }
 
 /*This is the top div in membership view*/
@@ -112,6 +112,20 @@
 
 .membership-section {
   background-color: var(--color-main-gray);
-  border-radius: 10px;
-  margin: 10px;
+  /*border-radius: 10px;*/
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.header {
+  background-color: var(--color-main-gray);
+  color: var(--color-main-offcolor);
+}
+
+#tab-button-roster {
+  background-color: var(--color-main-gray);
+  color: var(--color-main-offcolor);
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }

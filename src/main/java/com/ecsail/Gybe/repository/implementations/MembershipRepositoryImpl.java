@@ -86,7 +86,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 INNER JOIN (select * from membership_id where FISCAL_YEAR=? and RENEW=1) id ON m.ms_id=id.ms_id
                 INNER JOIN (select * from person where MEMBER_TYPE=1) p ON m.p_id=p.p_id
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID
-                                """;
+                """;
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear, selectedYear.intValue()});
         return membershipListDTOS;
@@ -121,7 +121,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                                          WHERE fiscal_year = (? - 1)
                                            AND renew = 1
                                            AND ms_id = id.ms_id));
-                                """;
+                """;
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue(),
                 selectedYear.intValue(), selectedYear.intValue(), selectedYear.intValue(), selectedYear.intValue(),
@@ -199,7 +199,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 from slip s right join membership m on m.MS_ID=s.MS_ID left join membership_id id on
                 m.MS_ID=id.MS_ID left join person p on p.MS_ID=m.MS_ID where p.MEMBER_TYPE=1
                 AND id.fiscal_year=(SELECT MAX(FISCAL_YEAR) FROM membership_id where MS_ID=76) AND m.MS_ID=?
-                                """;
+                """;
         return template.queryForObject(query, new MembershipListRowMapper(), msId);
     }
 
@@ -314,7 +314,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                          INNER JOIN membership m ON m.MS_ID = id.MS_ID
                          LEFT JOIN (SELECT * FROM person WHERE MEMBER_TYPE = 1) p ON m.MS_ID = p.MS_ID
                          LEFT JOIN slip s ON m.MS_ID = s.MS_ID
-                                                """);
+                """);
 
         // List to hold parameters for the prepared statement
         List<Object> params = new ArrayList<>();
@@ -384,7 +384,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                         bo.BOAT_ID = ?  -- Replace '?' with the actual BOAT_ID value
                 GROUP BY
                     m.MS_ID;
-                                """;
+                """;
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), boatId);
         return membershipListDTOS;
@@ -393,153 +393,167 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     @Override
     public JsonNode getMembershipAsJSON(int msId, int year) {
         String query = """
-   SELECT
-      JSON_OBJECT(
-          'mid', mi.MID,
-          'fiscalYear', mi.FISCAL_YEAR,
-          'msId', mi.MS_ID,
-          'membershipId', mi.MEMBERSHIP_ID,
-          'renew', mi.RENEW,
-          'memType', mi.MEM_TYPE,
-          'selected', mi.SELECTED,
-          'lateRenew', mi.LATE_RENEW,
-          'pId', m.P_ID,
-          'joinDate', m.JOIN_DATE,
-          'address', m.ADDRESS,
-          'city', m.CITY,
-          'state', m.STATE,
-          'zip', m.ZIP,
-          'slip', JSON_OBJECT(
-              'slipId', s.SLIP_ID,
-              'slipNum', s.SLIP_NUM,
-              'subleasedTo', s.SUBLEASED_TO,
-              'altText', s.ALT_TEXT
-          ),
-          'people', JSON_ARRAYAGG(
-              JSON_OBJECT(
-                  'pId', p.P_ID,
-                  'msId', p.MS_ID,
-                  'memberType', p.MEMBER_TYPE,
-                  'firstName', p.F_NAME,
-                  'lastName', p.L_NAME,
-                  'birthday', p.BIRTHDAY,
-                  'occupation', p.OCCUPATION,
-                  'business', p.BUSINESS,
-                  'active', p.IS_ACTIVE,
-                  'nickName', p.NICK_NAME,
-                  'oldMsid', p.OLD_MSID,
-                  'emails', (
-                      SELECT JSON_ARRAYAGG(
-                          JSON_OBJECT(
-                              'emailId', e.EMAIL_ID,
-                              'pId', p.P_ID,
-                              'primaryUse', e.PRIMARY_USE,
-                              'email', e.EMAIL,
-                              'emailListed', e.EMAIL_LISTED
-                          )
-                      )
-                      FROM email e
-                      WHERE e.P_ID = p.P_ID
-                  ),
-                  'phones', (
-                      SELECT JSON_ARRAYAGG(
-                          JSON_OBJECT(
-                              'phoneId', ph.PHONE_ID,
-                              'pId', p.P_ID,
-                              'phone', ph.PHONE,
-                              'phoneType', ph.PHONE_TYPE,
-                              'phoneListed', ph.PHONE_LISTED
-                          )
-                      )
-                      FROM phone ph
-                      WHERE ph.P_ID = p.P_ID
-                  ),
-                  'awards', (
-                      SELECT JSON_ARRAYAGG(
-                          JSON_OBJECT(
-                              'awardId', a.AWARD_ID,
-                              'pId', p.P_ID,
-                              'awardYear', a.AWARD_YEAR,
-                              'awardType', a.AWARD_TYPE
-                          )
-                      )
-                      FROM awards a
-                      WHERE a.P_ID = p.P_ID
-                  ),
-                  'officers', (
-                      SELECT JSON_ARRAYAGG(
-                          JSON_OBJECT(
-                              'officerId', o.O_ID,
-                              'pId', o.P_ID,
-                              'boardYear', o.BOARD_YEAR,
-                              'officerType', o.OFF_TYPE,
-                              'fiscalYear', o.OFF_YEAR
-                          )
-                      )
-                      FROM officer o
-                      WHERE o.P_ID = p.P_ID
-                  )
-              )
-          ),
-          'boats', (
-              SELECT JSON_ARRAYAGG(
-                  JSON_OBJECT(
-                      'boatId', b.BOAT_ID,
-                      'manufacturer', b.MANUFACTURER,
-                      'manufactureYear', b.MANUFACTURE_YEAR,
-                      'registrationNum', b.REGISTRATION_NUM,
-                      'model', b.MODEL,
-                      'boatName', b.BOAT_NAME,
-                      'sailNumber', b.SAIL_NUMBER,
-                      'hasTrailer', b.HAS_TRAILER,
-                      'length', b.LENGTH,
-                      'weight', b.WEIGHT,
-                      'keel', b.KEEL,
-                      'phrf', b.PHRF,
-                      'draft', b.DRAFT,
-                      'beam', b.BEAM,
-                      'lwl', b.LWL,
-                      'aux', b.AUX
-                  )
-              )
-              FROM boat_owner bo
-              JOIN boat b ON bo.BOAT_ID = b.BOAT_ID
-              WHERE bo.MS_ID = mi.MS_ID
-          ),
-          'invoices', (
-              SELECT JSON_ARRAYAGG(
-                  JSON_OBJECT(
-                      'invoiceId', i.ID,
-                      'fiscalYear', i.FISCAL_YEAR,
-                      'paid', i.PAID,
-                      'total', i.TOTAL,
-                      'credit', i.CREDIT,
-                      'balance', i.BALANCE,
-                      'batch', i.BATCH,
-                      'committed', i.COMMITTED,
-                      'closed', i.CLOSED,
-                      'supplemental', i.SUPPLEMENTAL,
-                      'maxCredit', i.MAX_CREDIT
-                  )
-              )
-              FROM invoice i
-              WHERE i.MS_ID = mi.MS_ID
-          )
-      ) AS membership_info
-   FROM
-      membership_id mi
-      JOIN membership m ON mi.MS_ID = m.MS_ID
-      LEFT JOIN person p ON m.MS_ID = p.MS_ID
-      LEFT JOIN slip s ON mi.MS_ID = s.MS_ID
-   WHERE
-      mi.MS_ID = ?
-   AND mi.FISCAL_YEAR = ?
-   GROUP BY
-      mi.MID, mi.FISCAL_YEAR, mi.MS_ID, mi.MEMBERSHIP_ID, mi.RENEW, mi.MEM_TYPE, mi.SELECTED, mi.LATE_RENEW,
-      m.P_ID, m.JOIN_DATE, m.MEM_TYPE, m.ADDRESS, m.CITY, m.STATE, m.ZIP, s.SLIP_ID, s.SLIP_NUM, s.SUBLEASED_TO, s.ALT_TEXT
-   LIMIT 1;
-   """;
-
+                SELECT
+                   JSON_OBJECT(
+                       'mid', mi.MID,
+                       'fiscalYear', mi.FISCAL_YEAR,
+                       'msId', mi.MS_ID,
+                       'membershipId', mi.MEMBERSHIP_ID,
+                       'renew', mi.RENEW,
+                       'memType', mi.MEM_TYPE,
+                       'selected', mi.SELECTED,
+                       'lateRenew', mi.LATE_RENEW,
+                       'pId', m.P_ID,
+                       'joinDate', m.JOIN_DATE,
+                       'address', m.ADDRESS,
+                       'city', m.CITY,
+                       'state', m.STATE,
+                       'zip', m.ZIP,
+                       'slip', JSON_OBJECT(
+                           'slipId', s.SLIP_ID,
+                           'slipNum', s.SLIP_NUM,
+                           'subleasedTo', s.SUBLEASED_TO,
+                           'altText', s.ALT_TEXT
+                       ),
+                       'people', JSON_ARRAYAGG(
+                           JSON_OBJECT(
+                               'pId', p.P_ID,
+                               'msId', p.MS_ID,
+                               'memberType', p.MEMBER_TYPE,
+                               'firstName', p.F_NAME,
+                               'lastName', p.L_NAME,
+                               'birthday', p.BIRTHDAY,
+                               'occupation', p.OCCUPATION,
+                               'business', p.BUSINESS,
+                               'active', p.IS_ACTIVE,
+                               'nickName', p.NICK_NAME,
+                               'oldMsid', p.OLD_MSID,
+                               'emails', (
+                                   SELECT JSON_ARRAYAGG(
+                                       JSON_OBJECT(
+                                           'emailId', e.EMAIL_ID,
+                                           'pId', p.P_ID,
+                                           'primaryUse', e.PRIMARY_USE,
+                                           'email', e.EMAIL,
+                                           'emailListed', e.EMAIL_LISTED
+                                       )
+                                   )
+                                   FROM email e
+                                   WHERE e.P_ID = p.P_ID
+                               ),
+                               'phones', (
+                                   SELECT JSON_ARRAYAGG(
+                                       JSON_OBJECT(
+                                           'phoneId', ph.PHONE_ID,
+                                           'pId', p.P_ID,
+                                           'phone', ph.PHONE,
+                                           'phoneType', ph.PHONE_TYPE,
+                                           'phoneListed', ph.PHONE_LISTED
+                                       )
+                                   )
+                                   FROM phone ph
+                                   WHERE ph.P_ID = p.P_ID
+                               ),
+                               'awards', (
+                                   SELECT JSON_ARRAYAGG(
+                                       JSON_OBJECT(
+                                           'awardId', a.AWARD_ID,
+                                           'pId', p.P_ID,
+                                           'awardYear', a.AWARD_YEAR,
+                                           'awardType', a.AWARD_TYPE
+                                       )
+                                   )
+                                   FROM awards a
+                                   WHERE a.P_ID = p.P_ID
+                               ),
+                               'officers', (
+                                   SELECT JSON_ARRAYAGG(
+                                       JSON_OBJECT(
+                                           'officerId', o.O_ID,
+                                           'pId', o.P_ID,
+                                           'boardYear', o.BOARD_YEAR,
+                                           'officerType', o.OFF_TYPE,
+                                           'fiscalYear', o.OFF_YEAR
+                                       )
+                                   )
+                                   FROM officer o
+                                   WHERE o.P_ID = p.P_ID
+                               )
+                           )
+                       ),
+                       'boats', (
+                           SELECT JSON_ARRAYAGG(
+                               JSON_OBJECT(
+                                   'boatId', b.BOAT_ID,
+                                   'manufacturer', b.MANUFACTURER,
+                                   'manufactureYear', b.MANUFACTURE_YEAR,
+                                   'registrationNum', b.REGISTRATION_NUM,
+                                   'model', b.MODEL,
+                                   'boatName', b.BOAT_NAME,
+                                   'sailNumber', b.SAIL_NUMBER,
+                                   'hasTrailer', b.HAS_TRAILER,
+                                   'length', b.LENGTH,
+                                   'weight', b.WEIGHT,
+                                   'keel', b.KEEL,
+                                   'phrf', b.PHRF,
+                                   'draft', b.DRAFT,
+                                   'beam', b.BEAM,
+                                   'lwl', b.LWL,
+                                   'aux', b.AUX
+                               )
+                           )
+                           FROM boat_owner bo
+                           JOIN boat b ON bo.BOAT_ID = b.BOAT_ID
+                           WHERE bo.MS_ID = mi.MS_ID
+                       ),
+                       'invoices', (
+                           SELECT JSON_ARRAYAGG(
+                               JSON_OBJECT(
+                                   'invoiceId', i.ID,
+                                   'fiscalYear', i.FISCAL_YEAR,
+                                   'paid', i.PAID,
+                                   'total', i.TOTAL,
+                                   'credit', i.CREDIT,
+                                   'balance', i.BALANCE,
+                                   'batch', i.BATCH,
+                                   'committed', i.COMMITTED,
+                                   'closed', i.CLOSED,
+                                   'supplemental', i.SUPPLEMENTAL,
+                                   'maxCredit', i.MAX_CREDIT
+                               )
+                           )
+                           FROM invoice i
+                           WHERE i.MS_ID = mi.MS_ID
+                       ),
+                       'membership_ids', (
+                           SELECT JSON_ARRAYAGG(
+                               JSON_OBJECT(
+                                   'mid', mid.MID,
+                                   'fiscalYear', mid.FISCAL_YEAR,
+                                   'membershipId', mid.MEMBERSHIP_ID,
+                                   'renew', mid.RENEW,
+                                   'memType', mid.MEM_TYPE,
+                                   'selected', mid.SELECTED,
+                                   'lateRenew', mid.LATE_RENEW
+                               )
+                           )
+                           FROM membership_id mid
+                           WHERE mid.MS_ID = mi.MS_ID
+                       )
+                   ) AS membership_info
+                FROM
+                   membership_id mi
+                   JOIN membership m ON mi.MS_ID = m.MS_ID
+                   LEFT JOIN person p ON m.MS_ID = p.MS_ID
+                   LEFT JOIN slip s ON mi.MS_ID = s.MS_ID
+                WHERE
+                   mi.MS_ID = ?
+                AND mi.FISCAL_YEAR = ?
+                GROUP BY
+                   mi.MID, mi.FISCAL_YEAR, mi.MS_ID, mi.MEMBERSHIP_ID, mi.RENEW, mi.MEM_TYPE, mi.SELECTED, mi.LATE_RENEW,
+                   m.P_ID, m.JOIN_DATE, m.MEM_TYPE, m.ADDRESS, m.CITY, m.STATE, m.ZIP, s.SLIP_ID, s.SLIP_NUM, s.SUBLEASED_TO, s.ALT_TEXT
+                LIMIT 1;
+                """;
         try {
             // Query for a single membership
             return template.queryForObject(query, new Object[]{msId, year}, new JsonRowMapper());

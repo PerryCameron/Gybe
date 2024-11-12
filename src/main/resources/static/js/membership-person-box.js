@@ -61,14 +61,11 @@ function setPhoneTable(person) {
     return phoneDiv; // but no table rendered in this div??
 }
 
-function fakeContent(person, type) {
+function fakeContent(type) {
     const fakeDiv = document.createElement("div");
     fakeDiv.classList.add("fake-div-testing");
     const fakeP = document.createElement("p");
     fakeDiv.appendChild(fakeP);
     fakeP.innerText = `This is a filler for ${type}`;
-    let email = person.emails;
-    if (type === "email")
-        console.log("Emails: ", email);
     return fakeDiv;
 }

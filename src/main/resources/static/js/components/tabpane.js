@@ -1,14 +1,11 @@
 class TabPane {
-    constructor(container, layout = "horizontal") {
+    constructor(container, layout) {
         // Store the container where the tab pane will be created
         this.container = container;
-
+        this.layout = layout;
         // Initialize the tab container and content container elements
         this.tabsContainer = document.createElement("div");
         this.tabsContainer.classList.add("tab-buttons");
-        // Save the layout as an instance property
-        this.layout = layout;
-
         this.contentContainer = document.createElement("div");
         this.contentContainer.classList.add("tab-content");
 
@@ -18,6 +15,11 @@ class TabPane {
             this.tabsContainer.style.display = "flex";
             this.container.style.flexDirection = "row";
             this.tabsContainer.style.flexDirection = "column";
+            this.tabsContainer.classList.add("tab-buttons-vertical");
+            this.contentContainer.classList.add("tab-content-vertical");
+        } else {
+            this.tabsContainer.classList.add("tab-buttons-horizontal");
+            this.contentContainer.classList.add("tab-content-horizontal");
         }
         this.container.appendChild(this.tabsContainer);
         this.container.appendChild(this.contentContainer);
@@ -46,10 +48,10 @@ class TabPane {
 
         // Create and append the content for the new tab
         const tabContent = document.createElement("div");
-        tabContent.setAttribute("data-tab-content", tabId);
+        // tabContent.setAttribute("data-tab-content", tabId);
+        tabContent.classList.add("tab-content-div");
         tabContent.appendChild(content);
         tabContent.style.display = "none"; // Hide content initially
-        tabContent.classList.add("attributes-tab-content");
         tabContent.id = `tab-content-${tabId}`;
         this.contentContainer.appendChild(tabContent);
 

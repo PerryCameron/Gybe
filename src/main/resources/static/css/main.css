@@ -1,6 +1,7 @@
 :root {
-    --color-main-green-second: #009879;
-    --color-main-green: #00b28f;
+    --color-main-green-second: #c2c2c5;
+    /*--color-main-green: #00b28f;*/
+    --color-main-green: #0068a5;
     --color-main-highlight: #e0eaff;
     --color-main-black-full: #000000;
     --color-main-black: #333;
@@ -8,6 +9,7 @@
     --color-main-border: #dddddd;
     --color-main-offcolor: #f1f1f1;
     --color-main-white: #FFFFFF;
+    --color-table-head: #e8a38c;
 
     input[type="checkbox"] {
         appearance: none;
