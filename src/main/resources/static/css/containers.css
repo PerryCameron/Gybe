@@ -1,0 +1,14 @@
+.horizontal-container {
+    display: flex;
+    flex-direction: row;
+    /*gap: 10px; !* Space between notes *!*/
+
+}
+
+.child {
+    padding: 10px;
+    background-color: lightblue;
+}
+
+#membership-hbox {
+}

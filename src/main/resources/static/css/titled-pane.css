@@ -29,3 +29,12 @@
 .titled-pane.open .title-pane-content {
     display: block;
 }
+
+.history-invoice-titled-pane {
+    width: 60%;
+}
+
+.address-storage-titled-pane {
+    margin-left: 0px;
+    width: 45%;
+}

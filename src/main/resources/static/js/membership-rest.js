@@ -9,7 +9,11 @@ function createMembershipContent(membership) {
         if (membershipData) {
             // Pass the fetched data to both functions
             contentDiv.appendChild(createPersonDiv(membershipData));
-            contentDiv.appendChild(createMembershipDiv(membershipData));
+            const hBox = new HorizontalBox("membership-hbox");
+            hBox.add(createMembershipDiv(membershipData));
+            hBox.add(createAddressAndStorageDiv(membershipData));
+            contentDiv.appendChild(hBox.getElement());  // why can't I do this?
+
         } else {
             console.error('Unable to fetch membership data');
         }
@@ -19,11 +23,21 @@ function createMembershipContent(membership) {
     return contentDiv;
 }
 
+function createAddressAndStorageDiv(membershipData) {
+    const titledPane = new TitledPane("Address and Storage", "membership-section");
+    // Use membershipData if needed, for example:
+    // titledPane.setContentId(`membership-pane-${membershipData.msId}`);
+    titledPane.classList.add("address-storage-titled-pane");
+    titledPane.contentElement.appendChild(fakeContent("address and storage"));
+    // Additional content population logic
+    return titledPane;
+}
+
 function createMembershipDiv(membershipData) {
     const titledPane = new TitledPane("Membership", "membership-section");
     // Use membershipData if needed, for example:
-    titledPane.setContentId(`membership-pane-${membershipData.msId}`);
-    titledPane.id = "history-invoice-titled-pane";
+    // titledPane.setContentId(`membership-pane-${membershipData.msId}`);
+    titledPane.classList.add("history-invoice-titled-pane");
     titledPane.contentElement.appendChild(leftBox(membershipData));
     // Additional content population logic
     return titledPane;

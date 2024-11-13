@@ -52,33 +52,29 @@ class HistoryTable {
         // Set data attributes for the row using rowData properties
         row.dataset.mid = rowData.mid;
 
+        // Create the year cell with an editable field
         const yearCell = document.createElement("td");
-        const yearText = document.createElement("span");
-        // Display placeholder if phone is empty
-        yearText.textContent = rowData.fiscalYear || "Click to add year";
-        yearText.classList.add(rowData.fiscalYear ? "filled-year" : "placeholder");
-        // phoneText.classList.add("phone-text-field");
-        yearText.addEventListener("click", () => {
-            this.convertToTextInput(yearText, rowData, "year");
-            this.modifiedRows.add(rowData.mid);
-        });
+        const yearText = this.createEditableTextField(
+            rowData.fiscalYear,
+            "Click to add year",
+            "filled-year",
+            rowData,
+            "fiscalYear"
+        );
         yearCell.appendChild(yearText);
         row.appendChild(yearCell);
 
+        // Create the membership ID cell with an editable field
         const idCell = document.createElement("td");
-        const memIdText = document.createElement("span");
-        // Display placeholder if phone is empty
-        memIdText.textContent = rowData.membershipId || "Click to add ID";
-        memIdText.classList.add(rowData.membershipId ? "filled-id" : "placeholder");
-        // phoneText.classList.add("phone-text-field");
-        memIdText.addEventListener("click", () => {
-            this.convertToTextInput(memIdText, rowData, "year");
-            this.modifiedRows.add(rowData.mid);
-        });
+        const memIdText = this.createEditableTextField(
+            rowData.membershipId,
+            "Click to add ID",
+            "filled-id",
+            rowData,
+            "membershipId"
+        );
         idCell.appendChild(memIdText);
         row.appendChild(idCell);
-
-
         row.appendChild(this.createHistoryTypeSelect(rowData));
 
         const listedCell = document.createElement("td");
@@ -95,6 +91,21 @@ class HistoryTable {
         // Highlight row on click for deletion
         row.addEventListener("click", () => this.highlightRow(row, index));
         return row;
+    }
+
+    createEditableTextField(cellText, placeholderText, cssClass, rowData, key) {
+        const span = document.createElement("span");
+        // Set initial content or placeholder
+        span.textContent = rowData[key] || placeholderText;
+        span.classList.add(rowData[key] ? cssClass : "placeholder");
+
+        // Add click event to convert to text input
+        span.addEventListener("click", () => {
+            this.convertToTextInput(span, rowData, key);
+            this.modifiedRows.add(rowData.mid); // Track modified rows by `mid`
+        });
+
+        return span;
     }
 
     createHistoryTypeSelect(rowData) {
