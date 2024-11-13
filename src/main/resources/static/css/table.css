@@ -40,13 +40,13 @@
 .header-link th a,
 .header-link th a:visited,
 .header-link th a:active {
-  color: var(--color-main-white); /* Links are white */
+  color: var(--color-main-offcolor); /* Links are white */
   text-decoration: none; /* No underline */
 }
 
 /* This changes the background color of the header cell and the color of the links when hovered */
 .header-link th:hover {
-  background-color: var(--color-main-green); /* Background color of the cell */
+  background-color: var(--color-main-offcolor); /* Background color of the cell */
 }
 
 .header-link th:hover a {
@@ -120,7 +120,7 @@
 
 .header {
   background-color: var(--color-main-gray);
-  color: var(--color-main-offcolor);
+  color: var(--color-main-green);
 }
 
 #tab-button-roster {

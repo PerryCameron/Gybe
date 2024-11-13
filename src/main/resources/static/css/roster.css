@@ -134,4 +134,5 @@ label {
 #roster-tab-div {
   display: inline-block;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  background: var(--color-main-black);
 }

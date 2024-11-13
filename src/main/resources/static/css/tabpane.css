@@ -1,8 +1,5 @@
 .tab-buttons {
     padding-top: 8px;
-    /*padding-left: 5px;*/
-    /*background-color: #1658e7;*/
-    /*background-color: #9d9d9d;*/
 }
 
 .tab-buttons button {
@@ -19,9 +16,12 @@
     text-align: center;
 }
 
+.tab-buttons button.active {
+    background-color: var(--color-main-white);
+}
+
 .tab-buttons-horizontal button {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-radius: 5px 5px 0 0;
     margin-right: 1px;
 }
 
@@ -29,6 +29,12 @@
     border-bottom-right-radius: 0px !important;
     border-top-right-radius: 0px !important;
     margin-bottom: 1px;
+}
+
+.tab-buttons button.active {
+    background-color: var(--color-main-white);
+    font-weight: bold;
+    color: var(--color-main-black-full);
 }
 
 .tab-content-horizontal {
@@ -43,13 +49,6 @@
  Hover effect
 .tab-buttons button:hover {
     background-color: var(--color-main-green);
-}
-
-/* Active button style */
-.tab-buttons button.active {
-    background-color: var(--color-main-offcolor);
-    font-weight: bold;
-    color: var(--color-main-black-full);
 }
 
 .close-tab {
@@ -93,40 +92,6 @@
     border-radius: 0px 5px 5px 5px;
 }
 
-#main-menu-tab-pane {
-    width: 100%;
-}
-
-#main-menu-tab-pane .tab-buttons button {
-    flex: 1;
-    width: auto;
-    border-radius: 0;
-    background-color: var(--color-main-gray);
-    color: var(--color-main-white);
-}
-
-#main-menu-tab-pane .tab-buttons button.active {
-    font-weight: bold;
-    background-color: var(--color-main-offcolor);
-    color: var(--color-main-black-full);
-}
-
-#main-menu_tab-container {
-    display: flex;
-}
-
-#person-accessories-tab-pane .tab-buttons button {
-
-}
-
-#person-accessories-tab-pane .tab-buttons button.active {
-    background-color: var(--color-main-white);
-}
-
-#tab-content-main-navigation {
-    border-radius: 0;
-}
-
 .attributes-tab-content-horizontal {
     background-color: var(--color-main-white);
     height: 80%;
@@ -149,4 +114,38 @@
 
 #tab-content-page-navigation {
     background-color: transparent;
+}
+
+#main-menu_tab-container {
+    display: flex;
+}
+
+#person-accessories-tab-pane .tab-buttons button {
+
+}
+
+/*#person-accessories-tab-pane .tab-buttons button.active {*/
+/*    background-color: var(--color-main-white);*/
+/*}*/
+
+#tab-content-main-navigation {
+    border-radius: 0;
+}
+
+#main-menu-tab-pane {
+    width: 100%;
+}
+
+#main-menu-tab-pane .tab-buttons button {
+    flex: 1;
+    width: auto;
+    border-radius: 0;
+    background-color: var(--color-main-gray);
+    color: var(--color-main-white);
+}
+
+#main-menu-tab-pane .tab-buttons button.active {
+    font-weight: bold;
+    background-color: var(--color-main-offcolor);
+    color: var(--color-main-black-full);
 }
