@@ -23,6 +23,7 @@ function createMembershipDiv(membershipData) {
     const titledPane = new TitledPane("Membership", "membership-section");
     // Use membershipData if needed, for example:
     titledPane.setContentId(`membership-pane-${membershipData.msId}`);
+    titledPane.id = "history-invoice-titled-pane";
     titledPane.contentElement.appendChild(leftBox(membershipData));
     // Additional content population logic
     return titledPane;
@@ -32,10 +33,17 @@ function leftBox(membershipData) {
     const div = document.createElement("div");
     const tabPane = new TabPane(div, "horizontal");
     tabPane.addTab("storage-" + membershipData.pId, "Storage", fakeContent("This is storage"), false);
-    tabPane.addTab("history-" + membershipData.pId, "History", fakeContent("This is history"), false);
+    tabPane.addTab("history-" + membershipData.pId, "History", setHistoryTable(membershipData), false);
     tabPane.addTab("address-" + membershipData.pId, "Address", fakeContent("This is address"), false);
     tabPane.addTab("properties-" + membershipData.pId, "Properties", fakeContent("This is properties"), false);
     return div;
+}
+
+function setHistoryTable(membershipData) {
+    const historyDiv = document.createElement("div");
+    const historyTable = new HistoryTable(historyDiv, membershipData);
+    historyTable.mainContainer.classList.add("small-table-container");// this is getting data and processing it
+    return historyDiv; // but no table rendered in this div??
 }
 
 function createPersonDiv(membershipData) {

@@ -1,15 +1,16 @@
-class PhoneTable {
-    constructor(container, person) {
+class HistoryTable {
+    constructor(container, membershipData) {
         this.mainContainer = container;
         this.tableContainer = document.createElement("div");
         this.tableContainer.classList.add("table-container");
         this.headers = {
-            0: {phone: "Phone", widget: "text"},
-            1: {phoneType: "Type", widget: "radio"},
-            2: {phoneListed: "Listed", widget: "check"},
+            0: {fiscalYear: "Year", widget: "text"},
+            1: {membershipId: "Mem ID", widget: "text"},
+            2: {memType: "Mem Type", widget: "drop down"},
+            3: {renew: "Renewed", widget: "check"},
         };
-        this.person = person || [];// Table data for each phone
-        this.person.phones = Array.isArray(this.person.phones) ? this.person.phones : [];
+        this.membership = membershipData || [];// Table data for each phone
+        this.membership.membership_ids = Array.isArray(this.membership.membership_ids) ? this.membership.membership_ids : [];
         this.modifiedRows = new Set();
         this.table = document.createElement("table"); // The phone table itself
         this.selectedRow = null; // To track the highlighted row
@@ -24,13 +25,13 @@ class PhoneTable {
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
             const th = document.createElement("th");
-            th.textContent = header.phone || header.phoneType || header.phoneListed;
+            th.textContent = header.fiscalYear || header.membershipId || header.memType || header.renew;
             headerRow.appendChild(th);
         });
         this.table.addEventListener('mouseleave', () => this.batchUpdate());
         this.table.appendChild(headerRow);
         // Create data rows
-        this.person.phones.forEach((rowData, index) => {
+        this.membership.membership_ids.forEach((rowData, index) => {
             const row = this.createDataRow(rowData, index);
             this.table.appendChild(row);
         });
@@ -49,31 +50,45 @@ class PhoneTable {
     createDataRow(rowData, index) {
         const row = document.createElement("tr");
         // Set data attributes for the row using rowData properties
-        row.dataset.phoneId = rowData.phoneId;
-        row.dataset.pId = rowData.pId;
-        // phone column
-        const phoneCell = document.createElement("td");
-        const phoneText = document.createElement("span");
+        row.dataset.mid = rowData.mid;
+
+        const yearCell = document.createElement("td");
+        const yearText = document.createElement("span");
         // Display placeholder if phone is empty
-        phoneText.textContent = rowData.phone || "Click to add phone";
-        phoneText.classList.add(rowData.phone ? "filled-phone" : "placeholder");
+        yearText.textContent = rowData.fiscalYear || "Click to add year";
+        yearText.classList.add(rowData.fiscalYear ? "filled-year" : "placeholder");
         // phoneText.classList.add("phone-text-field");
-        phoneText.addEventListener("click", () => {
-            this.convertToTextInput(phoneText, rowData, "phone");
-            this.modifiedRows.add(rowData.phoneId);
+        yearText.addEventListener("click", () => {
+            this.convertToTextInput(yearText, rowData, "year");
+            this.modifiedRows.add(rowData.mid);
         });
-        phoneCell.appendChild(phoneText);
-        row.appendChild(phoneCell);
-        row.appendChild(this.createPhoneTypeSelect(rowData));
-        // phone Listed column as a checkbox
+        yearCell.appendChild(yearText);
+        row.appendChild(yearCell);
+
+        const idCell = document.createElement("td");
+        const memIdText = document.createElement("span");
+        // Display placeholder if phone is empty
+        memIdText.textContent = rowData.membershipId || "Click to add ID";
+        memIdText.classList.add(rowData.membershipId ? "filled-id" : "placeholder");
+        // phoneText.classList.add("phone-text-field");
+        memIdText.addEventListener("click", () => {
+            this.convertToTextInput(memIdText, rowData, "year");
+            this.modifiedRows.add(rowData.mid);
+        });
+        idCell.appendChild(memIdText);
+        row.appendChild(idCell);
+
+
+        row.appendChild(this.createHistoryTypeSelect(rowData));
+
         const listedCell = document.createElement("td");
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("listed-check-box");
-        checkbox.checked = rowData.phoneListed === 1;
+        checkbox.checked = rowData.renew === 1;
         checkbox.addEventListener("change", () => {
-            rowData.phoneListed = checkbox.checked ? 1 : 0;
-            this.modifiedRows.add(rowData.phoneId);
+            rowData.renew = checkbox.checked ? 1 : 0;
+            this.modifiedRows.add(rowData.mid);
         });
         listedCell.appendChild(checkbox);
         row.appendChild(listedCell);
@@ -82,16 +97,16 @@ class PhoneTable {
         return row;
     }
 
-    createPhoneTypeSelect(rowData) {
-        // console.log("data: ", rowData);
-        const phoneTypeContainer = document.createElement("td");
-        phoneTypeContainer.classList.add("select-container");
-        phoneTypeContainer.id = "phone-type-container-" + rowData.phoneId;
+    createHistoryTypeSelect(rowData) {
+        console.log("history data: ", rowData);
+        const historyTypeContainer = document.createElement("td");
+        historyTypeContainer.classList.add("select-container");
+        historyTypeContainer.id = "history-type-container-" + rowData.mid;
 
-        const phoneTypeSelect = document.createElement("select");
-        phoneTypeSelect.id = "phone-type-select-" +rowData.phoneId;
-        phoneTypeSelect.className = "small-table-select";
-        phoneTypeSelect.name = "phoneType";
+        const historyTypeSelect = document.createElement("select");
+        historyTypeSelect.id = "history-type-select-" +rowData.mid;
+        historyTypeSelect.className = "small-table-select";
+        historyTypeSelect.name = "historyType";
 
         // Define the options mapping
         const options = {
@@ -105,34 +120,34 @@ class PhoneTable {
             const option = document.createElement("option");
             option.value = value;
             option.textContent = label;
-            phoneTypeSelect.appendChild(option);
+            historyTypeSelect.appendChild(option);
         }
 
-        // Set the selected option based on data.phoneType
-        if (rowData.phoneType) {
-            phoneTypeSelect.value = rowData.phoneType;
+        // Set the selected option based on data.historyType
+        if (rowData.historyType) {
+            historyTypeSelect.value = rowData.historyType;
         }
 
-        phoneTypeSelect.addEventListener("change", () => {
-            rowData.phoneType = phoneTypeSelect.value;
-            this.modifiedRows.add(rowData.phoneId);  // Now this refers to the correct context
+        historyTypeSelect.addEventListener("change", () => {
+            rowData.historyType = historyTypeSelect.value;
+            this.modifiedRows.add(rowData.mid);  // Now this refers to the correct context
         });
 
-        phoneTypeContainer.appendChild(phoneTypeSelect);
-        return phoneTypeContainer;
+        historyTypeContainer.appendChild(historyTypeSelect);
+        return historyTypeContainer;
     }
 
-    convertToTextInput(phoneText, rowData, field) {
+    convertToTextInput(historyText, rowData, field) {
         const input = document.createElement("input");
         input.type = "text";
-        input.classList.add("phone-text-open");
-        input.value = rowData[field] || ""; // Start with empty if no phone
+        input.classList.add("history-text-open");
+        input.value = rowData[field] || ""; // Start with empty if no history
         // Function to handle saving and switching back to text view
         const saveAndSwitchBack = () => {
             rowData[field] = input.value; // Update the data object
-            phoneText.textContent = input.value || "Click to add phone"; // Set text or placeholder
-            phoneText.classList.toggle("placeholder", !input.value); // Add placeholder styling if empty
-            phoneText.style.display = "inline";
+            historyText.textContent = input.value || "Click to add id"; // Set text or placeholder
+            historyText.classList.toggle("placeholder", !input.value); // Add placeholder styling if empty
+            historyText.style.display = "inline";
             input.remove();
         };
         // Attach the blur event
@@ -145,8 +160,8 @@ class PhoneTable {
                 saveAndSwitchBack();
             }
         });
-        phoneText.style.display = "none";
-        phoneText.parentNode.appendChild(input);
+        historyText.style.display = "none";
+        historyText.parentNode.appendChild(input);
         input.focus();
     }
 
@@ -176,21 +191,22 @@ class PhoneTable {
     }
 
     addRow() {
-        const newPhone = {
-            "phoneId": 0,
-            "pId": this.person.pId,
-            "phoneListed": true,
-            "phone": "",
-            "phoneType": "cell",
+        const newHistory = {
+            "mid": this.membership.mid,
+            "fiscalYear": 0,
+            "membershipId": 0,
+            "renew": false,
+            "memType": "RM",
+            "lateRenew": false
         };
-        // Send POST request to server to create a new phone
-        fetch('/api/insert-phone', {
+        // Send POST request to server to create a new history
+        fetch('/api/insert-membershipId', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 [csrfHeaderName]: csrfToken // Include CSRF token in the request headers
             },
-            body: JSON.stringify(newPhone)
+            body: JSON.stringify(newHistory)
         })
             .then(response => {
                 if (!response.ok) {
@@ -200,25 +216,25 @@ class PhoneTable {
             })
             .then(data => {
                 // Assuming the response contains the new ID
-                newPhone.phoneId = data.id; // Set the returned ID
-                this.person.phones.push(newPhone); // Add new phone row to data array
+                newHistory.mid = data.id; // Set the returned ID
+                this.membership.membership_ids.push(newHistory); // Add new history row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
-            .catch(error => console.error('Error adding new phone:', error));
+            .catch(error => console.error('Error adding new history:', error));
     }
 
     deleteRow() {
         if (this.selectedRowIndex != null) {
-            const phone = this.person.phones[this.selectedRowIndex]; // Ensure `person` is accessible here
+            const history = this.membership.membership_ids[this.selectedRowIndex]; // Ensure `person` is accessible here
             // Confirm deletion (optional)
-            if (!confirm("Are you sure you want to delete this phone?")) return;
-            fetch('/api/delete-phone', {
+            if (!confirm("Are you sure you want to delete this history?")) return;
+            fetch('/api/delete-membershipId', {
                 method: 'DELETE', // Use DELETE method for deletion
                 headers: {
                     'Content-Type': 'application/json',
                     [csrfHeaderName]: csrfToken // Include CSRF token
                 },
-                body: JSON.stringify(phone)
+                body: JSON.stringify(history)
             })
                 .then(response => {
                     if (!response.ok) {
@@ -227,8 +243,8 @@ class PhoneTable {
                     return response.json();
                 })
                 .then(() => { // data is not used here
-                    // Remove phone from array and DOM
-                    this.person.phones.splice(this.selectedRowIndex, 1); // Remove from data
+                    // Remove history from array and DOM
+                    this.membership.membership_ids.splice(this.selectedRowIndex, 1); // Remove from data
                     if (this.selectedRow) { // Ensure row exists
                         this.selectedRow.remove(); // Remove from DOM
                     }
@@ -236,14 +252,14 @@ class PhoneTable {
                     this.selectedRow = null; // Reset selected row
                     this.selectedRowIndex = null; // Reset selected row index
                 })
-                .catch(error => console.error('Error deleting phone:', error)); // Adjust error message
+                .catch(error => console.error('Error deleting history:', error)); // Adjust error message
         }
     }
 
     // Function to check for any open editable fields and close them
     closeOpenInputs() {
-        // Select all elements with the 'phone-text-open' class
-        const openInputs = document.querySelectorAll('.phone-text-open');
+        // Select all elements with the 'history-text-open' class
+        const openInputs = document.querySelectorAll('.history-text-open');
         // Loop through each open input and simulate a blur to trigger saving
         openInputs.forEach(input => {
             input.blur(); // This will trigger the blur event, which saves the data
@@ -253,23 +269,24 @@ class PhoneTable {
     batchUpdate() {
             this.closeOpenInputs();
             const editedRows = [];
-            // Loop through each phone in the data model
-            this.person.phones.forEach(phone => {
-                // Check if this phoneId is in the modified set
-                if (this.modifiedRows.has(phone.phoneId)) {
-                    // Add the modified phone data directly from the model
+            // Loop through each history in the data model
+            this.membership.membership_ids.forEach(memId => {
+                // Check if this historyId is in the modified set
+                if (this.modifiedRows.has(memId.mid)) {
+                    // Add the modified memId data directly from the model
                     editedRows.push({
-                        phoneId: phone.phoneId,
-                        pId: phone.pId,
-                        phoneListed: phone.phoneListed,
-                        phone: phone.phone,
-                        phoneType: phone.phoneType,
+                        mid: memId.mid,
+                        fiscalYear: memId.fiscalYear,
+                        membershipId: memId.membershipId,
+                        renew: memId.renew,
+                        memType: memId.memType,
+                        lateRenew: false,
                     });
                 }
             });
         // Only send the fetch request if there are modified rows
         if (editedRows.length > 0) {
-            fetch('/api/update-phones', {
+            fetch('/api/update-membershipIds', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -284,19 +301,19 @@ class PhoneTable {
                     return response.json();
                 })
                 .then(() => {
-                    this.modifiedRows.forEach(phoneId => {
-                        const phoneRow = document.querySelector(`tr[data-phone-id="${phoneId}"]`);
-                        if (phoneRow) {
-                            phoneRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                    this.modifiedRows.forEach(historyId => {
+                        const historyRow = document.querySelector(`tr[data-history-id="${historyId.mid}"]`);
+                        if (historyRow) {
+                            historyRow.style.backgroundColor = 'lightgreen'; // still not turning green
                             // Revert to the original background color after .5 seconds
                             setTimeout(() => {
-                                phoneRow.style.backgroundColor = '';
+                                historyRow.style.backgroundColor = '';
                             }, 500);
                         }
                     });
                     this.modifiedRows.clear();
                 })
-                .catch(error => console.error('Error updating phones:', error));
+                .catch(error => console.error('Error updating membershipIds:', error));
         }
     }
 }

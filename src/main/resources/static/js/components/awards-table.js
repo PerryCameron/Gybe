@@ -71,7 +71,7 @@ class AwardsTable {
     }
 
     createAwardTypeSelect(rowData) {
-        console.log("data: ", rowData);
+        // console.log("data: ", rowData);
         const awardTypeContainer = document.createElement("td");
         awardTypeContainer.classList.add("select-container");
         awardTypeContainer.id = "award-type-container-" + rowData.awardId;

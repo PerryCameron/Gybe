@@ -132,3 +132,14 @@
  * @property {boolean|null} supplemental - Whether the invoice is supplemental (1 for true, 0 for false).
  * @property {number} maxCredit - The maximum credit available on the invoice.
  */
+
+/**
+ * @typedef {Object} MembershipId
+ * @property {number} mid - The unique identifier for the membership.
+ * @property {number} fiscalYear - The fiscal year associated with this membership.
+ * @property {number|null} membershipId - The membership ID.
+ * @property {boolean} renew - Indicates if the membership was renewed (1 for true, 0 for false).
+ * @property {string|null} memType - The type of membership (e.g., "FM" for full member).
+ * @property {boolean} selected - Indicates if this membership is selected (1 for true, 0 for false).
+ * @property {boolean} lateRenew - Indicates if the membership was renewed late (1 for true, 0 for false).
+ */
