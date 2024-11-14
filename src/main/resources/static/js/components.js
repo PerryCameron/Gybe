@@ -28,12 +28,12 @@ function newCheckbox(text, objectId, value) {
   return checkbox;
 }
 
-function newLabledCheckBox(objectId, text, value, label) {
+function labeledCheckBox(objectId, text, value, label) {
   let cbContent = newDiv("checkbox-container-div", "checkbox-container-" + text + "-" + objectId);
   let checkbox = newCheckbox(text, objectId, value);
   let checkboxDiv = newDiv("checkbox", "checkbox-" + objectId);
-  let checkboxlabelDiv = newDiv("checkbox-label", "checkbox-label-" + objectId);
-  checkboxlabelDiv.appendChild(newLabel(label, "none", `${text}-check-${objectId}`));
+  let checkBoxLabelDiv = newDiv("checkbox-label", "checkbox-label-" + objectId);
+  checkBoxLabelDiv.appendChild(newLabel(label, "none", `${text}-check-${objectId}`));
   checkboxDiv.appendChild(checkbox);
   cbContent.appendChildren([checkboxDiv, checkboxlabelDiv]);
   return cbContent;
@@ -58,16 +58,8 @@ function newLabel(text, classAttribute, forAttribute) {
   return label;
 }
 
-// function deleteElement(divId) {
-//   let elementToDelete = document.getElementById(divId);
-//   elementToDelete.style.border = "2px solid red";
-//   setTimeout(() => {
-//     elementToDelete.style.border = "";
-//     elementToDelete.remove();
-//   }, 500);
-// }
 function createImageElement(src, className) {
-  var img = document.createElement("img");
+  const img = document.createElement("img");
   img.src = src;
   img.alt = "logo"; // Setting a default alt text, can be parameterized as well
   if (className) {

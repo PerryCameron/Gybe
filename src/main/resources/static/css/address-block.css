@@ -1,0 +1,30 @@
+.address-block {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.street-field {
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+.city-state-zip-container {
+    display: flex;
+    gap: 10px;
+}
+
+.city-field, .state-field, .zip-field {
+    flex: 1;
+}
+
+.city-field {
+    width: 50px;
+}
+
+.state-field {
+    width: 50px;
+}
+
+.zip-field {
+    width: 50px;
+}
