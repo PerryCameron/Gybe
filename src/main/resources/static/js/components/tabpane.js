@@ -48,7 +48,6 @@ class TabPane {
 
         // Create and append the content for the new tab
         const tabContent = document.createElement("div");
-        // tabContent.setAttribute("data-tab-content", tabId);
         tabContent.classList.add("tab-content-div");
         tabContent.appendChild(content);
         tabContent.style.display = "none"; // Hide content initially

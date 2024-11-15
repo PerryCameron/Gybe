@@ -25,38 +25,34 @@ function createMembershipContent(membership) {
 
 function AddressAndStorageTitlePane(membershipData) {
     const titledPane = new TitledPane("Address and Storage", "membership-section");
-    // Use membershipData if needed, for example:
-    // titledPane.setContentId(`membership-pane-${membershipData.msId}`);
     titledPane.classList.add("address-storage-titled-pane");
     titledPane.contentElement.appendChild(addressAndStorageTabPane(membershipData));
-    // Additional content population logic
     return titledPane;
 }
 
 function MembershipTitlePane(membershipData) {
     const titledPane = new TitledPane("Membership", "membership-section");
-    // Use membershipData if needed, for example:
-    // titledPane.setContentId(`membership-pane-${membershipData.msId}`);
     titledPane.classList.add("history-invoice-titled-pane");
     titledPane.contentElement.appendChild(membershipTabPane(membershipData));
-    // Additional content population logic
     return titledPane;
 }
 
 function addressAndStorageTabPane(membershipData) {
     const div = document.createElement("div");
     const tabPane = new TabPane(div, "horizontal");
-    tabPane.addTab("address-" + membershipData.pId, "Address", setAddressBlock(membershipData), false);
-    tabPane.addTab("storage-" + membershipData.pId, "Storage", fakeContent("This is storage"), false);
+    tabPane.addTab("address-" + membershipData.msId, "Address", setAddressBlock(membershipData), false);
+    tabPane.addTab("storage-" + membershipData.msId, "Storage", fakeContent("This is storage"), false);
+    tabPane.switchToTab("address-" + membershipData.msId);
     return div;
 }
 
 function membershipTabPane(membershipData) {
     const div = document.createElement("div");
     const tabPane = new TabPane(div, "horizontal");
-    tabPane.addTab("history-" + membershipData.pId, "History", setHistoryTable(membershipData), false);
-    tabPane.addTab("invoice-list-" + membershipData.pId, "Invoices", fakeContent("This is the invoice list"), false);
-    tabPane.addTab("properties-" + membershipData.pId, "Properties", fakeContent("This is properties"), false);
+    tabPane.addTab("history-" + membershipData.msId, "History", setHistoryTable(membershipData), false);
+    tabPane.addTab("invoice-list-" + membershipData.msId, "Invoices", fakeContent("This is the invoice list"), false);
+    tabPane.addTab("properties-" + membershipData.msId, "Properties", fakeContent("This is properties"), false);
+    tabPane.switchToTab("history-" + membershipData.msId);
     return div;
 }
 

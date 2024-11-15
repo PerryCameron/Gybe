@@ -21,7 +21,7 @@ class AddressBlock {
         this.streetField = document.createElement("textarea");
         this.streetField.classList.add("street-field");
         this.streetField.rows = 2;
-        this.streetField.value = this.addressData.street || "";
+        this.streetField.value = this.addressData.address || "";
         this.container.appendChild(this.streetField);
 
         // City, State, and Zip fields (inline)
@@ -29,11 +29,16 @@ class AddressBlock {
         this.stateField = this.createTextInput("state-field", this.addressData.state || "", "State");
         this.zipField = this.createTextInput("zip-field", this.addressData.zip || "", "Zip");
 
-        const cityStateZipContainer = document.createElement("div");
-        cityStateZipContainer.classList.add("city-state-zip-container");
-        cityStateZipContainer.append(this.cityField, this.stateField, this.zipField);
+        const cityContainer = document.createElement("div");
+        const stateZipContainer = document.createElement("div");
+        stateZipContainer.classList.add("city-state-zip-container");
+        cityContainer.classList.add("city-container");
+        cityContainer.append(this.cityField);
+        stateZipContainer.append(this.stateField, this.zipField);
 
-        this.container.appendChild(cityStateZipContainer);
+        this.container.appendChild(cityContainer);
+        this.container.appendChild(stateZipContainer);
+
     }
 
     // Helper method to create text input fields
@@ -49,7 +54,7 @@ class AddressBlock {
     // Method to check for changes and send an AJAX update if needed
     checkForChangesAndUpdate() {
         const newAddressData = {
-            street: this.streetField.value,
+            address: this.streetField.value,
             city: this.cityField.value,
             state: this.stateField.value,
             zip: this.zipField.value
