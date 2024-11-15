@@ -287,10 +287,10 @@ class PhoneTable {
                     this.modifiedRows.forEach(phoneId => {
                         const phoneRow = document.querySelector(`tr[data-phone-id="${phoneId}"]`);
                         if (phoneRow) {
-                            phoneRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                            phoneRow.classList.add("updateSuccess");
                             // Revert to the original background color after .5 seconds
                             setTimeout(() => {
-                                phoneRow.style.backgroundColor = '';
+                                phoneRow.classList.remove("updateSuccess");
                             }, 500);
                         }
                     });

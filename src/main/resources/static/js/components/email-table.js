@@ -266,10 +266,10 @@ class EmailTable {
                     this.modifiedRows.forEach(emailId => {
                         const emailRow = document.querySelector(`tr[data-email-id="${emailId}"]`);
                         if (emailRow) {
-                            emailRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                            emailRow.classList.add("updateSuccess");
                             // Revert to the original background color after .5 seconds
                             setTimeout(() => {
-                                emailRow.style.backgroundColor = '';
+                                emailRow.classList.remove("updateSuccess");
                             }, 500);
                         }
                     });

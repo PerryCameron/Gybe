@@ -272,10 +272,10 @@ class AwardsTable {
                     this.modifiedRows.forEach(awardId => {
                         const awardRow = document.querySelector(`tr[data-award-id="${awardId}"]`);
                         if (awardRow) {
-                            awardRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                            awardRow.classList.add("updateSuccess");
                             // Revert to the original background color after .5 seconds
                             setTimeout(() => {
-                                awardRow.style.backgroundColor = '';
+                                awardRow.classList.remove("updateSuccess");
                             }, 500);
                         }
                     });

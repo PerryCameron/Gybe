@@ -1,26 +1,36 @@
 class HistoryTable {
     constructor(container, membershipData) {
         this.mainContainer = container;
-        this.tableContainer = document.createElement("div");
-        this.tableContainer.classList.add("table-container");
+        this.membership = membershipData || {};
+        this.membership.membership_ids = Array.isArray(this.membership.membership_ids) ? this.membership.membership_ids : [];
+        this.modifiedRows = new Set();
+        this.selectedRow = null;
+
+        // Define table headers
         this.headers = {
             0: {fiscalYear: "Year", widget: "text"},
             1: {membershipId: "Mem ID", widget: "text"},
             2: {memType: "Mem Type", widget: "drop down"},
             3: {renew: "Renewed", widget: "check"},
         };
-        this.membership = membershipData || [];// Table data for each phone
-        this.membership.membership_ids = Array.isArray(this.membership.membership_ids) ? this.membership.membership_ids : [];
-        this.modifiedRows = new Set();
-        this.table = document.createElement("table"); // The phone table itself
-        this.selectedRow = null; // To track the highlighted row
-        this.mainContainer.appendChild(this.tableContainer);
-        this.renderTable();
-        this.renderButtons();
+
+        // Attach rendered nodes to the main container
+        const buttonContainer = this.renderButtons();
+        const tableContainer = this.renderTable();
+
+        // Add the button container above the table
+        this.mainContainer.appendChild(buttonContainer);
+        this.mainContainer.appendChild(tableContainer);
     }
 
     renderTable() {
-        this.table.innerHTML = ""; // Clear previous content
+        const tableContainer = document.createElement("div");
+        tableContainer.classList.add("medium-table");
+
+        const table = document.createElement("table");
+        this.table = table; // Save reference for further use
+        table.innerHTML = ""; // Clear previous content
+
         // Create the header row
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
@@ -28,25 +38,38 @@ class HistoryTable {
             th.textContent = header.fiscalYear || header.membershipId || header.memType || header.renew;
             headerRow.appendChild(th);
         });
-        this.table.addEventListener('mouseleave', () => this.batchUpdate());
-        this.table.appendChild(headerRow);
-        // sort rows descending
+        table.addEventListener("mouseleave", () => this.batchUpdate());
+        table.appendChild(headerRow);
+
+        // Sort rows descending
         this.membership.membership_ids.sort((a, b) => b.fiscalYear - a.fiscalYear);
+
         // Create data rows
         this.membership.membership_ids.forEach((rowData, index) => {
             const row = this.createDataRow(rowData, index);
-            this.table.appendChild(row);
+            table.appendChild(row);
         });
-        // Append the table to the main container if it's not already there
-        if (!this.tableContainer.contains(this.table)) {
-            // changed
-            this.tableContainer.appendChild(this.table); // changed
-        }
-        // Only append the tableContainer once to the body
-        if (!document.body.contains(this.mainContainer)) {
-            // changed
-            document.body.appendChild(this.mainContainer); // changed
-        }
+
+        tableContainer.appendChild(table);
+        return tableContainer;
+    }
+
+    renderButtons() {
+        const buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("medium-table-button-container");
+
+        const addButton = document.createElement("button");
+        addButton.textContent = "Add";
+        addButton.addEventListener("click", () => this.addRow());
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", () => this.deleteRow());
+
+        buttonContainer.appendChild(addButton);
+        buttonContainer.appendChild(deleteButton);
+
+        return buttonContainer;
     }
 
     createDataRow(rowData, index) {
@@ -186,24 +209,6 @@ class HistoryTable {
         this.selectedRow = row;
         row.classList.add("highlight");
         this.selectedRowIndex = index;
-    }
-
-    renderButtons() {
-        // Create the button container only once
-        if (this.buttonContainer) return; // Avoid creating it multiple times // changed
-        this.buttonContainer = document.createElement("div"); // changed
-        this.buttonContainer.classList.add("tableButton-container"); // TODO
-        const addButton = document.createElement("button");
-        addButton.textContent = "Add";
-        addButton.addEventListener("click", () => this.addRow());
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", () => this.deleteRow());
-        // Append buttons to the button container
-        this.buttonContainer.appendChild(addButton);
-        this.buttonContainer.appendChild(deleteButton);
-        // Append the button container to the right side of the table in the main container
-        this.mainContainer.appendChild(this.buttonContainer); // changed
     }
 
     addRow() {

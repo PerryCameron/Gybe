@@ -106,3 +106,7 @@
     width: 100%;
     /*height: 100%;*/
 }
+
+.updateSuccess {
+    background-color: var(--color-main-offcolor) !important;
+}

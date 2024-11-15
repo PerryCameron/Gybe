@@ -317,10 +317,10 @@ class PositionTable {
                         const officerRow = document.querySelector(`tr[data-officer-id="${officerId}"]`);
                         console.log(`tr[data-officer-id="${officerId}"]`);
                         if (officerRow) {
-                            officerRow.style.backgroundColor = 'lightgreen';
+                            officerRow.classList.add("updateSuccess");
                             // Revert to the original background color after 1.5 seconds
                             setTimeout(() => {
-                                officerRow.style.backgroundColor = '';
+                                officerRow.classList.remove("updateSuccess");
                             }, 500);
                         }
                     });
