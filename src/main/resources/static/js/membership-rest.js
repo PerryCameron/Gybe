@@ -66,7 +66,7 @@ function setAddressBlock(membershipData) {
 function setHistoryTable(membershipData) {
     const historyDiv = document.createElement("div");
     const historyTable = new HistoryTable(historyDiv, membershipData);
-    historyTable.mainContainer.classList.add("small-table-container");// this is getting data and processing it
+    historyTable.mainContainer.classList.add("medium-table-container");// this is getting data and processing it
     return historyDiv; // but no table rendered in this div??
 }
 

@@ -22,6 +22,7 @@ class PositionTable {
         this.table.innerHTML = ""; // Clear previous content
         // Create the header row
         const headerRow = document.createElement("tr");
+
         Object.values(this.headers).forEach((header) => {
             const th = document.createElement("th");
             th.textContent = header.fiscalYear || header.officerType || header.boardYear;
@@ -29,6 +30,8 @@ class PositionTable {
         });
         this.table.addEventListener('mouseleave', () => this.batchUpdate());
         this.table.appendChild(headerRow);
+        // sort officer rows in decending order
+        this.person.officers.sort((a, b) => b.fiscalYear - a.fiscalYear);
         // Create data rows
         this.person.officers.forEach((rowData, index) => {
             const row = this.createDataRow(rowData, index);

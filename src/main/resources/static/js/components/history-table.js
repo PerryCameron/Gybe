@@ -30,6 +30,8 @@ class HistoryTable {
         });
         this.table.addEventListener('mouseleave', () => this.batchUpdate());
         this.table.appendChild(headerRow);
+        // sort rows descending
+        this.membership.membership_ids.sort((a, b) => b.fiscalYear - a.fiscalYear);
         // Create data rows
         this.membership.membership_ids.forEach((rowData, index) => {
             const row = this.createDataRow(rowData, index);
@@ -121,9 +123,12 @@ class HistoryTable {
 
         // Define the options mapping
         const options = {
-            "C": "Cell",
-            "H": "Home",
-            "E": "Emergency"
+            "RM": "Regular",
+            "FM": "Family",
+            "SO": "Social",
+            "LA": "Lake Associate",
+            "LM": "Life Member",
+            "RF": "Race Fellow"
         };
 
         // Populate the select element with the defined options
@@ -135,8 +140,8 @@ class HistoryTable {
         }
 
         // Set the selected option based on data.historyType
-        if (rowData.historyType) {
-            historyTypeSelect.value = rowData.historyType;
+        if (rowData.memType) {
+            historyTypeSelect.value = rowData.memType;
         }
 
         historyTypeSelect.addEventListener("change", () => {
