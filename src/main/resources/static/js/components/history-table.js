@@ -22,10 +22,10 @@ class HistoryTable {
         this.mainContainer.appendChild(this.tableContainer);
 
         // Render the initial table
-        this.renderTable();
+        this.renderTable(true);
     }
 
-    renderTable() {
+    renderTable(sort) {
         console.log("rendering table");
 
         // Clear previous rows while keeping the container structure intact
@@ -44,9 +44,9 @@ class HistoryTable {
             this.table.appendChild(headerRow);
         }
 
-        // Sort rows descending
-        this.membership.membership_ids.sort((a, b) => b.fiscalYear - a.fiscalYear);
-
+        if(sort) {
+            this.membership.membership_ids.sort((a, b) => b.fiscalYear - a.fiscalYear);
+        }
         // Create and append data rows
         this.buildRows();
     }
@@ -217,7 +217,8 @@ class HistoryTable {
 
     addRow() {
         const newHistory = {
-            "fiscalYear": this.membership.fiscalYear,
+            // "fiscalYear": this.membership.fiscalYear,
+            "fiscalYear": 0,
             "lateRenew": 0,
             "mId": 0,
             "memType": "RM",
@@ -244,8 +245,8 @@ class HistoryTable {
             .then(data => {
                 // Assuming the response contains the new ID
                 newHistory.mId = data.id; // Set the returned ID
-                this.membership.membership_ids.push(newHistory); // Add new history row to data array
-                this.renderTable(); // Re-render the table to display the new row
+                this.membership.membership_ids.unshift(newHistory); // Add new history row to data array
+                this.renderTable(false); // Re-render the table to display the new row
             })
             .catch(error => console.error('Error adding new history:', error));
     }

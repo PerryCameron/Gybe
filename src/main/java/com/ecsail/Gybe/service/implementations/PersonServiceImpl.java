@@ -82,9 +82,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public int insertNewMembershipId(MembershipIdDTO membershipIdDTO) {
-        if(membershipIdRepository.exists(membershipIdDTO)) membershipIdDTO.setFiscalYear("0");
-//        return membershipIdRepository.insert(membershipIdDTO);
-        return 11111111;
+        return membershipIdRepository.insert(membershipIdDTO);
     }
 
     @Override
@@ -110,6 +108,12 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public boolean deleteAwardRow(AwardDTO awardDTO) {
         int result = awardRepository.delete(awardDTO);
+        return result > 0;
+    }
+
+    @Override
+    public boolean deleteMembershipIdRow(MembershipIdDTO membershipIdDTO) {
+        int result = membershipIdRepository.delete(membershipIdDTO);
         return result > 0;
     }
 

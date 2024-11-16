@@ -179,4 +179,13 @@ public class PersonRestController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/api/delete-membershipId")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> deleteMembershipId(@RequestBody MembershipIdDTO membershipIdDTO) {
+        boolean isDeleted = personService.deleteMembershipIdRow(membershipIdDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("deleted", isDeleted);
+        return ResponseEntity.ok(response);
+    }
+
 }

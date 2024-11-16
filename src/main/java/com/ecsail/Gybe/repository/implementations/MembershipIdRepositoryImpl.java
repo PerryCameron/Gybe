@@ -121,7 +121,7 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
         String sql = """
         SELECT COUNT(*) 
         FROM membership_id 
-        WHERE FISCAL_YEAR = ? AND MS_ID = ?
+        WHERE FISCAL_YEAR = ?
     """;
         // Query for the count and return true if the count is greater than 0
         Integer count = template.queryForObject(
@@ -130,6 +130,7 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
                 membershipIdDTO.getFiscalYear(),
                 membershipIdDTO.getMsId()
         );
+        System.out.println("membership exists: " + count != null && count > 0);
         return count != null && count > 0;
     }
 
