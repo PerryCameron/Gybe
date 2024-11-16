@@ -10,6 +10,7 @@ public interface PersonService {
     int insertNewPositionRow(OfficerDTO officerDTO);
     int insertNewEmailRow(EmailDTO emailDTO);
     int insertNewAwardRow(AwardDTO awardDTO);
+    int insertNewMembershipId(MembershipIdDTO membershipIdDTO);
     boolean deletePhoneRow(PhoneDTO phoneDTO);
     boolean deletePositionRow(OfficerDTO officerDTO);
     boolean deleteEmailRow(EmailDTO emailDTO);

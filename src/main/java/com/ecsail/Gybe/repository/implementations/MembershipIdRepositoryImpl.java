@@ -117,6 +117,23 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     }
 
     @Override
+    public boolean exists(MembershipIdDTO membershipIdDTO) {
+        String sql = """
+        SELECT COUNT(*) 
+        FROM membership_id 
+        WHERE FISCAL_YEAR = ? AND MS_ID = ?
+    """;
+        // Query for the count and return true if the count is greater than 0
+        Integer count = template.queryForObject(
+                sql,
+                Integer.class,
+                membershipIdDTO.getFiscalYear(),
+                membershipIdDTO.getMsId()
+        );
+        return count != null && count > 0;
+    }
+
+    @Override
     public int insert(MembershipIdDTO membershipIdDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO membership_id (FISCAL_YEAR, MS_ID, MEMBERSHIP_ID, RENEW, MEM_TYPE, SELECTED, LATE_RENEW) " +
@@ -124,6 +141,6 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipIdDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         membershipIdDTO.setmId(keyHolder.getKey().intValue());
-        return affectedRows;
+        return membershipIdDTO.getmId();
     }
 }

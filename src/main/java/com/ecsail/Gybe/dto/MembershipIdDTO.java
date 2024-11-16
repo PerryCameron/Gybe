@@ -88,4 +88,18 @@ public class MembershipIdDTO {
 	public void setLateRenew(boolean lateRenew) {
 		this.lateRenew = lateRenew;
 	}
+
+	@Override
+	public String toString() {
+		return "MembershipIdDTO{" +
+				"mId=" + mId +
+				", fiscalYear='" + fiscalYear + '\'' +
+				", msId=" + msId +
+				", membershipId='" + membershipId + '\'' +
+				", renew=" + renew +
+				", memType='" + memType + '\'' +
+				", selected=" + selected +
+				", lateRenew=" + lateRenew +
+				'}';
+	}
 }

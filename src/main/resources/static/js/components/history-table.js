@@ -5,7 +5,9 @@ class HistoryTable {
         this.membership.membership_ids = Array.isArray(this.membership.membership_ids) ? this.membership.membership_ids : [];
         this.modifiedRows = new Set();
         this.selectedRow = null;
-
+        this.tableContainer = document.createElement("div");
+        this.tableContainer.classList.add("medium-table");
+        this.table = document.createElement("table");
         // Define table headers
         this.headers = {
             0: {fiscalYear: "Year", widget: "text"},
@@ -13,45 +15,47 @@ class HistoryTable {
             2: {memType: "Mem Type", widget: "drop down"},
             3: {renew: "Renewed", widget: "check"},
         };
+        this.buttonContainer = this.renderButtons()
+        this.tableContainer.appendChild(this.table);
+        this.renderButtons()
+        this.mainContainer.appendChild(this.buttonContainer);
+        this.mainContainer.appendChild(this.tableContainer);
 
-        // Attach rendered nodes to the main container
-        const buttonContainer = this.renderButtons();
-        const tableContainer = this.renderTable();
-
-        // Add the button container above the table
-        this.mainContainer.appendChild(buttonContainer);
-        this.mainContainer.appendChild(tableContainer);
+        // Render the initial table
+        this.renderTable();
     }
 
     renderTable() {
-        const tableContainer = document.createElement("div");
-        tableContainer.classList.add("medium-table");
+        console.log("rendering table");
 
-        const table = document.createElement("table");
-        this.table = table; // Save reference for further use
-        table.innerHTML = ""; // Clear previous content
+        // Clear previous rows while keeping the container structure intact
+        this.table.innerHTML = ""; // Clear existing table rows
 
-        // Create the header row
+        // Create the header row (if not already created)
         const headerRow = document.createElement("tr");
         Object.values(this.headers).forEach((header) => {
             const th = document.createElement("th");
             th.textContent = header.fiscalYear || header.membershipId || header.memType || header.renew;
             headerRow.appendChild(th);
         });
-        table.addEventListener("mouseleave", () => this.batchUpdate());
-        table.appendChild(headerRow);
+
+        // Check if the header already exists before appending it
+        if (!this.table.querySelector("tr")) {
+            this.table.appendChild(headerRow);
+        }
 
         // Sort rows descending
         this.membership.membership_ids.sort((a, b) => b.fiscalYear - a.fiscalYear);
 
-        // Create data rows
+        // Create and append data rows
+        this.buildRows();
+    }
+
+    buildRows() {
         this.membership.membership_ids.forEach((rowData, index) => {
             const row = this.createDataRow(rowData, index);
-            table.appendChild(row);
+            this.table.appendChild(row);
         });
-
-        tableContainer.appendChild(table);
-        return tableContainer;
     }
 
     renderButtons() {
@@ -75,7 +79,7 @@ class HistoryTable {
     createDataRow(rowData, index) {
         const row = document.createElement("tr");
         // Set data attributes for the row using rowData properties
-        row.dataset.mid = rowData.mid;
+        row.dataset.mId = rowData.mId;
 
         // Create the year cell with an editable field
         const yearCell = document.createElement("td");
@@ -109,7 +113,7 @@ class HistoryTable {
         checkbox.checked = rowData.renew === 1;
         checkbox.addEventListener("change", () => {
             rowData.renew = checkbox.checked ? 1 : 0;
-            this.modifiedRows.add(rowData.mid);
+            this.modifiedRows.add(rowData.mId);
         });
         listedCell.appendChild(checkbox);
         row.appendChild(listedCell);
@@ -127,7 +131,7 @@ class HistoryTable {
         // Add click event to convert to text input
         span.addEventListener("click", () => {
             this.convertToTextInput(span, rowData, key);
-            this.modifiedRows.add(rowData.mid); // Track modified rows by `mid`
+            this.modifiedRows.add(rowData.mId); // Track modified rows by `mId`
         });
 
         return span;
@@ -137,10 +141,10 @@ class HistoryTable {
         console.log("history data: ", rowData);
         const historyTypeContainer = document.createElement("td");
         historyTypeContainer.classList.add("select-container");
-        historyTypeContainer.id = "history-type-container-" + rowData.mid;
+        historyTypeContainer.id = "history-type-container-" + rowData.mId;
 
         const historyTypeSelect = document.createElement("select");
-        historyTypeSelect.id = "history-type-select-" +rowData.mid;
+        historyTypeSelect.id = "history-type-select-" +rowData.mId;
         historyTypeSelect.className = "small-table-select";
         historyTypeSelect.name = "historyType";
 
@@ -169,7 +173,7 @@ class HistoryTable {
 
         historyTypeSelect.addEventListener("change", () => {
             rowData.historyType = historyTypeSelect.value;
-            this.modifiedRows.add(rowData.mid);  // Now this refers to the correct context
+            this.modifiedRows.add(rowData.mId);  // Now this refers to the correct context
         });
 
         historyTypeContainer.appendChild(historyTypeSelect);
@@ -213,12 +217,14 @@ class HistoryTable {
 
     addRow() {
         const newHistory = {
-            "mid": this.membership.mid,
-            "fiscalYear": 0,
-            "membershipId": 0,
-            "renew": false,
+            "fiscalYear": this.membership.fiscalYear,
+            "lateRenew": 0,
+            "mId": 0,
             "memType": "RM",
-            "lateRenew": false
+            "msId": this.membership.msId,
+            "membershipId": 0,
+            "renew": 1,
+            "selected": 0,
         };
         // Send POST request to server to create a new history
         fetch('/api/insert-membershipId', {
@@ -237,7 +243,7 @@ class HistoryTable {
             })
             .then(data => {
                 // Assuming the response contains the new ID
-                newHistory.mid = data.id; // Set the returned ID
+                newHistory.mId = data.id; // Set the returned ID
                 this.membership.membership_ids.push(newHistory); // Add new history row to data array
                 this.renderTable(); // Re-render the table to display the new row
             })
@@ -293,15 +299,15 @@ class HistoryTable {
             // Loop through each history in the data model
             this.membership.membership_ids.forEach(memId => {
                 // Check if this historyId is in the modified set
-                if (this.modifiedRows.has(memId.mid)) {
+                if (this.modifiedRows.has(memId.mId)) {
                     // Add the modified memId data directly from the model
                     editedRows.push({
-                        mid: memId.mid,
+                        mId: memId.mId,
                         fiscalYear: memId.fiscalYear,
                         membershipId: memId.membershipId,
                         renew: memId.renew,
                         memType: memId.memType,
-                        lateRenew: false,
+                        lateRenew: 0,
                     });
                 }
             });
@@ -323,7 +329,7 @@ class HistoryTable {
                 })
                 .then(() => {
                     this.modifiedRows.forEach(historyId => {
-                        const historyRow = document.querySelector(`tr[data-history-id="${historyId.mid}"]`);
+                        const historyRow = document.querySelector(`tr[data-history-id="${historyId.mId}"]`);
                         if (historyRow) {
                             historyRow.style.backgroundColor = 'lightgreen'; // still not turning green
                             // Revert to the original background color after .5 seconds

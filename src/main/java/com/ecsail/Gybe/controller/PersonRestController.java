@@ -133,6 +133,16 @@ public class PersonRestController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/api/insert-membershipId")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> insertMembershipId(@RequestBody MembershipIdDTO membershipIdDTO) {
+        System.out.println(membershipIdDTO);
+        int id = personService.insertNewMembershipId(membershipIdDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", id);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/api/delete-award")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> deleteAward(@RequestBody AwardDTO awardDTO) {

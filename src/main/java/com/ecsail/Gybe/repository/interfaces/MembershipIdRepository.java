@@ -23,5 +23,7 @@ public interface MembershipIdRepository {
 
     int delete(MembershipIdDTO membershipIdDTO);
 
+    boolean exists(MembershipIdDTO membershipIdDTO);
+
     int insert(MembershipIdDTO membershipIdDTO);
 }

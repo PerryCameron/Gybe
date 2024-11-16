@@ -15,19 +15,22 @@ public class PersonServiceImpl implements PersonService {
     private final PhoneRepository phoneRepository;
     private final OfficerRepository officerRepository;
     private final AwardRepository awardRepository;
+    private final MembershipIdRepository membershipIdRepository;
 
     public PersonServiceImpl(AwardRepository awardRepository,
                              EmailRepository emailRepository,
                              PersonRepository personRepository,
                              GeneralRepository generalRepository,
                              PhoneRepository phoneRepository,
-                             OfficerRepository officerRepository) {
+                             OfficerRepository officerRepository,
+                             MembershipIdRepository membershipIdRepository) {
         this.awardRepository = awardRepository;
         this.personRepository = personRepository;
         this.emailRepository = emailRepository;
         this.generalRepository = generalRepository;
         this.phoneRepository = phoneRepository;
         this.officerRepository = officerRepository;
+        this.membershipIdRepository = membershipIdRepository;
     }
 
     @Override
@@ -75,6 +78,13 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public int insertNewAwardRow(AwardDTO awardDTO) {
         return awardRepository.insert(awardDTO);
+    }
+
+    @Override
+    public int insertNewMembershipId(MembershipIdDTO membershipIdDTO) {
+        if(membershipIdRepository.exists(membershipIdDTO)) membershipIdDTO.setFiscalYear("0");
+//        return membershipIdRepository.insert(membershipIdDTO);
+        return 11111111;
     }
 
     @Override

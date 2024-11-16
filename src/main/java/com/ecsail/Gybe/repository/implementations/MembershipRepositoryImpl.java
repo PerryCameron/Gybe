@@ -528,9 +528,10 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                        'membership_ids', (
                            SELECT JSON_ARRAYAGG(
                                JSON_OBJECT(
-                                   'mid', mid.MID,
+                                   'mId', mid.MID,
                                    'fiscalYear', mid.FISCAL_YEAR,
                                    'membershipId', mid.MEMBERSHIP_ID,
+                                   'msId', mid.MS_ID,
                                    'renew', mid.RENEW,
                                    'memType', mid.MEM_TYPE,
                                    'selected', mid.SELECTED,
