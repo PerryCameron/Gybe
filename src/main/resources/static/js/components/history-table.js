@@ -138,7 +138,6 @@ class HistoryTable {
     }
 
     createHistoryTypeSelect(rowData) {
-        console.log("history data: ", rowData);
         const historyTypeContainer = document.createElement("td");
         historyTypeContainer.classList.add("select-container");
         historyTypeContainer.id = "history-type-container-" + rowData.mId;
@@ -172,7 +171,7 @@ class HistoryTable {
         }
 
         historyTypeSelect.addEventListener("change", () => {
-            rowData.historyType = historyTypeSelect.value;
+            rowData.memType = historyTypeSelect.value;
             this.modifiedRows.add(rowData.mId);  // Now this refers to the correct context
         });
 
@@ -331,13 +330,15 @@ class HistoryTable {
                     return response.json();
                 })
                 .then(() => {
-                    this.modifiedRows.forEach(historyId => {
-                        const historyRow = document.querySelector(`tr[data-history-id="${historyId.mId}"]`);
+                    console.log("Modified rows: ", this.modifiedRows);
+                    this.modifiedRows.forEach(mId => {
+                        console.log(`tr[data-m-id="${mId}"]`); // why is mId undefined here?
+                        const historyRow = document.querySelector(`tr[data-m-id="${mId}"]`);
                         if (historyRow) {
-                            historyRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                            historyRow.classList.add("updateSuccess");
                             // Revert to the original background color after .5 seconds
                             setTimeout(() => {
-                                historyRow.style.backgroundColor = '';
+                                historyRow.classList.remove("updateSuccess");
                             }, 500);
                         }
                     });
