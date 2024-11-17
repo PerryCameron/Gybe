@@ -1,7 +1,6 @@
 package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.MembershipIdDTO;
-import com.ecsail.Gybe.dto.PhoneDTO;
 import com.ecsail.Gybe.repository.interfaces.MembershipIdRepository;
 import com.ecsail.Gybe.repository.rowmappers.MembershipIdRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

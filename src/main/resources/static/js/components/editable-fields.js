@@ -8,6 +8,7 @@ class EditableFieldsPane extends HTMLElement {
         // Create a div to hold all fields, add a mouseleave listener to handle updates
         this.fieldsContainer = document.createElement("div");
         this.fieldsContainer.classList.add("fields-container");
+        this.fieldsContainer.id = "fields-" + this.personData.pId;
         // Create fields for each property and add them to the container
         this.fields = {};
         Object.keys(personFields).forEach((field) => {
@@ -54,8 +55,10 @@ class EditableFieldsPane extends HTMLElement {
 
     // Create a div for each field, initially displaying the text
     createFieldDiv(field) {
+        console.log("field",field);
         const fieldDiv = document.createElement("div");
         fieldDiv.classList.add("field");
+        // fieldDiv.id =  field + "-" + this.id
         const label = document.createElement("label");
         label.textContent = field.charAt(0).toUpperCase() + field.slice(1) + ": ";
         const valueSpan = document.createElement("span");
@@ -153,12 +156,13 @@ class EditableFieldsPane extends HTMLElement {
                 return response.json(); // Optional: Parse JSON response
             })
             .then(() => {
-                const personRow = document.getElementById(`person-info-${this.personData.pId}`);
+                const personRow = document.getElementById(`fields-${this.personData.pId}`);
+                console.log(personRow);
                 if (personRow) {
-                    personRow.style.backgroundColor = 'lightgreen'; // still not turning green
+                    personRow.classList.add("updateSuccess");
                     // Revert to the original background color after .5 seconds
                     setTimeout(() => {
-                        personRow.style.backgroundColor = '';
+                        personRow.classList.remove("updateSuccess");
                     }, 500);
                 }
             })

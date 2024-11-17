@@ -108,5 +108,5 @@
 }
 
 .updateSuccess {
-    background-color: var(--color-main-offcolor) !important;
+    background-color: var(--color-main-highlight) !important;
 }
