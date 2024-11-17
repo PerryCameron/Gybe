@@ -118,7 +118,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean batchUpdateEmail(List<EmailDTO> emailDTOList) {
+    public boolean updateEmail(List<EmailDTO> emailDTOList) {
+        if (emailDTOList == null || emailDTOList.isEmpty()) return false; // No updates to perform
         int result = 0;
         if(emailDTOList.size() == 1) result = emailRepository.update(emailDTOList.get(0));
         else if(emailDTOList.size() > 1) result = emailRepository.batchUpdate(emailDTOList);
@@ -126,7 +127,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean batchUpdatePosition(List<OfficerDTO> officerDTOList) {
+    public boolean updatePositions(List<OfficerDTO> officerDTOList) {
+        if (officerDTOList == null || officerDTOList.isEmpty()) return false; // No updates to perform
         int result = 0;
         if(officerDTOList.size() == 1) result = officerRepository.update(officerDTOList.get(0));
         else if(officerDTOList.size() > 1) result = officerRepository.batchUpdate(officerDTOList);
@@ -134,10 +136,20 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean batchUpdateAwards(List<AwardDTO> awardDTOS) {
+    public boolean updateAwards(List<AwardDTO> awardDTOS) {
+        if (awardDTOS == null || awardDTOS.isEmpty()) return false; // No updates to perform
         int result = 0;
         if(awardDTOS.size() == 1) result = awardRepository.update(awardDTOS.get(0));
         else if(awardDTOS.size() > 1) result = awardRepository.batchUpdate(awardDTOS);
+        return result > 0;
+    }
+
+    @Override
+    public boolean updateMembershipIds(List<MembershipIdDTO> membershipIdDTOS) {
+        if (membershipIdDTOS == null || membershipIdDTOS.isEmpty()) return false; // No updates to perform
+        int result = 0;
+        if(membershipIdDTOS.size() == 1) result = membershipIdRepository.update(membershipIdDTOS.get(0));
+        else if(membershipIdDTOS.size() > 1) result = membershipIdRepository.batchUpdate(membershipIdDTOS);
         return result > 0;
     }
 }

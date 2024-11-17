@@ -20,7 +20,7 @@ class HistoryTable {
         this.renderButtons()
         this.mainContainer.appendChild(this.buttonContainer);
         this.mainContainer.appendChild(this.tableContainer);
-
+        this.mainContainer.addEventListener('mouseleave', () => this.batchUpdate());
         // Render the initial table
         this.renderTable(true);
     }
@@ -305,10 +305,12 @@ class HistoryTable {
                     editedRows.push({
                         mId: memId.mId,
                         fiscalYear: memId.fiscalYear,
+                        msId: memId.msId,
                         membershipId: memId.membershipId,
                         renew: memId.renew,
                         memType: memId.memType,
-                        lateRenew: 0,
+                        selected: memId.selected,
+                        lateRenew: memId.lateRenew,
                     });
                 }
             });

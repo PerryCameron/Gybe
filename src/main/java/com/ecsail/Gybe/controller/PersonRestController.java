@@ -70,7 +70,7 @@ public class PersonRestController {
     @PatchMapping("/api/update-emails")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> updateEmails(@RequestBody List<EmailDTO> emailDTOList) {
-        boolean isUpdated = personService.batchUpdateEmail(emailDTOList); // Update each email in a batch operation
+        boolean isUpdated = personService.updateEmail(emailDTOList); // Update each email in a batch operation
         Map<String, Object> response = new HashMap<>();
         response.put("updated", isUpdated);
         return ResponseEntity.ok(response);
@@ -79,7 +79,7 @@ public class PersonRestController {
     @PatchMapping("/api/update-positions")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> updatePositions(@RequestBody List<OfficerDTO> officerDTOList) {
-        boolean isUpdated = personService.batchUpdatePosition(officerDTOList); // Update each email in a batch operation
+        boolean isUpdated = personService.updatePositions(officerDTOList); // Update each email in a batch operation
         Map<String, Object> response = new HashMap<>();
         response.put("updated", isUpdated);
         return ResponseEntity.ok(response);
@@ -91,7 +91,19 @@ public class PersonRestController {
         for(AwardDTO awardDTO : awardDTOS) {
             System.out.println("testing: " + awardDTO);
         }
-        boolean isUpdated = personService.batchUpdateAwards(awardDTOS); // Update each email in a batch operation
+        boolean isUpdated = personService.updateAwards(awardDTOS); // Update each email in a batch operation
+        Map<String, Object> response = new HashMap<>();
+        response.put("updated", isUpdated);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/api/update-membershipIds")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> batchUpdateMembershipIds(@RequestBody List<MembershipIdDTO> membershipIdDTOS) {
+        for(MembershipIdDTO membershipIdDTO : membershipIdDTOS) {
+            System.out.println("testing: " + membershipIdDTO);
+        }
+        boolean isUpdated = personService.updateMembershipIds(membershipIdDTOS); // Update each email in a batch operation
         Map<String, Object> response = new HashMap<>();
         response.put("updated", isUpdated);
         return ResponseEntity.ok(response);

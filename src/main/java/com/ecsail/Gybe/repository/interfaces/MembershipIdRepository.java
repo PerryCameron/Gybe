@@ -20,10 +20,8 @@ public interface MembershipIdRepository {
     int getNonRenewNumber(int year);
     int getMsidFromYearAndMembershipId(int year, String membershipId);
     int update(MembershipIdDTO o);
-
+    int batchUpdate(List<MembershipIdDTO> membershipIdDTOS);
     int delete(MembershipIdDTO membershipIdDTO);
-
     boolean exists(MembershipIdDTO membershipIdDTO);
-
     int insert(MembershipIdDTO membershipIdDTO);
 }

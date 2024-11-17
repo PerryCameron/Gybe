@@ -16,8 +16,9 @@ public interface PersonService {
     boolean deleteEmailRow(EmailDTO emailDTO);
     boolean deleteAwardRow(AwardDTO awardDTO);
     boolean deleteMembershipIdRow(MembershipIdDTO membershipIdDTO);
-    boolean batchUpdateEmail(List<EmailDTO> emailDTOList);
-    boolean batchUpdatePosition(List<OfficerDTO> officerDTOList);
-    boolean batchUpdateAwards(List<AwardDTO> awardDTOS);
+    boolean updateEmail(List<EmailDTO> emailDTOList);
+    boolean updatePositions(List<OfficerDTO> officerDTOList);
+    boolean updateAwards(List<AwardDTO> awardDTOS);
     boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
+    boolean updateMembershipIds(List<MembershipIdDTO> membershipIdDTOS);
 }

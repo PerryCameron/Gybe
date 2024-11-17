@@ -1,12 +1,14 @@
 package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.MembershipIdDTO;
+import com.ecsail.Gybe.dto.PhoneDTO;
 import com.ecsail.Gybe.repository.interfaces.MembershipIdRepository;
 import com.ecsail.Gybe.repository.rowmappers.MembershipIdRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -108,6 +110,30 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
                 "WHERE MID = :mId ";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipIdDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int batchUpdate(List<MembershipIdDTO> membershipIdDTOS) {
+        String query = "UPDATE membership_id SET " +
+                "FISCAL_YEAR = :fiscalYear, " +
+                "MS_ID = :msId, " +
+                "MEMBERSHIP_ID = :membershipId, " +
+                "RENEW = :renew, " +
+                "MEM_TYPE = :memType, " +
+                "SELECTED = :selected, " +
+                "LATE_RENEW = :lateRenew " +
+                "WHERE MID = :mId ";
+        SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(membershipIdDTOS.toArray());
+        int[] result = namedParameterJdbcTemplate.batchUpdate(query, batchParams);
+        for (int num : result) {
+            if (num != 1) {
+                return 0; // Return 0 if any element is not 1
+            }
+        }
+        for(MembershipIdDTO membershipIdDTO : membershipIdDTOS) {
+            System.out.println("Update success: " + membershipIdDTO);
+        }
+        return 1;
     }
 
     @Override
