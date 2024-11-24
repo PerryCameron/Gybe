@@ -21,4 +21,5 @@ public interface PersonService {
     boolean updateAwards(List<AwardDTO> awardDTOS);
     boolean batchUpdatePhones(List<PhoneDTO> phoneDTOList);
     boolean updateMembershipIds(List<MembershipIdDTO> membershipIdDTOS);
+    boolean updateAddress(MembershipDTO membershipDTO);
 }

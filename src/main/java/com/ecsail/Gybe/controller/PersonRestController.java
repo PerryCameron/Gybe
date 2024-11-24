@@ -109,6 +109,15 @@ public class PersonRestController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/api/update-address")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Map<String, Object>> updateAddress(@RequestBody MembershipDTO membershipDTO) {
+        boolean isUpdated = personService.updateAddress(membershipDTO); // Update each email in a batch operation
+        Map<String, Object> response = new HashMap<>();
+        response.put("updated", isUpdated);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/api/insert-phone")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public ResponseEntity<Map<String, Object>> insertEmail(@RequestBody PhoneDTO phoneDTO) {

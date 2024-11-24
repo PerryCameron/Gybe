@@ -1,23 +1,13 @@
 .address-block {
-    padding: 10px;
+    display: flex;
     border: 1px solid #ccc;
-    margin: 10px;
     border-radius: 5px;
+    gap: 5px;
 }
 
 .street-field {
-    width: 280px;
-    margin-bottom: 10px;
-    padding: 10px;
-}
-
-.city-state-zip-container {
-    display: flex;
-    gap: 10px;
-}
-
-.cityContainer {
-
+    width: 50%;
+    height: 20px;
 }
 
 .city-field, .state-field, .zip-field {
@@ -25,14 +15,13 @@
 }
 
 .city-field {
-    width: 280px;
-    margin-bottom: 10px;
+    width: 20%;
 }
 
 .state-field {
-    width: 50px;
+    width: 10%;
 }
 
 .zip-field {
-    width: 50px;
+    width: 20%;
 }

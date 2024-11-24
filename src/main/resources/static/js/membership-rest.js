@@ -4,14 +4,16 @@ function createMembershipContent(membership) {
     contentDiv.classList.add("vbox");
     // Append header immediately
     contentDiv.appendChild(createHeaderDiv(membership));
+
     // Fetch the membership data once and pass it to both createPersonDiv and createMembershipDiv
     fetchMembershipData(membership).then(membershipData => {
         if (membershipData) {
             // Pass the fetched data to both functions
             contentDiv.appendChild(createPersonDiv(membershipData));
+            contentDiv.appendChild(AddressTitlePane(membershipData));
             const hBox = new HorizontalBox("membership-hbox");
             hBox.add(MembershipTitlePane(membershipData));
-            hBox.add(AddressAndStorageTitlePane(membershipData));
+            hBox.add(StorageTitlePane(membershipData));
             contentDiv.appendChild(hBox.getElement());  // why can't I do this?
 
         } else {
@@ -23,10 +25,17 @@ function createMembershipContent(membership) {
     return contentDiv;
 }
 
-function AddressAndStorageTitlePane(membershipData) {
-    const titledPane = new TitledPane("Address and Storage", "membership-section");
+function AddressTitlePane(membershipData) {
+    const titledPane = new TitledPane("Address", "membership-section");
+    titledPane.classList.add("address-titled-pane");
+    titledPane.contentElement.appendChild(addressBlock(membershipData));
+    return titledPane;
+}
+
+function StorageTitlePane(membershipData) {
+    const titledPane = new TitledPane("Storage", "membership-section");
     titledPane.classList.add("address-storage-titled-pane");
-    titledPane.contentElement.appendChild(addressAndStorageTabPane(membershipData));
+    titledPane.contentElement.appendChild(storageTabPane(membershipData));
     return titledPane;
 }
 
@@ -37,12 +46,19 @@ function MembershipTitlePane(membershipData) {
     return titledPane;
 }
 
-function addressAndStorageTabPane(membershipData) {
+function addressBlock(membershipData) {
+    const historyDiv = document.createElement("div");
+    const historyTable = new AddressBlock(membershipData);
+    historyDiv.appendChild(historyTable.getElement());
+    return historyDiv; // but no table rendered in this div??
+}
+
+function storageTabPane(membershipData) {
     const div = document.createElement("div");
     const tabPane = new TabPane(div, "horizontal");
-    tabPane.addTab("address-" + membershipData.msId, "Address", setAddressBlock(membershipData), false);
+    // tabPane.addTab("address-" + membershipData.msId, "Address", setAddressBlock(membershipData), false);
     tabPane.addTab("storage-" + membershipData.msId, "Storage", fakeContent("This is storage"), false);
-    tabPane.switchToTab("address-" + membershipData.msId);
+    tabPane.switchToTab("storage-" + membershipData.msId);
     return div;
 }
 
@@ -54,13 +70,6 @@ function membershipTabPane(membershipData) {
     tabPane.addTab("properties-" + membershipData.msId, "Properties", fakeContent("This is properties"), false);
     tabPane.switchToTab("history-" + membershipData.msId);
     return div;
-}
-
-function setAddressBlock(membershipData) {
-    const historyDiv = document.createElement("div");
-    const historyTable = new AddressBlock(membershipData);
-    historyDiv.appendChild(historyTable.getElement());
-    return historyDiv; // but no table rendered in this div??
 }
 
 function setHistoryTable(membershipData) {

@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.repository.implementations;
 
+import com.ecsail.Gybe.dto.MembershipDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
 import com.ecsail.Gybe.repository.rowmappers.JsonRowMapper;
@@ -168,6 +169,18 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 "STATE = :state, " +
                 "ZIP = :zip WHERE MS_ID = :msId";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipListDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int updateAddress(MembershipDTO membershipDTO) {
+        String query = "UPDATE membership SET " +
+                "ADDRESS = :address, " +
+                "CITY = :city, " +
+                "STATE = :state, " +
+                "ZIP = :zip " +
+                "WHERE MS_ID = :msId";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 

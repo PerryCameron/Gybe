@@ -1,5 +1,6 @@
 package com.ecsail.Gybe.repository.interfaces;
 
+import com.ecsail.Gybe.dto.MembershipDTO;
 import com.ecsail.Gybe.dto.MembershipIdDTO;
 
 import java.util.List;

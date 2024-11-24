@@ -16,6 +16,7 @@ public class PersonServiceImpl implements PersonService {
     private final OfficerRepository officerRepository;
     private final AwardRepository awardRepository;
     private final MembershipIdRepository membershipIdRepository;
+    private final MembershipRepository membershipRepository;
 
     public PersonServiceImpl(AwardRepository awardRepository,
                              EmailRepository emailRepository,
@@ -23,7 +24,8 @@ public class PersonServiceImpl implements PersonService {
                              GeneralRepository generalRepository,
                              PhoneRepository phoneRepository,
                              OfficerRepository officerRepository,
-                             MembershipIdRepository membershipIdRepository) {
+                             MembershipIdRepository membershipIdRepository,
+                             MembershipRepository membershipRepository) {
         this.awardRepository = awardRepository;
         this.personRepository = personRepository;
         this.emailRepository = emailRepository;
@@ -31,6 +33,7 @@ public class PersonServiceImpl implements PersonService {
         this.phoneRepository = phoneRepository;
         this.officerRepository = officerRepository;
         this.membershipIdRepository = membershipIdRepository;
+        this.membershipRepository = membershipRepository;
     }
 
     @Override
@@ -150,6 +153,13 @@ public class PersonServiceImpl implements PersonService {
         int result = 0;
         if(membershipIdDTOS.size() == 1) result = membershipIdRepository.update(membershipIdDTOS.get(0));
         else if(membershipIdDTOS.size() > 1) result = membershipIdRepository.batchUpdate(membershipIdDTOS);
+        return result > 0;
+    }
+
+    @Override
+    public boolean updateAddress(MembershipDTO membershipDTO) {
+        if (membershipDTO == null) return false; // No updates to perform
+        int result = membershipRepository.updateAddress(membershipDTO);
         return result > 0;
     }
 }

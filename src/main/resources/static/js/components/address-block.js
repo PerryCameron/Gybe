@@ -2,7 +2,15 @@ class AddressBlock {
     constructor(membershipData) {
         // Store the initial membership data
         this.membershipData = membershipData;
-        this.addressData = { ...membershipData }; // Copy of initial data to track changes
+        this.addressData = {
+            msId: this.membershipData.msId,
+            pId: this.membershipData.pId,
+            joinDate: this.membershipData.joinDate,
+            address: this.membershipData.address,
+            city: this.membershipData.city,
+            state: this.membershipData.state,
+            zip: this.membershipData.zip
+        }
 
         // Create the address block container
         this.container = document.createElement("div");
@@ -20,7 +28,7 @@ class AddressBlock {
         // Street field (multiline)
         this.streetField = document.createElement("textarea");
         this.streetField.classList.add("street-field");
-        this.streetField.rows = 2;
+        // this.streetField.rows = 2;
         this.streetField.value = this.addressData.address || "";
         this.container.appendChild(this.streetField);
 
@@ -29,16 +37,10 @@ class AddressBlock {
         this.stateField = this.createTextInput("state-field", this.addressData.state || "", "State");
         this.zipField = this.createTextInput("zip-field", this.addressData.zip || "", "Zip");
 
-        const cityContainer = document.createElement("div");
-        const stateZipContainer = document.createElement("div");
-        stateZipContainer.classList.add("city-state-zip-container");
-        cityContainer.classList.add("city-container");
-        cityContainer.append(this.cityField);
-        stateZipContainer.append(this.stateField, this.zipField);
-
-        this.container.appendChild(cityContainer);
-        this.container.appendChild(stateZipContainer);
-
+        this.container.appendChild(this.streetField);
+        this.container.appendChild(this.cityField);
+        this.container.appendChild(this.stateField);
+        this.container.appendChild(this.zipField);
     }
 
     // Helper method to create text input fields
@@ -54,6 +56,10 @@ class AddressBlock {
     // Method to check for changes and send an AJAX update if needed
     checkForChangesAndUpdate() {
         const newAddressData = {
+            msId: this.membershipData.msId,
+            pId: this.membershipData.pId,
+            joinDate: this.membershipData.joinDate,
+            memType: this.membershipData.memType,
             address: this.streetField.value,
             city: this.cityField.value,
             state: this.stateField.value,
@@ -67,13 +73,15 @@ class AddressBlock {
 
         if (hasChanges) {
             // Update the stored address data
-            this.addressData = { ...newAddressData };
+            this.addressData = {...newAddressData}; //
 
             // Send AJAX update to /api/update-address
             fetch('/api/update-address', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    [csrfHeaderName]: csrfToken
+
                 },
                 body: JSON.stringify(newAddressData)
             })

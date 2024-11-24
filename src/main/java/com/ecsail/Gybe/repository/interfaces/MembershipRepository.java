@@ -1,6 +1,7 @@
 package com.ecsail.Gybe.repository.interfaces;
 
 
+import com.ecsail.Gybe.dto.MembershipDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -16,7 +17,7 @@ public interface MembershipRepository {
     List<MembershipListDTO> getSlipWaitList();
     List<MembershipListDTO> getMembershipByBoatId(Integer boatId);
     int update(MembershipListDTO membershipListDTO);
-
+    int updateAddress(MembershipDTO membershipDTO);
     int updateJoinDate(MembershipListDTO membershipListDTO);
 
     MembershipListDTO getMembershipByMembershipId(int membershipId);
@@ -37,4 +38,5 @@ public interface MembershipRepository {
     List<MembershipListDTO> getOwnersOfBoat(Integer boatId);
     JsonNode getMembershipAsJSON(int msId, int year);
     List<JsonNode> getMembershipsAsJson();
+
 }

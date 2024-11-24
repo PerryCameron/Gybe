@@ -4,10 +4,10 @@ package com.ecsail.Gybe.dto;
 
 public class MembershipDTO {
 
-	private Integer ms_id; /// unique auto key for Membership
-	private Integer p_id;  /// pid of Main Member
-	private String join_date;
-	private String mem_type;  // Type of Membership (Family, Regular, Lake Associate(race fellow), Social
+	private Integer msId; /// unique auto key for Membership
+	private Integer pId;  /// pid of Main Member
+	private String joinDate;
+	private String memType;  // Type of Membership (Family, Regular, Lake Associate(race fellow), Social
 	private String address;
 	private String city;
 	private String state;
@@ -16,47 +16,47 @@ public class MembershipDTO {
 	public MembershipDTO() {
 	}
 
-	public MembershipDTO(Integer ms_id, Integer p_id, String join_date, String mem_type, String address, String city, String state, String zip) {
-		this.ms_id = ms_id;
-		this.p_id = p_id;
-		this.join_date = join_date;
-		this.mem_type = mem_type;
+	public MembershipDTO(Integer msId, Integer pId, String joinDate, String memType, String address, String city, String state, String zip) {
+		this.msId = msId;
+		this.pId = pId;
+		this.joinDate = joinDate;
+		this.memType = memType;
 		this.address = address;
 		this.city = city;
 		this.state = state;
 		this.zip = zip;
 	}
 
-	public Integer getMs_id() {
-		return ms_id;
+	public Integer getMsId() {
+		return msId;
 	}
 
-	public void setMs_id(Integer ms_id) {
-		this.ms_id = ms_id;
+	public void setMsId(Integer msId) {
+		this.msId = msId;
 	}
 
-	public Integer getP_id() {
-		return p_id;
+	public Integer getpId() {
+		return pId;
 	}
 
-	public void setP_id(Integer p_id) {
-		this.p_id = p_id;
+	public void setpId(Integer pId) {
+		this.pId = pId;
 	}
 
-	public String getJoin_date() {
-		return join_date;
+	public String getJoinDate() {
+		return joinDate;
 	}
 
-	public void setJoin_date(String join_date) {
-		this.join_date = join_date;
+	public void setJoinDate(String joinDate) {
+		this.joinDate = joinDate;
 	}
 
-	public String getMem_type() {
-		return mem_type;
+	public String getMemType() {
+		return memType;
 	}
 
-	public void setMem_type(String mem_type) {
-		this.mem_type = mem_type;
+	public void setMemType(String memType) {
+		this.memType = memType;
 	}
 
 	public String getAddress() {
@@ -94,10 +94,10 @@ public class MembershipDTO {
 	@Override
 	public String toString() {
 		return "Object_Membership{" +
-				"msid=" + ms_id +
-				", pid=" + p_id +
-				", joinDate='" + join_date + '\'' +
-				", memType='" + mem_type + '\'' +
+				"msid=" + msId +
+				", pid=" + pId +
+				", joinDate='" + joinDate + '\'' +
+				", memType='" + memType + '\'' +
 				", address='" + address + '\'' +
 				", city='" + city + '\'' +
 				", state='" + state + '\'' +
