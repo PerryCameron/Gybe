@@ -53,7 +53,6 @@ class AddressBlock {
         return input;
     }
 
-    // Method to check for changes and send an AJAX update if needed
     checkForChangesAndUpdate() {
         const newAddressData = {
             msId: this.membershipData.msId,
@@ -66,14 +65,14 @@ class AddressBlock {
             zip: this.zipField.value
         };
 
-        // Compare each field to see if there are changes
-        const hasChanges = Object.keys(newAddressData).some(
+        // Determine which fields have changed
+        const changedFields = Object.keys(newAddressData).filter(
             key => newAddressData[key] !== this.addressData[key]
         );
 
-        if (hasChanges) {
+        if (changedFields.length > 0) {
             // Update the stored address data
-            this.addressData = {...newAddressData}; //
+            this.addressData = { ...newAddressData };
 
             // Send AJAX update to /api/update-address
             fetch('/api/update-address', {
@@ -81,7 +80,6 @@ class AddressBlock {
                 headers: {
                     'Content-Type': 'application/json',
                     [csrfHeaderName]: csrfToken
-
                 },
                 body: JSON.stringify(newAddressData)
             })
@@ -91,8 +89,33 @@ class AddressBlock {
                     }
                     return response.json();
                 })
-                .then(data => console.log("Address updated successfully:", data))
+                .then(data => {
+                    // Highlight only the fields that were updated
+                    changedFields.forEach(field => {
+                        const fieldElement = this.getFieldElement(field);
+                        if (fieldElement) {
+                            fieldElement.classList.add("updateSuccess");
+                            setTimeout(() => fieldElement.classList.remove("updateSuccess"), 500);
+                        }
+                    });
+                })
                 .catch(error => console.error("Error updating address:", error));
+        }
+    }
+
+// Helper function to map field names to DOM elements
+    getFieldElement(fieldName) {
+        switch (fieldName) {
+            case 'address':
+                return this.streetField;
+            case 'city':
+                return this.cityField;
+            case 'state':
+                return this.stateField;
+            case 'zip':
+                return this.zipField;
+            default:
+                return null; // No corresponding field
         }
     }
 
