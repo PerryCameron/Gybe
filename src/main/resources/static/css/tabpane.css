@@ -41,6 +41,10 @@
     background-color: var(--color-main-white);
 }
 
+/*.membership-content {*/
+/*    background-color: var(--color-main-white);*/
+/*}*/
+
 .tab-content-vertical {
 
 }
@@ -130,10 +134,12 @@
 
 #tab-content-main-navigation {
     border-radius: 0;
+    background-color: var(--color-main-offcolor);
 }
 
 #main-menu-tab-pane {
     width: 100%;
+    background-color: var(--color-main-black);
 }
 
 #main-menu-tab-pane .tab-buttons button {
@@ -148,4 +154,8 @@
     font-weight: bold;
     background-color: var(--color-main-offcolor);
     color: var(--color-main-black-full);
+}
+
+#pageNavigation {
+    background-color: var(--color-main-offcolor);
 }

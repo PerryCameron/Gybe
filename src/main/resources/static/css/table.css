@@ -28,6 +28,10 @@
   background-color: var(--color-main-offcolor);
 }
 
+/*.styled-table tbody tr:nth-of-type(odd) {*/
+/*  background-color: var(--color-main-white);*/
+/*}*/
+
 .styled-table tbody tr:last-of-type {
   border-bottom: 2px solid var(--color-main-green-second);
 }

@@ -15,6 +15,7 @@ function createMembershipContent(membership) {
             hBox.add(MembershipTitlePane(membershipData));
             hBox.add(StorageTitlePane(membershipData));
             contentDiv.appendChild(hBox.getElement());  // why can't I do this?
+            // contentDiv.classList.add("membership-content");
 
         } else {
             console.error('Unable to fetch membership data');
