@@ -124,7 +124,7 @@ function charts() {
         unloadScript(lastLoadedScript); // changed
     }
     const script = document.createElement('script');
-    script.src = '/js/gybe-chart-rest.js';
+    script.src = '/js/chart-controller.js';
     script.id = 'dynamicScript'; // changed
     script.onload = function () {
         console.log(`Script with URL ${script.src} has been loaded.`);

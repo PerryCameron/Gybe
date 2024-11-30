@@ -10,32 +10,20 @@ function insertBasicChart() {
 }
 
 function  buildBasicCharts(data) {
-    // const stats = data.stats;
-    // const currentYear = new Date().getFullYear();
-
-
     const mainDiv = document.getElementById("main-content");
     mainDiv.innerHTML = '';
 
-    // Create top chart container
     const topChartDiv = document.createElement('div');
     topChartDiv.className = 'charts top-chart';
 
-    // addMembershipChart(data, membershipChartCanvas);
-    topChartDiv.appendChild(addMembershipChart(data));
-
-
-    mainDiv.appendChild(topChartDiv);
-
-    // Create bottom charts container
     const bottomChartsDiv = document.createElement('div');
     bottomChartsDiv.className = 'charts bottom-charts';
-    const ageChartCanvas = document.createElement('canvas');
-    addAgeChart(data, ageChartCanvas);
-    const membershipTypeChartCanvas = document.createElement('canvas');
-    addMembershipTypeChart(data, membershipTypeChartCanvas);
-    bottomChartsDiv.appendChild(ageChartCanvas);
-    bottomChartsDiv.appendChild(membershipTypeChartCanvas);
+
+    topChartDiv.appendChild(addMembershipChart(data));
+    bottomChartsDiv.appendChild(addAgeChart(data));
+    bottomChartsDiv.appendChild(addMembershipTypeChart(data));
+
+    mainDiv.appendChild(topChartDiv);
     mainDiv.appendChild(bottomChartsDiv);
 }
 
@@ -143,7 +131,8 @@ function addMembershipChart(data) {
     return membershipChartCanvas;
 }
 
-function addAgeChart(data, ageChartCanvas) {
+function addAgeChart(data) {
+    const ageChartCanvas = document.createElement('canvas');
     const currentYear = new Date().getFullYear();
     const ages = data.ages;
     let agesArray = [
@@ -205,9 +194,11 @@ function addAgeChart(data, ageChartCanvas) {
             },
         },
     });
+    return ageChartCanvas;
 }
 
-function addMembershipTypeChart(data, membershipTypeChartCanvas) {
+function addMembershipTypeChart(data) {
+    const membershipTypeChartCanvas = document.createElement('canvas');
     const currentYear = new Date().getFullYear();
     new Chart(membershipTypeChartCanvas, {
         type: "pie",
@@ -244,4 +235,5 @@ function addMembershipTypeChart(data, membershipTypeChartCanvas) {
             },
         },
     });
+    return membershipTypeChartCanvas;
 }

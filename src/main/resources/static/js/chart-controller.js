@@ -3,7 +3,7 @@ function buildCharts() {
     mainDiv.innerHTML = '';
     const script = document.createElement('script');
     script.src = '/js/charts/basic-charts.js';
-    script.id = 'dynamicScript'; // changed
+    script.id = 'dynamicChartScript'; // changed
     script.onload = function () {
         console.log(`Script with URL ${script.src} has been loaded.`);
         lastLoadedScript = script.id; // changed
