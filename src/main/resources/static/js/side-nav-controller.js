@@ -1,4 +1,5 @@
 let lastLoadedScript;
+let lastChartScript;
 // global for rosters
 let globalRosterData;  // Declare global variable
 let lastSortedColumn = 'membershipId';
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         {handler: loadDirectory, text: "Directory", target: "", tabLabel: "",roles: ["ROLE_MEMBERSHIP"]}
     ];
 
-    let chartLink;
+    let mainLink;
 
     links.forEach(function (link) {
         const hasRole = link.roles.some(role => userRoles.includes(role));
@@ -65,13 +66,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Save reference to "Charts" link
             if (link.text === "Charts") {
-                chartLink = a;
+                mainLink = a;
             }
         }
     });
-    if (chartLink) {
-        chartLink.click();
-    }});
+    if (mainLink) {
+        mainLink.click();
+    }
+});
 
 function loadFormRequests() {
     if (lastLoadedScript) { // changed
