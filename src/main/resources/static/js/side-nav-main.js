@@ -123,22 +123,15 @@ function charts() {
     if (lastLoadedScript) { // changed
         unloadScript(lastLoadedScript); // changed
     }
-    fetch('/api/gybe_chart_data')
-        .then(response => response.json())
-        .then(data => {
-            const script = document.createElement('script');
-            script.src = '/js/gybe-chart-rest.js';
-            script.id = 'dynamicScript'; // changed
-            script.onload = function () {
-                console.log(`Script with URL ${script.src} has been loaded.`);
-                lastLoadedScript = script.id; // changed
-                buildGybeChart(data); //gybe-chart-rest.js
-            };
-            document.body.appendChild(script);
-        })
-        .catch(error => {
-            console.error('Error fetching gybe chart data:', error);
-        });
+    const script = document.createElement('script');
+    script.src = '/js/gybe-chart-rest.js';
+    script.id = 'dynamicScript'; // changed
+    script.onload = function () {
+        console.log(`Script with URL ${script.src} has been loaded.`);
+        lastLoadedScript = script.id; // changed
+        buildCharts(); //gybe-chart-rest.js
+    };
+    document.body.appendChild(script);
 }
 
 function bod() {

@@ -143,3 +143,49 @@
  * @property {boolean} selected - Indicates if this membership is selected (1 for true, 0 for false).
  * @property {boolean} lateRenew - Indicates if the membership was renewed late (1 for true, 0 for false).
  */
+
+/**
+ * Represents a single stat entry for a specific fiscal year.
+ * @typedef {Object} Stat
+ * @property {number} statId - Unique identifier for the stat.
+ * @property {number} fiscalYear - The fiscal year of the stat.
+ * @property {number} activeMemberships - Number of active memberships.
+ * @property {number} nonRenewMemberships - Number of memberships not renewed.
+ * @property {number} returnMemberships - Number of returning memberships.
+ * @property {number} newMemberships - Number of new memberships.
+ * @property {number} secondaryMembers - Number of secondary members.
+ * @property {number} dependants - Number of dependants.
+ * @property {number} numberOfBoats - Number of boats.
+ * @property {number} family - Number of family memberships.
+ * @property {number} regular - Number of regular memberships.
+ * @property {number} social - Number of social memberships.
+ * @property {number} lakeAssociates - Number of lake associate memberships.
+ * @property {number} lifeMembers - Number of life members.
+ * @property {number} raceFellows - Number of race fellows.
+ * @property {number} student - Number of student memberships.
+ * @property {number} deposits - Number of deposits.
+ * @property {number} initiation - Number of initiation fees.
+ */
+
+/**
+ * Represents the ages breakdown of members.
+ * @typedef {Object} Ages
+ * @property {number} zeroTen - Members aged 0–10.
+ * @property {number} elevenTwenty - Members aged 11–20.
+ * @property {number} twentyOneThirty - Members aged 21–30.
+ * @property {number} thirtyOneForty - Members aged 31–40.
+ * @property {number} fortyOneFifty - Members aged 41–50.
+ * @property {number} fiftyOneSixty - Members aged 51–60.
+ * @property {number} sixtyOneSeventy - Members aged 61–70.
+ * @property {number} seventyOneEighty - Members aged 71–80.
+ * @property {number} eightyOneNinety - Members aged 81–90.
+ * @property {number} notReported - Members with unreported ages.
+ * @property {number} total - Total number of members.
+ */
+
+/**
+ * Represents the entire data structure for stats and ages.
+ * @typedef {Object} Data
+ * @property {Stat[]} stats - Array of stat entries for different fiscal years.
+ * @property {Ages} ages - Breakdown of member ages.
+ */
