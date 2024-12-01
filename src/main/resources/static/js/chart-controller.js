@@ -28,6 +28,7 @@ function createButtons() {
                 a.href = "#";
                 a.addEventListener("click", (e) => {
                     e.preventDefault();
+                    removeMenuExtras();
                     button.handler(); // Call the button's handler function
                 });
             }
@@ -53,6 +54,17 @@ function createButtons() {
         chartLink.click();
     }
     return buttonContainer;
+}
+
+function removeMenuExtras() {
+    const parent = document.getElementById("chart-button-container");
+    const child = document.getElementById("treeview-container");
+
+    if (parent && child && parent.contains(child)) {
+        parent.removeChild(child);
+    } else {
+        console.log("Either the parent or child element doesn't exist, or the child is not a descendant of the parent.");
+    }
 }
 
 function basicCharts() {

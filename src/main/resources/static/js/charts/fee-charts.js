@@ -92,6 +92,11 @@ function createTreeView(data, chart) {
             typeNode.textContent = description || "No Description";
             typeNode.addEventListener("click", () => {
                 toggleDataset(chart, description, items);
+                if (typeNode.classList.contains("selected-chart")) {
+                    typeNode.classList.remove("selected-chart");
+                } else {
+                    typeNode.classList.add("selected-chart");
+                }
             });
             sublist.appendChild(typeNode);
         });

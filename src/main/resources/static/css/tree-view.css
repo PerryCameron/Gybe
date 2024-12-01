@@ -37,3 +37,11 @@
     color: var(--color-main-green);
     cursor: pointer;
 }
+
+.selected-chart {
+    /*background-color: #007bff;*/
+    color: var(--color-main-green);
+    font-weight: bold;
+    /*padding: 2px 5px;*/
+    /*border-radius: 4px;*/
+}
