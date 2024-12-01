@@ -15,10 +15,11 @@ public interface InvoiceRepository {
     List<InvoiceWithMemberInfoDTO> getInvoicesWithMembershipInfoByYear(String year);
     List<InvoiceItemDTO> getInvoiceItemsByInvoiceId(int id);
     List<PaymentDTO> getPaymentByInvoiceId(int id);
+    List<FeeDTO> getFeesFromYear(int year);
+    List<FeeDTO> getFeesByType(String type);
     int insert(PaymentDTO paymentDTO);
     int insert(InvoiceDTO invoiceDTO);
     int getBatchNumber(String year);
-    List<FeeDTO> getFeesFromYear(int year);
     int update(InvoiceDTO invoiceDTO);
     int[] updateBatch(InvoiceDTO invoiceDTO);
     int[] insertBatch(InvoiceDTO invoiceDTO);

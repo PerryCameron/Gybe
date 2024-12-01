@@ -23,5 +23,10 @@ public class FeeServiceImpl implements FeeService {
         return invoiceRepository.getFeesFromYear(Year.now().getValue());
     }
 
+    @Override
+    public List<FeeDTO> getFeesByType(String type) {
+        return invoiceRepository.getFeesByType(type);
+    }
+
 
 }

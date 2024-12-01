@@ -116,6 +116,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
+    public List<FeeDTO> getFeesByType(String type) {
+        String query = "SELECT * FROM fee WHERE FIELD_NAME=?";
+        return template.query(query, new FeeRowMapper(), type);
+    }
+
+    @Override
     public int update(InvoiceDTO invoiceDTO) {
         String query = "UPDATE invoice SET " +
                 "MS_ID = :msId, " +

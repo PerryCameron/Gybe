@@ -100,7 +100,7 @@ public class MembershipRestController {
         return response;
     }
 
-    @GetMapping("/api/gybe_chart_data")
+    @GetMapping("/api/basic_chart_data")
     @PreAuthorize("hasRole('ROLE_USER')")
     public Map<String, Object> getGybeChartData() {
         // Replace with actual service calls to fetch data
@@ -109,6 +109,16 @@ public class MembershipRestController {
         Map<String, Object> response = new HashMap<>();
         response.put("stats", statsDTOS);
         response.put("ages", agesDTO);
+        return response;
+    }
+
+    @GetMapping("/api/fee_chart_data")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Map<String, Object> getFeeChartData(@RequestParam(defaultValue = "Dues") String type) {
+        System.out.println("getFeeChartData()");
+        List<FeeDTO> feeDTOS = feeService.getFeesByType(type);
+        Map<String, Object> response = new HashMap<>();
+        response.put("fees", feeDTOS);
         return response;
     }
 

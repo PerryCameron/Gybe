@@ -1,5 +1,5 @@
 function insertBasicChart() {
-    fetch('/api/gybe_chart_data')
+    fetch('/api/basic_chart_data')
         .then(response => response.json())
         .then(data => {
                 buildBasicCharts(data);
@@ -28,7 +28,6 @@ function  buildBasicCharts(data) {
 }
 
 function extractRegular(stats) {
-    console.log("stats", stats);
     // Sort the stats array by fiscalYear
     stats.sort((a, b) => a.fiscalYear - b.fiscalYear);
     // Extract the "regular" fields into a new array
