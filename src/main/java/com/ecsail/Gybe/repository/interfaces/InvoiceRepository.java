@@ -7,16 +7,14 @@ import java.util.Set;
 
 public interface InvoiceRepository {
     List<InvoiceDTO> getInvoicesByMsid(int ms_id);
-
     List<InvoiceDTO> getInvoicesByMsidAndYear(int msId, int year);
-
     List<InvoiceDTO> getAllInvoices();
     List<InvoiceWithMemberInfoDTO> getInvoicesWithMembershipInfoByDeposit(DepositDTO d);
     List<InvoiceWithMemberInfoDTO> getInvoicesWithMembershipInfoByYear(String year);
     List<InvoiceItemDTO> getInvoiceItemsByInvoiceId(int id);
     List<PaymentDTO> getPaymentByInvoiceId(int id);
     List<FeeDTO> getFeesFromYear(int year);
-    List<FeeDTO> getFeesByType(String type);
+    List<FeeDTO> getAllFees();
     int insert(PaymentDTO paymentDTO);
     int insert(InvoiceDTO invoiceDTO);
     int getBatchNumber(String year);
@@ -29,4 +27,5 @@ public interface InvoiceRepository {
     int deletePaymentsByInvoiceID(InvoiceDTO invoiceDTO);
     int deleteItemsByInvoiceID(InvoiceDTO invoiceDTO);
     int delete(InvoiceDTO invoiceDTO);
+
 }

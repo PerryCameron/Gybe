@@ -116,9 +116,9 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
-    public List<FeeDTO> getFeesByType(String type) {
-        String query = "SELECT * FROM fee WHERE FIELD_NAME=?";
-        return template.query(query, new FeeRowMapper(), type);
+    public List<FeeDTO> getAllFees() {
+        String query = "SELECT * FROM fee";
+        return template.query(query, new FeeRowMapper());
     }
 
     @Override

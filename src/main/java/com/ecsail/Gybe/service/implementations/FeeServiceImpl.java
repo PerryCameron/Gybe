@@ -24,9 +24,7 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
-    public List<FeeDTO> getFeesByType(String type) {
-        return invoiceRepository.getFeesByType(type);
+    public List<FeeDTO> getAllFees() {
+        return invoiceRepository.getAllFees();
     }
-
-
 }

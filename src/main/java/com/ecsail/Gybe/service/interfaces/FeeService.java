@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FeeService {
     List<FeeDTO> getFees();
-    List<FeeDTO> getFeesByType(String type);
+    List<FeeDTO> getAllFees();
 }

@@ -114,9 +114,9 @@ public class MembershipRestController {
 
     @GetMapping("/api/fee_chart_data")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public Map<String, Object> getFeeChartData(@RequestParam(defaultValue = "Dues") String type) {
+    public Map<String, Object> getFeeChartData() {
         System.out.println("getFeeChartData()");
-        List<FeeDTO> feeDTOS = feeService.getFeesByType(type);
+        List<FeeDTO> feeDTOS = feeService.getAllFees();
         Map<String, Object> response = new HashMap<>();
         response.put("fees", feeDTOS);
         return response;
