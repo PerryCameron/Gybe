@@ -14,7 +14,8 @@ function insertFeeChart() {
 function buildFeeChart(data) {
     const mainDiv = document.getElementById("main-content");
     mainDiv.innerHTML = '';
-    // const ctx = document.getElementById("myChart").getContext("2d");
+    const treeViewContainer = document.createElement("div");
+    treeViewContainer.id = "treeview-container";
     const duesChartCanvas = document.createElement('canvas');
     const feesChart = new Chart(duesChartCanvas, {
         type: "line",
@@ -52,64 +53,54 @@ function buildFeeChart(data) {
         }
     });
     mainDiv.appendChild(duesChartCanvas);
-    mainDiv.appendChild(createDropdownMenus(data, feesChart));
+    const buttonContainer = document.getElementById("chart-button-container");
+    treeViewContainer.appendChild(createTreeView(data, feesChart));
+    buttonContainer.appendChild(treeViewContainer);
+    // mainDiv.appendChild(treeViewContainer);
 }
 
-// function createButtons(groupedData, chart) {
-//     const buttonContainer = document.createElement('div');
-//     Object.keys(groupedData).forEach((description) => {
-//         const button = document.createElement("button");
-//         button.textContent = description || "No Description"; // Handle empty descriptions
-//         button.dataset.description = description;
-//         button.addEventListener("click", () => {
-//             toggleDataset(chart, description, groupedData[description]);
-//         });
-//         buttonContainer.appendChild(button);
-//     });
-//     return buttonContainer;
-// }
-function createDropdownMenus(groupedData, chart) {
-    const buttonContainer = document.createElement('div');
+function createTreeView(data, chart) {
+    const treeview = document.createElement("ul");
+    treeview.id = "treeview";
 
     // Group data by fieldName
     const categories = {};
-    for (const [description, data] of Object.entries(groupedData)) {
-        const fieldName = data[0]?.fieldName || "Uncategorized";
+    for (const [description, items] of Object.entries(data)) {
+        const fieldName = items[0]?.fieldName || "Uncategorized";
         if (!categories[fieldName]) {
             categories[fieldName] = [];
         }
-        categories[fieldName].push({ description, data });
+        categories[fieldName].push({ description, items });
     }
 
-    // Create dropdowns for each category
+    // Build the tree structure
     Object.keys(categories).forEach((category) => {
-        const dropdown = document.createElement("div");
-        dropdown.classList.add("dropdown");
-
-        const dropdownLabel = document.createElement("button");
-        dropdownLabel.textContent = category;
-        dropdownLabel.classList.add("dropdown-button");
-        dropdownLabel.addEventListener("click", () => {
-            dropdownContent.classList.toggle("show");
+        const categoryNode = document.createElement("li");
+        const toggleSpan = document.createElement("span");
+        toggleSpan.textContent = "+";
+        toggleSpan.classList.add("toggle");
+        toggleSpan.addEventListener("click", () => {
+            categoryNode.classList.toggle("open");
+            toggleSpan.textContent = categoryNode.classList.contains("open") ? "-" : "+";
         });
-
-        const dropdownContent = document.createElement("div");
-        dropdownContent.classList.add("dropdown-content");
-
-        categories[category].forEach(({ description, data }) => {
-            const button = document.createElement("button");
-            button.textContent = description || "No Description";
-            button.addEventListener("click", () => {
-                toggleDataset(chart, description, data);
+        const categoryLabel = document.createElement("span");
+        categoryLabel.textContent = category;
+        categoryLabel.style.fontWeight = "bold";
+        const sublist = document.createElement("ul");
+        categories[category].forEach(({ description, items }) => {
+            const typeNode = document.createElement("li");
+            typeNode.textContent = description || "No Description";
+            typeNode.addEventListener("click", () => {
+                toggleDataset(chart, description, items);
             });
-            dropdownContent.appendChild(button);
+            sublist.appendChild(typeNode);
         });
-
-        dropdown.appendChild(dropdownLabel);
-        dropdown.appendChild(dropdownContent);
-        buttonContainer.appendChild(dropdown);
+        categoryNode.appendChild(toggleSpan);
+        categoryNode.appendChild(categoryLabel);
+        categoryNode.appendChild(sublist);
+        treeview.appendChild(categoryNode);
     });
-    return buttonContainer;
+    return treeview;
 }
 
 function toggleDataset(chart, description, data) {
@@ -162,4 +153,3 @@ function organizeDataByDescription(data) {
     });
     return groupedData;
 }
-

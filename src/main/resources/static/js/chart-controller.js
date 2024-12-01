@@ -7,6 +7,7 @@ function buildCharts() {
 function createButtons() {
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "button-container";
+    buttonContainer.id = "chart-button-container";
     // Example user roles (replace with actual user roles from your app)
     const userRoles = ["ROLE_USER"];
     let buttons = [
