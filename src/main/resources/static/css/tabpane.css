@@ -158,4 +158,5 @@
 
 #pageNavigation {
     background-color: var(--color-main-offcolor);
+    width: 100%;
 }
