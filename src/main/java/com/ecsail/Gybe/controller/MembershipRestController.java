@@ -5,18 +5,18 @@ import com.ecsail.Gybe.service.interfaces.*;
 import com.ecsail.Gybe.wrappers.BoardOfDirectorsResponse;
 import com.ecsail.Gybe.wrappers.BoatListResponse;
 import com.ecsail.Gybe.wrappers.RosterResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -40,6 +40,7 @@ public class MembershipRestController {
     private final AdminService adminService;
     private final XLSService xlsService;
     private final PDFService pdfService;
+    private final ResourceLoader resourceLoader;
 
 
     @Autowired
@@ -53,7 +54,8 @@ public class MembershipRestController {
             FeeService feeService,
             BoatService boatService,
             XLSService xlsService,
-            PDFService pdfService) {
+            PDFService pdfService,
+            ResourceLoader resourceLoader) {
         this.service = service;
         this.rosterService = rosterService;
         this.adminService = adminService;
@@ -64,6 +66,7 @@ public class MembershipRestController {
         this.boatService = boatService;
         this.xlsService = xlsService;
         this.pdfService = pdfService;
+        this.resourceLoader = resourceLoader;
     }
 
     @GetMapping("/rb_bod")
@@ -124,7 +127,7 @@ public class MembershipRestController {
 
     @GetMapping("/api/bod")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public Map<String, Object> getBods(Model model, @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
+    public Map<String, Object> getBods(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
         List<LeadershipDTO> leadershipDTOS = membershipService.getLeadershipByYear(year);
         ThemeDTO themeDTO = membershipService.getThemeByYear(year);
         Map<String, Object> response = new HashMap<>();
@@ -136,8 +139,8 @@ public class MembershipRestController {
 
     @GetMapping("/api/publicity")
     @PreAuthorize("hasRole('ROLE_PUBLICITY')")
-    public ResponseEntity<InputStreamResource> getPublicity(@RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear()}") Integer year) {
-        xlsService.createEmailList(); // this creates an xlsx file
+    public ResponseEntity<InputStreamResource> getPublicity() {
+        xlsService.createEmailList(); // this creates a xlsx file
         String filePath = System.getProperty("user.home") + "/Email_List.xlsx";
         File file = new File(filePath);
         if (!file.exists()) {
@@ -176,10 +179,10 @@ public class MembershipRestController {
 
     @GetMapping("/api/directory-test")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
-    public Map<String, Object> getDirectoryTest(@RequestParam String listNumber) throws JsonProcessingException {
+    public Map<String, Object> getDirectoryTest(@RequestParam String listNumber) {
         List<JsonNode> memberships = membershipService.getMembershipListAsJson();
-        ObjectMapper objectMapper = new ObjectMapper();
-        MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(Integer.parseInt(listNumber)), MembershipInfoDTO.class);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        MembershipInfoDTO membershipInfo = objectMapper.treeToValue(memberships.get(Integer.parseInt(listNumber)), MembershipInfoDTO.class);
         Map<String, Object> response = new HashMap<>();
         response.put("membership", memberships.get(Integer.parseInt(listNumber)));
         return response;
@@ -228,6 +231,26 @@ public class MembershipRestController {
                     .body(resource);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
+        }
+    }
+
+    @GetMapping("/api/images/{imageName}")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public ResponseEntity<Resource> getSlipImage(@PathVariable String imageName) {
+        try {
+            // Load the image from the "resources/slips" folder
+            Resource imageResource = resourceLoader.getResource("classpath:slips/" + imageName);
+            if (!imageResource.exists() || !imageResource.isReadable()) {
+                // If the requested image doesn't exist or isn't readable, serve the default image
+                imageResource = resourceLoader.getResource("classpath:slips/default_icon.png");
+            }
+            // Return the image with appropriate headers
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + imageResource.getFilename() + "\"")
+                    .body(imageResource);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

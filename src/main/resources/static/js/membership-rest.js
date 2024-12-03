@@ -58,8 +58,44 @@ function storageTabPane(membershipData) {
     const div = document.createElement("div");
     const tabPane = new TabPane(div, "horizontal");
     // tabPane.addTab("address-" + membershipData.msId, "Address", setAddressBlock(membershipData), false);
-    tabPane.addTab("storage-" + membershipData.msId, "Storage", fakeContent("This is storage"), false);
+    tabPane.addTab("storage-" + membershipData.msId, "Slip", slipStorage(membershipData), false);
     tabPane.switchToTab("storage-" + membershipData.msId);
+    return div;
+}
+
+function slipStorage(membershipData) {
+    const div = document.createElement("div");
+    div.classList.add("slip-storage");
+
+    // Assuming `membershipData` contains the slip name, e.g., 'A01_icon.png'
+    const slipName = membershipData.slip.slipNum || "none_icon.png"; // Fallback to default if slipName is missing
+    const imageUrl = `/api/images/${slipName}_icon.png`; // Endpoint to fetch the image
+
+    // Create an img element
+    const img = document.createElement("img");
+    img.alt = `Slip: ${slipName}`; // Set alt text for accessibility
+
+    // Fetch the image
+    fetch(imageUrl)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.blob();
+        })
+        .then((blob) => {
+            // Create a local URL for the blob and set it as the src of the image
+            const imageObjectUrl = URL.createObjectURL(blob);
+            img.src = imageObjectUrl;
+            div.appendChild(img); // Append the image to the div
+        })
+        .catch((error) => {
+            console.error("There was a problem with the fetch operation:", error);
+            // Optionally handle the error, e.g., add a placeholder image
+            img.src = "/path/to/placeholder.png";
+            div.appendChild(img);
+        });
+
     return div;
 }
 
