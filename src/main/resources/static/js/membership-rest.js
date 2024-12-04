@@ -57,45 +57,30 @@ function addressBlock(membershipData) {
 function storageTabPane(membershipData) {
     const div = document.createElement("div");
     const tabPane = new TabPane(div, "horizontal");
-    // tabPane.addTab("address-" + membershipData.msId, "Address", setAddressBlock(membershipData), false);
-    tabPane.addTab("storage-" + membershipData.msId, "Slip", slipStorage(membershipData), false);
+    const slipWidget = new SlipWidget(membershipData.slip);
+    tabPane.addTab("storage-" + membershipData.msId, "Slip", slipWidget.getElement(), false);
     tabPane.switchToTab("storage-" + membershipData.msId);
-    return div;
-}
 
-function slipStorage(membershipData) {
-    const div = document.createElement("div");
-    div.classList.add("slip-storage");
+// Dynamically update the slip object
+    setTimeout(() => {
+        console.log("Adding subleasedTo...");
+        slipWidget.slip.subleasedTo = "John Doe"; // Updates the widget
+    }, 2000);
 
-    // Assuming `membershipData` contains the slip name, e.g., 'A01_icon.png'
-    const slipName = membershipData.slip.slipNum || "none_icon.png"; // Fallback to default if slipName is missing
-    const imageUrl = `/api/images/${slipName}_icon.png`; // Endpoint to fetch the image
+    setTimeout(() => {
+        console.log("Clearing slipNum...");
+        slipWidget.slip.slipNum = null; // Clears the widget
+    }, 4000);
 
-    // Create an img element
-    const img = document.createElement("img");
-    img.alt = `Slip: ${slipName}`; // Set alt text for accessibility
+    setTimeout(() => {
+        console.log("Restoring slipNum...");
+        slipWidget.slip.slipNum = "C43"; // Re-renders the widget
+    }, 6000);
 
-    // Fetch the image
-    fetch(imageUrl)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.blob();
-        })
-        .then((blob) => {
-            // Create a local URL for the blob and set it as the src of the image
-            const imageObjectUrl = URL.createObjectURL(blob);
-            img.src = imageObjectUrl;
-            div.appendChild(img); // Append the image to the div
-        })
-        .catch((error) => {
-            console.error("There was a problem with the fetch operation:", error);
-            // Optionally handle the error, e.g., add a placeholder image
-            img.src = "/path/to/placeholder.png";
-            div.appendChild(img);
-        });
-
+    setTimeout(() => {
+        console.log("Removing subleasedTo...");
+        slipWidget.slip.subleasedTo = null; // Updates the widget
+    }, 8000);
     return div;
 }
 
