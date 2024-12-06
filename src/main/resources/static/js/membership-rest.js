@@ -3,12 +3,12 @@ function createMembershipContent(membership) {
     const contentDiv = document.createElement("div");
     contentDiv.classList.add("vbox");
     // Append header immediately
-    contentDiv.appendChild(createHeaderDiv(membership));
 
     // Fetch the membership data once and pass it to both createPersonDiv and createMembershipDiv
     fetchMembershipData(membership).then(membershipData => {
         if (membershipData) {
             // Pass the fetched data to both functions
+            contentDiv.appendChild(createHeaderDiv(membershipData));
             contentDiv.appendChild(createPersonDiv(membershipData));
             contentDiv.appendChild(AddressTitlePane(membershipData));
             const hBox = new HorizontalBox("membership-hbox-" + membershipData.id);
@@ -60,9 +60,6 @@ function storageTabPane(membershipData) {
     const slipWidget = new SlipWidget(membershipData);
     tabPane.addTab("storage-" + membershipData.msId, "Slip", slipWidget.getElement(), false);
     tabPane.switchToTab("storage-" + membershipData.msId);
-
-// Dynamically update the slip object
-// []]
     return div;
 }
 
@@ -96,7 +93,7 @@ function createHeaderDiv(membership) {
     // Add content dynamically here
     const topDiv = document.createElement("div");
     topDiv.classList.add("top-div");
-    topDiv.appendChild(labeledTextDiv("Record Year: ", membership.selectedYear));
+    topDiv.appendChild(labeledTextDiv("Record Year: ", membership.fiscalYear));
     topDiv.appendChild(labeledTextDiv("Membership: ", membership.membershipId));
     topDiv.appendChild(labeledTextDiv("Type: ", membership.memType));
     topDiv.appendChild(labeledTextDiv("Join Date: ", membership.joinDate));

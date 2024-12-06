@@ -11,12 +11,15 @@ function buildRosters(data) {
     membershipTabPane.id = "roster-tab-div";
     mainDiv.innerHTML = ""; // may make sense to create an array of divs, to maintain state even when not on tab, hmm?
     mainDiv.appendChild(membershipTabPane);
-    // const tabPane = new TabPane("roster-tab-div", "horizontal");
-    rosterTabPane = new TabPane(membershipTabPane, "horizontal");
-    rosterTabPane.addTab("roster", "Roster", createTable(), false);
+    const rosterTabPane = new TabPane(membershipTabPane, "horizontal");
+
+    // Attach the TabPane object to the div
+    membershipTabPane.tabPaneInstance = rosterTabPane;
+    // how can I get this TabPane object later?
+    rosterTabPane.addTab("roster", "Roster", createTable(rosterTabPane), false);
 }
 
-function createTable() {
+function createTable(rosterTabPane) {
     const table = document.createElement("table");
     table.className = "styled-table";
     const thead = document.createElement("thead");
@@ -52,16 +55,25 @@ function createTable() {
         <td>${membership.city}</td>
       `;
         tr.addEventListener('click', () => {
-            if(rosterTabPane.tabExists(membership.msId)) {
-                rosterTabPane.switchToTab(membership.msId)
-            } else {
-                rosterTabPane.addTab(membership.msId, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
-            }
+            // membership-rest.js
+            addNewTab(membership.msId, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
         });
         tbody.appendChild(tr);
     });
     table.appendChild(tbody);
     return table;
+}
+
+function addNewTab(tabId, label, content, closable) {
+    const membershipTabPane = document.getElementById("roster-tab-div");
+    if (membershipTabPane?.tabPaneInstance) {
+        const tabPane = membershipTabPane.tabPaneInstance; // Get the TabPane instance
+        if (tabPane.tabExists(tabId)) {
+            tabPane.switchToTab(tabId); // Use the TabPane instance's method
+        } else {
+            tabPane.addTab(tabId, label, content, closable); // Add the new tab
+        }
+    }
 }
 
 function replaceTable() {

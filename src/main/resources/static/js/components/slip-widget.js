@@ -1,6 +1,6 @@
 class SlipWidget {
-    constructor(MembershipData) {
-        this.slip = new Proxy(MembershipData.slip, {
+    constructor(membershipData) {
+        this.slip = new Proxy(membershipData.slip, {
             set: (target, property, value) => {
                 target[property] = value;
                 this.renderGraphic(); // Update the graphic whenever the slip changes
@@ -9,7 +9,9 @@ class SlipWidget {
             }
         });
 
-        this.msId = MembershipData.msId;
+        console.log("slip widget membership data", membershipData);
+        this.msId = membershipData.msId;
+        this.selectedYear = membershipData.fiscalYear;
         this.subleaseOwnerId = null; // Tracks the ID of the slip's owner if subleasing
 
         this.container = document.createElement("div");
@@ -43,6 +45,7 @@ class SlipWidget {
                 }
 
                 const data = await response.json(); // Expecting { slipDTO: { slipNum: string | null, ownerId: string | null } }
+                this.subleaseInfo = data;
                 const subleaseInfo = data.slipDTO;
 
                 if (subleaseInfo.slipNum && subleaseInfo.altText) {
@@ -114,7 +117,7 @@ class SlipWidget {
                 });
         }
     }
-    
+
     renderWidget() {
         this.widgetDiv.innerHTML = ""; // Clear the widget div
 
@@ -122,7 +125,32 @@ class SlipWidget {
         if (this.subleaseOwnerId) {
             const subleaseMessage = document.createElement("div");
             subleaseMessage.classList.add("sublease-message");
-            subleaseMessage.textContent = `Subleased from Membership ${this.subleaseOwnerId}`;
+
+            // Create the link element
+            const subleaseLink = document.createElement("a");
+            subleaseLink.href = "#"; // Prevent default navigation
+            subleaseLink.textContent = `Membership ${this.subleaseOwnerId}`;
+
+            let membership = {
+                msId: this.subleaseInfo.slipDTO.msId,
+                selectedYear: this.selectedYear,
+                membershipId: this.subleaseInfo.slipDTO.altText
+            }
+            console.log("testing the sublease box", this.subleaseInfo);
+            console.log("testing again", this.subleaseInfo.slipDTO);
+            console.log("created membership", membership);
+
+            // Add event listener to call addNewTab
+            subleaseLink.addEventListener("click", (event) => {
+                event.preventDefault(); // Prevent navigation
+                addNewTab(`${membership.msId}`, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
+            });
+
+            // Append the link to the message
+            subleaseMessage.textContent = "Subleased from ";
+            subleaseMessage.appendChild(subleaseLink);
+
+            // Append the message to the widget
             this.widgetDiv.appendChild(subleaseMessage);
             return;
         }
