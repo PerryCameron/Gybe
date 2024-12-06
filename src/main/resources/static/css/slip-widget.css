@@ -1,0 +1,49 @@
+.slip-storage {
+    padding-top: 10px;
+    padding-left: 20px;
+    height: 400px;
+}
+
+.slip-graphic {
+    display: flex;
+    flex-direction: row; /* Ensures children are laid out in a row (left-to-right) */
+    align-items: center; /* Vertically centers children */
+    justify-content: flex-start; /* Aligns children to the left */
+    gap: 20px; /* Adds space between children */
+}
+
+.slip-label {
+    color: black; /* Set "Slip:" text to black */
+    font-weight: bold; /* Optional: Make the text bold */
+}
+
+.slip-name {
+    color: var(--color-main-green); /* Set "C43" text to red */
+    font-weight: bold; /* Optional: Make the text bold */
+}
+
+.slip-widget {
+    /*border: 1px solid #ccc;*/
+    padding: 10px;
+    margin: 5px;
+    max-width: 300px;
+}
+
+.radio-container label {
+    display: block;
+    /*margin-bottom: 5px;*/
+}
+
+.input-container {
+    margin-top: 10px;
+}
+
+.release-sub-button {
+    margin-top: 20px;
+    margin-left: 95px;
+}
+
+.sublease-message {
+    text-align: center;
+    margin-top: 30px;
+}
