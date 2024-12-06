@@ -2,10 +2,9 @@ package com.ecsail.Gybe.repository.implementations;
 
 import com.ecsail.Gybe.dto.MembershipDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
+import com.ecsail.Gybe.dto.SlipDTO;
 import com.ecsail.Gybe.repository.interfaces.MembershipRepository;
-import com.ecsail.Gybe.repository.rowmappers.JsonRowMapper;
-import com.ecsail.Gybe.repository.rowmappers.MembershipListRowMapper;
-import com.ecsail.Gybe.repository.rowmappers.MembershipListRowMapper1;
+import com.ecsail.Gybe.repository.rowmappers.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -706,5 +705,15 @@ public class MembershipRepositoryImpl implements MembershipRepository {
         List<JsonNode> memberships
                 = template.query(query, new JsonRowMapper());
         return memberships;
+    }
+
+    @Override
+    public SlipDTO isSubleased(int msId) {
+        String query = "SELECT * FROM slip s left join membership_id id on s.MS_ID=id.MS_ID WHERE SUBLEASED_TO = ? and id.FISCAL_YEAR=YEAR(NOW())";
+        try {
+            return template.queryForObject(query, new CustomSlipRowMapper(), msId);
+        } catch (EmptyResultDataAccessException e) {
+            return new SlipDTO(); // Return a default SlipDTO when no match is found
+        }
     }
 }

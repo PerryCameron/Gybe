@@ -3,6 +3,7 @@ package com.ecsail.Gybe.repository.interfaces;
 
 import com.ecsail.Gybe.dto.MembershipDTO;
 import com.ecsail.Gybe.dto.MembershipListDTO;
+import com.ecsail.Gybe.dto.SlipDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
@@ -39,4 +40,5 @@ public interface MembershipRepository {
     JsonNode getMembershipAsJSON(int msId, int year);
     List<JsonNode> getMembershipsAsJson();
 
+    SlipDTO isSubleased(int msId);
 }

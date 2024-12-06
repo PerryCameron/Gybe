@@ -11,7 +11,7 @@ function createMembershipContent(membership) {
             // Pass the fetched data to both functions
             contentDiv.appendChild(createPersonDiv(membershipData));
             contentDiv.appendChild(AddressTitlePane(membershipData));
-            const hBox = new HorizontalBox("membership-hbox");
+            const hBox = new HorizontalBox("membership-hbox-" + membershipData.id);
             hBox.add(MembershipTitlePane(membershipData));
             hBox.add(StorageTitlePane(membershipData));
             contentDiv.appendChild(hBox.getElement());  // why can't I do this?
@@ -57,30 +57,12 @@ function addressBlock(membershipData) {
 function storageTabPane(membershipData) {
     const div = document.createElement("div");
     const tabPane = new TabPane(div, "horizontal");
-    const slipWidget = new SlipWidget(membershipData.slip);
+    const slipWidget = new SlipWidget(membershipData);
     tabPane.addTab("storage-" + membershipData.msId, "Slip", slipWidget.getElement(), false);
     tabPane.switchToTab("storage-" + membershipData.msId);
 
 // Dynamically update the slip object
-    setTimeout(() => {
-        console.log("Adding subleasedTo...");
-        slipWidget.slip.subleasedTo = "John Doe"; // Updates the widget
-    }, 2000);
-
-    setTimeout(() => {
-        console.log("Clearing slipNum...");
-        slipWidget.slip.slipNum = null; // Clears the widget
-    }, 4000);
-
-    setTimeout(() => {
-        console.log("Restoring slipNum...");
-        slipWidget.slip.slipNum = "C43"; // Re-renders the widget
-    }, 6000);
-
-    setTimeout(() => {
-        console.log("Removing subleasedTo...");
-        slipWidget.slip.subleasedTo = null; // Updates the widget
-    }, 8000);
+// []]
     return div;
 }
 

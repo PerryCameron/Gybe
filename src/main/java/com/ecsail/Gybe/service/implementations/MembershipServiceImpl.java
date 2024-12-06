@@ -116,5 +116,10 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipRepository.getMembershipAsJSON(msId, selectedYear);
     }
 
+    @Override
+    public SlipDTO getSubleaseInfo(int msId) {
+        return membershipRepository.isSubleased(msId);
+    }
+
 
 }

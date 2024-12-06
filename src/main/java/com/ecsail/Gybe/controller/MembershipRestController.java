@@ -253,4 +253,14 @@ public class MembershipRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/api/check-sublease")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, SlipDTO> isSubleasing(@RequestParam int msId) {
+        System.out.println("isSubleasing with parameter " + msId);
+        Map<String, SlipDTO> slipMap = new HashMap<>();
+        SlipDTO slipDTO = membershipService.getSubleaseInfo(msId);
+        slipMap.put("slipDTO", slipDTO);
+        return slipMap;
+    }
 }
