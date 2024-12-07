@@ -121,5 +121,10 @@ public class MembershipServiceImpl implements MembershipService {
         return membershipRepository.isSubleased(msId);
     }
 
+    @Override
+    public MembershipIdDTO getMembershipId(int msId) {
+        return membershipIdRepository.getCurrentId(msId);
+    }
+
 
 }

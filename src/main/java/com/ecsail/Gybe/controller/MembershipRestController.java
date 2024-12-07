@@ -257,10 +257,19 @@ public class MembershipRestController {
     @GetMapping("/api/check-sublease")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public Map<String, SlipDTO> isSubleasing(@RequestParam int msId) {
-        System.out.println("isSubleasing with parameter " + msId);
         Map<String, SlipDTO> slipMap = new HashMap<>();
         SlipDTO slipDTO = membershipService.getSubleaseInfo(msId);
         slipMap.put("slipDTO", slipDTO);
+        return slipMap;
+    }
+
+    @GetMapping("/api/get-membershipId")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, MembershipIdDTO> getMembershipId(@RequestParam int msId) {
+        System.out.println("get membershipId " + msId);
+        Map<String, MembershipIdDTO> slipMap = new HashMap<>();
+        MembershipIdDTO membershipIdDTO = membershipService.getMembershipId(msId);
+        slipMap.put("membershipIdDTO", membershipIdDTO);
         return slipMap;
     }
 }

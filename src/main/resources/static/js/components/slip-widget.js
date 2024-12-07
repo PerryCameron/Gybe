@@ -45,13 +45,12 @@ class SlipWidget {
                 }
 
                 const data = await response.json(); // Expecting { slipDTO: { slipNum: string | null, ownerId: string | null } }
-                this.subleaseInfo = data;
-                const subleaseInfo = data.slipDTO;
+                this.subleaseInfo = data.slipDTO;
 
-                if (subleaseInfo.slipNum && subleaseInfo.altText) {
+                if (this.subleaseInfo.slipNum && this.subleaseInfo.altText) {
                     // Update slip info for a subleasing membership
-                    this.slip.slipNum = subleaseInfo.slipNum;
-                    this.subleaseOwnerId = subleaseInfo.altText; // Use altText for the original owner's ID
+                    this.slip.slipNum = this.subleaseInfo.slipNum;
+                    this.subleaseOwnerId = this.subleaseInfo.altText; // Use altText for the original owner's ID
                 } else {
                     // Reset sublease information if no valid data is returned
                     this.subleaseOwnerId = null;
@@ -132,13 +131,10 @@ class SlipWidget {
             subleaseLink.textContent = `Membership ${this.subleaseOwnerId}`;
 
             let membership = {
-                msId: this.subleaseInfo.slipDTO.msId,
+                msId: this.subleaseInfo.msId,
                 selectedYear: this.selectedYear,
-                membershipId: this.subleaseInfo.slipDTO.altText
-            }
-            console.log("testing the sublease box", this.subleaseInfo);
-            console.log("testing again", this.subleaseInfo.slipDTO);
-            console.log("created membership", membership);
+                membershipId: this.subleaseInfo.altText
+            };
 
             // Add event listener to call addNewTab
             subleaseLink.addEventListener("click", (event) => {
@@ -155,19 +151,45 @@ class SlipWidget {
             return;
         }
 
-        // If subleasedTo is filled, display only the "Release Sub" button
+        // If subleasedTo is filled, display who it is being subleased to
         if (this.slip.subleasedTo !== null) {
-            const releaseButton = document.createElement("button");
-            releaseButton.textContent = "Release Sub";
-            releaseButton.classList.add("release-sub-button");
+            // Create a container for the sublease info and button
+            const subleaseContainer = document.createElement("div");
+            subleaseContainer.classList.add("sublease-container");
 
-            releaseButton.addEventListener("click", () => {
-                console.log("Releasing sublease...");
-                this.slip.subleasedTo = null; // Clear the sublease
+            // Fetch subleaser membership asynchronously
+            getSubleaserId(this.slip.subleasedTo).then(subleaserInfo => {
+                if (subleaserInfo) {
+
+                    console.log("Subleaser info:", subleaserInfo);
+
+                    // Add the "Subleased to" text
+                    const subleaseInfo = document.createElement("span");
+                    subleaseInfo.textContent = `Subleased to Membership: ${subleaserInfo.membershipIdDTO.membershipId}`;
+                    subleaseContainer.appendChild(subleaseInfo);
+
+                    // Create the release button
+                    const releaseButton = document.createElement("button");
+                    releaseButton.textContent = "Release Sub";
+                    releaseButton.classList.add("release-sub-button");
+
+                    // Add click event listener to the button
+                    releaseButton.addEventListener("click", () => {
+                        console.log("Releasing sublease...");
+                        this.slip.subleasedTo = null; // Clear the sublease
+                        this.renderWidget(); // Re-render the widget
+                    });
+
+                    subleaseContainer.appendChild(releaseButton);
+                    this.widgetDiv.appendChild(subleaseContainer);
+                } else {
+                    console.warn("Subleaser information not available.");
+                }
+            }).catch(error => {
+                console.error("Failed to fetch subleaser information:", error);
             });
 
-            this.widgetDiv.appendChild(releaseButton);
-            return;
+            return; // Exit early to wait for the async operation
         }
 
         // Default controls for when there is no sublease
@@ -179,9 +201,9 @@ class SlipWidget {
         radioContainer.classList.add("radio-container");
 
         radioContainer.innerHTML = `
-            <label><input type="radio" name="action" value="sublease"> Sublease Slip</label><br>
-            <label><input type="radio" name="action" value="reassign"> Reassign Slip</label>
-        `;
+        <label><input type="radio" name="action" value="sublease"> Sublease Slip</label><br>
+        <label><input type="radio" name="action" value="reassign"> Reassign Slip</label>
+    `;
 
         this.widgetDiv.appendChild(radioContainer);
 
@@ -205,5 +227,20 @@ class SlipWidget {
 
     getElement() {
         return this.container;
+    }
+}
+
+async function getSubleaserId(msId) {
+    try {
+        const response = await fetch(`/api/get-membershipId?msId=${msId}`);
+        if (!response.ok) {
+            throw new Error(`Error fetching membership ID: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Sublease data", data);
+        return data;
+    } catch (error) {
+        console.error("Failed to fetch membership ID:", error);
+        return null; // Return null or handle the error as appropriate
     }
 }

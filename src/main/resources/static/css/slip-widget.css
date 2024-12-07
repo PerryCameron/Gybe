@@ -40,10 +40,15 @@
 
 .release-sub-button {
     margin-top: 20px;
-    margin-left: 95px;
+    /*margin-left: 95px;*/
 }
 
 .sublease-message {
     text-align: center;
     margin-top: 30px;
+}
+
+.sublease-container {
+    text-align: center;
+    margin-top: 15px;
 }

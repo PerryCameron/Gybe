@@ -22,4 +22,6 @@ public interface MembershipService {
     JsonNode getMembershipAsJson(int msId, int year);
 
     SlipDTO getSubleaseInfo(int msId);
+
+    MembershipIdDTO getMembershipId(int msId);
 }
