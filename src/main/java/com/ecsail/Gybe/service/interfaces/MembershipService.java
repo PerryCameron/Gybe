@@ -24,4 +24,6 @@ public interface MembershipService {
     SlipDTO getSubleaseInfo(int msId);
 
     MembershipIdDTO getMembershipId(int msId);
+
+    SlipDTO changeSlip(int membershipId, String changeType, int ownerMsId);
 }

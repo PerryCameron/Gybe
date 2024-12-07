@@ -30,6 +30,20 @@ public class SlipDTO {
         this.altText = altText;
     }
 
+    public void setAllFieldsNull() {
+        this.slipId = null;
+        this.msId = null;
+        this.slipNum = null;
+        this.subleasedTo = null;
+        this.altText = null;
+    }
+
+    public void setNewOwner(int newOwner) {
+        this.msId = newOwner;
+        this.subleasedTo = null;
+        this.altText = null;
+    }
+
     public Integer getSlipId() {
         return slipId;
     }

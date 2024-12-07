@@ -37,6 +37,17 @@ public class SlipRepositoryImpl implements SlipRepository {
             return new SlipDTO();
         }
     }
+
+    @Override
+    public SlipDTO getSlipOwner(int msId) {
+        String sql = "select * from slip where MS_ID = ? LIMIT 1";
+        try {
+            return template.queryForObject(sql, new SlipRowMapper(), msId, msId);
+        } catch (EmptyResultDataAccessException e) {
+            return new SlipDTO();
+        }
+    }
+
     @Override
     public SlipDTO getSlipFromMsid(int ms_id) {
         String QUERY = "select * from slip where MS_ID=?";
@@ -83,6 +94,21 @@ public class SlipRepositoryImpl implements SlipRepository {
     public List<SlipStructureDTO> getSlipStructure() {
         String query = "SELECT * FROM slip_structure";
         return template.query(query, new SlipStructureRowMapper());
+    }
+
+    @Override
+    public int updateSlip(SlipDTO slip) {
+        String sql = "UPDATE slip " +
+                "SET MS_ID = ?, SLIP_NUM = ?, SUBLEASED_TO = ?, ALT_TEXT = ? " +
+                "WHERE SLIP_ID = ?";
+        return template.update(
+                sql,
+                slip.getMsId(),
+                slip.getSlipNum(),
+                slip.getSubleasedTo(),
+                slip.getAltText(),
+                slip.getSlipId()
+        );
     }
 
 }

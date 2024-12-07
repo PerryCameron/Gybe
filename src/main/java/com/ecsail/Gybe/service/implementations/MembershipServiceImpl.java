@@ -27,7 +27,7 @@ public class MembershipServiceImpl implements MembershipService {
     private final BoardPositionsRepository boardPositionsRepository;
     private final SettingsRepository settingsRepository;
     private static final Logger logger = LoggerFactory.getLogger(MembershipServiceImpl.class);
-
+    private final SlipRepository slipRepository;
 
 
     @Autowired
@@ -42,7 +42,8 @@ public class MembershipServiceImpl implements MembershipService {
             OfficerRepository officerRepository,
             NotesRepository notesRepository,
             BoardPositionsRepository boardPositionsRepository,
-            SettingsRepository settingsRepository
+            SettingsRepository settingsRepository,
+            SlipRepository slipRepository
     ) {
         this.membershipRepository = membershipRepository;
         this.personRepository = personRepository;
@@ -55,17 +56,16 @@ public class MembershipServiceImpl implements MembershipService {
         this.notesRepository = notesRepository;
         this.boardPositionsRepository = boardPositionsRepository;
         this.settingsRepository = settingsRepository;
+        this.slipRepository = slipRepository;
     }
     @Override
     public MembershipListDTO getMembership(int msId, int selectedYear) {
         try {
             MembershipListDTO membership = membershipRepository.getMembershipByMsId(msId, selectedYear);
             membership.setPersonDTOS((ArrayList<PersonDTO>) personRepository.getActivePeopleByMsId(msId));
-            System.out.println("List size: " + membership.getPersonDTOS().size());
             membership.getPersonDTOS().forEach(personDTO -> {
                 personDTO.setPhones(phoneRepository.getPhoneByPid(personDTO.getPId()));
                 personDTO.setEmails(emailRepository.getEmail(personDTO.getPId()));
-                System.out.println("Number of Emails: " + personDTO.getEmails().size());
                 personDTO.setAwards(awardRepository.getAwards(personDTO));
                 personDTO.setOfficers(officerRepository.getOfficer(personDTO));
             });
@@ -124,6 +124,21 @@ public class MembershipServiceImpl implements MembershipService {
     @Override
     public MembershipIdDTO getMembershipId(int msId) {
         return membershipIdRepository.getCurrentId(msId);
+    }
+
+    @Override
+    public SlipDTO changeSlip(int membershipId, String changeType, int originalOwnerMsId) {
+        SlipDTO slipDTO = slipRepository.getSlipOwner(originalOwnerMsId);
+        int newMsId = membershipRepository.getMembershipByMembershipId(membershipId).getMsId();
+        if(changeType.equals("sublease")) {
+            slipDTO.setSubleasedTo(newMsId);
+            slipRepository.updateSlip(slipDTO);
+        } else { // we are changing the owner of the slip
+            slipDTO.setNewOwner(newMsId);
+            slipRepository.updateSlip(slipDTO);
+            slipDTO.setAllFieldsNull();
+        }
+        return slipDTO;
     }
 
 

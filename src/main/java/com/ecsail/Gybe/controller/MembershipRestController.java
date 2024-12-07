@@ -266,10 +266,18 @@ public class MembershipRestController {
     @GetMapping("/api/get-membershipId")
     @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
     public Map<String, MembershipIdDTO> getMembershipId(@RequestParam int msId) {
-        System.out.println("get membershipId " + msId);
         Map<String, MembershipIdDTO> slipMap = new HashMap<>();
         MembershipIdDTO membershipIdDTO = membershipService.getMembershipId(msId);
         slipMap.put("membershipIdDTO", membershipIdDTO);
+        return slipMap;
+    }
+
+    @GetMapping("/api/slip-change")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, SlipDTO> changeSlip(@RequestParam int membershipId, @RequestParam String changeType, @RequestParam int ownerMsId) {
+        SlipDTO slipDTO = membershipService.changeSlip(membershipId, changeType, ownerMsId);
+        Map<String, SlipDTO> slipMap = new HashMap<>();
+        slipMap.put("newSlipInfo", slipDTO);
         return slipMap;
     }
 }
