@@ -280,4 +280,13 @@ public class MembershipRestController {
         slipMap.put("newSlipInfo", slipDTO);
         return slipMap;
     }
+
+    @GetMapping("/api/slip-sub-release")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, Integer> releaseSublease(@RequestParam int ownerMsId) {
+        Integer successful = membershipService.releaseSublease(ownerMsId);
+        Map<String, Integer> slipMap = new HashMap<>();
+        slipMap.put("slipReleased", successful);
+        return slipMap;
+    }
 }

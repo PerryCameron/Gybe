@@ -148,6 +148,7 @@ class SlipWidget {
 
         const subleaseContainer = document.createElement("div");
         subleaseContainer.classList.add("sublease-container");
+        // fetch the current membership ID of the membership who is subleasing
         getSubleaserId(this.slip.subleasedTo)
             .then(subleaserInfo => {
                 if (subleaserInfo) {
@@ -160,6 +161,7 @@ class SlipWidget {
                         selectedYear: subleaserInfo.membershipIdDTO.fiscalYear,
                         membershipId: subleaserInfo.membershipIdDTO.membershipId
                     };
+                    // launch tab of the membership who is subleasing if user clicks on it
                     subleaseToLink.addEventListener("click", (event) => {
                         event.preventDefault();
                         addNewTab(`${membership.msId}`, `Mem ${membership.membershipId}`, createMembershipContent(membership), true);
@@ -172,7 +174,11 @@ class SlipWidget {
                     releaseButton.classList.add("release-sub-button");
                     releaseButton.addEventListener("click", () => {
                         console.log("Releasing sublease...");
-                        this.slip.subleasedTo = null;
+                        releaseSublease(this.msId).then(() => {
+                            this.slip.subleasedTo = null;
+                        }).catch(error => {
+                            console.error("Failed to release subleaser:", error);
+                        })
                         this.renderWidget();
                     });
                     subleaseContainer.appendChild(releaseButton);
@@ -290,5 +296,21 @@ async function getSubleaserId(msId) {
     } catch (error) {
         console.error("Failed to fetch membership ID:", error);
         return null; // Return null or handle the error as appropriate
+    }
+}
+
+async function releaseSublease(ownerMsId) {
+    try {
+        const response = await fetch(`/api/slip-sub-release?ownerMsId=${ownerMsId}`, {
+            method: "GET",
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data; // Resolve the Promise with the data
+    } catch (error) {
+        console.error("Error:", error);
+        throw error; // Rethrow the error to be handled by the caller
     }
 }

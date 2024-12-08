@@ -141,5 +141,12 @@ public class MembershipServiceImpl implements MembershipService {
         return slipDTO;
     }
 
+    @Override
+    public Integer releaseSublease(int ownerMsId) {
+        SlipDTO slipDTO = slipRepository.getSlipOwner(ownerMsId);
+        slipDTO.setSubleasedTo(null);
+        return slipRepository.updateSlip(slipDTO);
+    }
+
 
 }
