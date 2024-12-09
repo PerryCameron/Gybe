@@ -148,5 +148,10 @@ public class MembershipServiceImpl implements MembershipService {
         return slipRepository.updateSlip(slipDTO);
     }
 
+    @Override
+    public SlipDTO getSlipInfo(int ownerMsId) {
+        return slipRepository.getSlipOwner(ownerMsId);
+    }
+
 
 }

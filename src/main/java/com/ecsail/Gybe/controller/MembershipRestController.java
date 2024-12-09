@@ -260,6 +260,7 @@ public class MembershipRestController {
         Map<String, SlipDTO> slipMap = new HashMap<>();
         SlipDTO slipDTO = membershipService.getSubleaseInfo(msId);
         slipMap.put("slipDTO", slipDTO);
+        System.out.println("check-sublease " + slipDTO);
         return slipMap;
     }
 
@@ -287,6 +288,15 @@ public class MembershipRestController {
         Integer successful = membershipService.releaseSublease(ownerMsId);
         Map<String, Integer> slipMap = new HashMap<>();
         slipMap.put("slipReleased", successful);
+        return slipMap;
+    }
+
+    @GetMapping("/api/get-slip-info")
+    @PreAuthorize("hasRole('ROLE_MEMBERSHIP')")
+    public Map<String, SlipDTO> getSlipInfo(@RequestParam int ownerMsId) {
+        SlipDTO slipDTO = membershipService.getSlipInfo(ownerMsId);
+        Map<String, SlipDTO> slipMap = new HashMap<>();
+        slipMap.put("newSlipInfo", slipDTO);
         return slipMap;
     }
 }

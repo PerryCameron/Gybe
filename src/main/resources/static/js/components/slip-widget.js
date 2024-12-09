@@ -1,26 +1,34 @@
 class SlipWidget {
     constructor(membershipData) {
-        this.slip = new Proxy(membershipData.slip, {
-            set: (target, property, value) => {
-                target[property] = value;
-                this.renderGraphic(); // Update the graphic whenever the slip changes
-                this.renderWidget(); // Re-render the widget whenever the slip changes
-                return true;
-            }
-        });
+        this.slip = { ...membershipData.slip }; // Initialize slip as a plain object
         this.msId = membershipData.msId;
+        this.membershipId = membershipData.membershipId;
         this.selectedYear = membershipData.fiscalYear;
         this.subleaseOwnerId = null; // Tracks the ID of the slip's owner if subleasing
+
         this.container = document.createElement("div");
         this.container.classList.add("slip-storage");
+        this.container.id = `slip-widget-${this.membershipId}`; // Assign a unique ID
+
         this.graphicDiv = document.createElement("div");
         this.graphicDiv.classList.add("slip-graphic");
+
         this.slipLabelDiv = document.createElement("div");
         this.slipLabelDiv.classList.add("slip-label");
+
         this.widgetDiv = document.createElement("div");
         this.widgetDiv.classList.add("slip-widget");
+
         this.container.appendChild(this.graphicDiv);
         this.container.appendChild(this.widgetDiv);
+
+        // Link instance to DOM element
+        this.container.widgetInstance = this;
+        this.rebuildSlipWidget()
+    }
+
+    rebuildSlipWidget() {
+        console.log("rebuildSlipWidget()", this.slip);
         this.checkSublease().then(() => {
             this.renderGraphic();
             this.renderWidget(); // Initial render
@@ -28,31 +36,28 @@ class SlipWidget {
     }
 
     async checkSublease() {
+        console.log("All slip fields are null, checking if " + this.membershipId + " is subleasing a slip");
         // Only check for subleasing if all fields in slip are null
         if (!this.slip.slipId && !this.slip.slipNum && !this.slip.subleasedTo) {
-            try {
-                const response = await fetch(`/api/check-sublease?msId=${this.msId}`);
-                if (!response.ok) {
-                    throw new Error("Failed to check sublease status");
-                }
-                const data = await response.json(); // Expecting { slipDTO: { slipNum: string | null, ownerId: string | null } }
+            console.log("This object renders true, so we will actually check for the sublease now")
+            checkForSublease(this.msId).then(data => {
                 this.subleaseInfo = data.slipDTO;
                 if (this.subleaseInfo.slipNum && this.subleaseInfo.altText) {
                     // Update slip info for a subleasing membership
                     this.slip.slipNum = this.subleaseInfo.slipNum;
                     this.subleaseOwnerId = this.subleaseInfo.altText; // Use altText for the original owner's ID
+                    this.rebuildSlipWidget();
                 } else {
                     // Reset sublease information if no valid data is returned
                     this.subleaseOwnerId = null;
                 }
                 console.log("Sublease info", data);
-            } catch (error) {
-                console.error("Error checking sublease status:", error);
-            }
+            });
         }
     }
 
     renderGraphic() {
+        console.log("Rendering graphic");
         const currentSlipName = this.slip.slipNum || "none";
         // Update the slip label
         this.slipLabelDiv.innerHTML = `
@@ -104,15 +109,22 @@ class SlipWidget {
     renderWidget() {
         console.log("Rendering widget"); // Add this to `renderWidget`
         this.widgetDiv.innerHTML = ""; // Clear the widget div
+        console.log("subleasedTo type:", typeof this.slip.subleasedTo);
+        console.log("subleasedTo value:", this.slip.subleasedTo);
         if (this.subleaseOwnerId) {
+            console.log("Rendering Subleased Owner for " + this.membershipId);
             this.renderSubleaseOwner();
+            this.subleaseOwnerId = null;
             return;
         }
         if (this.slip.subleasedTo !== null) {
-            this.renderSubleasedTo();
+            console.log("Rendering Subleased To for " + this.membershipId);
+            console.log("The value of subleased to is: " + this.slip.subleasedTo);
+            this.renderSubleasedTo();  // why is this being called?
             return;
         }
         if (!this.slip.slipNum) {
+            console.log("No slip number found, rendering nothing for " + this.membershipId);
             return; // If slipNum is null, don't render anything
         }
         this.renderDefaultControls();
@@ -139,16 +151,15 @@ class SlipWidget {
     }
 
     renderSubleasedTo() {
-        console.log("Rendering subleasedTo"); // Add this to `renderSubleasedTo`
         // Remove existing sublease container if it exists
         const existingContainer = document.querySelector('.sublease-container');
         if (existingContainer) {
             existingContainer.remove();
         }
-
         const subleaseContainer = document.createElement("div");
         subleaseContainer.classList.add("sublease-container");
         // fetch the current membership ID of the membership who is subleasing
+        console.log("Getting Membership Id for the current membership subleasing the slip " + this.membershipId);
         getSubleaserId(this.slip.subleasedTo)
             .then(subleaserInfo => {
                 if (subleaserInfo) {
@@ -173,13 +184,14 @@ class SlipWidget {
                     releaseButton.textContent = "Release Sub";
                     releaseButton.classList.add("release-sub-button");
                     releaseButton.addEventListener("click", () => {
-                        console.log("Releasing sublease...");
                         releaseSublease(this.msId).then(() => {
+                            // console.log("Release Sub", membership.membershipId);
                             this.slip.subleasedTo = null;
+                            this.rebuildSlipWidget();
+                            this.refreshWidgetById(membership.membershipId);
                         }).catch(error => {
                             console.error("Failed to release subleaser:", error);
                         })
-                        this.renderWidget();
                     });
                     subleaseContainer.appendChild(releaseButton);
                     this.widgetDiv.appendChild(subleaseContainer);
@@ -192,7 +204,18 @@ class SlipWidget {
             });
     }
 
+    updateSlipObject(data) {
+        // Temporarily disable rendering to batch updates
+        console.log("Updating slip object for membership " + this.membershipId);
+        // this fixes it to work correctly
+        if(data.newSlipInfo.subleasedTo === 0) data.newSlipInfo.subleasedTo = null;
+            this.slip = { ...this.slip, ...data.newSlipInfo };
+        console.log("Slip object for membership " + this.membershipId + " is now updated, rendering widget");
+        this.rebuildSlipWidget();
+    }
+
     renderDefaultControls() {
+        console.log("Rendering default controls for " + this.membershipId);
         const radioContainer = document.createElement("div");
         radioContainer.classList.add("radio-container");
         radioContainer.innerHTML = `
@@ -210,48 +233,30 @@ class SlipWidget {
         textField.style.flex = "1";
         const submitButton = document.createElement("button");
         submitButton.textContent = "Submit";
-
         // Add click event listener for validation
         submitButton.addEventListener("click", (event) => {
             event.preventDefault(); // Prevent default form submission
-
             const inputValue = textField.value.trim();
-
             // Check if the input is an integer
             if (!/^\d+$/.test(inputValue)) {
                 alert("Please enter a valid integer for Membership ID.");
                 return; // Stop further execution if validation fails
             }
-
             const selectedRadio = document.querySelector('input[name="action"]:checked');
             if (!selectedRadio) {
                 alert("Please select an action.");
                 return; // Stop if no radio button is selected
             }
             const changeType = selectedRadio.value;
-
             // Proceed with the endpoint call
             const membershipId = parseInt(inputValue, 10);
-            console.log("Validated Membership ID:", membershipId);
-            console.log("Selected Change Type:", changeType);
             changeSlip(membershipId, changeType, this.msId)
                 .then(data => {
-                    console.log("New Slip Data:", data.newSlipInfo);
-
-                    // Temporarily disable rendering to batch updates
-                    const oldRenderWidget = this.renderWidget;
-                    this.renderWidget = () => {}; // No-op
-
-                    // Update the proxy object with the new data
-                    for (const key in data.newSlipInfo) {
-                        if (data.newSlipInfo.hasOwnProperty(key)) {
-                            this.slip[key] = data.newSlipInfo[key]; // Triggers Proxy `set`
-                        }
-                    }
-
-                    // Restore renderWidget and call it once
-                    this.renderWidget = oldRenderWidget;
-                    this.renderWidget();
+                    console.log("Changing slip new data= " + this.membershipId, data.newSlipInfo);
+                    this.updateSlipObject(data)
+                    // to refresh any open tabs that may have their data changed.
+                    console.log("We successfully updated the membership with the controls")
+                    this.refreshWidgetById(membershipId);
                 })
                 .catch(error => {
                     console.error("Error handling slip change:", error);
@@ -263,8 +268,51 @@ class SlipWidget {
         this.widgetDiv.appendChild(inputContainer);
     }
 
+    async refresh() {
+        getSlipInfo(this.msId).then(data => {
+            this.updateSlipObject(data);
+        })
+    }
+
+    refreshWidgetById(membershipId) {
+        console.log("Refreshing...widget for the membership without controls: membershipId=" + membershipId);
+        const widgetElement = document.getElementById(`slip-widget-${membershipId}`);
+        if (widgetElement && widgetElement.widgetInstance) {
+            widgetElement.widgetInstance.refresh();
+        } else {
+            console.error(`No widget instance found for ID: slip-widget-${membershipId}`);
+        }
+    }
+
     getElement() {
         return this.container;
+    }
+}
+
+async function checkForSublease(msId) {
+    console.log("checkForSublease() " + msId);
+    try {
+        const response = await fetch(`/api/check-sublease?msId=${msId}`);
+        if (!response.ok) {
+            throw new Error("Failed to check sublease status");
+        }
+        const data = await response.json(); // Expecting { slipDTO: { slipNum: string | null, ownerId: string | null } }
+        return data;
+    } catch (error) {
+        console.error("Error checking sublease status:", error);
+    }
+}
+
+async function getSlipInfo(ownerMsId) {
+    try {
+        const response = await fetch(`/api/get-slip-info?ownerMsId=${ownerMsId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error refreshing SlipWidget:", error);
     }
 }
 
@@ -291,7 +339,7 @@ async function getSubleaserId(msId) {
             throw new Error(`Error fetching membership ID: ${response.statusText}`);
         }
         const data = await response.json();
-        console.log("Sublease data", data);
+        console.log("Getting membership ID for current subleaser=" + msId, data);
         return data;
     } catch (error) {
         console.error("Failed to fetch membership ID:", error);

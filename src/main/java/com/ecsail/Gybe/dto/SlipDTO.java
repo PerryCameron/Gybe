@@ -35,7 +35,7 @@ public class SlipDTO {
         this.msId = null;
         this.slipNum = null;
         this.subleasedTo = null;
-        this.altText = null;
+        this.altText = "set to null";
     }
 
     public void setNewOwner(int newOwner) {

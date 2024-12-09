@@ -55,7 +55,6 @@ class EditableFieldsPane extends HTMLElement {
 
     // Create a div for each field, initially displaying the text
     createFieldDiv(field) {
-        console.log("field",field);
         const fieldDiv = document.createElement("div");
         fieldDiv.classList.add("field");
         // fieldDiv.id =  field + "-" + this.id
